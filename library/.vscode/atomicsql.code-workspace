@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../src"
+		}
+	],
+	"settings": {
+		"explorer.compactFolders": false,
+		"explorer.fileNesting.expand": true,
+		"outline.icons": true
+	}
+}
