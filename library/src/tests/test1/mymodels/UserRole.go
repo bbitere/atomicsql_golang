@@ -17,4 +17,6 @@ type UserRole struct /*atomicsql-table:"user_role"*/ {
 	RoleStatusID        *StatusRole                   `json:"-"`
 	Role_status_ID      sql.NullInt32                 `json:"role_status_ID"`
 
+
+	
 }
