@@ -3,12 +3,16 @@ package main
 import (
 	"fmt"
 	importer "go/importer"
-	orm "github.com/bbitere/atomicsql_golang.git/atomicsql"
+
+	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 )
 
 func main(){
 
-	pkg, err := importer.Default().Import("github.com/bbitere/atomicsql_golang.git/atomicsql");
+	
+	orm.Str_SubString("", 0, 0); 
+
+	pkg, err := importer.Default().Import("github.com/bbitere/atomicsql_golang");
 	if err != nil {
         fmt.Printf("error: %s\n", err.Error())
         return
