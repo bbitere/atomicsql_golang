@@ -1,17 +1,15 @@
-package tests_test1_mymodels
+package atomicsql
 
 import (
 	//orm	  "github.com/bbitere/atomicsql_golang/tree/main/library/src/atomicsql"
 	"database/sql"
-
-	orm "github.com/bbitere/atomicsql_golang/atomicsql"
 )
 
 
 
 type User struct /*atomicsql-table:"user"*/ {
 
-	orm.Generic_MODEL
+	//Generic_MODEL
 
 	ID                  int32                         `json:"ID,omitempty"`
 	UserName            string                        `json:"userName"`
