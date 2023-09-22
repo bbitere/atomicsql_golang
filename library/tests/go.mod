@@ -1,4 +1,4 @@
-module github.com/bbitere/atomicsql_golang.git/atomicsql
+module github.com/bbitere/atomicsql_golang.git/tests
 
 go 1.20
 

@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	importer "go/importer"
-	orm "github.com/bbitere/atomicsql_golang/atomicsql"
+	orm "github.com/bbitere/atomicsql_golang.git/atomicsql"
 )
 
 func main(){
 
-	pkg, err := importer.Default().Import("time");
+	pkg, err := importer.Default().Import("github.com/bbitere/atomicsql_golang.git/atomicsql");
 	if err != nil {
         fmt.Printf("error: %s\n", err.Error())
         return
@@ -22,7 +22,6 @@ func main(){
 		var type1 = obj.Type();
 
 		fmt.Println( type1.String() );
-
 		
     }
 }

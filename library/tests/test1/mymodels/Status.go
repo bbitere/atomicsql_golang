@@ -1,4 +1,4 @@
-package atomicsql
+package test1_atomicsql
 
 import (
 	//orm	  "github.com/bbitere/atomicsql_golang"
