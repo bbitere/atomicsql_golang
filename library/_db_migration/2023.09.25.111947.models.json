@@ -1,0 +1,21 @@
+
+
+        StatusRole={"_tblsql":{"Type":"","tags":"/*atomicsql-table:\u0022statusRole\u0022*/"},"ID":{"Type":"int32","tags":"\u0022json:\\\u0022ID,omitempty\\\u0022\u0022"},"StatusName":{"Type":"sql.NullString","tags":"\u0022json:\\\u0022status_name\\\u0022\u0022"}}
+        @@@@@@@@######@@@@@@
+        
+
+        User={"_tblsql":{"Type":"","tags":"/*atomicsql-table:\u0022user\u0022*/"},"ID":{"Type":"int32","tags":"\u0022json:\\\u0022ID,omitempty\\\u0022\u0022"},"UserName":{"Type":"string","tags":"\u0022json:\\\u0022userName\\\u0022\u0022"},"UUID":{"Type":"string","tags":"\u0022json:\\\u0022UUID\\\u0022\u0022"},"UserPsw":{"Type":"string","tags":"\u0022json:\\\u0022user_psw\\\u0022\u0022"},"UserRoleID":{"Type":"*UserRole","tags":"\u0022json:\\\u0022-\\\u0022\u0022"},"UserRole_ID":{"Type":"sql.NullInt32","tags":"\u0022json:\\\u0022userRole_ID\\\u0022\u0022"},"Time1":{"Type":"sql.NullTime","tags":"\u0022json:\\\u0022time1\\\u0022\u0022"},"Money":{"Type":"float64","tags":"\u0022json:\\\u0022money\\\u0022\u0022"}}
+        @@@@@@@@######@@@@@@
+        
+
+        UserRole={"_tblsql":{"Type":"","tags":"/*atomicsql-table:\u0022user_role\u0022*/"},"ID":{"Type":"int32","tags":"\u0022json:\\\u0022ID,omitempty\\\u0022\u0022"},"IsActive":{"Type":"bool","tags":"\u0022json:\\\u0022isActive\\\u0022\u0022"},"RoleName":{"Type":"string","tags":"\u0022json:\\\u0022roleName\\\u0022\u0022"},"RoleStatusID":{"Type":"*StatusRole","tags":"\u0022json:\\\u0022-\\\u0022\u0022"},"Role_status_ID":{"Type":"sql.NullInt32","tags":"\u0022json:\\\u0022role_status_ID\\\u0022\u0022"},"MyActive":{"Type":"bool","tags":"\u0022json:\\\u0022my_active\\\u0022\u0022"}}
+        @@@@@@@@######@@@@@@
+        
+
+        Department={"_tblsql":{"Type":"","tags":"/*atomicsql-table:\u0022departm\u0022*/"},"ID":{"Type":"int32","tags":"\u0022json:\\\u0022ID,omitempty\\\u0022\u0022"},"IsActive":{"Type":"bool","tags":"\u0022json:\\\u0022isActive\\\u0022\u0022"},"NameDep":{"Type":"string","tags":"\u0022json:\\\u0022name_dep\\\u0022\u0022"}}
+        @@@@@@@@######@@@@@@
+        
+
+        Employee1={"_tblsql":{"Type":"","tags":"/*atomicsql-table:\u0022employee1\u0022*/"},"ID":{"Type":"int32","tags":"\u0022json:\\\u0022ID,omitempty\\\u0022\u0022"},"IsActive":{"Type":"bool","tags":"\u0022json:\\\u0022isActive\\\u0022\u0022"},"UserID":{"Type":"*User","tags":"\u0022json:\\\u0022-\\\u0022\u0022"},"User_ID":{"Type":"int","tags":"\u0022json:\\\u0022user_ID\\\u0022\u0022"},"DepartmentID":{"Type":"*Department","tags":"\u0022json:\\\u0022-\\\u0022\u0022"},"Department_ID":{"Type":"sql.NullInt32","tags":"\u0022json:\\\u0022departm_ID\\\u0022\u0022"},"Department2ID":{"Type":"*Department","tags":"\u0022json:\\\u0022-\\\u0022\u0022"},"Department2_ID":{"Type":"sql.NullInt32","tags":"\u0022json:\\\u0022departm2_ID\\\u0022\u0022"}}
+        @@@@@@@@######@@@@@@
+        
