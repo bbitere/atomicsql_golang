@@ -4,6 +4,8 @@ import (
 	sql "database/sql"
 	fmt "fmt"
 	log "log"
+
+	_ "github.com/lib/pq"
 )
 
 var DBConnectionInst DBContextBase

@@ -1434,6 +1434,8 @@ func (_this *DBQuery[T]) _deleteRecords() string {
 		//_this.getJoins().createJoinCollection();
 
 		_this.whereTxt =_this.generateSqlText(_this.m_queryAND );
+	}else{
+		_this.whereTxt = "1=1"
 	}
 
 	var bHasJoins bool = _this.getJoins() != nil && _this.getJoins()._joins != nil;
