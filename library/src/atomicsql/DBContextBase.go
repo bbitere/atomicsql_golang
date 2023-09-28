@@ -135,9 +135,55 @@ type DBContextBase struct {
 
 	AllTables				map[ string ]*DBTable[IGeneric_MODEL]
 
+	stackTransactions		[]*Transaction;	
+	hasError				error
+
 }
 type IDBContext interface {
 	GetContext()IDBContext
+}
+
+// execute sql query
+// see sql.Exec()
+func (_this *DBContextBase) Exec(sqlQuery string ) (sql.Result, error) {
+
+	var cnt = len(_this.stackTransactions);
+	if( cnt > 0 ){
+
+		var tx = _this.stackTransactions[ cnt -1];
+		return tx.tx.Exec(sqlQuery);		
+	}else{
+		return _this.Db.Exec(sqlQuery);
+	}
+}
+
+// get a Row executing a sql query
+// see sql.QueryRow()
+func (_this *DBContextBase) QueryRow(sqlQuery string ) *sql.Row {
+	
+	var cnt = len(_this.stackTransactions);
+	if( cnt > 0 ){
+
+		var tx = _this.stackTransactions[ cnt -1];
+		return tx.tx.QueryRow(sqlQuery);
+	}else{
+		return _this.Db.QueryRow(sqlQuery);
+	}
+	
+}
+
+// get Rows executing a sql query
+// see sql.Query()
+func (_this *DBContextBase) Query(query string, args ...any) (*sql.Rows, error) {
+	
+	var cnt = len(_this.stackTransactions);
+	if( cnt > 0 ){
+
+		var tx = _this.stackTransactions[ cnt -1];
+		return tx.tx.Query(query);
+	}else{
+		return _this.Db.Query(query);
+	}
 }
 
 
@@ -189,7 +235,7 @@ func (_this *DBContextBase) GetTotalDeltaTime() float64{
 	//return float64(_this.accumulatorDTimeMicroSec2) / 1000.0
 }
 
-
+//the constructor
 func (_this *DBContextBase) Constr(dialect string, schemaSql TSchemaDef) (*DBContextBase, error){
 
 	_this.SCHEMA_SQL = schemaSql
@@ -300,19 +346,21 @@ func (_this *DBContextBase) convertSchemaLangColumns( schemaSql TSchemaDef ) (ma
 	return newSchema, nil
 }
 
-
+//write in log
 func (_this *DBContextBase) Log_Fatal( formatstr string) {
 
 	//var msg = fmt.Sprintf(formatstr, args)
 	log.Fatalln(formatstr);
 }
 
+//write in log
 func (_this *DBContextBase) Log_Print( formatstr string) {
 
 	//var msg = fmt.Sprintf(formatstr, args)
 	log.Println(formatstr);
 }
 
+//It must be called in DBcontext_lambdaQueries.gen.go file. internal use
 func (_this *DBContextBase) ProcessCompiledQuery( compiledSqlQueries* map[string]TCompiledSqlQuery, bDoAllChecks bool ){
 
 	for key, val:= range(*compiledSqlQueries) {
@@ -327,7 +375,6 @@ func (_this *DBContextBase) ProcessCompiledQuery( compiledSqlQueries* map[string
 	}
 
 	if( bDoAllChecks){
-
 	}
 
 }

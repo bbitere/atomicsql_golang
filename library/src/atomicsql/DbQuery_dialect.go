@@ -85,7 +85,7 @@ func (_this *DBQuery[T]) _quote1( /*#String*/ data string) string {
 }
 
 /*#PHPARG=[ String ];*/
-func (_this *DBQuery[T]) CLEAN__quoteTable( /*#String*/ tableName string) string {
+func (_this *DBQuery[T]) clean__quoteTable( /*#String*/ tableName string) string {
 
 	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgress {
 		tableName = str_replace(`"`, "", tableName)

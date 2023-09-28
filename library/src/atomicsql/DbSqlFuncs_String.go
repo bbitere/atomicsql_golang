@@ -1,12 +1,6 @@
 package atomicsql
 
 import (
-	//"reflect"
-	//"unsafe"
-	//sql "database/sql"
-	//fmt "fmt"
-	//reflect "reflect"
-
 	"strconv"
 	"strings"
 
@@ -21,6 +15,8 @@ var  SQL_Like TTextSql = TTextSql{
 	Mysql:    "@x1@ like '@x2@'",
 	Mssql:    "@x1@ like '@x2@'",
 }
+// it is similar with LIKE operator from sql
+// if( userName LIKE '%jing%') -> will return all rows that userName contains `jing`
 func Sql_Like( val string, likeFormat string) bool {
 
 	var regExFormat = strings.ReplaceAll( likeFormat, "%", ".*");
@@ -36,6 +32,8 @@ var  SQL_MatchRegex TTextSql = TTextSql{
 	Mysql:    "@x1@ REGEXP '@x2@'",
 	Mssql:    "@x1@ LIKE '@x2@'",
 }
+// match `val` arg with a reg expression `regExFormat`.
+// return true if is match
 func Sql_MatchRegex( val string, regExFormat string) bool {
 
 	var match, _ = regexp.MatchString(regExFormat, val)
@@ -49,6 +47,7 @@ var  SQL_Int2Str TTextSql = TTextSql{
 	Mysql: "CONVERT(@x1@, INT )",
 	Mssql: "CONVERT(@x1@, INT )",
 }
+//return convert integer value to string
 func Sql_Int2Str( val int) string{
 
 	return strconv.Itoa(val)
@@ -60,7 +59,7 @@ var  SQL_StrTrim TTextSql = TTextSql{
 	Mysql:    "TRIM(@x1@)",
 	Mssql:   	"TRIM(@x1@)",
 }
-
+//return trim the string (left and right)
 func Sql_StrTrim( str string) string {
 
 	return Str.Trim( str, " " );
@@ -73,7 +72,7 @@ var  SQL_StrLen TTextSql = TTextSql{
 	Mysql:    	"LEN(@x1@)",
 	Mssql:   	"LEN(@x1@)",
 }
-
+//return get the lenght of `str`
 func Sql_StrLen( str string) int {
 
 	return len( str );
@@ -85,6 +84,7 @@ var  SQL_Concat TTextSql = TTextSql{
 	Mysql: 		"CONCAT( @xx1@ )",
 	Mssql: 		"CONCAT( @xx1@ )",
 }
+//return concat values
 func Sql_Concat( arr ... string ) string{
 
 	var min = "";

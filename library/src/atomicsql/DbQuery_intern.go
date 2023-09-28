@@ -494,7 +494,7 @@ func (_this *DBQuery[T]) _arrayRecordsAny(sqlResult *sql.Rows, fnNewInst func()a
 	for sqlResult.Next() {
 
 		var model any = fnNewInst()
-		var err1 = _this.readRowSqlResult(sqlResult, model)
+		var err1 = _this.readModelSqlResult(sqlResult, model)
 		if( err1 != nil) {
 			return  nil, err1
 		}
@@ -506,14 +506,14 @@ func (_this *DBQuery[T]) _arrayRecordsAny(sqlResult *sql.Rows, fnNewInst func()a
 
 
 /*#PHPARG=[ Array< T > ];*/
-func (_this *DBQuery[T]) _arrayRecords(sqlResult *sql.Rows) ([]*T, error) {
+func (_this *DBQuery[T]) _arrayRecords(sqlResult *sql.Rows, fields []string) ([]*T, error) {
 	//_this.clearCachedSyntax();
 	retList := []*T{}
 	
 	for sqlResult.Next() {
 
 		model := new(T)
-		var err1 = _this.readRowSqlResult(sqlResult, model)
+		var err1 = _this.readRecordSqlResult( sqlResult, model, fields )
 		if( err1 != nil) {
 			return  nil, err1
 		}
@@ -522,7 +522,24 @@ func (_this *DBQuery[T]) _arrayRecords(sqlResult *sql.Rows) ([]*T, error) {
 	return retList, nil
 }
 
-func (_this *DBQuery[T])  result_getHeaderColumn( model any) []interface{}{
+/*#PHPARG=[ Array< T > ];*/
+func (_this *DBQuery[T]) _arrayModels(sqlResult *sql.Rows) ([]*T, error) {
+	//_this.clearCachedSyntax();
+	retList := []*T{}
+	
+	for sqlResult.Next() {
+
+		model := new(T)
+		var err1 = _this.readModelSqlResult( sqlResult, model )
+		if( err1 != nil) {
+			return  nil, err1
+		}
+		Arr_Append(&retList, model)
+	}
+	return retList, nil
+}
+
+func (_this *DBQuery[T])  result_getModelHeaderColumn( model any) []interface{}{
 
 	//var strAttr = string( ATTR_ATOMICSQL_COPY_MODEL );
 	var reflVal  = reflect.ValueOf(model).Elem()
@@ -545,12 +562,61 @@ func (_this *DBQuery[T])  result_getHeaderColumn( model any) []interface{}{
 		}
 		if( field.Type().Kind() == reflect.Pointer){ 
 			continue
+		}		
+		if( fldType.Tag != "" && string(fldType.Tag) == ATTR_ATOMICSQL_COPY_MODEL){
+
+			// SELECT( x=> {User = *x.user; ...}
+			var cols = _this.result_getModelHeaderColumn( field.Addr().Interface() )
+			Arr_AddRange( &columns, &cols)
+		}else{
+			Arr_Append( &columns, field.Addr().Interface() )
+		}
+	}
+	return columns;
+}
+
+func (_this *DBQuery[T])  readModelSqlResult(rows *sql.Rows, model any) error{
+
+	var columns = _this.result_getModelHeaderColumn( model);
+	var err = rows.Scan(columns...)
+	return err;
+}
+
+func (_this *DBQuery[T])  result_getRecordHeaderColumn( model any, fields []string) []interface{}{
+
+	//var strAttr = string( ATTR_ATOMICSQL_COPY_MODEL );
+	var reflVal  = reflect.ValueOf(model).Elem()
+	var reflType = reflect.TypeOf(model).Elem();
+
+	numCols := reflVal.NumField()
+	var columns  []interface{}
+
+	for i := 0; i < numCols; i++ {
+
+		var field  = reflVal.Field(i)
+
+		var fldType = reflType.Field( i )
+		var nameFld = fldType.Name
+		if( nameFld == ""){}
+		
+		if( fields != nil){
+			if( !Arr_Contains( &fields, nameFld) ){
+				continue;
+			}
+		}
+
+		var nameTypeFld = field.Type().Name();
+		if( nameTypeFld == Generic_MODEL_Name ){ 
+			continue
+		}
+		if( field.Type().Kind() == reflect.Pointer){ 
+			continue
 		}
 		
 		if( fldType.Tag != "" && string(fldType.Tag) == ATTR_ATOMICSQL_COPY_MODEL){
 
 			// SELECT( x=> {User = *x.user; ...}
-			var cols = _this.result_getHeaderColumn( field.Addr().Interface() )
+			var cols = _this.result_getRecordHeaderColumn( field.Addr().Interface(), fields )
 			Arr_AddRange( &columns, &cols)
 		}else{
 			Arr_Append( &columns, field.Addr().Interface() )
@@ -560,30 +626,28 @@ func (_this *DBQuery[T])  result_getHeaderColumn( model any) []interface{}{
 	
 }
 
-func (_this *DBQuery[T])  readRowSqlResult(rows *sql.Rows, model any) error{
+func (_this *DBQuery[T])  readRecordSqlResult(rows *sql.Rows, model any, fields []string) error{
 
-	var columns = _this.result_getHeaderColumn( model);
+	var columns = _this.result_getRecordHeaderColumn( model, fields);
 	err := rows.Scan(columns...)
 	return err;
 }
-
-
+//----------------------------------------------------------------------------
 func (_this *DBQuery[T]) _arrayOfSingleField(sqlResult *sql.Rows, fieldName string) []string {
 
-	retList := []string{}
+	var retList = []string{}
 
-
-	model := new(T)
+	var model = new(T)
 	for sqlResult.Next() {
 
-		var strVal = ReadRowSqlResult_Readfield(*sqlResult, model, fieldName)
+		var strVal = readRecordSqlResult_Readfield(*sqlResult, model, fieldName)
 		//err = sqlResult.Scan(&user.ID, &user.Username, &user.Password, &user.Tel)
 		Arr_Append(&retList, strVal)
 	}
 	return retList
 }
 
-func ReadRowSqlResult_Readfield[T IGeneric_MODEL](rows sql.Rows, model *T, fieldName string) string {
+func readRecordSqlResult_Readfield[T IGeneric_MODEL](rows sql.Rows, model *T, fieldName string) string {
 
 	s := reflect.ValueOf(model).Elem()
 	//numCols := s.NumField()
@@ -600,20 +664,33 @@ func ReadRowSqlResult_Readfield[T IGeneric_MODEL](rows sql.Rows, model *T, field
 }
 
 /*#PHPARG=[ T ];*/
-func (_this *DBQuery[T]) _oneRecord( /*#mysqli_result*/ sqlResult *sql.Rows) (*T, error) {
-	//_this.clearCachedSyntax();
+func (_this *DBQuery[T]) _oneModel( /*#mysqli_result*/ sqlResult *sql.Rows) (*T, error) {
 	
+	for sqlResult.Next() {
+
+		var model = new(T)
+		//var columns = _this.result_getHeaderColumn( model);
+		var err = _this.readModelSqlResult( sqlResult, model)
+		if( err != nil){
+			return nil, err
+		}
+		return model, nil
+	}
+	return nil, nil
+}
+func (_this *DBQuery[T]) _oneRecord( /*#mysqli_result*/ sqlResult *sql.Rows, fields[]string) (*T, error) {
+	//_this.clearCachedSyntax();	
 
 	for sqlResult.Next() {
 
-		model := new(T)
+		var record = new(T)
 		//var columns = _this.result_getHeaderColumn( model);
-		err := _this.readRowSqlResult( sqlResult, model)
+		err := _this.readRecordSqlResult( sqlResult, record, fields )
 		if( err != nil){
 			return nil, err
 		}
 
-		return model, nil
+		return record, nil
 	}
 	return nil, nil
 }
@@ -660,8 +737,9 @@ func (_this *DBQuery[T]) checkMySqlError1( /*#String*/ sqlQuery string) {
 func (_this *DBQuery[T]) checkMySqlError( /*#String*/ sqlQuery string, err error) {
 	//_this.clearCachedSyntax();
 	//_this.checkMySqlError1( sqlQuery);
-
+	
 	if( err != nil){
+		_this.tableInst.m_ctx.hasError = err;
 		log.Printf("sql query error: %s %s", sqlQuery, err.Error() )
 	}
 }
@@ -901,7 +979,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 		if( _this.tableInst.m_ctx.Dialect == ESqlDialect.MySql){
 
 			ctx.currOperationDTime2 = time.Now()
-			dbResult1, err := _this.tableInst.m_ctx.Db.Exec(sqlQuery)
+			dbResult1, err := _this.tableInst.m_ctx.Exec(sqlQuery)
 			ctx.updateDeltaTime2()
 
 			if dbResult1 != nil && err == nil {
@@ -922,7 +1000,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 		//	   _this.tableInst.m_ctx.Dialect == ESqlDialect.MSSQL){	
 
 			ctx.currOperationDTime2 = time.Now()		
-			dbResultRows, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+			dbResultRows, err := _this.tableInst.m_ctx.Query(sqlQuery)
 			defer queryClose( dbResultRows )
 			ctx.updateDeltaTime2()	
 
@@ -1664,7 +1742,7 @@ func (_this *DBQuery[T]) _getModelRelations(
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()		
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult )
 	ctx.updateDeltaTime2()	
 
@@ -1974,7 +2052,7 @@ func (_this *DBQuery[T]) _updateBulkRecords(  records *[]*T, fields*[]string) er
 	}		
 	
 	ctx.currOperationDTime2 = time.Now()			
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult )
 	ctx.updateDeltaTime2()	
 

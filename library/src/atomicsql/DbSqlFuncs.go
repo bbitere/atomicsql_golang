@@ -28,6 +28,7 @@ var  SQL_IIF TTextSql = TTextSql{
 	Mysql:    "(CASE WHEN (@x1@) THEN @x2@ ELSE @x3@ END)",
 	Mssql:    "(CASE WHEN (@x1@) THEN @x2@ ELSE @x3@ END)",
 }
+//Sql_IIF() - it replace the conditional operator 
 func Sql_IIF[T any](  b bool, s1 T, s2 T) T {
 
 	if( b){
@@ -37,7 +38,7 @@ func Sql_IIF[T any](  b bool, s1 T, s2 T) T {
 	}
 }
 //----------------------------------------------------------------------------------------------
-
+// not used
 func Sql_AA[T any]( ctx IDBContext)  {
 }
 
@@ -51,7 +52,7 @@ var  SQL_IsNilI08 TTextSql = TTextSql{
 	Mysql:    "ISNULL(@x1@, @x2@)",
 	Mssql:   	"ISNULL(@x1@, @x2@)",
 }
-
+//return val or defval if val is nil
 func Sql_IsNilI08( val sql.NullByte, defval byte) byte {
 
 	if( val.Valid ){
@@ -67,6 +68,7 @@ var  SQL_IsNilI16 TTextSql = TTextSql{
 	Mssql:   	"ISNULL(@x1@, @x2@)",
 }
 
+//return val or defval if val is nil
 func Sql_IsNilI16( val sql.NullInt16, defval int16) int16 {
 
 	if( val.Valid ){
@@ -82,6 +84,7 @@ var  SQL_IsNilI32 TTextSql = TTextSql{
 	Mysql:    	"ISNULL(@x1@, @x2@)",
 	Mssql:   	"ISNULL(@x1@, @x2@)",
 }
+//return val or defval if val is nil
 func Sql_IsNilI32( val sql.NullInt32, defval int32) int32 {
 
 	if( val.Valid ){
@@ -97,6 +100,7 @@ var  SQL_IsNilI64 TTextSql = TTextSql{
 	Mysql:    "ISNULL(@x1@, @x2@)",
 	Mssql:   	"ISNULL(@x1@, @x2@)",
 }
+//return val or defval if val is nil
 func Sql_IsNilI64( val sql.NullInt64, defval int64) int64 {
 
 	if( val.Valid ){
@@ -112,6 +116,7 @@ var  SQL_IsNilStr TTextSql = TTextSql{
 	Mysql:    	"ISNULL(@x1@, @x2@)",
 	Mssql:  	"ISNULL(@x1@, @x2@)",
 }
+//return val or defval if val is nil
 func Sql_IsNilStr( val sql.NullString, defval string) string {
 
 	if( val.Valid ){
@@ -127,6 +132,7 @@ var  SQL_IsNilBool TTextSql = TTextSql{
 	Mysql:    "ISNULL(@x1@, @x2@)",
 	Mssql:   	"ISNULL(@x1@, @x2@)",
 }
+//return val or defval if val is nil
 func Sql_IsNilBool( val sql.NullBool, defval bool) bool {
 
 	if( val.Valid ){
@@ -142,6 +148,7 @@ var  SQL_IsNilDate TTextSql = TTextSql{
 	Mysql:    "ISNULL(@x1@, @x2@)",
 	Mssql:   	"ISNULL(@x1@, @x2@)",
 }
+//return val or defval if val is nil
 func Sql_IsNilDate( val sql.NullTime, defval time.Time) time.Time {
 
 	if( val.Valid ){

@@ -21,6 +21,7 @@ var  SQL_MinInt TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinInt( arr []int ) int{
 
 	var min = arr[0]
@@ -37,6 +38,7 @@ var  SQL_MinInt16 TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinInt16( arr []int16 ) int16{
 
 	var min = arr[0]
@@ -53,6 +55,7 @@ var  SQL_MinInt32 TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinInt32( arr []int32 ) int32{
 
 	var min = arr[0]
@@ -70,6 +73,7 @@ var  SQL_MinInt64 TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinInt64( arr []int64 ) int64{
 
 	var min = arr[0]
@@ -87,6 +91,7 @@ var  SQL_MinF64 TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinF64( arr []float64 ) float64{
 
 	var min = arr[0]
@@ -104,6 +109,7 @@ var  SQL_MinF32 TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinF32( arr []float32 ) float32{
 
 	var min = arr[0]
@@ -121,6 +127,7 @@ var  SQL_MinStr TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinStr( arr []string ) string{
 
 	var min = arr[0]
@@ -138,6 +145,7 @@ var  SQL_MinDate TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument
 func Sql_MinDate( arr []time.Time ) time.Time{
 
 	var min = arr[0]
@@ -149,15 +157,13 @@ func Sql_MinDate( arr []time.Time ) time.Time{
 	return min;
 }
 
-
-
-
 //----------------------------------------------------------------------------------------------
 var  SQL_MinInt16N TTextSql = TTextSql{ 
 	Postgres: 	"MIN( @x1@ )",
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument, only for valid items
 func Sql_MinInt16N( arr []sql.NullInt16 ) sql.NullInt16{
 
 	var min = arr[0]
@@ -174,6 +180,7 @@ var  SQL_MinInt32N TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument, only for valid items
 func Sql_MinInt32N( arr []sql.NullInt32 ) sql.NullInt32{
 
 	var min = arr[0]
@@ -191,6 +198,7 @@ var  SQL_MinInt64N TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument, only for valid items
 func Sql_MinInt64N( arr []sql.NullInt64 ) sql.NullInt64{
 
 	var min = arr[0]
@@ -208,6 +216,7 @@ var  SQL_MinF64N TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument, only for valid items
 func Sql_MinF64N( arr []sql.NullFloat64 ) sql.NullFloat64{
 
 	var min = arr[0]
@@ -220,14 +229,12 @@ func Sql_MinF64N( arr []sql.NullFloat64 ) sql.NullFloat64{
 }
 
 //----------------------------------------------------------------------------------------------
-
-
-//----------------------------------------------------------------------------------------------
 var  SQL_MinStrN TTextSql = TTextSql{ 
 	Postgres: 	"MIN( @x1@ )",
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument, only for valid items
 func Sql_MinStrN( arr []sql.NullString ) sql.NullString{
 
 	var min = arr[0]
@@ -245,6 +252,7 @@ var  SQL_MinDateN TTextSql = TTextSql{
 	Mysql: 		"MIN( @x1@ )",
 	Mssql: 		"MIN( @x1@ )",
 }
+//returns the minum value from the list received as 'arr' argument, only for valid items
 func Sql_MinDateN( arr []sql.NullTime ) sql.NullTime{
 
 	var min = arr[0]

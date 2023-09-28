@@ -1,5 +1,9 @@
 package atomicsql
 
+import (
+	sql "database/sql"
+)
+
 func Arr_Contains[T comparable](arr *[]T, value T) bool {
 
 	for _, elem := range *arr {
@@ -91,4 +95,9 @@ func Util_FromMapToArray[T any](dict *map[string]T) []T {
 		Arr_Append(&ret, val)
 	}
 	return ret
+}
+
+func Null_String(s string ) sql.NullString{
+
+	return sql.NullString{ String: s, Valid: true};
 }

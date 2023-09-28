@@ -21,6 +21,7 @@ var  SQL_MaxInt TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxInt( arr []int ) int{
 
 	var min = arr[0]
@@ -37,6 +38,7 @@ var  SQL_MaxInt16 TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxInt16( arr []int16 ) int16{
 
 	var min = arr[0]
@@ -53,6 +55,7 @@ var  SQL_MaxInt32 TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxInt32( arr []int32 ) int32{
 
 	var min = arr[0]
@@ -70,6 +73,7 @@ var  SQL_MaxInt64 TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxInt64( arr []int64 ) int64{
 
 	var min = arr[0]
@@ -87,6 +91,7 @@ var  SQL_MaxF64 TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxF64( arr []float64 ) float64{
 
 	var min = arr[0]
@@ -104,6 +109,7 @@ var  SQL_MaxF32 TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxF32( arr []float32 ) float32{
 
 	var min = arr[0]
@@ -121,6 +127,7 @@ var  SQL_MaxStr TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxStr( arr []string ) string{
 
 	var min = arr[0]
@@ -138,6 +145,7 @@ var  SQL_MaxDate TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument
 func Sql_MaxDate( arr []time.Time ) time.Time{
 
 	var min = arr[0]
@@ -158,6 +166,7 @@ var  SQL_MaxInt16N TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument, only for valid items
 func Sql_MaxInt16N( arr []sql.NullInt16 ) sql.NullInt16{
 
 	var min = arr[0]
@@ -174,6 +183,7 @@ var  SQL_MaxInt32N TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument, only for valid items
 func Sql_MaxInt32N( arr []sql.NullInt32 ) sql.NullInt32{
 
 	var min = arr[0]
@@ -191,6 +201,7 @@ var  SQL_MaxInt64N TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument, only for valid items
 func Sql_MaxInt64N( arr []sql.NullInt64 ) sql.NullInt64{
 
 	var min = arr[0]
@@ -208,6 +219,7 @@ var  SQL_MaxF64N TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument, only for valid items
 func Sql_MaxF64N( arr []sql.NullFloat64 ) sql.NullFloat64{
 
 	var min = arr[0]
@@ -218,16 +230,13 @@ func Sql_MaxF64N( arr []sql.NullFloat64 ) sql.NullFloat64{
     }
 	return min;
 }
-
-//----------------------------------------------------------------------------------------------
-
-
 //----------------------------------------------------------------------------------------------
 var  SQL_MaxStrN TTextSql = TTextSql{ 
 	Postgres: 	"MAX( @x1@ )",
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument, only for valid items
 func Sql_MaxStrN( arr []sql.NullString ) sql.NullString{
 
 	var min = arr[0]
@@ -245,6 +254,7 @@ var  SQL_MaxDateN TTextSql = TTextSql{
 	Mysql: 		"MAX( @x1@ )",
 	Mssql: 		"MAX( @x1@ )",
 }
+//returns the maximum value from the list received as 'arr' argument, only for valid items
 func Sql_MaxDateN( arr []sql.NullTime ) sql.NullTime{
 
 	var min = arr[0]

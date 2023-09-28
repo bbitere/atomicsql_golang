@@ -37,7 +37,7 @@ type IQueryBase interface {
 }
 type Vvalue IGeneric_MODEL
 
-
+// internal use
 type DBSqlJoin struct {
 	nameItem string
 	sql      string //left join Table item on item.ID = item2.FK
@@ -49,6 +49,7 @@ func (_this *DBSqlJoin) getSqlTxt( itm string ) string {
 	return _this.sql
 }
 
+// internal use
 type DBSqlJoinCollection struct {
 
 	/*#PHPARG=[ Array< DBSqlJoin >];*/
@@ -60,17 +61,8 @@ func (_this *DBSqlJoinCollection) Constr() *DBSqlJoinCollection{
 	return _this;
 }
 
-/*#PHPARG=[ String ];*/
-/**
- *
- * @global type DB_FOREIGN_KEYS
- * @param type pivotTableName
- * @param type itemTxt
- * @param type FK_id: _user._mrole._role  (signature)
- * @param type FK    mrole._role  (table + fk)
- * @param type itemFK
- * @return string
- */
+
+
 
 type DBSqlQuery[T IGeneric_MODEL] struct {
 	text string
@@ -123,6 +115,11 @@ type  IDBQuery interface{
 	_generateSelectSql(selectFields string, ITEM string, bLimit bool, select_sqlFields []string) string;
 }
 
+// DBQuery is the struct that will do the magic in atomicsql.
+// 
+// context.Table.Qry(""); ->return DBQuery
+//
+// DBQuery can put in a sequence a lot of another methods to set attributes, the last will be a method that return or set the data. 
 type DBQuery[T IGeneric_MODEL] struct {
 	//DBSqlQuery[T]
 	//rows []*T
@@ -173,6 +170,7 @@ type DBQuery[T IGeneric_MODEL] struct {
 	errorRet error
 }
 
+//internal user
 func (_this *DBQuery[T]) Constr(tableInst *DBTable[T]) *DBQuery[T] {
 
 	//_this.rows = []*T{}
@@ -259,15 +257,137 @@ func (_this *DBQuery[T]) Select[V any](fnSelect func(x *T) *V) *DBQuery[V] {
 	return _selectNewRecord[T]( _this, fnSelect );
 }
 //*/
+
+// Select() - Projects each element of a sequence  into a new form. 
+//
+// Let's look to next example. First define a local struct vUser1.
+// 
+// if you want to extend from model User, you need to put the annotation `atomicsql:"copy-model"` 
+//
+//  import m "models"
+//  
+//  type vUser1 struct {
+//  
+//  	m.User	`atomicsql:"copy-model"`  	// extends vUser1 struct with struct m.User
+//  	UserRole string						// add an field that is the forkeignkey UserRoleID.
+//  }
+//  
+// And after, look to the call.
+// Select contain 2 parameters
+//
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+// 
+// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return. 
+//  ex:
+//  usrs4, err := orm.Select( ctx.User.Qry("evcy59").
+//  
+//  Where(func(x *m.User) bool {
+//  	
+//  	return x.UserRoleID.IsActive == true
+//  }),
+//  
+//  func (x *m.User ) *vUser1 {
+//  
+//  	return &vUser1{
+//  	
+//  		User:     *x,						//return the original m.User struct
+//  		UserRole: x.UserRoleID.RoleName,	//add UserRole field
+//  	}
+//  
+//  }).GetModels();
+//
+// **NOTE**: pay attention to Qry("evcy59")
+//
+// - "evcy59" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the Select() argument not placed outside
 func Select[T IGeneric_MODEL, V IGeneric_MODEL]( 
-	_this *DBQuery[T],  
+	sequence *DBQuery[T],  
 	fnSelect func(x *T) *V,
 	)  *DBQuery[V] {
 
-	_this.subTag = "S"+_this.tableInst.m_ctx.getSubTag();
-	return _Select_query( _this, fnSelect );
+	sequence.subTag = "S"+sequence.tableInst.m_ctx.getSubTag();
+	return _Select_query( sequence, fnSelect );
 }
 
+// Aggregate() - Applies an accumulator function over a sequence.
+// 
+// Agregate( sequence) - receive a sequence and return an altered sequence. 
+//
+// From this reason - Aggregate() can be used only in tandem/pairs with Select()
+//  Select( Aggregate[ m.User, TUserAggr ]( sequence ), fnSelect );
+// from this reason you need to look first to Select() method documentation
+//
+// So Let's look to next example: User struct is defined from DataBase and it is exported as struct in golang.
+//
+//  type User struct /*atomicsql-table:"user"*/ {
+//  
+//  	orm.Generic_MODEL
+//  
+//  	ID                  int32                         `json:"ID,omitempty"`
+//  	UserName            string                        `json:"userName"`
+//  	UUID                string                        `json:"UUID"`
+//  	UserPsw             string                        `json:"user_psw"`
+//  	UserRoleID          *UserRole                     `json:"-"`
+//  	UserRole_ID         sql.NullInt32                 `json:"userRole_ID"`
+//  	Misc1               []uint8                       `json:"misc1"`
+//  	Time1               sql.NullTime                  `json:"time1"`
+//  	Money               float64                       `json:"money"`
+//  
+//  }
+// 
+//
+// First we need to declare the aggregator struct TUserAggr and the translate / select struct TUserView
+//
+// Lets see that in next section:
+//  import (
+//  m "models"	
+//  orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+//  )
+//  type TUserAggr struct {
+//  
+//  	orm.Generic_MODEL	// all struct should have the basestruct orm.Generic_MODEL
+//  	UserRoleID          *m.UserRole			//should be identic like in m.User
+//  	UserRole_ID         sql.NullInt32		//should be identic like in m.User
+//		
+//		// remark that the fields with [] will be aggregated
+//  	Time1               []sql.NullTime	//should have the name and the basic type like in m.User
+//  	Money               []float64 		//should have the name and the basic type like in m.User
+//  }
+//  type TUserView struct{
+//  
+//  	orm.Generic_MODEL	// all struct should have the basestruct orm.Generic_MODEL
+//  	UserRoleName        string				// the RoleName that categorize the data list.
+//  	MinTime1           	sql.NullTime		// the result of aggregated Time1
+//  	SumMoney            float64 			// the result of sum of Money
+//  }
+// You need to understand the main point how to creeate TUserAggr struct
+// column Time, Money are the columns that will be aggreegate
+// they need to have the same name and basic type like m.User struct (see the first example)
+// the only difference is that they are array
+// 
+// the another columns invovled are : UserRoleID, UserRole_ID and they should be identically like in m.User struct
+//
+// So, the aggregator will convert m.User structs list in TUserView list.
+// 
+//  usrs, err := orm.Select(
+//  				orm.Aggregate[ m.User, TUserAggr ]( ctx.User.Qry("evcy58").
+//  					Where(func(x *m.User) bool {
+//  						return x.UserRoleID.IsActive == true
+//  					}),
+//  				),
+//  				func (x *TUserAggr ) *TUserView {
+//  					return &TUserView{
+//  						UserRoleName: x.UserRoleID.RoleName,	// the foreignkey x.UserRoleID.RoleName will help to categorize the elems in sequence
+//  						MinTime1: orm.Sql_MinDateN( x.Time1 ),	//x.Time1 is an array and will be aggregate as MinDate
+//  						SumMoney: orm.Sql_SumF64( x.Money ),	//x.Money is an array and will be aggregate as Sum
+//  					}
+//  				}).GetModels();
+// **NOTE**: pay attention to Qry("evcy58")
+//
+// - "evcy58" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the Select() argument not placed outside
 func Aggregate[T IGeneric_MODEL, V IGeneric_MODEL]( 
 	_this *DBQuery[T],
 	 )  *DBQuery[V] {
@@ -300,19 +420,55 @@ func Aggregate[T IGeneric_MODEL, V IGeneric_MODEL](
 	return query
 }
 
-
+// WhereEq() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+//
+// it can apply an additional filter, between a field and a value
+// 
+// Ex: context.Table.WhereEq( context.User_.Name, userName). ...
+// 
+// in this example the whereEq add a condition: User_.Name == userName
 func (_this *DBQuery[T]) WhereEq(field string, operand any) *DBQuery[T] {
 
 	return _this._whereEq(field, operand, "", false)
 }
+
+// WhereNotEq() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+//
+// it can apply an additional filter, between a field and a value
+// 
+//  ex: 
+//  
+//  context.Table.WhereNotEq( context.User_.Name, userName). ...
+// 
+// in this example the whereEq add a condition: User_.Name != userName
 func (_this *DBQuery[T]) WhereNotEq(field string, operand any) *DBQuery[T] {
 
 	return _this._whereEq(field, operand, "", true)
 }
+
+// WhereEqFld() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+//
+// it can apply an additional filter, between a field and another field
+// 
+//  ex: 
+//  
+//  context.Table.WhereEqFld( context.User_.Name, context.User_.Name1). ...
+// 
+// in this example the WhereEqFld add a condition: User_.Name == User_.Name2
 func (_this *DBQuery[T]) WhereEqFld(field string, field2 string) *DBQuery[T] {
 
 	return _this._whereEq(field, nil, field2, false)
 }
+
+// WhereNotEqFld() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+//
+// it can apply an additional filter, between a field and another field
+// 
+//  ex: 
+//  
+//  context.Table.WhereNotEqFld( context.User_.Name, context.User_.Name1). ...
+// 
+// in this example the WhereNotEqFld add a condition: User_.Name == User_.Name2
 func (_this *DBQuery[T]) WhereNotEqFld(field string, field2 string) *DBQuery[T] {
 
 	return _this._whereEq(field, nil, field2, true)
@@ -341,7 +497,18 @@ func (_this *DBQuery[T]) whereNotIn( field string, operandsIn []any)*DBQuery[T]{
 }
 
 
-
+// Where() is a unlimited filter condition function. if in upper examples with diferent versions of Where: whereEq, WhereNotEq, the limitation was done by the num of arguments,
+// here you can add any condition you want, even a subquery condition
+//
+//  Ex: 
+//
+//  context.Table.Where( func(x *Table)bool{
+//
+//  return Sql_IIF( x.Relation != nil, x.RelationID.Name, "") != "admin" && (val == nil || x.Relation_ID == val)
+// 
+//  } 
+// 
+// in this example the Where() add a condition: IsNull( User.RelationID.Name, "") AND (val is null OR User.Relation_ID = val)
 func (_this *DBQuery[T]) Where( fnWhere func(x *T) bool) *DBQuery[T] {
 
 	_this.subTag = "W"+_this.tableInst.m_ctx.getSubTag();
@@ -362,25 +529,40 @@ func (_this *DBQuery[T]) Where( fnWhere func(x *T) bool) *DBQuery[T] {
 
 
 
-
+// Return a slice of models from sequence.
+//  ex: 
+//  
+//  var elems = context.Table.Where().GetModels()
 func (_this *DBQuery[T]) GetModels() ([]*T, error) {
 
-	return _this.GetRows(nil)
+	return _this.GetRecords(nil)
 }
 
-func (_this *DBQuery[T]) GetRows(fields []string) ([]*T, error) {
+// Return a slice of records from sequence
+// 
+//  ex: 
+//  
+//  var elems = context.Table.Where().GetRecords([]string{"ID", "Name"})
+// ___________________________________________________
+//  **NOTE**:the diference between Model and Record is that :
+// 
+//  the record can have some fields that are not updated from database. 
+//  it is returned from methods (GetRecords, GetRecord, etc) that select only some fields that will be filled with database values, and another fields with invalid values (non selected fields).
+// 
+// Using records should be done with precaution, because can impact the app flow
+func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error) {
 
 	sqlQuery := _this._getRows(false, fields, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult )
 	ctx.updateDeltaTime2()	
 
 	if err == nil {
 		_this.clearCachedSyntax()
-		var ret1, err1 = _this._arrayRecords(dbResult)
+		var ret1, err1 = _this._arrayRecords(dbResult, fields)
 		_this.tableInst.m_ctx.updateDeltaTime();
 		return ret1, err1;
 	}
@@ -389,45 +571,140 @@ func (_this *DBQuery[T]) GetRows(fields []string) ([]*T, error) {
 	return nil, err
 }
 
+// Return the first model from sequence. if sequence is empty the returned value is nil
+// 
+//  ex: 
+//  
+//  var elem = context.Table.Where().GetFirstModel()
+func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
 
+	_this.setLimit(0, 1)
+
+	sqlQuery := _this._getRows(false, nil, false)
+
+	var ctx = _this.tableInst.m_ctx
+	ctx.currOperationDTime2 = time.Now()			
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
+	defer queryClose( dbResult )
+	ctx.updateDeltaTime2()	
+
+	if dbResult != nil && err == nil {
+		_this.clearCachedSyntax()
+		return _this._oneModel(dbResult)
+	}
+
+	_this.checkMySqlError(sqlQuery, err)
+	return nil, err
+}
+
+// Return the first record from sequence. If sequence is empty the returned value is nil
+// 
+//  ex: 
+//  
+//  var elem = context.Table.Where().GetFirstRecord([]string{"ID", "Name"})
+//
+// ___________________________________________________
+//  **NOTE**:the diference between Model and Record is that :
+// 
+//  the record can have some fields that are not updated from database. 
+//  it is returned from methods (GetRecords, GetRecord, etc) that select only some fields that will be filled with database values, and another fields with invalid values (non selected fields).
+// 
+// **NOTE**: Using records should be done with precaution, because can impact the app flow
+func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
+
+	_this.setLimit(0, 1)
+
+	sqlQuery := _this._getRows(false, fields, false)
+
+	var ctx = _this.tableInst.m_ctx
+	ctx.currOperationDTime2 = time.Now()			
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
+	defer queryClose( dbResult )
+	ctx.updateDeltaTime2()	
+
+	if dbResult != nil && err == nil {
+		_this.clearCachedSyntax()
+		return _this._oneRecord(dbResult, fields)
+	}
+
+	_this.checkMySqlError(sqlQuery, err)
+	return nil, err
+}
+
+// Return a slice of distinct models from sequence.
+// 
+//  ex: 
+//  
+//  var elems = context.Table.Where().GetModels()
 func (_this *DBQuery[T]) GetDistinctModel() ([]*T, error) {
 
 	sqlQuery := _this._getRows(true, nil, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult )
 	ctx.updateDeltaTime2()	
 
 	if err == nil {
 		_this.clearCachedSyntax()
-		return _this._arrayRecords(dbResult)
+		return _this._arrayModels( dbResult )
 	}
 
 	_this.checkMySqlError(sqlQuery, err)
 	return nil, err
 }
 
-func (_this *DBQuery[T]) GetDistinctRows(fields []string) ([]*T, error) {
+// Return a slice of distinct records from sequence. The uniqueness is provided by pair of fields arg
+// 
+//  ex: 
+//  
+//  var elems = context.Table.Where().GetDistinctRecords([]string{"ID", "Name"})
+//
+// ___________________________________________________
+//  **NOTE**:the diference between Model and Record is that :
+// 
+//  the record can have some fields that are not updated from database. 
+//  it is returned from methods (GetRecords, GetRecord, etc) that select only some fields that will be filled with database values, and another fields with invalid values (non selected fields).
+// 
+// **NOTE**: Using records should be done with precaution, because can impact the app flow
+func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 
 	sqlQuery := _this._getRows(true, fields, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult )
 	ctx.updateDeltaTime2()	
 
 	if err == nil {
 		_this.clearCachedSyntax()
-		return _this._arrayRecords(dbResult)
+		return _this._arrayRecords(dbResult, fields)
 	}
 
 	_this.checkMySqlError(sqlQuery, err)
 	return nil, err
 }
 
+
+// Return the first model from sequence.
+// 
+// this model will have set the Relation pointer to a foreignkey table.
+// 
+// context.Table_ is a avatar of Table that contains the fields definitions 
+// and for the Relation the Def() -> definitions of import the foreignkey
+//
+//  ex: 
+//  
+//  var elem = context.Table.Where().GetModelRel( context.Table_.RelationID.Def() )
+// 
+//     if(  elem != nill && elem.RelationID != nil ){
+// 
+//			fmt.Print( elems.RelationID.Name )	
+// 
+//	}
+// Please check the info
 func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation ) (*T, error) {
 
 	_this.setLimit(0, 1)
@@ -441,6 +718,22 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 	return nil, err
 }
 
+// Return a slice of models from sequence.
+// 
+// this model will have set the Relation pointer to a foreignkey table.
+// 
+// context.Table_ is a avatar of Table that contains the fields definitions 
+// and for the Relation the Def() -> definitions of import the foreignkey
+//
+//  ex: 
+//  
+//  var elems = context.Table.Where().GetModelsRel( context.Table_.RelationID.Def() )
+// 
+//     if( len(elems) > 0 && elems[0].RelationID != nil ){
+// 
+//			fmt.Print( elems[0].RelationID.Name )	
+// 
+//	}
 func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]*T, error) {
 	
 	arrAny, err := _this._getModelRelations(structDefs, nil) 
@@ -450,92 +743,115 @@ func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]
 	return arr, err
 }
 
-
-func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
-
-	_this.setLimit(0, 1)
-
-	sqlQuery := _this._getRows(false, nil, false)
-
-	var ctx = _this.tableInst.m_ctx
-	ctx.currOperationDTime2 = time.Now()			
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
-	defer queryClose( dbResult )
-	ctx.updateDeltaTime2()	
-
-	if dbResult != nil && err == nil {
-		_this.clearCachedSyntax()
-		return _this._oneRecord(dbResult)
-	}
-
-	_this.checkMySqlError(sqlQuery, err)
-	return nil, err
-}
-
-func (_this *DBQuery[T]) GetFirstRow(fields []string) (*T, error) {
-
-	_this.setLimit(0, 1)
-
-	sqlQuery := _this._getRows(false, fields, false)
-
-	var ctx = _this.tableInst.m_ctx
-	ctx.currOperationDTime2 = time.Now()			
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
-	defer queryClose( dbResult )
-	ctx.updateDeltaTime2()	
-
-	if dbResult != nil && err == nil {
-		_this.clearCachedSyntax()
-		return _this._oneRecord(dbResult)
-	}
-
-	_this.checkMySqlError(sqlQuery, err)
-	return nil, err
-}
-
-func (_this *DBQuery[T]) SingleDataS(sqlResult *sql.Rows, fieldName string) (string, error) {
+// return a single string from a specific field, (field arg is to determine this field )
+// 
+// this is useful when we want to obtain a property value from a props table
+// 
+//  ex: 
+//  
+//  var propString = context.Table.Qry("").WhereEq( "propName", nameValue ).GetSingleDataS("propValue");
+func (_this *DBQuery[T]) GetSingleDataS( fieldName string) (string, error) {
 
 	_this.clearCachedSyntax()
-	model, err := _this._oneRecord(sqlResult)
 
-	if model != nil && err == nil{
-		val := reflect.ValueOf(model).Elem().FieldByName(fieldName)
-		return val.String(), nil
+	var sqlQuery = _this._getRows(false, []string{fieldName}, false)
+
+	var ctx = _this.tableInst.m_ctx
+	ctx.currOperationDTime2 = time.Now()			
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
+	defer queryClose( dbResult )
+	ctx.updateDeltaTime2()	
+
+	if dbResult != nil && err == nil {
+		return _this.singleDataS(dbResult, fieldName);
 	}
+	_this.checkMySqlError(sqlQuery, err)
 	return "", err
 }
 
-func (_this *DBQuery[T]) SingleDataInt(sqlResult *sql.Rows, fieldName string) (int64, error) {
+// return a single integernce from a specific field, (field arg is to determine this field )
+// 
+// this is useful when we want to obtain a property value from a props table
+// 
+//  ex: 
+//  
+//  var propInt = context.Table.Qry("").WhereEq( "propName", nameValue ).GetSingleDataInt("propValue");
+
+func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string) (int64, error) {
 
 	_this.clearCachedSyntax()
-	model, err := _this._oneRecord(sqlResult)
+
+	var sqlQuery = _this._getRows(false, []string{fieldName}, false)
+
+	var ctx = _this.tableInst.m_ctx
+	ctx.currOperationDTime2 = time.Now()			
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
+	defer queryClose( dbResult )
+	ctx.updateDeltaTime2()	
+
+	if dbResult != nil && err == nil {		
+		return _this.singleDataInt(dbResult, fieldName);
+	}
+	_this.checkMySqlError(sqlQuery, err)
+	return 0, err
+}
+
+func (_this *DBQuery[T]) singleDataInt(dbResult *sql.Rows, fieldName string) (int64, error) {
+
+	_this.clearCachedSyntax()	
+	model, err := _this._oneRecord(dbResult, []string{fieldName} )
 
 	if model != nil && err == nil{
 		val := reflect.ValueOf(model).Elem().FieldByName(fieldName)
 		return val.Int(), nil
-	}
+	}		
 	return 0, err
 }
+func (_this *DBQuery[T]) singleDataS(dbResult *sql.Rows, fieldName string) (string, error) {
 
-func (_this *DBQuery[T]) GetSingleFieldRows(field string) []string {
+	_this.clearCachedSyntax()	
+	model, err := _this._oneRecord(dbResult, []string{fieldName} )
+
+	if model != nil && err == nil{
+		val := reflect.ValueOf(model).Elem().FieldByName(fieldName)
+		return val.String(), nil
+	}		
+	return "", err
+}
+
+// return an array with data for all elements of sequence from a specific field, (field arg is to determine this field )
+// 
+// this is useful when we want to obtain the Ids- of sequence
+// 
+//  ex: 
+//  
+//  var ids = context.Table.Qry("").Where( .. ).GetSingleFieldRows("ID");
+
+func (_this *DBQuery[T]) GetSingleFieldRows(field string) ([]string, error) {
 
 	sqlQuery := _this._getRows(false, []string{field}, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
-	dbResult, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult )
 	ctx.updateDeltaTime2()	
 
 	if dbResult != nil && err == nil {
 
 		_this.clearCachedSyntax()
-		return _this._arrayOfSingleField(dbResult, field)
+		return _this._arrayOfSingleField(dbResult, field), nil
 	}
 
 	_this.checkMySqlError(sqlQuery, err)
-	return nil
+	return nil, err
 }
+
+// Sorts the elements of a sequence in ascending or descending order, using multiple orderFields arg.
+//
+// Parameters:
+//
+// - `orderFields`: is a dictionary that have for each field the asc or desc attribute
 
 func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[T] {
 
@@ -567,8 +883,7 @@ func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[
 	return _this
 }
 
-/*#PHPARG=[ DBSqlProvider< T > ];*/
-/**  @return DBSqlProvider  */
+// Sorts the elements of a sequence in ascending order, using field arg.
 func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T] {
 
 	if _this.orderBy == "" {
@@ -579,8 +894,7 @@ func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T] {
 	return _this
 }
 
-/*#PHPARG=[ DBSqlProvider< T > ];*/
-/**  @return DBSqlProvider  */
+// Sorts the elements of a sequence in descending order, using field arg.
 func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T] {
 
 	if _this.orderBy == "" {
@@ -591,35 +905,39 @@ func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T] {
 	return _this
 }
 
-func (_this *DBQuery[T]) InsertModel(data *T) (int64, error) {
+// Insert model arg 'model'
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").InsertRecord( model)
+func (_this *DBQuery[T]) InsertModel(model *T) (int64, error) {
 
-	return _this.InsertRecord(data, false, nil)
+	return _this.InsertRecord(model, false, nil)
 }
+
+// Insert models or Update all data in model arg 'model'
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").InsertOrUpdateModel( record)
 func (_this *DBQuery[T]) InsertOrUpdateModel(data *T) (int64, error) {
 
 	return _this.InsertOrUpdateRecord(data, false, nil)
 }
 
-/*#PHPARG=[ Object ];*/
-func (_this *DBQuery[T]) InsertRecord(data *T, bInsertID bool, fields *[]string) (int64, error) {
-
-	if data == nil {
-		return 0, nil
-	}
-	reflectData := reflect.ValueOf(data).Elem();
-	//fldID := reflectData.FieldByName( "ID")
-	//fldID.SetInt( 1 )
-
-	return _this._InsertRecordByReflectValue( _this.tableNameOrig, reflectData, bInsertID, fields );
-}
-
+// Insert models or Update all data in model arg 'model'
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").UpdateModels( records)
+// 
+// you can use fields to select only same fields for update. For insertsion, this arg is ingnored
 func (_this *DBQuery[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *[]string) (int64, error) {
 
 	if model == nil {
 		return 0, nil
 	}
 	
-
 	if( (*model).GetID() == 0 ){
 
 		reflectData := reflect.ValueOf(model).Elem();
@@ -634,11 +952,47 @@ func (_this *DBQuery[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *
 	}
 }
 
+
+// Insert model arg 'model'
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").InsertRecord( record)
+// 
+// you can use fields to select only same fields for update. For insertsion, this arg is ingnored
+func (_this *DBQuery[T]) InsertRecord(data *T, bInsertID bool, fields *[]string) (int64, error) {
+
+	if data == nil {
+		return 0, nil
+	}
+	reflectData := reflect.ValueOf(data).Elem();
+	var nameID = _this.tableInst.m_ctx.SCHEMA_SQL_BySqlName[ _this.tableName ].PrimaryColumnLangName;
+	var fldID = reflectData.FieldByName( nameID)
+	var id = fldID.Int();
+	if( id != 0 ){
+		return id, fmt.Errorf( "the model is already inserted. Detache it first" );
+	}
+	//fldID.SetInt( 1 )
+
+	return _this._InsertRecordByReflectValue( _this.tableNameOrig, reflectData, bInsertID, fields );
+}
+
+
+// Insert models or Update all data in models list arg 'models'
+// 
+// ex: context.Table.Qry("").UpdateModels( records)
 func (_this *DBQuery[T]) InsertOrUpdateModels(models []*T) ( error) {
 
 	return _this.InsertOrUpdateRecords( models, nil);
 }
 
+// Insert models or Update all data in models list arg 'models'
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").UpdateModels( records)
+// 
+// you can use fields to select only same fields for update. For insertsion, this arg is ingnored
 func (_this *DBQuery[T]) InsertOrUpdateRecords(models []*T, fields []string) ( error) {
 
 	var arrIns = []*T{}
@@ -675,11 +1029,20 @@ func (_this *DBQuery[T]) InsertOrUpdateRecords(models []*T, fields []string) ( e
 
 }
 
-
+// Update all data in models list arg 'records'
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").UpdateModels( records)
 func (_this *DBQuery[T]) UpdateModels(  records *[]*T) error {
 
 	return _this._updateBulkRecords(  records, nil);
 }
+
+// Update all data in model arg 'model'
+//  ex: 
+//  
+//  context.Table.Qry("").UpdateModels( records)
 func (_this *DBQuery[T]) UpdateModel( model *T) error {
 
 	var arr = []*T{}
@@ -688,7 +1051,13 @@ func (_this *DBQuery[T]) UpdateModel( model *T) error {
 	return _this._updateBulkRecords( &arr, nil);
 }
 
-
+// Delete all records from curent sequence (table). 
+// 
+// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").WhereEq("field", "value").DeleteRecords()
 func (_this *DBQuery[T]) DeleteRecords()  error {
 
 	var sqlQuery    = _this._deleteRecords();
@@ -696,7 +1065,7 @@ func (_this *DBQuery[T]) DeleteRecords()  error {
 	var ctx = _this.tableInst.m_ctx
 
 	ctx.currOperationDTime2 = time.Now()		
-	dbResult1, err := _this.tableInst.m_ctx.Db.Exec(sqlQuery)	
+	dbResult1, err := _this.tableInst.m_ctx.Exec(sqlQuery)	
 	ctx.updateDeltaTime2()
 
 	if( dbResult1 != nil && err == nil ){
@@ -710,19 +1079,26 @@ func (_this *DBQuery[T]) DeleteRecords()  error {
 
 
 const COUNT_NAME   = "Count1";
+
 type TGetCount struct {
 	Generic_MODEL
 	Count1 int32 // the same name as COUNT_NAME
 }
 
-func (_this *DBQuery[T])  GetCount( ) (int64, error){
+// return the number of elements in a sequence
+// 
+// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").WhereEq("field", "value").GetCount()
+func (_this *DBQuery[T])  GetCount() (int64, error){
 
-	
 	var sqlQuery     = _this._getCount( COUNT_NAME );
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
-	dbResult1, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult1, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult1 )
 	ctx.updateDeltaTime2()	
 
@@ -734,9 +1110,9 @@ func (_this *DBQuery[T])  GetCount( ) (int64, error){
 		}
 		else*/
 
-		var tableCnt = (new ( DBTable[TGetCount])).Constr("", "", _this.tableInst.m_ctx)
-		
-		var ret, err = tableCnt.Qry("").SingleDataInt( dbResult1, COUNT_NAME );
+		//I used a custom DBTable because _oneRecord(dbResult) read entire model, not 1 single record
+		var tableCnt = (new ( DBTable[TGetCount])).Constr("", "", _this.tableInst.m_ctx)		
+		var ret, err = tableCnt.Qry("").singleDataInt( dbResult1, COUNT_NAME );
 		if( err == nil ){
 
 			return ret, nil;
@@ -750,14 +1126,38 @@ func (_this *DBQuery[T])  GetCount( ) (int64, error){
 	return 0, err;
 }
 
-/*#PHPARG=[ INT ];*/
+// return the number of distinct elements in a sequence, find the distinct elemnts using field
+// 
+// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// optional you can specify the fields where to select the distinction between elems
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").WhereEq("field", "value").GetCount()
+//
+func (_this *DBQuery[T])  GetDistinct1Count( field string) (int64,error){
+
+	return _this.GetDistinctCount( []string{ field });
+}
+// return the number of distinct elements in a sequence, find the distinct elemnts using fields
+// 
+// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// optional you can specify the fields where to select the distinction between elems
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").WhereEq("field", "value").GetCount()
+//
 func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 
+	if(fields == nil || len(fields) == 0 ){
+		return 0, fmt.Errorf("arg fields is empty");
+	}
 	var sqlQuery     = _this._getDistinctCount( COUNT_NAME, fields );
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
-	dbResult1, err := _this.tableInst.m_ctx.Db.Query(sqlQuery)
+	dbResult1, err := _this.tableInst.m_ctx.Query(sqlQuery)
 	defer queryClose( dbResult1 )
 	ctx.updateDeltaTime2()	
 
@@ -769,7 +1169,8 @@ func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 		}
 		else*/
 		var tableCnt = (new ( DBTable[TGetCount])).Constr("", "", _this.tableInst.m_ctx)
-		var ret, err = tableCnt.Qry("").SingleDataInt( dbResult1, COUNT_NAME );
+		var ret, err = tableCnt.Qry("").singleDataInt( dbResult1, COUNT_NAME );
+		//var ret, err = _this.singleDataInt( dbResult1, COUNT_NAME );
 		if( err == nil ){
 
 			return ret, nil;

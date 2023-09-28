@@ -21,6 +21,7 @@ var  SQL_AddDate TTextSql = TTextSql{
 	Mysql:    	"ADDDATE(@x1@, @x2@, @x3@, @x4@)",
 	Mssql:   	"ADDDATE(@x1@, @x2@, @x3@, @x4@)",
 }
+//return a date = `time` + (year, month, day)
 func Sql_AddDate( time time.Time, years int, months int, days int)  time.Time{
 
 	return time.AddDate( years, months, days);
@@ -32,6 +33,7 @@ var  SQL_Now TTextSql = TTextSql{
 	Mysql:    	"NOW()",//UTC_TIMESTAMP()
 	Mssql:   	"CURRENT_TIMESTAMP()",
 }
+//return a time with value of current time.
 func Sql_Now() time.Time{
 
 	return time.Now();
@@ -44,6 +46,7 @@ var  SQL_Day TTextSql = TTextSql{
 	Mysql:    	"DAY(@THIS@)",
 	Mssql:   	"DAY(@THIS@)",
 }
+//return time.day
 func (_this *TTime) Day()  int{
 
 	return _this.Time.Day();
@@ -54,6 +57,7 @@ var  SQL_Year TTextSql = TTextSql{
 	Mysql:    	"YEAR(@THIS@)",
 	Mssql:   	"YEAR(@THIS@)",
 }
+//return time.year
 func (_this *TTime) Year()  int{
 
 	return _this.Time.Year();
@@ -66,6 +70,7 @@ var  SQL_Month TTextSql = TTextSql{
 	Mysql:    	"MONTH(@THIS@)",
 	Mssql:   	"MONTH(@THIS@)",
 }
+//return time.month
 func (_this *TTime) Month()  int{
 
 	return int(_this.Time.Month());
@@ -77,6 +82,7 @@ var  SQL_Hour TTextSql = TTextSql{
 	Mysql:    	"HOUR(@THIS@)",
 	Mssql:   	"HOUR(@THIS@)",
 }
+//return time.hour
 func (_this *TTime) Hour()  int{
 
 	return (_this.Time.Hour());
@@ -87,6 +93,7 @@ var  SQL_Minute TTextSql = TTextSql{
 	Mysql:    	"Minute(@THIS@)",
 	Mssql:   	"Minute(@THIS@)",
 }
+//return time.minute
 func (_this *TTime) Minute()  int{
 
 	return (_this.Time.Minute());
@@ -97,6 +104,7 @@ var  SQL_Second TTextSql = TTextSql{
 	Mysql:    	"Second(@THIS@)",
 	Mssql:   	"Second(@THIS@)",
 }
+//return time.second
 func (_this *TTime) Second()  int{
 
 	return (_this.Time.Second());
@@ -108,6 +116,7 @@ var  SQL_UnixMilli TTextSql = TTextSql{
 	Mysql:    	"MILLIS(@THIS@)",
 	Mssql:   	"MILLIS(@THIS@)",
 }
+//return time.millisecond
 func (_this *TTime) UnixMilli() int64{
 
 	return (_this.Time.UnixMilli());
@@ -120,6 +129,7 @@ var  SQL_YearDay TTextSql = TTextSql{
 	Mysql:    	"YearDay(@THIS@)",
 	Mssql:   	"YearDay(@THIS@)",
 }
+//return the day of year
 func (_this *TTime) YearDay()  int{
 
 	return (_this.Time.YearDay());
@@ -131,6 +141,7 @@ var  SQL_Compare TTextSql = TTextSql{
 	Mysql:    	"CASE WHEN @THIS@ = @x1@ THEN 0 WHEN @THIS@ < @x1@ THEN -1 ELSE 1 END",
 	Mssql:   	"CASE WHEN @THIS@ = @x1@ THEN 0 WHEN @THIS@ < @x1@ THEN -1 ELSE 1 END",
 }
+//return compare this with `t`
 func (_this *TTime) Compare(t time.Time)  int{
 
 	return int(_this.Time.Compare(t));
@@ -142,6 +153,7 @@ var  SQL_Format TTextSql = TTextSql{
 	Mysql:    	"DATE_FORMAT(@THIS@, @x1@)",
 	Mssql:   	"FORMAT(@THIS@, @x1@)",
 }
+//return a string formated like Time.Format
 func (_this *TTime) Format(formatStr string)  string{
 
 	return _this.Time.Format(formatStr);
