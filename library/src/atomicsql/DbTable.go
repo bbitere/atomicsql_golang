@@ -6,10 +6,7 @@ import (
 )
 
 //type mUser models.User
-
 //type Vvalue models.IGeneric_MODEL
-
-
 
 type DBTable[T IGeneric_MODEL] struct {
 	//rows      []*T
@@ -19,6 +16,7 @@ type DBTable[T IGeneric_MODEL] struct {
 	m_ctx      		*DBContextBase
 }
 
+//Constructor of DBTable
 func (_this *DBTable[T]) Constr(sqlName string, langName string, ctx *DBContextBase) *DBTable[T] {
 
 	_this.m_sqlName = sqlName
@@ -42,6 +40,7 @@ func (_this *DBTable[T]) cloneTable_GenModel() *DBTable[IGeneric_MODEL] {
 	return table;
 }
 
+// Detache a model from the ORM. From this point you can insert it again in the table.
 func (_this *DBTable[T]) DeatachModel( model *T ){
 
 	var table, has = _this.m_ctx.SCHEMA_SQL[ _this.m_langName ]
@@ -53,6 +52,7 @@ func (_this *DBTable[T]) DeatachModel( model *T ){
 	//model.SetID( 0 )
 }
 
+// Do a clone of a DBTable
 func (_this *DBTable[T]) CloneGenericModel() *DBTable[IGeneric_MODEL] {
 
 	var newInst = new( DBTable[ IGeneric_MODEL])
@@ -64,8 +64,29 @@ func (_this *DBTable[T]) CloneGenericModel() *DBTable[IGeneric_MODEL] {
 	return newInst
 }
 
-//func (_this *DBTable[T]) getRows() []*T { return _this.rows }
-
+// Qry( tag ) - transform each tabel request, to a query sequence,
+// the query sequence has all methods to do the sql query
+// it should end in one of :
+//
+// GetModels(), GetFirstModel(),
+// GetModelsRel(), GetFirstModelRel(),
+// GetRecords(), GetFirstRecord(), 
+// GetCount(), GetDistinctCount(),
+// GetSingleDataS(), GetSingleDataI(), GetSingleFieldRows()
+// GetDistinctModels(), GetDistinctRecords()
+// DeleteModels(), DeleteModel()
+//
+// the argument tag should be non empty, and unique per app only in this 3 example
+//  context.Table.Qry("tag1").Where( func(x *Table) bool{ ... }).
+// or
+//  atmsql.Select( context.Table.Qry("tag2"), func(x *Table) *TView{ ... }).
+// or
+//  atmsql.Select( orm.Aggregate[ Table, TableAggr ]( context.Table.Qry("tag2")), func(x *TableAggr) *TView{ ... }).
+//
+// Each of this statemets will be translated by the scanner tool, and the inner content will be translated in Sql Query.
+// So this tag, help to do a correct identification of the precompiled sql query.
+// 
+// This is the main diference between this library and linq (C#) or jinq (java)
 func (_this *DBTable[T]) Qry(tagID string) *DBQuery[T] {
 
 	_this.m_ctx.currOperationDTime = time.Now()

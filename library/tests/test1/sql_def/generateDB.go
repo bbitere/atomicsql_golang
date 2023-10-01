@@ -4,6 +4,7 @@ import (
 	"fmt"
 	///importer "go/importer"
 
+	test1_crud "github.com/bbitere/atomicsql_golang.git/tests/test1/test_crud"
 	test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/test_where"
 )
 
@@ -16,7 +17,7 @@ func main(){
 	Exec_test( test1.Test1_02N, &counter );
 	Exec_test( test1.Test1_02, &counter );
 	Exec_test( test1.Test1_03, &counter );
-	//orm.Arr_Append( &arrTests, test1.Test1_04 );
+	//Exec_test( test1.Test1_0, &counter );
 	Exec_test( test1.Test1_05, &counter );
 	//orm.Arr_Append( &arrTests, test1.Test1_06 );
 	//orm.Arr_Append( &arrTests, test1.Test1_07 );
@@ -24,15 +25,10 @@ func main(){
 	Exec_test( test1.Test1_09, &counter );
 	Exec_test( test1.Test1_10, &counter );
 
-	/*
-	for iTest := 0; iTest < len(arrTests); iTest++ {
-				
-		var fnTest = arrTests[iTest];
-		ret, err, msg = fnTest( iTest, false );
-		
-		//if( ret == -1 ){return;}
-		printTest(ret, msg, err, &counter);
-	}*/
+	Exec_test( test1.Test1_10, &counter );
+
+	Exec_test( test1_crud.Tst_Example_CreateUser, &counter );
+	
 }
 
 func Exec_test(fnTest test1.TestFunc, pIndex *int){

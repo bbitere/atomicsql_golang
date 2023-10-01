@@ -598,7 +598,7 @@ func (_this *DBQuery[T])  result_getRecordHeaderColumn( model any, fields []stri
 		var fldType = reflType.Field( i )
 		var nameFld = fldType.Name
 		if( nameFld == ""){}
-		
+
 		if( fields != nil){
 			if( !Arr_Contains( &fields, nameFld) ){
 				continue;
@@ -2332,6 +2332,15 @@ func (_this *DBQuery[T])  getSqlNativeMethod( compiledQry TCompiledSqlQuery, ptr
 	return sql, nil
 }
 
+func (_this *DBQuery[T])  _getNameAndID(model *T) (string, int64, reflect.Value ){
+
+	var reflectData = reflect.ValueOf(model).Elem();
+	var nameID 	= _this.tableInst.m_ctx.SCHEMA_SQL_BySqlName[ _this.tableName ].PrimaryColumnLangName;
+	var fldID 	= reflectData.FieldByName( nameID )
+	var id 		= fldID.Int();
+
+	return nameID, id, reflectData;
+}
 
 func (_this *DBQuery[T])  _whereGeneric(  fnWhere func(x *T) bool ) *DBSqlQuery[T]{
 
@@ -2414,5 +2423,13 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSel
 		return query;
 	}
 	log.Printf("DBQuery::select() not found signature, tag: %s! Recompile the project, to regenerate schema", fullTag)
+	return nil;
+}
+
+func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( 
+	model *T,
+	 )  *V {
+
+	
 	return nil;
 }

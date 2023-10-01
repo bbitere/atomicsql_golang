@@ -33,9 +33,9 @@ func Test1_init() (*orm.DBContext, error, string){
 
 func Test_cleanUp( ctx *orm.DBContext){
 
-	ctx.User.Qry("").DeleteRecords();
-	ctx.UserRole.Qry("").DeleteRecords();
-	ctx.StatusRole.Qry("").DeleteRecords();
+	ctx.User.Qry("").DeleteModels();
+	ctx.UserRole.Qry("").DeleteModels();
+	ctx.StatusRole.Qry("").DeleteModels();
 	
 	//return errcode, err, nameTest;
 }
@@ -61,7 +61,7 @@ func Test1_01(step int, bCheckName bool) ( int, error, string) {
 	userRole_id, err := ctx.UserRole.Qry("").InsertModel(&userRole);
 	if( err != nil || userRole_id == 0 ){return 0, err, nameTest;}
 
-	var err1 = ctx.UserRole.Qry("").DeleteRecords();
+	var err1 = ctx.UserRole.Qry("").DeleteModels();
 	if( err1 != nil  ){return 0, err, nameTest;}
 
 	var count, err2 = ctx.UserRole.Qry("").GetCount();
@@ -177,9 +177,9 @@ func Test1_03(step int, bCheckName bool) ( int, error, string) {
 
 func Test1_05(step int, bCheckName bool) ( int, error, string) {
 
-
 	var nameTest = "ORM: UpdateModel() and test the new UserRole inserted"
 	
+	var newname = "Vasile";
 	var RoleNameDefault = "default";
 	var UserMoney 	float64 =  100;
 	var UserName 	string =  "a";
@@ -195,7 +195,7 @@ func Test1_05(step int, bCheckName bool) ( int, error, string) {
 				UserName: UserName, 
 				Money: UserMoney,
 				UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, 
-										IsActive: false},
+										IsActive: true},
 				};
 	_, err = ctx.User.Qry("").InsertModel(&user);
 
@@ -206,7 +206,8 @@ func Test1_05(step int, bCheckName bool) ( int, error, string) {
 		return 0, err, nameTest
 	}
 
-	usrT.UserName = "Vasile";
+	
+	usrT.UserName = newname;
 	usrT.UserRoleID.ID = 0 // sa il inserez din nou in tablea
 	
 	err = ctx.User.Qry("").UpdateModel( usrT )
@@ -214,18 +215,15 @@ func Test1_05(step int, bCheckName bool) ( int, error, string) {
 		return 0, err, nameTest
 	}
 
-	usrT, err = ctx.User.Qry("").WhereEq( ctx.User_.UserRoleID.IsActive, true).GetFirstModel()
+	usrT, err = ctx.User.Qry("").
+					WhereEq( ctx.User_.UserRoleID.IsActive, true).
+					WhereEq( ctx.User_.UserName, newname).
+					GetFirstModel()
 	if( usrT == nil || err != nil){
 		return 0, err, nameTest
 	}
 
-	var cntRoles, err2 = ctx.UserRole.Qry("").GetCount()
-	if( !(cntRoles > 1 && err2 == nil)){
-		//not insert the relation :usrT.UserRoleID.ID = 0 // sa il inserez din nou in tablea
-		return 0, err, nameTest
-	}
-
-	if( usrT.UserName != "Vasile"){
+	if( usrT.UserName != newname ){
 		//field is not updated
 		return 0, err, nameTest
 	}
@@ -369,6 +367,7 @@ func Test1_10( step int, bCheckName bool) ( int, error, string) {
 	UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: true},};
 	_, err = ctx.User.Qry("").InsertModel(&user1);
 
+	//second has different user role
 	var user2 = m.User{UserName: UserName3, Money: UserMoney,
 		UserRoleID: &m.UserRole{ RoleName: RoleNameAdmin, IsActive: true},};
 	_, err = ctx.User.Qry("").InsertModel(&user2);
@@ -409,10 +408,13 @@ func Test1_10( step int, bCheckName bool) ( int, error, string) {
 	if( err != nil){
 		return 0, err, nameTest
 	}
-	if(len(usrs4) != 1){
+	if(len(usrs4) != 2){
 		return 0, err, nameTest
 	}
-	if( usrs4[0].SumMoney != 3*UserMoney){
+	if( usrs4[0].SumMoney != 2*UserMoney){
+		return 0, err, nameTest
+	}
+	if( usrs4[1].SumMoney != UserMoney){
 		return 0, err, nameTest
 	}
 	return 1, nil, nameTest;

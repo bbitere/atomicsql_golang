@@ -38,77 +38,6 @@ type IQueryBase interface {
 type Vvalue IGeneric_MODEL
 
 // internal use
-type DBSqlJoin struct {
-	nameItem string
-	sql      string //left join Table item on item.ID = item2.FK
-
-}
-
-/*#PHPARG=[ String ];*/
-func (_this *DBSqlJoin) getSqlTxt( itm string ) string {
-	return _this.sql
-}
-
-// internal use
-type DBSqlJoinCollection struct {
-
-	/*#PHPARG=[ Array< DBSqlJoin >];*/
-	_joins map[string]*DBSqlJoin
-}
-
-func (_this *DBSqlJoinCollection) Constr() *DBSqlJoinCollection{
-	_this._joins = nil;//make(map[string]*DBSqlJoin)
-	return _this;
-}
-
-
-
-
-type DBSqlQuery[T IGeneric_MODEL] struct {
-	text string
-
-	m_op       string
-	m_field1   string
-	m_field2   string
-	m_operand1 string
-	m_operand2 any
-	/*#PHPARG=[ Delegate1< BOOL, T> ];*/
-	fnWhere func(x *T) bool
-
-	/*#PHPARG=[ Array<DBSqlQuery> ];*/
-	m_listOperands []*DBSqlQuery[T]
-
-	/*#PHPARG=[ Array<String> ];*/
-	m_listOperandsStr []any
-}
-
-func (_this *DBSqlQuery[T]) Constr( /*#String*/ text string) *DBSqlQuery[T] {
-
-	_this.text = text
-	return _this
-}
-
-func (_this *DBSqlQuery[T]) cloneSqlQuery_GenModel()*DBSqlQuery[IGeneric_MODEL] {
-
-	var newQ = (new (DBSqlQuery[IGeneric_MODEL])).Constr(_this.text);
-	newQ.text = _this.text;
-
-	newQ.m_op = _this.m_op;
-	newQ.m_field1  = _this.m_field1;
-	newQ.m_field2  = _this.m_field2 ;
-	newQ.m_operand1 = _this.m_operand1;
-	newQ.m_operand2 = _this.m_operand2;
-	newQ.m_listOperandsStr = _this.m_listOperandsStr;
-
-	//fnWhere 
-	//m_listOperands 
-	return newQ;
-}
-
-/*#PHPARG=[ String ];*/
-func (_this *DBSqlQuery[T]) getText() string {
-	return _this.text
-}
 
 type  IDBQuery interface{
 
@@ -161,6 +90,7 @@ type DBQuery[T IGeneric_MODEL] struct {
 	m_SQL_ITEM_DEF 	string
 	myTag 			string // memorize the tag to be used with Where() and Select()
 	subTag			string
+	pRTM 			*RuntimeQuery[T]
 
 	/*#PHPARG=[ DBSqlQuery ];*/
 	m_queryAND *DBSqlQuery[T]
@@ -192,6 +122,7 @@ func (_this *DBQuery[T]) Constr(tableInst *DBTable[T]) *DBQuery[T] {
 	_this.limit = ""
 	_this.orderBy = ""
 	_this.withForeignKeys = nil
+	_this.pRTM = nil;
 
 	return _this
 }
@@ -306,8 +237,29 @@ func Select[T IGeneric_MODEL, V IGeneric_MODEL](
 	fnSelect func(x *T) *V,
 	)  *DBQuery[V] {
 
-	sequence.subTag = "S"+sequence.tableInst.m_ctx.getSubTag();
-	return _Select_query( sequence, fnSelect );
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		var tbl1 = (new(DBTable[V])).Constr(
+			_this.tableInst.m_sqlName,
+			_this.tableInst.m_langName,
+			_this.tableInst.m_ctx)
+	
+		var query = (new(DBQuery[V])).Constr(tbl1);
+
+		var arr = []*V{}
+		for _, itm := range( _this.pRTM.models ) {
+			
+			Arr_Append( &arr, fnSelect( itm ) );			
+		}
+		query.pRTM = (new (RuntimeQuery[V])).Constr( arr, _this.pRTM.structDefs )
+						
+		return query;
+	}else {
+
+		sequence.subTag = "S"+sequence.tableInst.m_ctx.getSubTag();
+		return _Select_query( sequence, fnSelect );
+	}
 }
 
 // Aggregate() - Applies an accumulator function over a sequence.
@@ -392,32 +344,51 @@ func Aggregate[T IGeneric_MODEL, V IGeneric_MODEL](
 	_this *DBQuery[T],
 	 )  *DBQuery[V] {
 
-	var ctx = _this.tableInst.m_ctx
-	//var safe_SQL_ITEM_DEF = _this.m_SQL_ITEM_DEF;
+	if( _this.pRTM != nil ){
 
-	var tbl1 = (new(DBTable[V])).Constr(
-	_this.tableInst.m_sqlName,
-	_this.tableInst.m_langName,
-	_this.tableInst.m_ctx)
-
-	var query = (new(DBQuery[V])).Constr(tbl1);
-
-	query.myTag = _this.myTag;
-	//_this.excludeLangFieldsFromGroupBy	= excludeFromGroupBy
-	query.parentQuery = _this;//.cloneQuery_GenModel();
-	//query.querySelectNewRecord = (new (DBSqlQuery[V])).Constr(sql);
+		var tbl1 = (new(DBTable[V])).Constr(
+			_this.tableInst.m_sqlName,
+			_this.tableInst.m_langName,
+			_this.tableInst.m_ctx)
 	
-	query.querySelectNewRecord_isAgregator = true;
-	query.m_SQL_ITEM_DEF 		= ctx.newSQL_ITEM( SQL_ITEM_DEF_Aggr );
-	//query.lamdaSelectNewRecord 	= _this.m_SQL_ITEM_DEF;
+		var query = (new(DBQuery[V])).Constr(tbl1);
 
-	var sql, excludeFromGroupBy = _Aggregate_generateSql[ T, V]( _this, _this.m_SQL_ITEM_DEF );
-	query.querySelectNewRecord_Text = sql;
-	query.excludeLangFieldsFromGroupBy	= excludeFromGroupBy		
-	//query.tablePhpModelName    = tablePhpModelName;
-	
-	//_this.m_SQL_ITEM_DEF = safe_SQL_ITEM_DEF;
-	return query
+		var arr = []*V{}
+		for _, itm := range( _this.pRTM.models ) {
+			
+			Arr_Append( &arr, _Aggregate_doRuntime[T, V]( itm ) );			
+		}
+		query.pRTM = (new (RuntimeQuery[V])).Constr( arr, _this.pRTM.structDefs )
+		return query;
+	}else {
+
+		var ctx = _this.tableInst.m_ctx
+		//var safe_SQL_ITEM_DEF = _this.m_SQL_ITEM_DEF;
+
+		var tbl1 = (new(DBTable[V])).Constr(
+		_this.tableInst.m_sqlName,
+		_this.tableInst.m_langName,
+		_this.tableInst.m_ctx)
+
+		var query = (new(DBQuery[V])).Constr(tbl1);
+
+		query.myTag = _this.myTag;
+		//_this.excludeLangFieldsFromGroupBy	= excludeFromGroupBy
+		query.parentQuery = _this;//.cloneQuery_GenModel();
+		//query.querySelectNewRecord = (new (DBSqlQuery[V])).Constr(sql);
+		
+		query.querySelectNewRecord_isAgregator = true;
+		query.m_SQL_ITEM_DEF 		= ctx.newSQL_ITEM( SQL_ITEM_DEF_Aggr );
+		//query.lamdaSelectNewRecord 	= _this.m_SQL_ITEM_DEF;
+
+		var sql, excludeFromGroupBy = _Aggregate_generateSql[ T, V]( _this, _this.m_SQL_ITEM_DEF );
+		query.querySelectNewRecord_Text = sql;
+		query.excludeLangFieldsFromGroupBy	= excludeFromGroupBy		
+		//query.tablePhpModelName    = tablePhpModelName;
+		
+		//_this.m_SQL_ITEM_DEF = safe_SQL_ITEM_DEF;
+		return query
+	}
 }
 
 // WhereEq() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
@@ -511,17 +482,30 @@ func (_this *DBQuery[T]) whereNotIn( field string, operandsIn []any)*DBQuery[T]{
 // in this example the Where() add a condition: IsNull( User.RelationID.Name, "") AND (val is null OR User.Relation_ID = val)
 func (_this *DBQuery[T]) Where( fnWhere func(x *T) bool) *DBQuery[T] {
 
-	_this.subTag = "W"+_this.tableInst.m_ctx.getSubTag();
-	var querySql = _this._whereGeneric( fnWhere );//"($opText1) AND ($opText2)" );
+	if( _this.pRTM != nil ){
 
-	if( _this.whereTxt != "" ) {
-		_this.whereTxt += " AND ";
-	}
+		var arr = []*T{}
+		for _, itm := range( _this.pRTM.models ) {
 
-	if( querySql == nil ){
-		_this.whereTxt += "( 1 = 0 )";
-	}else{
-		_this.whereTxt += fmt.Sprintf( "(%s)", querySql.getText()  );
+			if( fnWhere( itm )){
+				Arr_Append( &arr, itm);
+			}
+		}
+		_this.pRTM.models = arr;
+
+	}else {
+		_this.subTag = "W"+_this.tableInst.m_ctx.getSubTag();
+		var querySql = _this._whereGeneric( fnWhere );//"($opText1) AND ($opText2)" );
+
+		if( _this.whereTxt != "" ) {
+			_this.whereTxt += " AND ";
+		}
+
+		if( querySql == nil ){
+			_this.whereTxt += "( 1 = 0 )";
+		}else{
+			_this.whereTxt += fmt.Sprintf( "(%s)", querySql.getText()  );
+		}
 	}
 
 	return _this
@@ -636,7 +620,7 @@ func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 //  ex: 
 //  
 //  var elems = context.Table.Where().GetModels()
-func (_this *DBQuery[T]) GetDistinctModel() ([]*T, error) {
+func (_this *DBQuery[T]) GetDistinctModels() ([]*T, error) {
 
 	sqlQuery := _this._getRows(true, nil, false)
 
@@ -735,6 +719,14 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 // 
 //	}
 func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]*T, error) {
+	
+	arrAny, err := _this._getModelRelations(structDefs, nil) 
+
+	var arr = convertToTemplateT[T](arrAny);
+	
+	return arr, err
+}
+func (_this *DBQuery[T]) _getModelsRel( structDefs[] *TDefIncludeRelation ) ([]*T, error) {
 	
 	arrAny, err := _this._getModelRelations(structDefs, nil) 
 
@@ -965,10 +957,7 @@ func (_this *DBQuery[T]) InsertRecord(data *T, bInsertID bool, fields *[]string)
 	if data == nil {
 		return 0, nil
 	}
-	reflectData := reflect.ValueOf(data).Elem();
-	var nameID = _this.tableInst.m_ctx.SCHEMA_SQL_BySqlName[ _this.tableName ].PrimaryColumnLangName;
-	var fldID = reflectData.FieldByName( nameID)
-	var id = fldID.Int();
+	var _, id, reflectData = _this._getNameAndID( data );
 	if( id != 0 ){
 		return id, fmt.Errorf( "the model is already inserted. Detache it first" );
 	}
@@ -1051,16 +1040,57 @@ func (_this *DBQuery[T]) UpdateModel( model *T) error {
 	return _this._updateBulkRecords( &arr, nil);
 }
 
-// Delete all records from curent sequence (table). 
+// Delete all models from curent sequence (table) of only the filtered models. 
 // 
 // You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
 // 
 //  ex: 
 //  
-//  context.Table.Qry("").WhereEq("field", "value").DeleteRecords()
-func (_this *DBQuery[T]) DeleteRecords()  error {
+//  context.Table.Qry("").WhereEq("field", "value").DeleteModels()
+// or
+//  context.Table.Qry("").WhereEq( context.Table_.ID, value_ID ).DeleteModels()
+func (_this *DBQuery[T]) DeleteModels()  error {
 
-	var sqlQuery    = _this._deleteRecords();
+	if( _this.pRTM != nil ){
+
+		var nameID = "";
+		var arrIDs = []any{}
+		for _, model := range( _this.pRTM.models) {
+
+			var name_ID, id, _ = _this._getNameAndID( model );
+			nameID = name_ID;
+			Arr_Append( &arrIDs, any(id) );
+		}
+		return _this.WhereIn( nameID, arrIDs).DeleteModels();
+
+	}else {
+
+		var sqlQuery    = _this._deleteRecords();
+		var ctx = _this.tableInst.m_ctx
+
+		ctx.currOperationDTime2 = time.Now()		
+		dbResult1, err := _this.tableInst.m_ctx.Exec(sqlQuery)	
+		ctx.updateDeltaTime2()
+
+		if( dbResult1 != nil && err == nil ){
+			_this.clearCachedSyntax();
+			return nil;
+		}
+		
+		_this.checkMySqlError( sqlQuery, err );
+		return err;
+	}
+}
+
+// Delete model 
+// 
+//  ex: 
+//  
+//  context.Table.Qry("").DeleteModel( model )
+func (_this *DBQuery[T]) DeleteModel(model *T)  error {
+
+	var nameID, id, _ = _this._getNameAndID(model );
+	var sqlQuery      = _this.WhereEq( nameID, id)._deleteRecords();
 
 	var ctx = _this.tableInst.m_ctx
 
@@ -1076,6 +1106,7 @@ func (_this *DBQuery[T]) DeleteRecords()  error {
 	_this.checkMySqlError( sqlQuery, err );
 	return err;
 }
+
 
 
 const COUNT_NAME   = "Count1";
@@ -1182,4 +1213,46 @@ func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 	//else
 		_this.checkMySqlError( sqlQuery, err );
 	return 0, err;
+}
+
+
+// ToRTM() - is a method that switch the execution of DB query in golang code, from that point forward.
+//
+// why this? 
+//
+// Because sometime the speed of DB query can do switched to be test in golang code, and compare the speed. you can do it easily if you switch the flag "bRuntime"
+//
+// Because the ORM engine is not mature yet, and sometime a issue could appear in compiling scanner phase, and this can be a better approch if an unxepected error appear in your code
+//
+// Ex
+//  var models = context.Table.Qry("tag1").Where( func(x *Table) bool{
+//		return  x.proj_id == proj_id &&
+//  			((x.Field.Field2.FieldName == val && x.Field.Field3.FieldName2 == val2 ) ||
+//   			 IIF( x.Field.Field4.Name != nil, val4, val3) )
+//              )  					
+//	            }).GetModels()
+// And Lets suppose that the scanner compile crash when it try to parse this complex syntax
+// 
+// But, Your project must continue to run, not to be stopped, and the ORM blamed.
+//
+// So let see what you need to do: You can translate it as:
+//  var models = context.Table.Qry("tag1").WhereEq( context.Table_.proj_id, proj_id ).  // do a smart filter to reduce the rows transfered to golang app
+//  				ToRTM( RunAsRTM, context.Table_.Field.Field2.Def(), context.Table_.Field.Field3.Def(), context.Table_.Field.Field4.Def() ).  //pass the foreign keys definitions, in order to load the relations
+//  				Where( func(x *Table) bool{  // execute the where in golang code.
+//						return  
+//  						(x.Field.Field2.FieldName == val && x.Field.Field3.FieldName2 == val2 ) ||
+//   			 			IIF( x.Field.Field4.Name != nil, val4, val3) ) 					
+//	            })
+//     GetModels()
+// 
+// if Flag RunAsRTM = true, the execution will be passed in golang code.
+// after the ORM will fix the crash of scanner, you can switch RunAsRTM = false, and the execution of query will be done on DB server.
+func (_this *DBQuery[T]) ToRTM( bRuntime bool, structDefs ... *TDefIncludeRelation) *DBQuery[T] {
+
+	if( bRuntime ){
+
+		var models, _ = _this._getModelsRel( structDefs );		
+		_this.pRTM = (new (RuntimeQuery[T])).Constr( models, structDefs );
+	}
+	return _this;
 }
