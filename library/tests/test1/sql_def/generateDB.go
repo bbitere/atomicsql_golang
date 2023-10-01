@@ -28,6 +28,9 @@ func main(){
 	Exec_test( test1.Test1_10, &counter );
 
 	Exec_test( test1_crud.Tst_Example_CreateUser, &counter );
+	Exec_test( test1_crud.Tst_Example_Create2Users, &counter );
+	Exec_test( test1_crud.Tst_Example_RetrieveUser, &counter );
+	Exec_test( test1_crud.Tst_Example_RetrieveUsers, &counter );
 	
 }
 
