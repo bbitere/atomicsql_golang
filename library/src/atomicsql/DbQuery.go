@@ -8,6 +8,7 @@ import (
 	sql "database/sql"
 	fmt "fmt"
 	reflect "reflect"
+	"sort"
 	time "time"
 	//"sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/common/arrays"
 	//"sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/common/arrays"
@@ -592,7 +593,7 @@ func (_this *DBQuery[T]) GetModels() ([]*T, error) {
 func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error) {
 
 	if( _this.pRTM != nil ){
-		return _this.pRTM.models, nil;
+		return _this.pRTM.models, _this.errorRet;
 	}
 	sqlQuery := _this._getRows(false, fields, false)
 
@@ -622,7 +623,7 @@ func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
 
 	if( _this.pRTM != nil ){
 		if( len(_this.pRTM.models) > 0 ){
-			return _this.pRTM.models[0], nil;
+			return _this.pRTM.models[0], _this.errorRet;
 		}else{
 			return nil, nil
 		}
@@ -664,7 +665,7 @@ func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 
 	if( _this.pRTM != nil ){
 		if( len(_this.pRTM.models) > 0 ){
-			return _this.pRTM.models[0], nil;
+			return _this.pRTM.models[0], _this.errorRet;
 		}else{
 			return nil, nil
 		}
@@ -698,7 +699,7 @@ func (_this *DBQuery[T]) GetDistinctModels() ([]*T, error) {
 
 	if( _this.pRTM != nil ){
 		var fields  = []string{}
-		return _this._getDistinctRTM(fields, _this.pRTM.models), nil;
+		return _this._getDistinctRTM(fields, _this.pRTM.models), _this.errorRet;
 	}
 
 	sqlQuery := _this._getRows(true, nil, false)
@@ -734,7 +735,7 @@ func (_this *DBQuery[T]) GetDistinctModels() ([]*T, error) {
 func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 
 	if( _this.pRTM != nil ){
-		return _this._getDistinctRTM( fields, _this.pRTM.models ), nil;
+		return _this._getDistinctRTM( fields, _this.pRTM.models ), _this.errorRet;
 	}
 
 	sqlQuery := _this._getRows(true, fields, false)
@@ -776,7 +777,7 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 
 	if( _this.pRTM != nil ){
 		if( len(_this.pRTM.models) > 0 ){
-			return _this.pRTM.models[0], nil;
+			return _this.pRTM.models[0], _this.errorRet;
 		}else{
 			return nil, nil
 		}
@@ -812,7 +813,7 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]*T, error) {
 	
 	if( _this.pRTM != nil ){
-		return _this.pRTM.models, nil;
+		return _this.pRTM.models, _this.errorRet;
 	}
 
 	arrAny, err := _this._getModelRelations(structDefs, nil) 
@@ -840,6 +841,9 @@ func (_this *DBQuery[T]) _getModelsRel( structDefs[] *TDefIncludeRelation ) ([]*
 func (_this *DBQuery[T]) GetSingleDataS( fieldName string) (string, error) {
 
 	if( _this.pRTM != nil ){
+		if( _this.errorRet  != nil){
+			return "", _this.errorRet;
+		}
 		if( len(_this.pRTM.models) > 0 ){
 			return _this.getValueS( _this.pRTM.models[0], fieldName);
 		}else{
@@ -873,6 +877,9 @@ func (_this *DBQuery[T]) GetSingleDataS( fieldName string) (string, error) {
 func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string) (int64, error) {
 
 	if( _this.pRTM != nil ){
+		if( _this.errorRet  != nil){
+			return 0, _this.errorRet;
+		}
 		if( len(_this.pRTM.models) > 0 ){
 			return _this.getValueI( _this.pRTM.models[0], fieldName);
 		}else{
@@ -930,6 +937,10 @@ func (_this *DBQuery[T]) GetSingleFieldRows(fieldName string) ([]string, error) 
 
 	if( _this.pRTM != nil ){
 
+		if( _this.errorRet  != nil){
+			return nil, _this.errorRet;
+		}
+
 		var arr = []string{};
 		for i:= 0; i < len(_this.pRTM.models); i++ {
 			var val, err = _this.getValueS( _this.pRTM.models[i], fieldName);
@@ -969,54 +980,92 @@ func (_this *DBQuery[T]) GetSingleFieldRows(fieldName string) ([]string, error) 
 
 func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[T] {
 
-	if orderFields == nil || orderFields.data == nil {
-		return _this
-	}
+	if( _this.pRTM != nil){
 
-	orderBy := ""
+		var models = _this.pRTM.models;
+		sort.Slice( models, 
+			func( i int, j int) bool { 
+				//var v1, _ = _this.getModel_FieldValueS( models[i], models[i], field, false)
+				//var v2, _ = _this.getModel_FieldValueS( models[j], models[i], field, false)
+				return false; //TO BE DONE.. I dont know yet how to do it.
+			})
+		return _this;
+	}else{
 
-	fields := orderFields.data
-	for nameField, val := range fields {
+		if orderFields == nil || orderFields.data == nil {
+			return _this
+		}
+
+		orderBy := ""
+
+		fields := orderFields.data
+		for nameField, val := range fields {
+
+			if orderBy != "" {
+				orderBy += ", "
+			}
+
+			if val == "asc" {
+				orderBy += fmt.Sprintf(" %s ASC", _this._quoteField(nameField))
+			} else if val == "desc" {
+				orderBy += fmt.Sprintf(" %s DESC", _this._quoteField(nameField))
+			}
+		}
 
 		if orderBy != "" {
-			orderBy += ", "
+			_this.orderBy = fmt.Sprintf(" ORDER BY %s ", orderBy)
+		} else {
+			_this.orderBy = fmt.Sprintf(" ORDER BY %s, %s", DEF_TABLE_ROW_IDX, DEF_TABLE_COLUMN_ID)
 		}
-
-		if val == "asc" {
-			orderBy += fmt.Sprintf(" %s ASC", _this._quoteField(nameField))
-		} else if val == "desc" {
-			orderBy += fmt.Sprintf(" %s DESC", _this._quoteField(nameField))
-		}
+		return _this
 	}
-
-	if orderBy != "" {
-		_this.orderBy = fmt.Sprintf(" ORDER BY %s ", orderBy)
-	} else {
-		_this.orderBy = fmt.Sprintf(" ORDER BY %s, %s", DEF_TABLE_ROW_IDX, DEF_TABLE_COLUMN_ID)
-	}
-	return _this
 }
 
 // Sorts the elements of a sequence in ascending order, using field arg.
 func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T] {
 
-	if _this.orderBy == "" {
-		_this.orderBy = fmt.Sprintf("ORDER BY %s ASC", _this._quoteField(field))
-	} else {
-		_this.orderBy += fmt.Sprintf(", %s ASC", _this._quoteField(field))
+	if( _this.pRTM != nil){
+
+		var models = _this.pRTM.models;
+		sort.Slice( models, 
+			func( i int, j int) bool { 
+				var v1, _ = _this.getModel_FieldValueS( models[i], models[i], field, false)
+				var v2, _ = _this.getModel_FieldValueS( models[j], models[i], field, false)
+				return v1 < v2;
+			})
+		return _this;
+	}else
+	{
+		if _this.orderBy == "" {
+			_this.orderBy = fmt.Sprintf("ORDER BY %s ASC", _this._quoteField(field))
+		} else {
+			_this.orderBy += fmt.Sprintf(", %s ASC", _this._quoteField(field))
+		}
+		return _this
 	}
-	return _this
 }
 
 // Sorts the elements of a sequence in descending order, using field arg.
 func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T] {
 
-	if _this.orderBy == "" {
-		_this.orderBy = fmt.Sprintf("ORDER BY %s DESC", _this._quoteField(field))
-	} else {
-		_this.orderBy += fmt.Sprintf(", %s DESC", _this._quoteField(field))
+	if( _this.pRTM != nil){
+
+		var models = _this.pRTM.models;
+		sort.Slice( models, 
+			func( i int, j int) bool { 
+				var v1, _ = _this.getModel_FieldValueS( models[i], models[i], field, false)
+				var v2, _ = _this.getModel_FieldValueS( models[j], models[i], field, false)
+				return v1 < v2;
+			})
+		return _this;
+	}else{
+		if _this.orderBy == "" {
+			_this.orderBy = fmt.Sprintf("ORDER BY %s DESC", _this._quoteField(field))
+		} else {
+			_this.orderBy += fmt.Sprintf(", %s DESC", _this._quoteField(field))
+		}
+		return _this
 	}
-	return _this
 }
 
 // Insert model arg 'model'

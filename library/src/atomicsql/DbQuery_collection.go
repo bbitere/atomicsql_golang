@@ -87,10 +87,17 @@ func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T]
 		for iFld := 0; iFld < reflectVal.NumField(); iFld++ {
 
 			var fldT = reflectVal.Field( iFld );
+			if( fldT.Anonymous){
+				continue;
+			}
 			if( fldT.Type.Kind() == reflect.Array ||
 			    fldT.Type.Kind() == reflect.Slice){
+				
+				// the groups fields are (name, []type)
 				Arr_Append( &fieldsGroupBy, fldT.Name );	// for time1 and Money
 			}else{
+
+				// the common fields are the fields that  are similar as (name, type)
 				Arr_Append( &fieldsCommon, fldT.Name );	//for RoleName
 			}			
 		}		
@@ -109,7 +116,7 @@ func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T]
 
 			var s,bIsSet = _this.getModel_FieldValueS( modelT, modelV, fldTName, true);
 			if( bIsSet){
-				key += s;
+				key += s + "_";
 			}else{
 				errTxt += fmt.Sprintf("Model cannot set field %s ", fldTName)
 			}
@@ -123,23 +130,45 @@ func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T]
 					modelsT: []*T{},
 					modelV: modelV,
 				};
-			}else{
-				Arr_Append( &dict[ key ].modelsT, modelT);
-			}		
+			}
+			Arr_Append( &dict[ key ].modelsT, modelT);					
 		}
 	}
 	var arr []*V = []*V{};	
 	
+	//do this for all keys in dictionary. 
+	// the key is made by all common fields using underrscode between them
 	for _, it := range dict {
-
+		
+		var arrLen = len(it.modelsT);
 		for _, fldTName := range fieldsGroupBy {
 
-			var bIsSet = _this.getModel_FieldValueAsArr( &it.modelsT, it.modelV, fldTName );
-			if( !bIsSet){
-				errTxt += fmt.Sprintf("Model cannot set field %s ", fldTName)
-			}			
+			//put in each field of modelV the array of elem from all modelsT for each corespondent Fields
+			// for ex:
+			// for field F1, create an array. extract the values from all modelsT for field F1. 
+			// arr = { modelT[0].F1, .., modelT[n-1].F1 }
+			// -> set the field modelV.F1 = arr
+			var reflectValV = reflect.ValueOf( it.modelV ).Elem() //V
+			if( !reflectValV.IsValid() ){
+				continue;
+			}
+			var fldV = reflectValV.FieldByName( fldTName );
+
+			var fldVIndirect =  reflect.Indirect(fldV)
+			var reflArr = reflect.MakeSlice( fldVIndirect.Type(), 0, arrLen );
+
+			for iElem := 0; iElem < arrLen; iElem++{
+
+				// var val = it.ModelsT[iElem] 
+				var valModel = reflect.ValueOf( it.modelsT[iElem] ).Elem();
+				var valFld   = valModel.FieldByName( fldTName );
+
+				reflArr = reflect.Append( reflArr, valFld );
+			}
+
+			fldV.Set( reflArr );
 		}
-		Arr_Append(&arr, modelV1)
+		Arr_Append(&arr, it.modelV)
 	}
 	if( errTxt != ""){
 		return arr, fmt.Errorf(errTxt);
@@ -160,14 +189,24 @@ func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName 
 		var fldT = reflectValT.FieldByName( fieldName );
 		var fldV = reflectValV.FieldByName( fieldName );
 
+		
 		var fldTNullable = _this._getNullableField( fldT );
 		if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
 			fldT = fldTNullable.Value
 		}
 
-		var fldVNullable = _this._getNullableField( fldV );
-		if( fldVNullable != nil && fldVNullable.Valid.Bool() ){
-			fldV = fldVNullable.Value
+		if( bDoSet){
+			var fldVNullable = _this._getNullableField( fldV );
+			if( fldVNullable != nil /*&& fldVNullable.Valid.Bool()*/ ){
+				fldV = fldVNullable.Value
+
+				if( fldTNullable != nil && bDoSet ){
+
+					var fValT = fldTNullable.Valid
+					var fValV = fldVNullable.Valid
+					fValV.Set( fValT );
+				}
+			}
 		}
 
 		var fieldInfoTypeT = fldT.Type()
@@ -179,14 +218,14 @@ func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName 
 	   		fieldInfoTypeT == reflect.TypeOf((*int)(nil)).Elem() ||
 	   		fieldInfoTypeT == reflect.TypeOf((*int8)(nil)).Elem() {	
 				
-				if  !(fieldInfoTypeV == reflect.TypeOf((*int16)(nil)).Elem() ||
-					fieldInfoTypeV == reflect.TypeOf((*int32)(nil)).Elem() ||
-					fieldInfoTypeV == reflect.TypeOf((*int64)(nil)).Elem() ||
-					fieldInfoTypeV == reflect.TypeOf((*int)(nil)).Elem() ||
-					fieldInfoTypeV == reflect.TypeOf((*int8)(nil)).Elem()) {
-						return "", false
-				}
 				if( bDoSet){
+					if  !(fieldInfoTypeV == reflect.TypeOf((*int16)(nil)).Elem() ||
+						fieldInfoTypeV == reflect.TypeOf((*int32)(nil)).Elem() ||
+						fieldInfoTypeV == reflect.TypeOf((*int64)(nil)).Elem() ||
+						fieldInfoTypeV == reflect.TypeOf((*int)(nil)).Elem() ||
+						fieldInfoTypeV == reflect.TypeOf((*int8)(nil)).Elem()) {
+							return "", false
+					}				
 					fldV.SetInt( fldT.Int() )
 				}
 				
@@ -194,10 +233,12 @@ func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName 
 		} else 
 		if( fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() ){
 
-			if( !(fieldInfoTypeV == reflect.TypeOf((*bool)(nil)).Elem()) ){
-				return "", false
-			}
 			if( bDoSet){
+
+				if( !(fieldInfoTypeV == reflect.TypeOf((*bool)(nil)).Elem()) ){
+					return "", false
+				}
+			
 				fldV.SetBool( fldT.Bool() )
 			}
 
@@ -206,31 +247,35 @@ func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName 
 		if( fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
 			fieldInfoTypeT == reflect.TypeOf((*float64)(nil)).Elem() ){
 
-				if( !(fieldInfoTypeV == reflect.TypeOf((*float32)(nil)).Elem() ||
-					  fieldInfoTypeV == reflect.TypeOf((*float64)(nil)).Elem() ) ){
-					return "", false
-				}
 				if( bDoSet){
+
+					if( !(fieldInfoTypeV == reflect.TypeOf((*float32)(nil)).Elem() ||
+						fieldInfoTypeV == reflect.TypeOf((*float64)(nil)).Elem() ) ){
+						return "", false
+					}
+				
 					fldV.SetFloat( fldT.Float() )
 				}
 				return fmt.Sprintf( "%f", fldT.Float() ), true;
 		} else 
 		if(  fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() ) {
 
-			if( !(fieldInfoTypeV == reflect.TypeOf((*string)(nil)).Elem() ) ) {
-				return "", false
-			}
 			if( bDoSet){
+
+				if( !(fieldInfoTypeV == reflect.TypeOf((*string)(nil)).Elem() ) ) {
+					return "", false
+				}			
 				fldV.SetString( fldT.String() )
 			}
 			return fldT.String(), true
 		} else 
 		if( fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() ){
 
-			if( fieldInfoTypeV == reflect.TypeOf((*time.Time)(nil)).Elem() ){
-				return "", false
-			}
 			if( bDoSet){
+
+				if( fieldInfoTypeV == reflect.TypeOf((*time.Time)(nil)).Elem() ){
+					return "", false
+				}			
 				fldV.SetString( fldT.String() )
 			}
 			return fldT.String(), true
@@ -244,27 +289,36 @@ func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName 
 				txt += fmt.Sprintf( "%d,", slice[i]);
 			}
 			
-			if( fieldInfoTypeV == reflect.TypeOf((*[]uint8)(nil)).Elem() ){
-				return "", false
-			}
 			if( bDoSet){
+
+				if( fieldInfoTypeV == reflect.TypeOf((*[]uint8)(nil)).Elem() ){
+					return "", false
+				}				
 				fldV.SetBytes( fldT.Bytes() )
 			}
 			return txt, true
+		}else
+		{
+			if fieldInfoTypeT == fieldInfoTypeV {
+				if( bDoSet){
+					fldV.Set( fldT )
+				}
+				return "", true
+			}
 		}		
 	}
-	return "", true
+	return "", false
 }
 
+/*
+func (_this *DBQuery[T]) getModel_FieldValueAsArr( reflValueArrayModelsT reflect.Value, modelV any, fieldName string) bool{
+	
+	//var reflectValT = reflect.ValueOf( modelsT )
+	var reflectValV = reflect.ValueOf( modelV ).Elem() //V
 
-func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fieldName string) bool{
+	if(  reflectValV.IsValid() ){
 
-	var reflectValT = reflect.ValueOf( modelT ).Elem()
-	var reflectValV = reflect.ValueOf( modelV ).Elem()
-
-	if( reflectValT.IsValid() && reflectValV.IsValid() ){
-
-		var fldT = reflectValT.FieldByName( fieldName );
+		//var fldT = reflectValT.FieldByName( fieldName );
 		var fldV = reflectValV.FieldByName( fieldName );
 
 		if( !fldV.CanSet() ){
@@ -274,17 +328,12 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fie
 		//because modelT is *[]*T
 		//fldT = fldT.Elem().Elem();
 		
-		var fldTNullable = _this._getNullableField( fldT );
-		if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
-			fldT = fldTNullable.Value
-		}
+		//var fldTNullable = _this._getNullableField( fldT );
+		//if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
+		//	fldT = fldTNullable.Value
+		//}
 
-		var fldVNullable = _this._getNullableField( fldV );
-		if( fldVNullable != nil && fldVNullable.Valid.Bool() ){
-			fldV = fldVNullable.Value
-		}
-		
-		var fieldInfoTypeT = fldT.Type()
+		//var fieldInfoTypeT = reflectValT.Type()
 		var fieldInfoTypeV = fldV.Type()
 
 		if  fieldInfoTypeT == reflect.TypeOf((*[]int16)(nil)).Elem() ||
@@ -300,7 +349,7 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fie
 					fieldInfoTypeV == reflect.TypeOf((*[]int8)(nil)).Elem()) {
 						return false
 				}
-				fldV.Set( fldT );
+				fldV.Set( reflectValT );
 				return true;
 		} else 
 		if( fieldInfoTypeT == reflect.TypeOf((*[]bool)(nil)).Elem() ){
@@ -308,7 +357,7 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fie
 			if( !(fieldInfoTypeV == reflect.TypeOf((*[]bool)(nil)).Elem()) ){
 				return false
 			}
-			fldV.Set( fldT );
+			fldV.Set( reflectValT );
 				return true;
 		} else 
 		if( fieldInfoTypeT == reflect.TypeOf((*[]float32)(nil)).Elem() ||
@@ -318,7 +367,7 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fie
 					  fieldInfoTypeV == reflect.TypeOf((*[]float64)(nil)).Elem() ) ){
 					return false
 				}
-				fldV.Set( fldT );
+				fldV.Set( reflectValT );
 				return true;
 		} else 
 		if(  fieldInfoTypeT == reflect.TypeOf((*[]string)(nil)).Elem() ) {
@@ -326,7 +375,7 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fie
 			if( !(fieldInfoTypeV == reflect.TypeOf((*[]string)(nil)).Elem() ) ) {
 				return false
 			}
-			fldV.Set( fldT );
+			fldV.Set( reflectValT );
 				return true;
 		} else 
 		if( fieldInfoTypeT == reflect.TypeOf((*[]time.Time)(nil)).Elem() ){
@@ -334,7 +383,7 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fie
 			if( fieldInfoTypeV == reflect.TypeOf((*[]time.Time)(nil)).Elem() ){
 				return false
 			}
-			fldV.Set( fldT );
+			fldV.Set( reflectValT );
 			return true;
 		}else
 		if fieldInfoTypeT == reflect.TypeOf((*[][]uint8)(nil)).Elem() {
@@ -342,13 +391,18 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( modelT *[]*T, modelV any, fie
 			if( fieldInfoTypeV == reflect.TypeOf((*[][]uint8)(nil)).Elem() ){
 				return false
 			}
-			fldV.Set( fldT );
+			fldV.Set( reflectValT );
 				return true;
-		}				
+		}else	
+		if reflectValT == fldV {
+
+			fldV.Set( reflectValT );
+				return true;
+		}			
 	}
 	return  true
 }
-
+*/
 
 func (_this *DBQuery[T]) getValueI( modelV any, fieldName string ) (int64, error){
 
