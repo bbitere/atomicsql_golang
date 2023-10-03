@@ -40,9 +40,6 @@ func Test_cleanUp( ctx *orm.DBContext){
 	//return errcode, err, nameTest;
 }
 
-func Nopp(){
-
-}
 
 //---------------------------------------------------------
 
@@ -321,7 +318,7 @@ func Test1_09(step int, bCheckName bool) ( int, error, string) {
 		UserRole string				
 	}
 
-	Nopp();
+	//Nopp();
 	
 	usrs4, err := atmsql.Select( ctx.User.Qry("evcy59").
 						Where(func(x *m.User) bool {
@@ -335,7 +332,7 @@ func Test1_09(step int, bCheckName bool) ( int, error, string) {
 					}).GetModels();
 
 	if( err != nil || len(usrs4) != 1 ){
-		return 0, nil, "error: not passed";
+		return 0, nil, nameTest;
 	}
 
 	return 1, nil, nameTest;
@@ -403,7 +400,7 @@ func Test1_10( step int, bCheckName bool) ( int, error, string) {
 							MinTime1: atmsql.Sql_MinDateN( x.Time1 ),
 							SumMoney: atmsql.Sql_SumF64( x.Money ),
 						}
-					}).GetModels();
+					}).OrderAsc( "UserRoleName" ).GetModels();
 
 	if( err != nil){
 		return 0, err, nameTest
@@ -411,10 +408,10 @@ func Test1_10( step int, bCheckName bool) ( int, error, string) {
 	if(len(usrs4) != 2){
 		return 0, err, nameTest
 	}
-	if( usrs4[0].SumMoney != 2*UserMoney){
+	if( usrs4[0].SumMoney != UserMoney){
 		return 0, err, nameTest
 	}
-	if( usrs4[1].SumMoney != UserMoney){
+	if( usrs4[1].SumMoney != 2*UserMoney){
 		return 0, err, nameTest
 	}
 	return 1, nil, nameTest;

@@ -89,13 +89,31 @@ func (_this *DBSqlQuery[T]) getText() string {
 	return _this.text
 }
 
+type RuntimeCollection[T IGeneric_MODEL] struct {
+	structDefs []*TDefIncludeRelation
+	modelsCollection []*T;
+}
+
+type IRuntimeCollection[T IGeneric_MODEL]  interface {
+
+	DeleteModels( models []*T ) bool;
+	InsertModels( models []*T );
+	InsertOrUpdateModels( models []*T );
+	GetModels() []*T;
+}
+
+
 type RuntimeQuery[T IGeneric_MODEL] struct {
 	structDefs []*TDefIncludeRelation
 	models [] *T
+
+	// the collection where can we can insert, update, delete
+	collection *IRuntimeCollection[T];
 }
-func (_this *RuntimeQuery[T]) Constr(models [] *T, structDefs []*TDefIncludeRelation) *RuntimeQuery[T] {
+func (_this *RuntimeQuery[T]) Constr( models [] *T, structDefs []*TDefIncludeRelation, collection *IRuntimeCollection[T]) *RuntimeQuery[T] {
 
 	_this.models = models;
 	_this.structDefs = structDefs;
+	_this.collection = collection;
 	return _this;
 }

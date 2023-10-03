@@ -9,6 +9,8 @@ import (
 )
 
 
+
+
 func Example_init() (*orm.DBContext, error, string){
 
 	var connString = atmsql.TConnectionString{
@@ -39,20 +41,21 @@ func Example_init() (*orm.DBContext, error, string){
 func Tst_Example_CreateUser(step int, bCheckName bool) ( int, error, string) {
 	
 	var nameTest = "ORM: Example_CreateUser";
-	var user, err = Example_CreateUser( "aa", "24234-5252315-25234");
+
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
+	if( ctx != nil ){
+		defer ctx.Close()
+	}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
+
+	var user, err = Example_CreateUser( ctx, "aa", "24234-5252315-25234");
 	if( user == nil){return 0, err, nameTest}
 	
 	return atmsql.IFF(err == nil, 1, 0), err, nameTest;
 
 }
-func Example_CreateUser(name string, uuid string) ( *m.User, error) {
+func Example_CreateUser( ctx *orm.DBContext, name string, uuid string) ( *m.User, error) {
 	
-	ctx, err, _ := Example_init();// (orm.DBContextBase, error, string){	
-	if( ctx != nil ){
-		defer ctx.Close()
-	}
-	if( err != nil ){return nil, err;}
-
 	var user = m.User{ UserName: name, UUID:uuid}
 	user_id, err := ctx.User.Qry("").InsertModel(&user);
 	if( err != nil || user_id == 0 ){return  nil, err;}
@@ -65,26 +68,29 @@ func Example_CreateUser(name string, uuid string) ( *m.User, error) {
 func Tst_Example_Create2Users(step int, bCheckName bool) ( int, error, string) {
 	
 	var nameTest = "ORM: Example_Create2Users";
-	var users, err = Example_Create2Users( "aa", "24234-5252315-25234", "bb", "24234-5252315-2523124");
+
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
+	if( ctx != nil ){
+		defer ctx.Close()
+	}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
+	
+	var users, err = Example_Create2Users( ctx, "aa", "24234-5252315-25234", "bb", "24234-5252315-2523124");
 	if( len(users) != 2 ){return 0, err, nameTest}
 
 	return atmsql.IFF(err == nil, 1, 0), err, nameTest;
 }
-func Example_Create2Users(name string, uuid string, 
-						 name2 string, uuid2 string) ( []*m.User, error) {
+func Example_Create2Users( ctx *orm.DBContext,
+	name string, uuid string, 
+	name2 string, uuid2 string) ( []*m.User, error) {
 	
 	var users = []*m.User{}
-	ctx, err, _ := Example_init();// (orm.DBContextBase, error, string){	
-	if( ctx != nil ){
-		defer ctx.Close()
-	}
-	if( err != nil ){return users, err;}
 
 	var user1 = m.User{ UserName: name, UUID:uuid}
 	var user2 = m.User{ UserName: name2, UUID:uuid2}
 
 	users = []*m.User{ &user1, &user2}
-	err = ctx.User.Qry("").InsertOrUpdateModels( users );
+	var err = ctx.User.Qry("").InsertOrUpdateModels( users );
 	if( err != nil ){return  users, err;}
 
 	return users, nil
@@ -94,27 +100,35 @@ func Tst_Example_RetrieveUser(step int, bCheckName bool) ( int, error, string) {
 	
 	var nameTest = "ORM: Example_RetrieveUser";
 
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
+	if( ctx != nil ){
+		defer ctx.Close()
+	}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
+
 	var uuid = "24234-5252315-25234";
-	var user1, err1 = Example_CreateUser( "aa", uuid);
+	var user1, err1 = Example_CreateUser( ctx, "aa", uuid);
 	if( err1 != nil || user1 == nil){ return 0, err1, nameTest}
 
-	var user2, err2 = Example_RetrieveUser( uuid );
+	var user2, err2 = Example_RetrieveUser( ctx, uuid );
 	if( err2 != nil || user2 == nil){ return 0, err2, nameTest}
 
 	if( user1.ID != user2.ID ) { return 0, err2, nameTest}
 	
 	return 1, nil, nameTest
 }
-func Example_RetrieveUser(uuid string) ( *m.User, error) {
+func Example_RetrieveUser( ctx *orm.DBContext, uuid string) ( *m.User, error) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
-	if( ctx != nil ){
-		defer ctx.Close()
-	}
-	if( err != nil ){return nil, err;}
-
 	var model, err1 = ctx.User.Qry("").WhereEq( ctx.User_.UUID, uuid ).GetFirstModel();
-	if( err1 != nil ){return  nil, err;}
+	if( err1 != nil ){return  nil, err1;}
+
+	return model, nil
+}
+
+func Example_RetrieveUserByName( ctx *orm.DBContext, name string) ( *m.User, error) {
+	
+	var model, err1 = ctx.User.Qry("").WhereEq( ctx.User_.UserName, name ).GetFirstModel();
+	if( err1 != nil ){return  nil, err1;}
 
 	return model, nil
 }
@@ -123,112 +137,213 @@ func Tst_Example_RetrieveUsers(step int, bCheckName bool) ( int, error, string) 
 	
 	var nameTest = "ORM: Example_RetrieveUsers";
 
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
+	if( ctx != nil ){
+		defer ctx.Close()
+	}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
+
 	var uuid = "24234-5252315-25234";
-	var users1, err1 = Example_Create2Users( "aa", uuid, "bb", uuid);
+	var users1, err1 = Example_Create2Users( ctx, "aa", uuid, "bb", uuid);
 	if( err1 != nil || len(users1) == 0){ return 0, err1, nameTest}
 
-	var users2, err2 = Example_RetrieveUsers( uuid );
+	var users2, err2 = Example_RetrieveUsers( ctx, uuid );
 	if( err2 != nil || len(users2) == 0 ){ return 0, err2, nameTest}
 
 	if( len(users1) != len(users2) ) { return 0, err2, nameTest}
 	
 	return 1, nil, nameTest
 }
-func Example_RetrieveUsers(uuid string) ( []*m.User, error) {
+func Example_RetrieveUsers( ctx *orm.DBContext, uuid string) ( []*m.User, error) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
-	if( ctx != nil ){
-		defer ctx.Close()
-	}
-	if( err != nil ){return nil, err;}
-
 	var models, err1 = ctx.User.Qry("").WhereEq( ctx.User_.UUID, uuid ).GetModels();
-	if( err1 != nil ){return  nil, err;}
+	if( err1 != nil ){return  nil, err1;}
 
 	return models, nil
 }
-
-func Example_DeleteUser(uuid string) ( error) {
+//-----------------------------------------------------------------------
+func Tst_Example_DeleteUser(step int, bCheckName bool) ( int, error, string) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
+	var nameTest = "ORM: Example_DeleteUser";
+
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
 	if( ctx != nil ){
 		defer ctx.Close()
 	}
-	if( err != nil ){return err;}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
 
+	var uuid = "24234-5252315-25234";
+	var users, err = Example_Create2Users( ctx, "aa", uuid, "bb", uuid);
+	if( len(users) != 2 ){
+		return 0, err, nameTest}
+
+	var err2 = Example_DeleteUser( ctx, uuid);
+	if( err2 != nil){
+		return 0, err, nameTest}
+
+	var users2, err3 = Example_RetrieveUsers( ctx, uuid);
+	if( err3 != nil){return 0, err, nameTest}
+	if( len(users2) != 1 ){
+		return 0, err, nameTest}
+	
+	return 1, nil, nameTest
+}
+func Example_DeleteUser( ctx *orm.DBContext, uuid string) ( error) {
+	
 	var model, err1 = ctx.User.Qry("").WhereEq( ctx.User_.UUID, uuid ).GetFirstModel();
-	if( err1 != nil ){return  err;}
+	if( err1 != nil ){return  err1;}
 
-	err = ctx.User.Qry("").DeleteModel( model );
+	var err = ctx.User.Qry("").DeleteModel( model );
 	if( err != nil ){return  err;}
 
 	return nil
 }
-func Example_DeleteUsers(uuid string) ( error) {
+//-----------------------------------------------------------------------
+func Tst_Example_DeleteUsers(step int, bCheckName bool) ( int, error, string) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
+	var nameTest = "ORM: Example_DeleteUsers";
+
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
 	if( ctx != nil ){
 		defer ctx.Close()
 	}
-	if( err != nil ){return err;}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
 
-	err = ctx.User.Qry("").WhereEq( ctx.User_.UUID, uuid).DeleteModels();
+	var uuid = "24234-5252315-25234";
+	var users, err = Example_Create2Users( ctx, "aa", uuid, "bb", uuid);
+	if( len(users) != 2 ){return 0, err, nameTest}
+
+	var err2 = Example_DeleteUsers( ctx, uuid);
+	if( err2 != nil){return 0, err, nameTest}
+
+	var user2, err3 = Example_RetrieveUser( ctx, uuid);
+	if( err3 != nil){return 0, err, nameTest}
+	if( user2 != nil){return 0, err, nameTest}
+	
+	return 1, nil, nameTest
+}
+
+func Example_DeleteUsers( ctx *orm.DBContext, uuid string) ( error) {
+	
+	var err = ctx.User.Qry("").WhereEq( ctx.User_.UUID, uuid).DeleteModels();
 	if( err != nil ){return  err;}
 
 	return nil
 }
 
-func Example_UpdateUser(uuid string, newName string) ( error) {
+//-----------------------------------------------------------------------
+func Tst_Example_UpdateUser(step int, bCheckName bool) ( int, error, string) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
+	var nameTest = "ORM: Example_UpdateUser";
+
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
 	if( ctx != nil ){
 		defer ctx.Close()
 	}
-	if( err != nil ){return err;}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
 
+	var userName = "cc";
+	var uuid = "24234-5252315-25234";
+	var users, err = Example_Create2Users( ctx, "aa", uuid, "bb", uuid);
+	if( len(users) != 2 ){return 0, err, nameTest}
+
+	var err3 = Example_UpdateUser( ctx, uuid, userName);
+	if( err3 != nil){return 0, err, nameTest}
+
+	var user2, err4 = Example_RetrieveUserByName( ctx, userName);
+	if( err4 != nil){return 0, err, nameTest}
+	if( user2 == nil){return 0, err, nameTest}
+
+	return 1, nil, nameTest
+}
+
+func Example_UpdateUser( ctx *orm.DBContext, uuid string, newName string) ( error) {
+	
 	var model, err1 = ctx.User.Qry("").WhereEq( ctx.User_.UUID, uuid ).GetFirstModel();
-	if( err1 != nil ){return  err;}
+	if( err1 != nil ){return  err1;}
 
 	//update same fields
 	model.UserName = newName;
 
-	err = ctx.User.Qry("").UpdateModel(model);
+	var err = ctx.User.Qry("").UpdateModel(model);
 	if( err != nil ){return  err;}
 
 	return nil
 }
 
-func Example_UpdateUsers(models[] *m.User, newName string) ( error) {
+
+//-----------------------------------------------------------------------
+func Tst_Example_UpdateUsers(step int, bCheckName bool) ( int, error, string) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
+	var nameTest = "ORM: Example_UpdateUsers";
+
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
 	if( ctx != nil ){
 		defer ctx.Close()
 	}
-	if( err != nil ){return err;}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
 
+	var userName = "cc";
+	var uuid = "24234-5252315-25234";
+	var users, err = Example_Create2Users( ctx, "aa", uuid, "bb", uuid);
+	if( len(users) != 2 ){return 0, err, nameTest}
+
+	var err3 = Example_UpdateUsers( ctx, uuid, userName);
+	if( err3 != nil){return 0, err, nameTest}
+
+	var users2, err4 = Example_RetrieveUsers( ctx, uuid);
+	if( err4 != nil){return 0, err, nameTest}
+	if( len(users2) != 2){return 0, err, nameTest}
+
+	return 1, nil, nameTest
+}
+func Example_UpdateUsers( ctx *orm.DBContext, uuid string, newName string) ( error) {
+	
+	var models, err1 = ctx.User.Qry("").WhereEq( ctx.User_.UUID, uuid ).GetModels();
+	if( err1 != nil ){return  err1;}
 
 	//update same fields
 	for _, m1 := range(models){
 		m1.UserName = newName;
 	}
 
-	err = ctx.User.Qry("").UpdateModels( &models );
+	var err = ctx.User.Qry("").UpdateModels( &models );
 	if( err != nil ){return  err;}
 
 	return nil
 }
 
-
-
 //---------------------------------------------------------
-func Example_CreateUserRelation(nameUser string, uuid string, userRole string) ( error) {
+
+//-----------------------------------------------------------------------
+func Tst_Example_CreateUserRelation(step int, bCheckName bool) ( int, error, string) {
 	
-	ctx, err, _ := Example_init();// (orm.DBContextBase, error, string){	
+	var nameTest = "ORM: Example_CreateUserRelation";
+
+	ctx, errCtx, _ := Example_init();// (orm.DBContextBase, error, string){	
 	if( ctx != nil ){
 		defer ctx.Close()
 	}
-	if( err != nil ){return err;}
+	if( errCtx != nil ){return 0, errCtx, nameTest;}
 
+	var uuid = "24234-5252315-25234";
+	var RoleAdmin = "admin";
+
+	var err = Example_CreateUserRelation( ctx, "aa", uuid, RoleAdmin );
+	if( err != nil ){return 0, errCtx, nameTest;}
+
+	var user, err2 = Example_RetrieveUserRelation1( ctx, uuid);
+	if( user == nil || err2 != nil ){return 0, errCtx, nameTest;}
+	if( !(user != nil && user.UserRoleID != nil && user.UserRoleID.RoleName == RoleAdmin)){return 0, errCtx, nameTest;}
+
+	user, err2 = Example_RetrieveUserRelation2( ctx, uuid);
+	if( user == nil || err2 != nil ){return 0, errCtx, nameTest;}
+	if( !(user != nil && user.UserRoleID != nil && user.UserRoleID.RoleName == RoleAdmin)){return 0, errCtx, nameTest;}
+
+	return 1, nil, nameTest
+}
+func Example_CreateUserRelation( ctx *orm.DBContext, nameUser string, uuid string, userRole string) ( error) {
+	
 	var user = m.User{ UserName: nameUser, UUID:uuid,
 					UserRoleID: &m.UserRole{ RoleName: userRole, IsActive: true},}
 	user_id, err := ctx.User.Qry("").InsertModel( &user );
@@ -237,19 +352,13 @@ func Example_CreateUserRelation(nameUser string, uuid string, userRole string) (
 	return nil
 }
 
-func Example_CreateUserRelationCheck(nameUser string, uuid string, userRoleName string) ( error) {
+func Example_CreateUserRelationCheck( ctx *orm.DBContext, 
+	nameUser string, uuid string, userRoleName string) ( error) {
 	
-	ctx, err, _ := Example_init();// (orm.DBContextBase, error, string){	
-	if( ctx != nil ){
-		defer ctx.Close()
-	}
-	if( err != nil ){return err;}
-
-
 	var userRole, err1 = ctx.UserRole.Qry("").
 					WhereEq( ctx.UserRole_.RoleName, userRoleName).
 					GetFirstModel();
-	if( err1 != nil ){return  err;}
+	if( err1 != nil ){return  err1;}
 	if( userRole == nil ){
 		userRole = &m.UserRole{ RoleName: userRoleName, IsActive: true};
 	}
@@ -261,46 +370,35 @@ func Example_CreateUserRelationCheck(nameUser string, uuid string, userRoleName 
 	return nil
 }
 
-func Example_RetrieveUserRelation1(uuid string) ( *m.User, error) {
+func Example_RetrieveUserRelation1( ctx *orm.DBContext, uuid string) ( *m.User, error) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
-	if( ctx != nil ){
-		defer ctx.Close()
-	}
-	if( err != nil ){return nil, err;}
-
 	var model, err1 = ctx.User.Qry("").
 						WhereEq( ctx.User_.UserRoleID.IsActive, true ).
 						WhereEq( ctx.User_.UserRoleID.RoleName, "admin" ).
 						WhereEq( ctx.User_.UUID, uuid ).
-						GetFirstModel();
-	if( err1 != nil ){return  nil, err;}
+						GetFirstModelRel( ctx.User_.UserRoleID.Def() );
+	if( err1 != nil ){return  nil, err1;}
 
-	if( model != nil && model.UserRoleID.RoleName == "admin"){
+	if( model != nil && model.UserRoleID != nil && model.UserRoleID.RoleName == "admin"){
 
 	}
 
 	return model, nil
 }
 
-func Example_RetrieveUserRelation2(uuid string) ( *m.User, error) {
+func Example_RetrieveUserRelation2( ctx *orm.DBContext, uuid string) ( *m.User, error) {
 	
-	var ctx, err, _ = Example_init();// (orm.DBContextBase, error, string){	
-	if( ctx != nil ){
-		defer ctx.Close()
-	}
-	if( err != nil ){return nil, err;}
-
-	var model, err1 = ctx.User.Qry("").
+	//Nopp();
+	var model, err1 = ctx.User.Qry("tst1340").
 						Where(  func(x *m.User) bool{
 							return x.UserRoleID.IsActive == true &&
 							x.UserRoleID.RoleName == "admin" &&
 							x.UUID == uuid 
 						}).
 						GetFirstModelRel( ctx.User_.UserRoleID.Def() );
-	if( err1 != nil ){return  nil, err;}
+	if( err1 != nil ){return  nil, err1;}
 
-	if( model != nil && model.UserRoleID.RoleName == "admin"){
+	if( model != nil && model.UserRoleID != nil && model.UserRoleID.RoleName == "admin"){
 		
 	}
 

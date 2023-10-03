@@ -6,13 +6,22 @@ import (
 
 	test1_crud "github.com/bbitere/atomicsql_golang.git/tests/test1/test_crud"
 	test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/test_where"
+	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/test_where"
 )
+
+type TestsResult struct{
+
+	Succeded 	int
+	Totals	 	int
+	Crashed 	int 
+	Failed 		int 
+}
+var testsResult TestsResult
 
 func main(){
 	
 	var counter = 0;
 
-	
 	Exec_test( test1.Test1_01, &counter );
 	Exec_test( test1.Test1_02N, &counter );
 	Exec_test( test1.Test1_02, &counter );
@@ -24,13 +33,29 @@ func main(){
 	Exec_test( test1.Test1_08, &counter );
 	Exec_test( test1.Test1_09, &counter );
 	Exec_test( test1.Test1_10, &counter );
-
-	Exec_test( test1.Test1_10, &counter );
+	
 
 	Exec_test( test1_crud.Tst_Example_CreateUser, &counter );
 	Exec_test( test1_crud.Tst_Example_Create2Users, &counter );
 	Exec_test( test1_crud.Tst_Example_RetrieveUser, &counter );
 	Exec_test( test1_crud.Tst_Example_RetrieveUsers, &counter );
+
+	Exec_test( test1_crud.Tst_Example_DeleteUser, &counter );
+	Exec_test( test1_crud.Tst_Example_DeleteUsers, &counter );
+
+	Exec_test( test1_crud.Tst_Example_UpdateUser, &counter );
+	Exec_test( test1_crud.Tst_Example_UpdateUsers, &counter );
+
+	Exec_test( test1_crud.Tst_Example_CreateUserRelation, &counter );
+
+
+	Exec_test( test1_where.TestMisc_01, &counter );
+
+	Exec_test( test1_where.Test1Rtm_10, &counter );
+
+	
+
+	printResults();
 	
 }
 
@@ -45,17 +70,30 @@ func Exec_test(fnTest test1.TestFunc, pIndex *int){
 	printTest(ret, msg, err, *pIndex);
 }
 
+func printResults(){
+
+	fmt.Println("**************************");
+	fmt.Printf("Tests Results: %d succeded/ %d totals", testsResult.Succeded, testsResult.Totals)
+	fmt.Println("");
+
+}
+
 func printTest(codeSucceded int, testName string, err error, idx int){
 		
+	testsResult.Totals++;
 
 	if( codeSucceded == -1 ){
+		testsResult.Crashed++;
 		fmt.Printf("Test %d crash -> %s", idx, testName)
 		fmt.Println("");		
 	}else
 	if( codeSucceded == 0 ){
+
+		testsResult.Failed++;
 		fmt.Printf("Test %d failed -> %s", idx, testName)
 		fmt.Println("");		
 	}else {
+		testsResult.Succeded++;
 		fmt.Printf("Test %d passed -> %s", idx, testName)
 		fmt.Println("");
 	}

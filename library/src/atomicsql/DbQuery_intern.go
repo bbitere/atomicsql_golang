@@ -251,24 +251,24 @@ func _Select_getSqlFields1[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T
 
 	for i:= 0; i < reflV.NumField(); i++{
 
-		var fldT = reflV.Field( i )
+		var fldTT = reflV.Field( i )
 
-		var typeTName= fldT.Type.Name();
+		var typeTName= fldTT.Type.Name();
 
 		if( typeTName == Generic_MODEL_Name ||
-			fldT.Type.Kind() == reflect.Pointer ){//the foreignKey pointer should be excluded
+			fldTT.Type.Kind() == reflect.Pointer ){//the foreignKey pointer should be excluded
 			continue;
 		}
-		var fld, has = selectSqlFields[ fldT.Name ];
+		var fldT, has = selectSqlFields[ fldTT.Name ];
 		if( has){
 			
-			if( _existInListString(excludedFields, fld)){
+			if( _existInListString(excludedFields, fldT)){
 				continue;
 			}
-			if( _existInListString(excludedFields, fld)){
+			if( _existInListString(excludedFields, fldT)){
 				continue;
 			}
-			Arr_Append( &retFields, fld );
+			Arr_Append( &retFields, fldT );
 		}
 	}
 	return retFields;
@@ -298,16 +298,16 @@ func _Aggregate_generateSql[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[
 
 	for i:= 0; i < reflT.NumField(); i++{
 
-		var fldT = reflT.Field( i )
+		var fldTT = reflT.Field( i )
 
-		var typeTName= fldT.Type.Name();
+		var typeTName= fldTT.Type.Name();
 
 		if( typeTName == Generic_MODEL_Name ||
-			fldT.Type.Kind() == reflect.Pointer ){//the foreignKey pointer should be excluded
+			fldTT.Type.Kind() == reflect.Pointer ){//the foreignKey pointer should be excluded
 			continue;
 		}
 
-		dictFld[ fldT.Name ] = fldT;
+		dictFld[ fldTT.Name ] = fldTT;
 	}
 	var selectFields = []string{};
 	var groupByFields = []string{};
@@ -315,36 +315,36 @@ func _Aggregate_generateSql[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[
 
 	for i:= 0; i < reflV.NumField(); i++{
 		
-		var fldV = reflV.Field( i )
+		var fldTV = reflV.Field( i )
 
-		var typeVName= fldV.Type.Name();
+		var typeVName= fldTV.Type.Name();
 		if( typeVName == Generic_MODEL_Name ||
-			fldV.Type.Kind() == reflect.Pointer ){//the foreignKey pointer should be excluded
+			fldTV.Type.Kind() == reflect.Pointer ){//the foreignKey pointer should be excluded
 			continue;
 		}
 
-		var fldT, has = dictFld[ fldV.Name ];
+		var fldTT, has = dictFld[ fldTV.Name ];
 		if( !has ){
-			_this.errorRet = fmt.Errorf( "incompatibile struct: %s - %s. Field not found %s",reflV.Name(), reflT.Name(), fldV.Name );
+			_this.errorRet = fmt.Errorf( "incompatibile struct: %s - %s. Field not found %s",reflV.Name(), reflT.Name(), fldTV.Name );
 			return "",nil;
 		}
-		var typeTName= fldT.Type.Name();
+		var typeTName= fldTT.Type.Name();
 		
-		var sqlColumnName = fldV.Name;
+		var sqlColumnName = fldTV.Name;
 		if( tableDef != nil ){
 			var hasCol = false;
-			sqlColumnName, hasCol = tableDef[ fldV.Name ];
+			sqlColumnName, hasCol = tableDef[ fldTV.Name ];
 			if( !hasCol){
-				_this.errorRet = fmt.Errorf("internal error: Not found column %s.", fldV.Name );
+				_this.errorRet = fmt.Errorf("internal error: Not found column %s.", fldTV.Name );
 				return "",nil;
 			}
 		}
 		Arr_Append( &selectFields, _this._quoteField( sqlColumnName ) );
 		
 		if( 
-		 ( fldV.Type.Kind() == reflect.Slice || 
-		   fldV.Type.Kind() == reflect.Array) ){
-			typeVName = "[]" + fldV.Type.Elem().Name()
+		 ( fldTV.Type.Kind() == reflect.Slice || 
+		   fldTV.Type.Kind() == reflect.Array) ){
+			typeVName = "[]" + fldTV.Type.Elem().Name()
 		}
 
 		if( typeVName == typeTName ){
@@ -353,10 +353,10 @@ func _Aggregate_generateSql[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[
 		}else
 		if( typeVName == "[]"+typeTName){
 			
-			Arr_Append( &excludeGroupByLangFields, fldV.Name );			
+			Arr_Append( &excludeGroupByLangFields, fldTV.Name );			
 			//here are the fields that will be aggregate
 		}else{
-			_this.errorRet = fmt.Errorf("incompatibile struct: %s - %s. For field %s the types are incompatible ", reflV.Name(), reflT.Name(), fldV.Name );
+			_this.errorRet = fmt.Errorf("incompatibile struct: %s - %s. For field %s the types are incompatible ", reflV.Name(), reflT.Name(), fldTV.Name );
 			return "",nil;
 		}
 	}
@@ -388,13 +388,13 @@ func (_this *DBQuery[T]) _Aggregate_generateGroupBySql( selectFields []string, e
 	var grouppingFields = []string{};
 	for i := 0; i < len(selectFields); i++{
 
-		var fldName = selectFields[i];
+		var fldTName = selectFields[i];
 		var bExclude = false;
 		for j := 0; j < len(excludeFields); j++{
-			if( fldName == excludeFields[j]){ bExclude = true; break;}
+			if( fldTName == excludeFields[j]){ bExclude = true; break;}
 		}
 		if( !bExclude ){
-			Arr_Append( &grouppingFields, fldName);
+			Arr_Append( &grouppingFields, fldTName);
 		}
 	}
 	var sqlGrouppingFields =  Str.Join( grouppingFields, ", ") ;
@@ -420,12 +420,11 @@ func (_this *DBQuery[T]) _getRows(
 	//this.whereTxt = _whereFilter(this.whereTxt);
 
 	if fields != nil {
-		for _, fld := range fields {
+		for _, fldT := range fields {
 
-			var fldDef = _this._quoteTableField1(fld, true, _this.getJoins(), !bDistinct && bAddFieldsInSelect)
-			if fldDef != "" { //it is possible sometime the defs of view to be empty
-
-				Arr_Append(&arrFieldsSql, fldDef)
+			var fldTDef = _this._quoteTableField1(fldT, true, _this.getJoins(), !bDistinct && bAddFieldsInSelect)
+			if fldTDef != "" { //it is possible sometime the defs of view to be empty
+				Arr_Append(&arrFieldsSql, fldTDef)
 			}
 		}
 	}
@@ -552,8 +551,8 @@ func (_this *DBQuery[T])  result_getModelHeaderColumn( model any) []interface{}{
 
 		var field  = reflVal.Field(i)
 
-		var fldType = reflType.Field( i )
-		var nameFld = fldType.Name
+		var fldTType = reflType.Field( i )
+		var nameFld = fldTType.Name
 		if( nameFld == ""){}
 
 		var nameTypeFld = field.Type().Name();
@@ -563,7 +562,7 @@ func (_this *DBQuery[T])  result_getModelHeaderColumn( model any) []interface{}{
 		if( field.Type().Kind() == reflect.Pointer){ 
 			continue
 		}		
-		if( fldType.Tag != "" && string(fldType.Tag) == ATTR_ATOMICSQL_COPY_MODEL){
+		if( fldTType.Tag != "" && string(fldTType.Tag) == ATTR_ATOMICSQL_COPY_MODEL){
 
 			// SELECT( x=> {User = *x.user; ...}
 			var cols = _this.result_getModelHeaderColumn( field.Addr().Interface() )
@@ -595,8 +594,8 @@ func (_this *DBQuery[T])  result_getRecordHeaderColumn( model any, fields []stri
 
 		var field  = reflVal.Field(i)
 
-		var fldType = reflType.Field( i )
-		var nameFld = fldType.Name
+		var fldTType = reflType.Field( i )
+		var nameFld = fldTType.Name
 		if( nameFld == ""){}
 
 		if( fields != nil){
@@ -613,7 +612,7 @@ func (_this *DBQuery[T])  result_getRecordHeaderColumn( model any, fields []stri
 			continue
 		}
 		
-		if( fldType.Tag != "" && string(fldType.Tag) == ATTR_ATOMICSQL_COPY_MODEL){
+		if( fldTType.Tag != "" && string(fldTType.Tag) == ATTR_ATOMICSQL_COPY_MODEL){
 
 			// SELECT( x=> {User = *x.user; ...}
 			var cols = _this.result_getRecordHeaderColumn( field.Addr().Interface(), fields )
@@ -742,6 +741,7 @@ func (_this *DBQuery[T]) checkMySqlError( /*#String*/ sqlQuery string, err error
 		_this.tableInst.m_ctx.hasError = err;
 		log.Printf("sql query error: %s %s", sqlQuery, err.Error() )
 	}
+	_this.clearCachedSyntax();
 }
 
 /*#PHPARG=[ String ];*/
@@ -984,16 +984,16 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 
 			if dbResult1 != nil && err == nil {
 				
-				fld := reflect.ValueOf(reflValue).FieldByName(primaryLangKey)
+				fldT := reflect.ValueOf(reflValue).FieldByName(primaryLangKey)
 				if !bInsertID {
 
 					lastID, err := _this.getLastInsertedRowID1(dbResult1) //_this.tableName, primarySqlKey)
 					if err == nil {
-						fld.SetInt(lastID)
+						fldT.SetInt(lastID)
 					}
 				}
 				ctx.updateDeltaTime();
-				return fld.Int(), nil
+				return fldT.Int(), nil
 			}
 		}else{
 		//	if( _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgress ||
@@ -1007,21 +1007,21 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 			if dbResultRows != nil && err == nil {
 				
 				v := reflValue;
-				fldValue := v.FieldByName(primaryLangKey)
+				fldTValue := v.FieldByName(primaryLangKey)
 				if !bInsertID {
 
-					//lastID := fldValue.Int()
+					//lastID := fldTValue.Int()
 
 					lastID, err := _this.getLastInsertedRowsID(dbResultRows) //_this.tableName, primarySqlKey)
 					if err == nil {
-						if( fldValue.CanSet()){
+						if( fldTValue.CanSet()){
 
-							fldValue.SetInt(lastID)
+							fldTValue.SetInt(lastID)
 						}						
 					}
 				}
 				ctx.updateDeltaTime();
-				return fldValue.Int(), nil
+				return fldTValue.Int(), nil
 			}
 		}		
 	}
@@ -1086,8 +1086,8 @@ func (_this *DBQuery[T]) _insertRecord( langTableName string, modelValue reflect
 		//var valSet bool = false;
 		//var unusedDateTime time.Time
 
-		//var fieldInfoType = fieldInfo.Type();
-		//var ss = fieldInfoType.Name();
+		//var fieldInfoTypeT = fieldInfo.Type();
+		//var ss = fieldInfoTypeT.Name();
 		//fmt.Print(ss);
 
 		
@@ -1173,13 +1173,13 @@ func (_this *DBQuery[T]) _insertRecord_setFieldGeneral(
 
 	) (string,error) {
 
-	var fieldInfoType = fieldInfo.Type();
+	var fieldInfoTypeT = fieldInfo.Type();
 	var valSql = ""
 	var err error	
 
-	var fldNullable *_TNullableField
+	var fldTNullable *_TNullableField
 
-	if fieldInfoType.Kind() == reflect.Slice {
+	if fieldInfoTypeT.Kind() == reflect.Slice {
 
 		var typeSqlElement = Str.ReplaceAll( columnTable.SqlType,"[]", "" )
 
@@ -1209,10 +1209,10 @@ func (_this *DBQuery[T]) _insertRecord_setFieldGeneral(
 		valSql = fmt.Sprintf( "ARRAY[ %s ]::%s[]", valSql1, typeSqlElement );
 	}else{
 	{
-		fldNullable = _this._getNullableField( fieldInfo);
-		if( fldNullable != nil){
+		fldTNullable = _this._getNullableField( fieldInfo);
+		if( fldTNullable != nil){
 		{
-			var bIsNotNull = fldNullable.Valid.Bool()
+			var bIsNotNull = fldTNullable.Valid.Bool()
 			if( !bIsNotNull ){ 
 
 				valSql = ctx.LangDB.VALUE_NULL
@@ -1228,14 +1228,14 @@ func (_this *DBQuery[T]) _insertRecord_setFieldGeneral(
 					if( err != nil){
 						return "", err
 					}
-					if( fldNullable.Value.CanSet() ){
-						fldNullable.Value.SetInt( FK_ID )
-						fldNullable.Valid.SetBool( true )
+					if( fldTNullable.Value.CanSet() ){
+						fldTNullable.Value.SetInt( FK_ID )
+						fldTNullable.Valid.SetBool( true )
 					}
 				}
 			}else{
 				
-				valSql, err = _this._insertRecord_setField( fldNullable.Value, reflctModel, columnTable, 
+				valSql, err = _this._insertRecord_setField( fldTNullable.Value, reflctModel, columnTable, 
 						ctx, bInsertID, fields )	
 				if( err != nil){
 					return "",err
@@ -1262,21 +1262,21 @@ type  _TNullableField struct{
 func (_this *DBQuery[T]) _getNullableField( 
 	 fieldInfo reflect.Value ) *_TNullableField{
 
-	var fieldInfoType = fieldInfo.Type();
+	var fieldInfoTypeT = fieldInfo.Type();
 
-	if( fieldInfoType == reflect.TypeOf((*sql.NullBool)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*sql.NullTime)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*sql.NullString)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*sql.NullByte)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*sql.NullInt16)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*sql.NullInt32)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*sql.NullInt64)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*sql.NullFloat64)(nil)).Elem()   ) {
+	if( fieldInfoTypeT == reflect.TypeOf((*sql.NullBool)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*sql.NullTime)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*sql.NullString)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*sql.NullByte)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*sql.NullInt16)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*sql.NullInt32)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*sql.NullInt64)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*sql.NullFloat64)(nil)).Elem()   ) {
 	{
-		fldValid:= fieldInfo.FieldByName("Valid");
+		fldTValid:= fieldInfo.FieldByName("Valid");
 		nullableFieldName := ""
 
-		switch fieldInfoType {
+		switch fieldInfoTypeT {
 			case reflect.TypeOf((*sql.NullBool)(nil)).Elem():{				
 				nullableFieldName = "Bool";
 			}
@@ -1302,8 +1302,8 @@ func (_this *DBQuery[T]) _getNullableField(
 				nullableFieldName = "Float64";
 			}
 		}
-		fldNullValue:= fieldInfo.FieldByName(nullableFieldName );
-		return &_TNullableField{ Valid:fldValid, Value:fldNullValue}
+		fldTNullValue:= fieldInfo.FieldByName(nullableFieldName );
+		return &_TNullableField{ Valid:fldTValid, Value:fldTNullValue}
 	}}
 	return nil
 }
@@ -1320,16 +1320,16 @@ func (_this *DBQuery[T])  getModel_ForeignKey_getID(
 	var tableFk = columnTable.ForeignKeyLangName[1];
 	primaryKey := ctx.SCHEMA_SQL[tableFk].PrimaryColumnLangName
 
-	fldFkName := columnTable.ForeignKeyLangName[0];
-	reflectFk := reflctModel.FieldByName(fldFkName)
+	fldTFkName := columnTable.ForeignKeyLangName[0];
+	reflectFk := reflctModel.FieldByName(fldTFkName)
 	ptrFkItf  := reflect.Indirect(reflectFk);//
 	
 	if( !(ptrFkItf.CanAddr() && ptrFkItf.IsValid()) ){
 		return nil
 	}
 
-	fldPrimary := ptrFkItf.FieldByName(primaryKey)						
-	var ID = fldPrimary.Int()
+	fldTPrimary := ptrFkItf.FieldByName(primaryKey)						
+	var ID = fldTPrimary.Int()
 
 	return &_TRetForeignKey_getID{ ID:ID, tableFk:tableFk, ptrFkItf:ptrFkItf }
 }
@@ -1397,13 +1397,13 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 	) (string,error) {
 
 	valSql := ""
-	fieldInfoType := fieldInfo.Type()
+	fieldInfoTypeT := fieldInfo.Type()
 	
-	if fieldInfoType == reflect.TypeOf((*int16)(nil)).Elem() ||
-	   fieldInfoType == reflect.TypeOf((*int32)(nil)).Elem() ||
-	   fieldInfoType == reflect.TypeOf((*int64)(nil)).Elem() ||
-	   fieldInfoType == reflect.TypeOf((*int)(nil)).Elem() ||
-	   fieldInfoType == reflect.TypeOf((*int8)(nil)).Elem() {
+	if fieldInfoTypeT == reflect.TypeOf((*int16)(nil)).Elem() ||
+	   fieldInfoTypeT == reflect.TypeOf((*int32)(nil)).Elem() ||
+	   fieldInfoTypeT == reflect.TypeOf((*int64)(nil)).Elem() ||
+	   fieldInfoTypeT == reflect.TypeOf((*int)(nil)).Elem() ||
+	   fieldInfoTypeT == reflect.TypeOf((*int8)(nil)).Elem() {
 		
 		if( columnTable.ForeignKeyLangName != nil ){
 
@@ -1427,7 +1427,7 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 			valSql = fmt.Sprintf("%d", fieldInfo.Int())
 		}
 	} else 
-	if fieldInfoType == reflect.TypeOf((*bool)(nil)).Elem() {
+	if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
 
 		var value = fieldInfo.Bool()
 		if value == true /*|| value == "true"*/ {
@@ -1436,17 +1436,17 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 			valSql = ctx.LangDB.VALUE_FALSE
 		}
 	} else 
-	if  fieldInfoType == reflect.TypeOf((*float32)(nil)).Elem() ||
-		fieldInfoType == reflect.TypeOf((*float64)(nil)).Elem() {
+	if  fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*float64)(nil)).Elem() {
 
 		valSql = fmt.Sprintf("%f", fieldInfo.Float())
-	} else if fieldInfoType == reflect.TypeOf((*string)(nil)).Elem() {
+	} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
 
 		valSql = _this._quote(fieldInfo.String(), columnTable)
-	} else if fieldInfoType == reflect.TypeOf((*time.Time)(nil)).Elem() {
+	} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
 		valSql = _this._quote(fieldInfo.String(), columnTable)
 	}else
-	if fieldInfoType == reflect.TypeOf((*[]uint8)(nil)).Elem() {
+	if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
 		var slice = fieldInfo.Bytes()
 		valSql = _this._quote(slice, columnTable)
@@ -1571,15 +1571,15 @@ func (_this *DBQuery[T]) _deleteRecords() string {
 }
 
 
-func (_this *DBQuery[T]) _getCount( /*#String*/ fldName string) string {
+func (_this *DBQuery[T]) _getCount( /*#String*/ fldTName string) string {
 	
-	var sqlQuery = _this._generateSelectSql( fmt.Sprintf( "COUNT(*) AS %s", fldName), SQL_ITEM_DEF, true, nil);
+	var sqlQuery = _this._generateSelectSql( fmt.Sprintf( "COUNT(*) AS %s", fldTName), SQL_ITEM_DEF, true, nil);
 	
 	return sqlQuery;
 }
 
 /*#PHPARG=[ String];*/
-func (_this *DBQuery[T]) _getDistinctCount( fldName string, fields []string  ) string {
+func (_this *DBQuery[T]) _getDistinctCount( fldTName string, fields []string  ) string {
 	
 	var table = _this._generateSqlSourceOfData();
 	var ITEM = SQL_ITEM_DEF;
@@ -1595,11 +1595,11 @@ func (_this *DBQuery[T]) _getDistinctCount( fldName string, fields []string  ) s
 		}   
 		bSelectDD = true;
 		sqlQuery = fmt.Sprintf( "SELECT COUNT(*) AS %s FROM ( SELECT DISTINCT %s FROM %s %s ",
-										fldName, fieldQList, table, ITEM );
+										fldTName, fieldQList, table, ITEM );
 	} else {
 		bSelectDD = true;
 		sqlQuery = fmt.Sprintf( "SELECT COUNT(*) AS %s FROM ( SELECT DISTINCT * FROM %s %s ",
-										fldName, table, ITEM );
+										fldTName, table, ITEM );
 	}
 	
 	if( _this.getJoins() != nil && _this.getJoins()._joins != nil){
@@ -1631,12 +1631,12 @@ func (_this *DBQuery[T]) collectForeignKeysID( arrForeignKeys []string, structDe
 
 	for iFld := 0; iFld < numOfFields; iFld ++ {
 
-		var fld = reflectVal.Field( iFld )
-		if( fld.Type().Kind() == reflect.Struct ){
+		var fldT = reflectVal.Field( iFld )
+		if( fldT.Type().Kind() == reflect.Struct ){
 			continue;
 		}else{
 
-			Arr_Append( &arrForeignKeys, fld.String() )
+			Arr_Append( &arrForeignKeys, fldT.String() )
 		}
 	}
 }
@@ -1896,15 +1896,15 @@ func (_this *DBQuery[T]) _getFK_IDs(elem any, lang2TableRelation_ID string )int6
 	var reflectVal = reflect.ValueOf( elem ).Elem()
 	if( reflectVal.CanAddr()){
 
-		var fld = reflectVal.FieldByName( lang2TableRelation_ID )
-		if( fld.IsValid() ){
+		var fldT = reflectVal.FieldByName( lang2TableRelation_ID )
+		if( fldT.IsValid() ){
 
-			var fldNullable = _this._getNullableField( fld);
-			if( fldNullable != nil ){
-				return fldNullable.Value.Int()
+			var fldTNullable = _this._getNullableField( fldT);
+			if( fldTNullable != nil ){
+				return fldTNullable.Value.Int()
 			}
 
-			return fld.Int();
+			return fldT.Int();
 		}else{			
 			debugger()
 		}
@@ -1961,7 +1961,13 @@ func (_this *DBQuery[T]) _changeTable(tableName string) (*DBQuery[IGeneric_MODEL
 
 
 func (_this *DBQuery[T]) _updateBulkRecords(  records *[]*T, fields*[]string) error {
-        
+        	
+	if( _this.pRTM != nil){	
+
+		Arr_AddRange( &_this.pRTM.models, records);
+		return nil
+	}
+
 	var ctx            = _this.tableInst.m_ctx;
 	var modelTableName = _this.tableName;
 	
@@ -1983,7 +1989,6 @@ func (_this *DBQuery[T]) _updateBulkRecords(  records *[]*T, fields*[]string) er
 				continue
 			}
 			if( columnDef.ForeignKeyLangName != nil){
-
 				//cand fac update la un model, setez model.FK_ID = model.FKID.ID
 				
 				var reflectModel   = reflect.ValueOf( modelData ).Elem();
@@ -2011,27 +2016,24 @@ func (_this *DBQuery[T]) _updateBulkRecords(  records *[]*T, fields*[]string) er
 						}
 					}
 				}
+				var fldT = reflectModel.FieldByName( columnDef.LangName )
+				var fldTNullable = _this._getNullableField( fldT );
+				if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
+					fldT = fldTNullable.Value
 
-				var fld = reflectModel.FieldByName( columnDef.LangName )
-
-				var fldNullable = _this._getNullableField( fld );
-				if( fldNullable != nil && fldNullable.Valid.Bool() ){
-					fld = fldNullable.Value
-
-					fldNullable.Valid.SetBool( ptr_ID != 0  )							
+					fldTNullable.Valid.SetBool( ptr_ID != 0  )							
 				}
+				var fieldInfoTypeT = fldT.Type()
 
-				var fieldInfoType = fld.Type()
-
-				if  fieldInfoType == reflect.TypeOf((*int16)(nil)).Elem() ||
-					fieldInfoType == reflect.TypeOf((*int32)(nil)).Elem() ||
-					fieldInfoType == reflect.TypeOf((*int64)(nil)).Elem() ||
-					fieldInfoType == reflect.TypeOf((*int)(nil)).Elem() ||
-					fieldInfoType == reflect.TypeOf((*int8)(nil)).Elem() {		
-						fld.SetInt( ptr_ID )		
+				if  fieldInfoTypeT == reflect.TypeOf((*int16)(nil)).Elem() ||
+					fieldInfoTypeT == reflect.TypeOf((*int32)(nil)).Elem() ||
+					fieldInfoTypeT == reflect.TypeOf((*int64)(nil)).Elem() ||
+					fieldInfoTypeT == reflect.TypeOf((*int)(nil)).Elem() ||
+					fieldInfoTypeT == reflect.TypeOf((*int8)(nil)).Elem() {		
+						fldT.SetInt( ptr_ID )		
 				} 
 			}
-			var value = _this.getModel_FieldValue( modelData, langFieldName, &columnDef )
+			var value = _this.getModel_FieldValue( modelData, langFieldName);//, &columnDef )
 			if( ( (primaryKeyLang == langFieldName)) ){ 
 				//do not insert in udate cmd the primary key
 				continue;
@@ -2068,44 +2070,44 @@ func (_this *DBQuery[T]) _updateBulkRecords(  records *[]*T, fields*[]string) er
 	return err;
 }
 
-func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string, columnTable *TSqlColumnDef) any{
+func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string/*, columnTable *TSqlColumnDef*/) any{
 
 	var reflectVal = reflect.ValueOf( model).Elem()
 	if( reflectVal.IsValid() ){
 
-		var fld = reflectVal.FieldByName( fieldName );
+		var fldT = reflectVal.FieldByName( fieldName );
 
-		var fldNullable = _this._getNullableField( fld);
-		if( fldNullable != nil && fldNullable.Valid.Bool() ){
-			fld = fldNullable.Value
+		var fldTNullable = _this._getNullableField( fldT);
+		if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
+			fldT = fldTNullable.Value
 		}
 
-		var fieldInfoType = fld.Type()
+		var fieldInfoTypeT = fldT.Type()
 
-		if  fieldInfoType == reflect.TypeOf((*int16)(nil)).Elem() ||
-	   		fieldInfoType == reflect.TypeOf((*int32)(nil)).Elem() ||
-	   		fieldInfoType == reflect.TypeOf((*int64)(nil)).Elem() ||
-	   		fieldInfoType == reflect.TypeOf((*int)(nil)).Elem() ||
-	   		fieldInfoType == reflect.TypeOf((*int8)(nil)).Elem() {		
-				return fld.Int()		
+		if  fieldInfoTypeT == reflect.TypeOf((*int16)(nil)).Elem() ||
+	   		fieldInfoTypeT == reflect.TypeOf((*int32)(nil)).Elem() ||
+	   		fieldInfoTypeT == reflect.TypeOf((*int64)(nil)).Elem() ||
+	   		fieldInfoTypeT == reflect.TypeOf((*int)(nil)).Elem() ||
+	   		fieldInfoTypeT == reflect.TypeOf((*int8)(nil)).Elem() {		
+				return fldT.Int()		
 		} else 
-		if fieldInfoType == reflect.TypeOf((*bool)(nil)).Elem() {
+		if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
 
-			return fld.Bool()			
+			return fldT.Bool()			
 		} else 
-		if  fieldInfoType == reflect.TypeOf((*float32)(nil)).Elem() ||
-			fieldInfoType == reflect.TypeOf((*float64)(nil)).Elem() {
-				return fld.Float()
+		if  fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
+			fieldInfoTypeT == reflect.TypeOf((*float64)(nil)).Elem() {
+				return fldT.Float()
 		} else 
-		if fieldInfoType == reflect.TypeOf((*string)(nil)).Elem() {
-			return fld.String()
+		if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
+			return fldT.String()
 		} else 
-		if fieldInfoType == reflect.TypeOf((*time.Time)(nil)).Elem() {
-			return fld.String()
+		if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
+			return fldT.String()
 		}else
-		if fieldInfoType == reflect.TypeOf((*[]uint8)(nil)).Elem() {
+		if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
-			var slice = fld.Bytes()
+			var slice = fldT.Bytes()
 			
 			return slice
 			/*
@@ -2114,8 +2116,7 @@ func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string, columnT
 			var valSql = fmt.Sprintf( "ARRAY[]::%s[]", typeSqlElement)
 			return valSql;
 			*/
-		}
-		
+		}		
 	}
 	return nil
 }
@@ -2246,27 +2247,42 @@ func  (_this *DBQuery[T])  _extractStaticVarFromFunc(
 
 func (_this *DBQuery[T]) _whereEq(field string, operand any, field2 string, bNot bool) *DBQuery[T] {
 
-	var queryVal *DBSqlQuery[T] = nil
+	if( _this.pRTM != nil ){
 
-	if field2 == "" {
-		queryVal = _this.eqFO(field, operand, bNot)
-	} else {
-		queryVal = _this.eqFF(field, field2, bNot)
+		var arr = []*T{}
+		for _, itm := range( _this.pRTM.models ) {
+
+			var operands = []any{operand}
+			if( _this._RtmWhereEq( itm, field, operands, field2, bNot )){
+				Arr_Append( &arr, itm);
+			}
+		}
+		_this.pRTM.models = arr;
+		return _this;
+	}else {
+
+		var queryVal *DBSqlQuery[T] = nil
+
+		if field2 == "" {
+			queryVal = _this.eqFO(field, operand, bNot)
+		} else {
+			queryVal = _this.eqFF(field, field2, bNot)
+		}
+
+		if _this.whereTxt != "" {
+			_this.whereTxt += " AND "
+		}
+		_this.whereTxt += queryVal.getText()
+
+		if _this.m_queryAND == nil {
+
+			_this.m_queryAND = (new(DBSqlQuery[T])).Constr("") //"(opText1) AND (opText2)" );
+			_this.m_queryAND.m_op = "AND"
+			_this.m_queryAND.m_listOperands = []*DBSqlQuery[T]{}
+		}
+		array_push(&_this.m_queryAND.m_listOperands, queryVal)
+		return _this
 	}
-
-	if _this.whereTxt != "" {
-		_this.whereTxt += " AND "
-	}
-	_this.whereTxt += queryVal.getText()
-
-	if _this.m_queryAND == nil {
-
-		_this.m_queryAND = (new(DBSqlQuery[T])).Constr("") //"(opText1) AND (opText2)" );
-		_this.m_queryAND.m_op = "AND"
-		_this.m_queryAND.m_listOperands = []*DBSqlQuery[T]{}
-	}
-	array_push(&_this.m_queryAND.m_listOperands, queryVal)
-	return _this
 }	
 
 func (_this *DBQuery[T])  getSqlNativeMethod( compiledQry TCompiledSqlQuery, ptr_fnWhere unsafe.Pointer, excludedLangFields []string ) (string, []string){
@@ -2300,31 +2316,40 @@ func (_this *DBQuery[T])  getSqlNativeMethod( compiledQry TCompiledSqlQuery, ptr
 
 	var selectAggregatedFields  = map[string]string  {}// = arrays.CloneMapString( &compiledQry.SelectSqlFields);
 	
+	
+	for _, fieldSql_ := range(fields) {
+		//do again this because range() get different order, and 
+		var fieldSql	= fieldSql_;
+		var len_field   = len( fieldSql );
+		var fldTClean   	= substr( fieldSql, PREFIX_FIELDS_len, len_field - POSTFIX_FIELDS_len );
+		_  			   	= _this._quoteTableField( fldTClean, false, _this.getJoins() );
+	}
 
-	for fldLangName, field_ := range(fields) {
+	for fldTLangName, fieldSql_ := range(fields) {
 
-		var field		= field_;
-		var len_field   = len(field);
-		var fldClean   	= substr( field, PREFIX_FIELDS_len, len_field - POSTFIX_FIELDS_len );
-		var itm        	= _this._quoteTableField( fldClean, false, _this.getJoins() );
+		var fieldSql		= fieldSql_;
+		var len_field   = len(fieldSql);
+		var fldTClean   	= substr( fieldSql, PREFIX_FIELDS_len, len_field - POSTFIX_FIELDS_len );
+		var itm        	= _this._quoteTableField( fldTClean, false, _this.getJoins() );
 
 		if( compiledQry.SelectSqlFields != nil ){
-			
-			for _, fieldExpr := range(compiledQry.SelectSqlFields) {
+			//for Select() and Select(Aggregate() )
+			for _, fieldSqlExpr := range(compiledQry.SelectSqlFields) {
 
-				if( !Str.Contains( fieldExpr, field) ){
+				if( !Str.Contains( fieldSqlExpr, fieldSql) ){
 					continue;
 				}
-				var fieldExpr1  = str_replace( field, itm, fieldExpr );
-				if( fieldExpr1 != fieldExpr){
+				var fieldExpr1  = str_replace( fieldSql, itm, fieldSqlExpr );
+				if( fieldExpr1 != fieldSqlExpr){
 					
-					if( !_existInListString( excludedLangFields, fldLangName) ){
-						selectAggregatedFields[fldLangName] = fieldExpr1;
+					//exclude columns groupby list
+					if( !_existInListString( excludedLangFields, fldTLangName) ){
+						selectAggregatedFields[fldTLangName] = fieldExpr1;
 					}
 				}
 			}
 		}
-		sql = str_replace( field, itm, sql );
+		sql = str_replace( fieldSql, itm, sql );
 	}
 	if( selectAggregatedFields != nil && len(selectAggregatedFields) > 0 ){
 		return sql, Util_FromMapToArray( &selectAggregatedFields );
@@ -2336,8 +2361,8 @@ func (_this *DBQuery[T])  _getNameAndID(model *T) (string, int64, reflect.Value 
 
 	var reflectData = reflect.ValueOf(model).Elem();
 	var nameID 	= _this.tableInst.m_ctx.SCHEMA_SQL_BySqlName[ _this.tableName ].PrimaryColumnLangName;
-	var fldID 	= reflectData.FieldByName( nameID )
-	var id 		= fldID.Int();
+	var fldTID 	= reflectData.FieldByName( nameID )
+	var id 		= fldTID.Int();
 
 	return nameID, id, reflectData;
 }
@@ -2374,6 +2399,7 @@ func (_this *DBQuery[T])  _whereGeneric(  fnWhere func(x *T) bool ) *DBSqlQuery[
 }
 
 
+
 func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSelect func(x *T) *V ) *DBQuery[V]{
 
 	var ctx = _this.tableInst.m_ctx
@@ -2406,6 +2432,10 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSel
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ);
 
 		var sql, _selectSqlFields= query.getSqlNativeMethod( compiledDataQuery, unsafe.Pointer(&fnSelect), query.excludeLangFieldsFromGroupBy );
+		if( Str_Index( sql, "itmq1.\"ID\" AS \"ID\"", 0) < 0){
+
+			sql, _selectSqlFields = query.getSqlNativeMethod( compiledDataQuery, unsafe.Pointer(&fnSelect), query.excludeLangFieldsFromGroupBy );
+		}
 		query.querySelectNewRecord_Text = sql;
 		query.querySelectNewRecord_isAgregator =false;
 		//query.joins = _this.joins;
@@ -2426,10 +2456,3 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSel
 	return nil;
 }
 
-func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( 
-	model *T,
-	 )  *V {
-
-	
-	return nil;
-}

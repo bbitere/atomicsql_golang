@@ -19,7 +19,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Fields:			map[string]string{
              "Money":"{#@money@#}",
              "UserRoleID":"{#@userRole_ID@#}",
-             "userRole_ID":"{#@userRole_ID.roleName@#}",
+             "RoleName":"{#@userRole_ID.roleName@#}",
             },
 			ExternVar:			[]orm.TExternVar{
 																	{VarName:"UserMoney", VarType:"float64"},
@@ -28,8 +28,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"asdax",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		8446,
-			EndOff:  		8584,
+			StartOff: 		8198,
+			EndOff:  		8336,
 			Hash:  			"BA78C254E0BC9C69C4D363F967614D10",
 		},
 		"tst1074-W1": 
@@ -48,8 +48,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst1074",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		8744,
-			EndOff:  		8803,
+			StartOff: 		8496,
+			EndOff:  		8555,
 			Hash:  			"7B5C0D4477A52364A382166ECCC60180",
 		},
 		"evcy59-W1": 
@@ -60,15 +60,15 @@ func (_this *DBContext) LoadCompiledQuery(){
 			SelectSqlFields: nil,
 			
 			Fields:			map[string]string{
-             "userRole_ID":"{#@userRole_ID.isActive@#}",
+             "IsActive":"{#@userRole_ID.isActive@#}",
             },
 			ExternVar:			[]orm.TExternVar{
 								 
 								},
 			Tag: 			"evcy59",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		10226,
-			EndOff:  		10299,
+			StartOff: 		9980,
+			EndOff:  		10053,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
 		},
 		"evcy59-S2": 
@@ -89,7 +89,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 			
 			Fields:			map[string]string{
              "UserRole_ID":"{#@userRole_ID@#}",
-             "userRole_ID":"{#@userRole_ID.roleName@#}",
+             "RoleName":"{#@userRole_ID.roleName@#}",
              "ID":"{#@ID@#}",
              "UserName":"{#@userName@#}",
              "UUID":"{#@UUID@#}",
@@ -102,8 +102,62 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy59",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		10309,
-			EndOff:  		10438,
+			StartOff: 		10063,
+			EndOff:  		10192,
+			Hash:  			"F128F38C0147DBEC1F3DC30C2BA3FD24",
+		},
+		"evcy59a-W1": 
+		{
+			//CompiledQuery: {#@userRole_ID.isActive@#}=true,
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI309dHJ1ZQ==`,
+			
+			SelectSqlFields: nil,
+			
+			Fields:			map[string]string{
+             "IsActive":"{#@userRole_ID.isActive@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"evcy59a",
+			File: 			"library\\tests\\test1\\test_where\\test1.go",
+			StartOff: 		10307,
+			EndOff:  		10380,
+			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
+		},
+		"evcy59a-S2": 
+		{
+			//CompiledQuery: {#@ID@#} AS "ID", {#@userName@#} AS "UserName", {#@UUID@#} AS "UUID", {#@user_psw@#} AS "UserPsw", {#@userRole_ID@#} AS "UserRole_ID", {#@time1@#} AS "Time1", {#@money@#} AS "Money", {#@userRole_ID.roleName@#} AS "UserRole",
+			CompiledQuery:`eyNASURAI30gQVMgIklEIiwgeyNAdXNlck5hbWVAI30gQVMgIlVzZXJOYW1lIiwgeyNAVVVJREAjfSBBUyAiVVVJRCIsIHsjQHVzZXJfcHN3QCN9IEFTICJVc2VyUHN3IiwgeyNAdXNlclJvbGVfSURAI30gQVMgIlVzZXJSb2xlX0lEIiwgeyNAdGltZTFAI30gQVMgIlRpbWUxIiwgeyNAbW9uZXlAI30gQVMgIk1vbmV5IiwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlIg==`,
+			
+			SelectSqlFields: map[string]string{
+             "ID":"{#@ID@#}",
+             "UserName":"{#@userName@#}",
+             "UUID":"{#@UUID@#}",
+             "UserPsw":"{#@user_psw@#}",
+             "UserRole_ID":"{#@userRole_ID@#}",
+             "Time1":"{#@time1@#}",
+             "Money":"{#@money@#}",
+             "UserRole":"{#@userRole_ID.roleName@#}",
+            },
+			
+			Fields:			map[string]string{
+             "UserRole_ID":"{#@userRole_ID@#}",
+             "RoleName":"{#@userRole_ID.roleName@#}",
+             "ID":"{#@ID@#}",
+             "UserName":"{#@userName@#}",
+             "UUID":"{#@UUID@#}",
+             "UserPsw":"{#@user_psw@#}",
+             "Time1":"{#@time1@#}",
+             "Money":"{#@money@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"evcy59a",
+			File: 			"library\\tests\\test1\\test_where\\test1.go",
+			StartOff: 		10390,
+			EndOff:  		10519,
 			Hash:  			"F128F38C0147DBEC1F3DC30C2BA3FD24",
 		},
 		"evcy58-W1": 
@@ -114,15 +168,15 @@ func (_this *DBContext) LoadCompiledQuery(){
 			SelectSqlFields: nil,
 			
 			Fields:			map[string]string{
-             "userRole_ID":"{#@userRole_ID.isActive@#}",
+             "IsActive":"{#@userRole_ID.isActive@#}",
             },
 			ExternVar:			[]orm.TExternVar{
 								 
 								},
 			Tag: 			"evcy58",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		12220,
-			EndOff:  		12295,
+			StartOff: 		12286,
+			EndOff:  		12361,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
 		},
 		"evcy58-S2": 
@@ -137,7 +191,7 @@ func (_this *DBContext) LoadCompiledQuery(){
             },
 			
 			Fields:			map[string]string{
-             "userRole_ID":"{#@userRole_ID.roleName@#}",
+             "RoleName":"{#@userRole_ID.roleName@#}",
              "Time1":"{#@time1@#}",
              "Money":"{#@money@#}",
             },
@@ -146,9 +200,49 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy58",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		12314,
-			EndOff:  		12534,
+			StartOff: 		12380,
+			EndOff:  		12600,
 			Hash:  			"B08DE8ED853C271C00FC1FFD127E71BC",
+		},"tst143-W1": 
+		{
+			//CompiledQuery: (CASE WHEN ({#@userRole_ID@#} IS NOT NULL) THEN {#@userRole_ID.isActive@#} ELSE false END),
+			CompiledQuery:`KENBU0UgV0hFTiAoeyNAdXNlclJvbGVfSURAI30gSVMgTk9UIE5VTEwpIFRIRU4geyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30gRUxTRSBmYWxzZSBFTkQp`,
+			
+			SelectSqlFields: nil,
+			
+			Fields:			map[string]string{
+             "UserRoleID.IsActive":"{#@userRole_ID@#}",
+             "IsActive":"{#@userRole_ID.isActive@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"tst143",
+			File: 			"library\\tests\\test1\\test_where\\test_misc.go",
+			StartOff: 		974,
+			EndOff:  		1086,
+			Hash:  			"86D42E66152DB0251A9C632A3B4EC162",
+		},"tst1340-W1": 
+		{
+			//CompiledQuery: {#@userRole_ID.isActive@#}=true AND {#@userRole_ID.roleName@#}='admin' AND {#@UUID@#}={@@uuid@@},
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI309dHJ1ZSBBTkQgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI309J2FkbWluJyBBTkQgeyNAVVVJREAjfT17QEB1dWlkQEB9`,
+			
+			SelectSqlFields: nil,
+			
+			Fields:			map[string]string{
+             "IsActive":"{#@userRole_ID.isActive@#}",
+             "RoleName":"{#@userRole_ID.roleName@#}",
+             "UUID":"{#@UUID@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+																	{VarName:"uuid", VarType:"string"},
+ 
+								},
+			Tag: 			"tst1340",
+			File: 			"library\\tests\\test1\\test_crud\\Crud.go",
+			StartOff: 		12177,
+			EndOff:  		12322,
+			Hash:  			"059EAF721518868C8166B9607E3B28A4",
 		},
 	}
 	

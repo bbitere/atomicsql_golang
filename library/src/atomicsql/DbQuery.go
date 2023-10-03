@@ -252,7 +252,7 @@ func Select[T IGeneric_MODEL, V IGeneric_MODEL](
 			
 			Arr_Append( &arr, fnSelect( itm ) );			
 		}
-		query.pRTM = (new (RuntimeQuery[V])).Constr( arr, _this.pRTM.structDefs )
+		query.pRTM = (new (RuntimeQuery[V])).Constr( arr, _this.pRTM.structDefs, nil )
 						
 		return query;
 	}else {
@@ -353,6 +353,60 @@ func Aggregate[T IGeneric_MODEL, V IGeneric_MODEL](
 	
 		var query = (new(DBQuery[V])).Constr(tbl1);
 
+		var arr, err2 = _Aggregate_doRuntime[T, V]( _this, _this.pRTM.models );			
+		if( err2 != nil){
+			_this.checkMySqlError("Error in _Aggregate_doRuntime. Structs are not compatible", err2);
+		}
+		
+		query.pRTM = (new (RuntimeQuery[V])).Constr( arr, _this.pRTM.structDefs, nil )
+		return query;
+	}else {
+
+		var ctx = _this.tableInst.m_ctx
+		//var safe_SQL_ITEM_DEF = _this.m_SQL_ITEM_DEF;
+
+		var tbl1 = (new(DBTable[V])).Constr(
+		_this.tableInst.m_sqlName,
+		_this.tableInst.m_langName,
+		_this.tableInst.m_ctx)
+
+		var query = (new(DBQuery[V])).Constr(tbl1);
+
+		query.myTag = _this.myTag;
+		//_this.excludeLangFieldsFromGroupBy	= excludeFromGroupBy
+		query.parentQuery = _this;//.cloneQuery_GenModel();
+		//query.querySelectNewRecord = (new (DBSqlQuery[V])).Constr(sql);
+		
+		query.querySelectNewRecord_isAgregator = true;
+		query.m_SQL_ITEM_DEF 		= ctx.newSQL_ITEM( SQL_ITEM_DEF_Aggr );
+		//query.lamdaSelectNewRecord 	= _this.m_SQL_ITEM_DEF;
+
+		var sql, excludeFromGroupBy = _Aggregate_generateSql[ T, V]( _this, _this.m_SQL_ITEM_DEF );
+		query.querySelectNewRecord_Text = sql;
+		query.excludeLangFieldsFromGroupBy	= excludeFromGroupBy		
+		//query.tablePhpModelName    = tablePhpModelName;
+		
+		//_this.m_SQL_ITEM_DEF = safe_SQL_ITEM_DEF;
+		return query
+	}
+}
+
+/*
+func Aggregate1[T IGeneric_MODEL, V IGeneric_MODEL]( 
+	_this *DBQuery[T],
+	fnAggregate func (x []*T) *V,
+	fields ... string,
+	 )  *DBQuery[V] {
+
+	if( _this.pRTM != nil ){
+
+		var tbl1 = (new(DBTable[V])).Constr(
+			_this.tableInst.m_sqlName,
+			_this.tableInst.m_langName,
+			_this.tableInst.m_ctx)
+	
+		var query = (new(DBQuery[V])).Constr(tbl1);
+
 		var arr = []*V{}
 		for _, itm := range( _this.pRTM.models ) {
 			
@@ -390,6 +444,7 @@ func Aggregate[T IGeneric_MODEL, V IGeneric_MODEL](
 		return query
 	}
 }
+*/
 
 // WhereEq() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
 //
@@ -536,6 +591,9 @@ func (_this *DBQuery[T]) GetModels() ([]*T, error) {
 // Using records should be done with precaution, because can impact the app flow
 func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error) {
 
+	if( _this.pRTM != nil ){
+		return _this.pRTM.models, nil;
+	}
 	sqlQuery := _this._getRows(false, fields, false)
 
 	var ctx = _this.tableInst.m_ctx
@@ -561,6 +619,14 @@ func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error) {
 //  
 //  var elem = context.Table.Where().GetFirstModel()
 func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
+
+	if( _this.pRTM != nil ){
+		if( len(_this.pRTM.models) > 0 ){
+			return _this.pRTM.models[0], nil;
+		}else{
+			return nil, nil
+		}
+	}
 
 	_this.setLimit(0, 1)
 
@@ -596,6 +662,14 @@ func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
 // **NOTE**: Using records should be done with precaution, because can impact the app flow
 func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 
+	if( _this.pRTM != nil ){
+		if( len(_this.pRTM.models) > 0 ){
+			return _this.pRTM.models[0], nil;
+		}else{
+			return nil, nil
+		}
+	}
+
 	_this.setLimit(0, 1)
 
 	sqlQuery := _this._getRows(false, fields, false)
@@ -621,6 +695,11 @@ func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 //  
 //  var elems = context.Table.Where().GetModels()
 func (_this *DBQuery[T]) GetDistinctModels() ([]*T, error) {
+
+	if( _this.pRTM != nil ){
+		var fields  = []string{}
+		return _this._getDistinctRTM(fields, _this.pRTM.models), nil;
+	}
 
 	sqlQuery := _this._getRows(true, nil, false)
 
@@ -653,6 +732,10 @@ func (_this *DBQuery[T]) GetDistinctModels() ([]*T, error) {
 // 
 // **NOTE**: Using records should be done with precaution, because can impact the app flow
 func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
+
+	if( _this.pRTM != nil ){
+		return _this._getDistinctRTM( fields, _this.pRTM.models ), nil;
+	}
 
 	sqlQuery := _this._getRows(true, fields, false)
 
@@ -691,6 +774,14 @@ func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 // Please check the info
 func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation ) (*T, error) {
 
+	if( _this.pRTM != nil ){
+		if( len(_this.pRTM.models) > 0 ){
+			return _this.pRTM.models[0], nil;
+		}else{
+			return nil, nil
+		}
+	}
+
 	_this.setLimit(0, 1)
 	arrAny, err := _this._getModelRelations(structDefs, nil) 
 
@@ -720,6 +811,10 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 //	}
 func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]*T, error) {
 	
+	if( _this.pRTM != nil ){
+		return _this.pRTM.models, nil;
+	}
+
 	arrAny, err := _this._getModelRelations(structDefs, nil) 
 
 	var arr = convertToTemplateT[T](arrAny);
@@ -744,7 +839,13 @@ func (_this *DBQuery[T]) _getModelsRel( structDefs[] *TDefIncludeRelation ) ([]*
 //  var propString = context.Table.Qry("").WhereEq( "propName", nameValue ).GetSingleDataS("propValue");
 func (_this *DBQuery[T]) GetSingleDataS( fieldName string) (string, error) {
 
-	_this.clearCachedSyntax()
+	if( _this.pRTM != nil ){
+		if( len(_this.pRTM.models) > 0 ){
+			return _this.getValueS( _this.pRTM.models[0], fieldName);
+		}else{
+			return "", nil
+		}
+	}
 
 	var sqlQuery = _this._getRows(false, []string{fieldName}, false)
 
@@ -771,7 +872,13 @@ func (_this *DBQuery[T]) GetSingleDataS( fieldName string) (string, error) {
 
 func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string) (int64, error) {
 
-	_this.clearCachedSyntax()
+	if( _this.pRTM != nil ){
+		if( len(_this.pRTM.models) > 0 ){
+			return _this.getValueI( _this.pRTM.models[0], fieldName);
+		}else{
+			return 0, nil
+		}
+	}
 
 	var sqlQuery = _this._getRows(false, []string{fieldName}, false)
 
@@ -819,9 +926,24 @@ func (_this *DBQuery[T]) singleDataS(dbResult *sql.Rows, fieldName string) (stri
 //  
 //  var ids = context.Table.Qry("").Where( .. ).GetSingleFieldRows("ID");
 
-func (_this *DBQuery[T]) GetSingleFieldRows(field string) ([]string, error) {
+func (_this *DBQuery[T]) GetSingleFieldRows(fieldName string) ([]string, error) {
 
-	sqlQuery := _this._getRows(false, []string{field}, false)
+	if( _this.pRTM != nil ){
+
+		var arr = []string{};
+		for i:= 0; i < len(_this.pRTM.models); i++ {
+			var val, err = _this.getValueS( _this.pRTM.models[i], fieldName);
+			if( err == nil){
+				Arr_Append( &arr,  val);
+			}else{
+				return nil, err
+			}
+
+		}
+		return arr, nil;
+	}
+
+	sqlQuery := _this._getRows(false, []string{fieldName}, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -832,7 +954,7 @@ func (_this *DBQuery[T]) GetSingleFieldRows(field string) ([]string, error) {
 	if dbResult != nil && err == nil {
 
 		_this.clearCachedSyntax()
-		return _this._arrayOfSingleField(dbResult, field), nil
+		return _this._arrayOfSingleField(dbResult, fieldName), nil
 	}
 
 	_this.checkMySqlError(sqlQuery, err)
@@ -926,6 +1048,16 @@ func (_this *DBQuery[T]) InsertOrUpdateModel(data *T) (int64, error) {
 // you can use fields to select only same fields for update. For insertsion, this arg is ingnored
 func (_this *DBQuery[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *[]string) (int64, error) {
 
+	if( _this.pRTM != nil){		
+		if( _this.pRTM.collection != nil){		
+
+			var models = []*T{model};
+			(*_this.pRTM.collection).InsertOrUpdateModels( models);
+			return 1, nil;
+		}
+		return 1, nil
+	}
+
 	if model == nil {
 		return 0, nil
 	}
@@ -953,6 +1085,16 @@ func (_this *DBQuery[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *
 // 
 // you can use fields to select only same fields for update. For insertsion, this arg is ingnored
 func (_this *DBQuery[T]) InsertRecord(data *T, bInsertID bool, fields *[]string) (int64, error) {
+
+	if( _this.pRTM != nil){		
+		if( _this.pRTM.collection != nil){		
+
+			var models = []*T{data};
+			(*_this.pRTM.collection).InsertModels( models);
+			return 1, nil;
+		}
+		return 1, nil
+	}
 
 	if data == nil {
 		return 0, nil
@@ -983,6 +1125,11 @@ func (_this *DBQuery[T]) InsertOrUpdateModels(models []*T) ( error) {
 // 
 // you can use fields to select only same fields for update. For insertsion, this arg is ingnored
 func (_this *DBQuery[T]) InsertOrUpdateRecords(models []*T, fields []string) ( error) {
+
+	if( _this.pRTM != nil){		
+		Arr_AddRange( &_this.pRTM.models, &models);
+		return nil
+	}
 
 	var arrIns = []*T{}
 	var arrUpd = []*T{}
@@ -1053,17 +1200,32 @@ func (_this *DBQuery[T]) DeleteModels()  error {
 
 	if( _this.pRTM != nil ){
 
-		var nameID = "";
-		var arrIDs = []any{}
-		for _, model := range( _this.pRTM.models) {
+		if( _this.pRTM.collection != nil){
 
-			var name_ID, id, _ = _this._getNameAndID( model );
-			nameID = name_ID;
-			Arr_Append( &arrIDs, any(id) );
+			var ret = (*_this.pRTM.collection).DeleteModels( _this.pRTM.models );
+			if( !ret){
+				return fmt.Errorf("elem not inserted")
+			}
+			return nil;
+		}else{
+
+			var nameID = "";
+			var arrIDs = []any{}
+			for _, model := range( _this.pRTM.models) {
+
+				var name_ID, id, _ = _this._getNameAndID( model );
+				nameID = name_ID;
+				Arr_Append( &arrIDs, any(id) );
+			}
+			return _this.WhereIn( nameID, arrIDs)._deleteModels();
 		}
-		return _this.WhereIn( nameID, arrIDs).DeleteModels();
-
 	}else {
+
+		return _this._deleteModels();
+	}
+}
+
+func (_this *DBQuery[T]) _deleteModels()  error {		
 
 		var sqlQuery    = _this._deleteRecords();
 		var ctx = _this.tableInst.m_ctx
@@ -1079,7 +1241,7 @@ func (_this *DBQuery[T]) DeleteModels()  error {
 		
 		_this.checkMySqlError( sqlQuery, err );
 		return err;
-	}
+	
 }
 
 // Delete model 
@@ -1088,6 +1250,22 @@ func (_this *DBQuery[T]) DeleteModels()  error {
 //  
 //  context.Table.Qry("").DeleteModel( model )
 func (_this *DBQuery[T]) DeleteModel(model *T)  error {
+
+	if( _this.pRTM != nil ){
+
+		if( _this.pRTM.collection != nil){
+
+			var ret= (*_this.pRTM.collection).DeleteModels( _this.pRTM.models );
+			if(!ret){
+				return fmt.Errorf("elem not inserted")
+			}
+			return nil;
+		}else{
+
+			var name_ID, id, _ = _this._getNameAndID( model );
+			return _this.WhereEq( name_ID, id)._deleteModels();
+		}
+	}
 
 	var nameID, id, _ = _this._getNameAndID(model );
 	var sqlQuery      = _this.WhereEq( nameID, id)._deleteRecords();
@@ -1107,8 +1285,6 @@ func (_this *DBQuery[T]) DeleteModel(model *T)  error {
 	return err;
 }
 
-
-
 const COUNT_NAME   = "Count1";
 
 type TGetCount struct {
@@ -1125,6 +1301,10 @@ type TGetCount struct {
 //  context.Table.Qry("").WhereEq("field", "value").GetCount()
 func (_this *DBQuery[T])  GetCount() (int64, error){
 
+	if( _this.pRTM != nil ){
+		return int64( len( _this.pRTM.models )), nil;
+	}
+
 	var sqlQuery     = _this._getCount( COUNT_NAME );
 
 	var ctx = _this.tableInst.m_ctx
@@ -1134,12 +1314,6 @@ func (_this *DBQuery[T])  GetCount() (int64, error){
 	ctx.updateDeltaTime2()	
 
 	if( dbResult1 != nil && err == nil ){
-		/*if( $bDonotCall )
-		{
-			$rec = _this._oneRecord( $mysqliResult );
-			return I($rec[ $COUNT_NAME ]);                
-		}
-		else*/
 
 		//I used a custom DBTable because _oneRecord(dbResult) read entire model, not 1 single record
 		var tableCnt = (new ( DBTable[TGetCount])).Constr("", "", _this.tableInst.m_ctx)		
@@ -1150,10 +1324,7 @@ func (_this *DBQuery[T])  GetCount() (int64, error){
 		}
 	}
 	
-	//if( $bDonotCall )
-	//    _this.checkMySqlError1( $sqlQuery );
-	//else
-		_this.checkMySqlError( sqlQuery, err );
+	_this.checkMySqlError( sqlQuery, err );
 	return 0, err;
 }
 
@@ -1181,6 +1352,10 @@ func (_this *DBQuery[T])  GetDistinct1Count( field string) (int64,error){
 //
 func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 
+	if( _this.pRTM != nil ){
+		return int64(len(_this._getDistinctRTM( fields, _this.pRTM.models ))), nil;
+	}
+
 	if(fields == nil || len(fields) == 0 ){
 		return 0, fmt.Errorf("arg fields is empty");
 	}
@@ -1193,28 +1368,17 @@ func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 	ctx.updateDeltaTime2()	
 
 	if( dbResult1 != nil && err == nil ){
-		/*if( $bDonotCall )
-		{
-			$rec = _this._oneRecord( $mysqliResult );
-			return I($rec[ $COUNT_NAME ]);                
-		}
-		else*/
+		
 		var tableCnt = (new ( DBTable[TGetCount])).Constr("", "", _this.tableInst.m_ctx)
-		var ret, err = tableCnt.Qry("").singleDataInt( dbResult1, COUNT_NAME );
-		//var ret, err = _this.singleDataInt( dbResult1, COUNT_NAME );
+		var ret, err = tableCnt.Qry("").singleDataInt( dbResult1, COUNT_NAME );		
 		if( err == nil ){
 
 			return ret, nil;
 		}
-	}
-	
-	//if( $bDonotCall )
-	//    _this.checkMySqlError1( $sqlQuery );
-	//else
-		_this.checkMySqlError( sqlQuery, err );
+	}	
+	_this.checkMySqlError( sqlQuery, err );
 	return 0, err;
 }
-
 
 // ToRTM() - is a method that switch the execution of DB query in golang code, from that point forward.
 //
@@ -1252,7 +1416,7 @@ func (_this *DBQuery[T]) ToRTM( bRuntime bool, structDefs ... *TDefIncludeRelati
 	if( bRuntime ){
 
 		var models, _ = _this._getModelsRel( structDefs );		
-		_this.pRTM = (new (RuntimeQuery[T])).Constr( models, structDefs );
+		_this.pRTM = (new (RuntimeQuery[T])).Constr( models, structDefs, nil );
 	}
 	return _this;
 }

@@ -2,7 +2,7 @@
 
 set GoScanPath=C:\Work\SlotMonitor\SlotGames\server-tools\atomicsql_compiler_tool\go2cs\go2cs-master\src\go2cs\bin\Sqlconv\net7.0\
 set GoServerToolPath=C:\Work\SlotMonitor\SlotGames\server-tools\GoServerTool\bin\Debug
-C:\Work\SlotMonitor\SlotGames\server-tools\GoServerTool\bin\Debug
+
 set PATH=%PATH%;%GoScanPath%
 set PATH=%PATH%;%GoServerToolPath%
 
