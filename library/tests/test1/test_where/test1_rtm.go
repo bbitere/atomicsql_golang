@@ -62,7 +62,7 @@ func Test1Rtm_10( step int, bCheckName bool) ( int, error, string) {
 	
 	usrs4, err := atmsql.Select(
 					atmsql.Aggregate[ m.User, TUserAggr ]( 
-						ctx.User.Qry("evcy58").ToRTM(true, ctx.User_.UserRoleID.Def() ).
+						ctx.User.Qry("tst1_066").ToRTM(true, ctx.User_.UserRoleID.Def() ).
 						Where(func(x *m.User) bool {
 							return x.UserRoleID.IsActive == true
 						}),
