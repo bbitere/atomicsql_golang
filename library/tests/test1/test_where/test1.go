@@ -3,7 +3,9 @@ package test1_where
 import (
 	"database/sql"
 
+	atmsql_func "github.com/bbitere/atomicsql_golang.git/src/atmsql_func"
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+
 	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/atomicsql_ormdefs"
 	m "github.com/bbitere/atomicsql_golang.git/tests/test1/mymodels"
 )
@@ -397,8 +399,8 @@ func Test1_10( step int, bCheckName bool) ( int, error, string) {
 
 						return &TUserView{
 							UserRoleName: x.UserRoleID.RoleName,
-							MinTime1: atmsql.Sql_MinDateN( x.Time1 ),
-							SumMoney: atmsql.Sql_SumF64( x.Money ),
+							MinTime1: atmsql_func.Sql_MinDateN( x.Time1 ),
+							SumMoney: atmsql_func.Sql_SumF64( x.Money ),
 						}
 					}).OrderAsc( "UserRoleName" ).GetModels();
 

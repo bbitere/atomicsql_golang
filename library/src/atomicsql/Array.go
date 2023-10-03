@@ -96,6 +96,14 @@ func Util_FromMapToArray[T any](dict *map[string]T) []T {
 	}
 	return ret
 }
+func Util_FromMapKeysToArray[T any](dict *map[string]T) []string {
+
+	var ret = []string{}
+	for key := range *dict {
+		Arr_Append(&ret, key)
+	}
+	return ret
+}
 
 func Null_String(s string ) sql.NullString{
 

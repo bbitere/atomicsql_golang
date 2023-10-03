@@ -103,6 +103,12 @@ type IRuntimeCollection[T IGeneric_MODEL]  interface {
 }
 
 
+type TModel[T IGeneric_MODEL] struct {
+	model 	*T;
+	dict 	map[string]string;
+}
+
+
 type RuntimeQuery[T IGeneric_MODEL] struct {
 	structDefs []*TDefIncludeRelation
 	models [] *T

@@ -982,13 +982,35 @@ func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[
 
 	if( _this.pRTM != nil){
 
-		var models = _this.pRTM.models;
+		var fields = Util_FromMapKeysToArray( &orderFields.data );
+		var models = _this.rtm_getModelsAsDicts( &_this.pRTM.models, fields );
+
 		sort.Slice( models, 
 			func( i int, j int) bool { 
-				//var v1, _ = _this.getModel_FieldValueS( models[i], models[i], field, false)
-				//var v2, _ = _this.getModel_FieldValueS( models[j], models[i], field, false)
-				return false; //TO BE DONE.. I dont know yet how to do it.
+
+				for itm:= 0; itm < len(fields); itm++{
+
+					var fieldName = fields[itm];
+					var order1 = orderFields.data[ fieldName ];
+
+					var v1 = models[i].dict[ fieldName ];
+					var v2 = models[j].dict[ fieldName ];
+					if( order1 == ESortField.Desc){
+
+						if( v1 > v2 ){
+							return true
+						}
+					}else
+					if( order1 == ESortField.Asc){
+
+						if( v1 < v2 ){
+							return true
+						}
+					}					
+				}
+				return false;
 			})
+		_this.pRTM.models = _this.rtm_updateModelsFromDicts( &models );
 		return _this;
 	}else{
 
@@ -1005,9 +1027,9 @@ func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[
 				orderBy += ", "
 			}
 
-			if val == "asc" {
+			if val == ESortField.Asc {
 				orderBy += fmt.Sprintf(" %s ASC", _this._quoteField(nameField))
-			} else if val == "desc" {
+			} else if val == ESortField.Desc {
 				orderBy += fmt.Sprintf(" %s DESC", _this._quoteField(nameField))
 			}
 		}
@@ -1026,13 +1048,14 @@ func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T] {
 
 	if( _this.pRTM != nil){
 
-		var models = _this.pRTM.models;
+		var models = _this.rtm_getModelsAsDicts( &_this.pRTM.models, []string{field} );
 		sort.Slice( models, 
 			func( i int, j int) bool { 
-				var v1, _ = _this.getModel_FieldValueS( models[i], models[i], field, false)
-				var v2, _ = _this.getModel_FieldValueS( models[j], models[i], field, false)
+				var v1 = models[i].dict[ field ];
+				var v2 = models[j].dict[ field ];
 				return v1 < v2;
 			})
+		_this.pRTM.models = _this.rtm_updateModelsFromDicts( &models );
 		return _this;
 	}else
 	{
@@ -1050,13 +1073,14 @@ func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T] {
 
 	if( _this.pRTM != nil){
 
-		var models = _this.pRTM.models;
+		var models = _this.rtm_getModelsAsDicts( &_this.pRTM.models, []string{field} );
 		sort.Slice( models, 
 			func( i int, j int) bool { 
-				var v1, _ = _this.getModel_FieldValueS( models[i], models[i], field, false)
-				var v2, _ = _this.getModel_FieldValueS( models[j], models[i], field, false)
+				var v1 = models[i].dict[ field ];
+				var v2 = models[j].dict[ field ];
 				return v1 < v2;
 			})
+		_this.pRTM.models = _this.rtm_updateModelsFromDicts( &models );
 		return _this;
 	}else{
 		if _this.orderBy == "" {

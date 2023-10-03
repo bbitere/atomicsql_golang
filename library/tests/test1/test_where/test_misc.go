@@ -1,7 +1,7 @@
 package test1_where
 
 import (
-	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+	atmsql_func "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 	//orm "github.com/bbitere/atomicsql_golang.git/tests/test1/atomicsql_ormdefs"
 	m "github.com/bbitere/atomicsql_golang.git/tests/test1/mymodels"
 )
@@ -33,7 +33,7 @@ func TestMisc_01(step int, bCheckName bool) ( int, error, string) {
 	Nopp();
 	
 	var countActive, _ = ctx.User.Qry("tst143").Where( func(x *m.User) bool{
-							return atmsql.Sql_IIF( x.UserRoleID != nil, x.UserRoleID.IsActive, false);
+							return atmsql_func.Sql_IIF( x.UserRoleID != nil, x.UserRoleID.IsActive, false);
 						}).GetCount();
 
 	if( countActive == 0){

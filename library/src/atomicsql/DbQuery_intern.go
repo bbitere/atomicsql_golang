@@ -118,12 +118,21 @@ func _removeQuote( /*#String*/ data string) string {
 }
 
 //------------------------------------------------------------------------
-
-type DataOrderByFields struct {
-	data map[string]string
+type VESortField string
+type TESortField struct {
+	Asc VESortField
+	Desc VESortField
+}
+var ESortField = TESortField{
+	Asc:"asc",
+	Desc: "desc",
 }
 
-func (_this DataOrderByFields) Constr(data map[string]string) {
+type DataOrderByFields struct {
+	data map[string] VESortField
+}
+
+func (_this DataOrderByFields) Constr(data map[string]VESortField) {
 
 	_this.data = data
 }

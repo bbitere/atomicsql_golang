@@ -174,10 +174,8 @@ func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T]
 		return arr, fmt.Errorf(errTxt);
 	}else{
 		return arr, nil;
-	}	
-	
+	}		
 }
-
 
 func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName string, bDoSet bool) (string, bool){
 
@@ -469,3 +467,37 @@ func (_this *DBQuery[T]) getValueS( modelV any, fieldName string ) (string, erro
 }
 
 
+func (_this *DBQuery[T]) rtm_getModelsAsDicts( models *[]*T, fields []string ) []*TModel[T] {
+
+	var arr = []*TModel[T]{}
+
+	for iElem := 0; iElem < len(*models); iElem++ {
+		
+		var model = (*models)[ iElem ];
+		var dict = map[string]string{}
+
+		for iFld := 0; iFld < len(fields); iFld++ {
+		
+			var fieldName = fields[iFld];
+			var valS, _ = _this.getModel_FieldValueS( model, model, fieldName, false);
+			dict[ fieldName ] = valS;
+		}
+		var elem = new (TModel[T]);
+		elem.model =  model;
+		elem.dict  = dict;
+		Arr_Append( &arr, elem);
+	}
+	
+	return arr;
+}
+
+func (_this *DBQuery[T]) rtm_updateModelsFromDicts( models1 *[]*TModel[T] ) []*T {
+
+	var arr = []*T{}
+
+	for iElem := 0; iElem < len(*models1); iElem++ {
+
+		Arr_Append( &arr, (*models1)[iElem].model );
+	}
+	return arr;
+}
