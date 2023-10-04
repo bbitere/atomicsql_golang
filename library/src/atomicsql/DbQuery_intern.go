@@ -70,7 +70,7 @@ func isset(data any) bool {
 }
 
 
-func S(s any) string {
+func _S(s any) string {
 
 	return fmt.Sprintf("%s", s)
 }
@@ -81,13 +81,7 @@ func IFFs(b bool, s1 string, s2 string) string {
 		return s2
 	}
 }
-func IFF[T any](b bool, s1 T, s2 T) T {
-	if b {
-		return s1
-	} else {
-		return s2
-	}
-}
+
 
 func str_replace(replaced string, replace string, target string) string {
 	return Str.Replace(target, replaced, replace, -1)
@@ -801,18 +795,18 @@ func (_this *DBQuery[T]) generateSqlText( /*#DBSqlQuery< T >*/ query *DBSqlQuery
 		} else {
 			if query.m_field1 != "" {
 				if query.m_field2 != "" {
-					o1 := _this._quoteTableField(S(query.m_field1), false, _this.getJoins())
-					o2 := _this._quoteTableField(S(query.m_field2), false, _this.getJoins())
+					o1 := _this._quoteTableField(_S(query.m_field1), false, _this.getJoins())
+					o2 := _this._quoteTableField(_S(query.m_field2), false, _this.getJoins())
 					return fmt.Sprintf("%s %s %s", o1, _op, o2)
 				} else {
-					o1 := _this._quoteTableField(S(query.m_field1), false, _this.getJoins())
+					o1 := _this._quoteTableField(_S(query.m_field1), false, _this.getJoins())
 					o2 := _this._quote(query.m_operand2, nil)
 					return fmt.Sprintf("%s %s %s", o1, _op, o2)
 				}
 			} else {
 				if query.m_field2 != "" {
 					o1 := _this._quote(query.m_operand1,nil)
-					o2 := _this._quoteTableField(S(query.m_field2), false, _this.getJoins())
+					o2 := _this._quoteTableField(_S(query.m_field2), false, _this.getJoins())
 					return fmt.Sprintf("%s %s %s", o1, _op, o2)
 				} else {
 					o1 := _this._quote(query.m_operand1, nil)

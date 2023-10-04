@@ -758,10 +758,11 @@ func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 
 // Return the first model from sequence.
 // 
-// this model will have set the Relation pointer to a foreignkey table.
+// this model will have set having the Relation pointer for a foreignkey.
 // 
 // context.Table_ is a avatar of Table that contains the fields definitions 
-// and for the Relation the Def() -> definitions of import the foreignkey
+// and for the Relation (Table.RelationID) the Def() method will contains 
+// the definitions of import the foreignkey
 //
 //  ex: 
 //  
@@ -772,6 +773,8 @@ func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 //			fmt.Print( elems.RelationID.Name )	
 // 
 //	}
+// if this will missing, the returned model will have the relation pointer = nil. (Table.RelationID = nil)
+//
 // Please check the info
 func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation ) (*T, error) {
 
@@ -799,7 +802,8 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 // this model will have set the Relation pointer to a foreignkey table.
 // 
 // context.Table_ is a avatar of Table that contains the fields definitions 
-// and for the Relation the Def() -> definitions of import the foreignkey
+// and for the Relation (Table.RelationID) the Def() method will contains 
+// the definitions of import the foreignkey
 //
 //  ex: 
 //  
@@ -810,6 +814,7 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 //			fmt.Print( elems[0].RelationID.Name )	
 // 
 //	}
+// if this will missing, the returned model will have the relation pointer = nil. (Table.RelationID = nil)
 func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]*T, error) {
 	
 	if( _this.pRTM != nil ){
@@ -1118,7 +1123,7 @@ func (_this *DBQuery[T]) InsertOrUpdateModel(data *T) (int64, error) {
 //  
 //  context.Table.Qry("").UpdateModels( records)
 // 
-// you can use fields to select only same fields for update. For insertsion, this arg is ingnored
+// you can use fields to select only same fields for update. For insertion, this arg is ingnored
 func (_this *DBQuery[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *[]string) (int64, error) {
 
 	if( _this.pRTM != nil){		
@@ -1262,7 +1267,7 @@ func (_this *DBQuery[T]) UpdateModel( model *T) error {
 
 // Delete all models from curent sequence (table) of only the filtered models. 
 // 
-// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// You can mix it with a filter condition [atomicsql.Where]() or [atomicsql.WhereEq]() or [atomicsql.WhereNotEq]()
 // 
 //  ex: 
 //  
@@ -1367,7 +1372,7 @@ type TGetCount struct {
 
 // return the number of elements in a sequence
 // 
-// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// You can mix it with a filter condition [atomicsql.Where]() or [atomicsql.WhereEq]() or [atomicsql.WhereNotEq]()
 // 
 //  ex: 
 //  
@@ -1403,7 +1408,7 @@ func (_this *DBQuery[T])  GetCount() (int64, error){
 
 // return the number of distinct elements in a sequence, find the distinct elemnts using field
 // 
-// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// You can mix it with a filter condition [atomicsql.Where]() or [atomicsql.WhereEq]() or [atomicsql.WhereNotEq]()
 // optional you can specify the fields where to select the distinction between elems
 // 
 //  ex: 
@@ -1416,7 +1421,7 @@ func (_this *DBQuery[T])  GetDistinct1Count( field string) (int64,error){
 }
 // return the number of distinct elements in a sequence, find the distinct elemnts using fields
 // 
-// You can mix it with a filter condition Where() or WhereEq() or WhereNotEq()
+// You can mix it with a filter condition [atomicsql.Where]() or [atomicsql.WhereEq]() or [atomicsql.WhereNotEq]()
 // optional you can specify the fields where to select the distinction between elems
 // 
 //  ex: 
@@ -1457,10 +1462,12 @@ func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 //
 // why this? 
 //
-// Because sometime the speed of DB query can do switched to be test in golang code, and compare the speed. you can do it easily if you switch the flag "bRuntime"
-//
-// Because the ORM engine is not mature yet, and sometime a issue could appear in compiling scanner phase, and this can be a better approch if an unxepected error appear in your code
-//
+// Because sometime the speed of DB query can do switched to be test in golang code, 
+// and compare the speed. you can do it easily if you switch the flag "bRuntime"
+// 
+// Because the ORM engine is not mature yet, and sometime a issue could appear in compiling scanner phase, 
+// and this can be a better approch if an unxepected error appear in your code
+// 
 // Ex
 //  var models = context.Table.Qry("tag1").Where( func(x *Table) bool{
 //		return  x.proj_id == proj_id &&
