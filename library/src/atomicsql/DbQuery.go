@@ -10,15 +10,7 @@ import (
 	reflect "reflect"
 	"sort"
 	time "time"
-	//"sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/common/arrays"
-	//"sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/common/arrays"
-	//m "sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_models"
-	//fmt "fmt"
 )
-
-//type mUser m.User
-
-//type Vvalue m.IGeneric_MODEL
 
 // ------------------------------------------------------
 
@@ -194,7 +186,7 @@ func (_this *DBQuery[T]) Select[V any](fnSelect func(x *T) *V) *DBQuery[V] {
 //
 // Let's look to next example. First define a local struct vUser1.
 // 
-// if you want to extend from model User, you need to put the annotation `atomicsql:"copy-model"` 
+// If you wish to extend a model using User as a base, you can use the annotation 'atomicsql:"copy-model"' as shown in the example below.
 //
 //  import m "models"
 //  
@@ -523,19 +515,33 @@ func (_this *DBQuery[T]) whereNotIn( field string, operandsIn []any)*DBQuery[T]{
 	return _this;
 }
 
-
-// Where() is a unlimited filter condition function. if in upper examples with diferent versions of Where: whereEq, WhereNotEq, the limitation was done by the num of arguments,
-// here you can add any condition you want, even a subquery condition
+// Where() is an unlimited conditioning function. It allows you to add any desired filtering condition, including complex subconditions, even a subquery condition
 //
-//  Ex: 
-//
+// Ex: 
 //  context.Table.Where( func(x *Table)bool{
 //
-//  return Sql_IIF( x.Relation != nil, x.RelationID.Name, "") != "admin" && (val == nil || x.Relation_ID == val)
-// 
+//  return Sql_IIF( x.Relation != nil, x.RelationID.Name, "") != "admin" &&
+//               (val == nil || x.Relation_ID == val)
 //  } 
 // 
 // in this example the Where() add a condition: IsNull( User.RelationID.Name, "") AND (val is null OR User.Relation_ID = val)
+// or you can add a subquery condition
+// 
+// Let;s see an example of subquery condition (This feature is not Implemented yet.):
+// Ex:
+//  context.Table.Where( func(x *Table)bool{
+//  
+//      var count, _ = context.Table2.WhereEq( context.Table2_.Field1, "val2").GetCount();
+//      return Sql_IIF( x.Relation != nil, count, 0) > 5 &&
+//               (val == nil || x.Relation_ID == val)
+//  } 
+// Or another example more logic:
+// Ex:
+//  context.Table.Where( func(x *Table)bool{
+//  
+//      var ids, _ = context.Table2.WhereEq( context.Table2_.Field1, "val2").GetRowsAsFieldInt( context.Table2_.ID );
+//      return Sql_ArrayContain( ids, context.Table.ForeignKey_ID);
+//  } 
 func (_this *DBQuery[T]) Where( fnWhere func(x *T) bool) *DBQuery[T] {
 
 	if( _this.pRTM != nil ){
@@ -689,20 +695,19 @@ func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 	_this.checkMySqlError(sqlQuery, err)
 	return nil, err
 }
-
+/*
 // Return a slice of distinct models from sequence.
 // 
 //  ex: 
 //  
-//  var elems = context.Table.Where().GetModels()
-func (_this *DBQuery[T]) GetDistinctModels() ([]*T, error) {
+//  var elems = context.Table.Where().GetDistinctModels( []string{ context.Table_.Field1, context.Table_.Field2 })
+func (_this *DBQuery[T]) GetDistinctModels( fields []string ) ([]*T, error) {
 
-	if( _this.pRTM != nil ){
-		var fields  = []string{}
+	if( _this.pRTM != nil ){		
 		return _this._getDistinctRTM(fields, _this.pRTM.models), _this.errorRet;
 	}
 
-	sqlQuery := _this._getRows(true, nil, false)
+	sqlQuery := _this._getRows(true, fields, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -718,6 +723,7 @@ func (_this *DBQuery[T]) GetDistinctModels() ([]*T, error) {
 	_this.checkMySqlError(sqlQuery, err)
 	return nil, err
 }
+*/
 
 // Return a slice of distinct records from sequence. The uniqueness is provided by pair of fields arg
 // 
@@ -766,7 +772,7 @@ func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 //
 //  ex: 
 //  
-//  var elem = context.Table.Where().GetModelRel( context.Table_.RelationID.Def() )
+//  var elem, err = context.Table.Where().GetFirstModelRel( context.Table_.RelationID.Def() )
 // 
 //     if(  elem != nill && elem.RelationID != nil ){
 // 
@@ -807,7 +813,7 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 //
 //  ex: 
 //  
-//  var elems = context.Table.Where().GetModelsRel( context.Table_.RelationID.Def() )
+//  var elems, err = context.Table.Where().GetModelsRel( context.Table_.RelationID.Def() )
 // 
 //     if( len(elems) > 0 && elems[0].RelationID != nil ){
 // 
@@ -840,10 +846,20 @@ func (_this *DBQuery[T]) _getModelsRel( structDefs[] *TDefIncludeRelation ) ([]*
 // 
 // this is useful when we want to obtain a property value from a props table
 // 
-//  ex: 
+// ex: 
+// Let consider a Table struct having 2 columns
+//  type Table struct{
+//      propName  string  	// the name of Property
+//      propValue string	// the value of Property. here can be any type, not only string
+//  }
 //  
-//  var propString = context.Table.Qry("").WhereEq( "propName", nameValue ).GetSingleDataS("propValue");
-func (_this *DBQuery[T]) GetSingleDataS( fieldName string) (string, error) {
+//  var propString, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetSingleDataString(context.Table_.propValue);
+// 
+// this is echivalent with:
+//  var modelTable, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetFirstRecord( []String{context.Table_.propValue}); 
+//  var propString = modelTable.propValue;
+// So, the second case it is a bit complex, we prefer the first one.
+func (_this *DBQuery[T]) GetSingleDataString( fieldName string) (string, error) {
 
 	if( _this.pRTM != nil ){
 		if( _this.errorRet  != nil){
@@ -875,10 +891,19 @@ func (_this *DBQuery[T]) GetSingleDataS( fieldName string) (string, error) {
 // 
 // this is useful when we want to obtain a property value from a props table
 // 
-//  ex: 
+// ex: 
+// Let consider a Table struct having 2 columns
+//  type Table struct{
+//      propName  string  	// the name of Property
+//      propValue int	// the value of Property. here can be any type, not only string
+//  }
 //  
-//  var propInt = context.Table.Qry("").WhereEq( "propName", nameValue ).GetSingleDataInt("propValue");
-
+//  var propString, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetSingleDataI(context.Table_.propValue);
+// 
+// this is echivalent with:
+//  var modelTable, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetFirstRecord( []String{context.Table_.propValue}); 
+//  var propString = modelTable.propValue;
+// So, the second case it is a bit complex, we prefer the first one.
 func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string) (int64, error) {
 
 	if( _this.pRTM != nil ){
@@ -936,16 +961,22 @@ func (_this *DBQuery[T]) singleDataS(dbResult *sql.Rows, fieldName string) (stri
 // 
 //  ex: 
 //  
-//  var ids = context.Table.Qry("").Where( .. ).GetSingleFieldRows("ID");
-
-func (_this *DBQuery[T]) GetSingleFieldRows(fieldName string) ([]string, error) {
+//  var ids, err = context.Table.Qry("").Where( .. ).GetRowsAsFieldString( context.Table_.UUID);
+//
+// this is echivalent with:
+// 
+//  var models, err = context.Table.Qry("").Where( .. ).GetRecords( []string{context.Table_.UUID});
+//  var ids = []String{}
+//  for model := range models {
+//      Arr_apend( &ids, model.UUID );
+//  }
+func (_this *DBQuery[T]) GetRowsAsFieldString(fieldName string) ([]string, error) {
 
 	if( _this.pRTM != nil ){
 
 		if( _this.errorRet  != nil){
 			return nil, _this.errorRet;
 		}
-
 		var arr = []string{};
 		for i:= 0; i < len(_this.pRTM.models); i++ {
 			var val, err = _this.getValueS( _this.pRTM.models[i], fieldName);
@@ -954,11 +985,9 @@ func (_this *DBQuery[T]) GetSingleFieldRows(fieldName string) ([]string, error) 
 			}else{
 				return nil, err
 			}
-
 		}
 		return arr, nil;
 	}
-
 	sqlQuery := _this._getRows(false, []string{fieldName}, false)
 
 	var ctx = _this.tableInst.m_ctx
@@ -970,7 +999,58 @@ func (_this *DBQuery[T]) GetSingleFieldRows(fieldName string) ([]string, error) 
 	if dbResult != nil && err == nil {
 
 		_this.clearCachedSyntax()
-		return _this._arrayOfSingleField(dbResult, fieldName), nil
+		return _this._arrayOfSingleFieldString(dbResult, fieldName), nil
+	}
+
+	_this.checkMySqlError(sqlQuery, err)
+	return nil, err
+}
+
+// return an array with data for all elements of sequence from a specific field, (field arg is to determine this field )
+// 
+// this is useful when we want to obtain the Ids- of sequence
+// 
+//  ex: 
+//  
+//  var ids, err = context.Table.Qry("").Where( .. ).GetRowsAsFieldInt( context.Table_.ID);
+//
+// this is echivalent with:
+// 
+//  var models, err = context.Table.Qry("").Where( .. ).GetRecords( []string{context.Table_.ID});
+//  var ids = []int64{}
+//  for model := range models {
+//      Arr_apend( &ids, int64(model.ID) );
+//  }
+func (_this *DBQuery[T]) GetRowsAsFieldInt(fieldName string) ([]int64, error) {
+
+	if( _this.pRTM != nil ){
+
+		if( _this.errorRet  != nil){
+			return nil, _this.errorRet;
+		}
+		var arr = []int64{};
+		for i:= 0; i < len(_this.pRTM.models); i++ {
+			var val, err = _this.getValueI( _this.pRTM.models[i], fieldName);
+			if( err == nil){
+				Arr_Append( &arr,  val);
+			}else{
+				return nil, err
+			}
+		}
+		return arr, nil;
+	}
+	sqlQuery := _this._getRows(false, []string{fieldName}, false)
+
+	var ctx = _this.tableInst.m_ctx
+	ctx.currOperationDTime2 = time.Now()			
+	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
+	defer queryClose( dbResult )
+	ctx.updateDeltaTime2()	
+
+	if dbResult != nil && err == nil {
+
+		_this.clearCachedSyntax()
+		return _this._arrayOfSingleFieldInt(dbResult, fieldName), nil
 	}
 
 	_this.checkMySqlError(sqlQuery, err)
@@ -982,7 +1062,14 @@ func (_this *DBQuery[T]) GetSingleFieldRows(fieldName string) ([]string, error) 
 // Parameters:
 //
 // - `orderFields`: is a dictionary that have for each field the asc or desc attribute
-
+// Example:
+// var orderFields = DataOrderByFields;
+// orderFields.SetDictionary( 
+//			ctx.Table_.Field1, atomicsql.ESortField.Asc,
+//			ctx.Table_.Field2, atomicsql.ESortField.Desc,
+//		)
+//  var rows = ctx.Table.Qry("").OrderByFields( &orderFields ).GetModels();
+// the rows are ordered by Table.Field1 Asc and after Table.Field2 Desc
 func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[T] {
 
 	if( _this.pRTM != nil){
@@ -1049,6 +1136,9 @@ func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[
 }
 
 // Sorts the elements of a sequence in ascending order, using field arg.
+// Example:
+//  var rows = ctx.Table.Qry("").OrderAsc(ctx.Table_.Field1).GetModels();
+// the rows are ordered Ascendent by Table.Field1
 func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T] {
 
 	if( _this.pRTM != nil){
@@ -1074,6 +1164,9 @@ func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T] {
 }
 
 // Sorts the elements of a sequence in descending order, using field arg.
+// Example:
+//  var rows = ctx.Table.Qry("").OrderDesc(ctx.Table_.Field1).GetModels();
+// the rows are ordered Descending by Table.Field1
 func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T] {
 
 	if( _this.pRTM != nil){
@@ -1083,7 +1176,7 @@ func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T] {
 			func( i int, j int) bool { 
 				var v1 = models[i].dict[ field ];
 				var v2 = models[j].dict[ field ];
-				return v1 < v2;
+				return v1 > v2;
 			})
 		_this.pRTM.models = _this.rtm_updateModelsFromDicts( &models );
 		return _this;
@@ -1265,7 +1358,7 @@ func (_this *DBQuery[T]) UpdateModel( model *T) error {
 	return _this._updateBulkRecords( &arr, nil);
 }
 
-// Delete all models from curent sequence (table) of only the filtered models. 
+// Delete all models selected in curent sequence (using Where(), WhereEq(), WhereNotEq() ) from database or collection. 
 // 
 // You can mix it with a filter condition [atomicsql.Where]() or [atomicsql.WhereEq]() or [atomicsql.WhereNotEq]()
 // 
@@ -1322,7 +1415,7 @@ func (_this *DBQuery[T]) _deleteModels()  error {
 	
 }
 
-// Delete model 
+// Delete a model from database or collection
 // 
 //  ex: 
 //  
@@ -1413,7 +1506,7 @@ func (_this *DBQuery[T])  GetCount() (int64, error){
 // 
 //  ex: 
 //  
-//  context.Table.Qry("").WhereEq("field", "value").GetCount()
+//  var count, err = context.Table.Qry("").WhereEq( ctx.Table_.field, "value").GetDistinct1Count(ctx.Table_.field)
 //
 func (_this *DBQuery[T])  GetDistinct1Count( field string) (int64,error){
 
@@ -1426,7 +1519,7 @@ func (_this *DBQuery[T])  GetDistinct1Count( field string) (int64,error){
 // 
 //  ex: 
 //  
-//  context.Table.Qry("").WhereEq("field", "value").GetCount()
+//  var count, err = context.Table.Qry("").WhereEq( ctx.Table_.field, "value").GetDistinct1Count([]string{ctx.Table_.field})
 //
 func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 
@@ -1465,8 +1558,8 @@ func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 // Because sometime the speed of DB query can do switched to be test in golang code, 
 // and compare the speed. you can do it easily if you switch the flag "bRuntime"
 // 
-// Because the ORM engine is not mature yet, and sometime a issue could appear in compiling scanner phase, 
-// and this can be a better approch if an unxepected error appear in your code
+// Because the ORM engine and scan compiler tool is still in development and might have occasional issues during compilation,
+// it can be helpful to switch to runtime execution temporarily
 // 
 // Ex
 //  var models = context.Table.Qry("tag1").Where( func(x *Table) bool{
@@ -1490,7 +1583,10 @@ func (_this *DBQuery[T])  GetDistinctCount( fields []string) (int64,error){
 //     GetModels()
 // 
 // if Flag RunAsRTM = true, the execution will be passed in golang code.
-// after the ORM will fix the crash of scanner, you can switch RunAsRTM = false, and the execution of query will be done on DB server.
+// 
+// After the ORM team will fix the crash of scanner compiler tool, 
+// 
+// you can switch back RunAsRTM = false, and the execution of the query will be done on DB server.
 func (_this *DBQuery[T]) ToRTM( bRuntime bool, structDefs ... *TDefIncludeRelation) *DBQuery[T] {
 
 	if( bRuntime ){

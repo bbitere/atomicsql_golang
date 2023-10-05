@@ -125,6 +125,16 @@ var ESortField = TESortField{
 type DataOrderByFields struct {
 	data map[string] VESortField
 }
+func (_this *DataOrderByFields) SetDictionary( fields_vals ... string){
+
+	_this.data = make(map[string] VESortField);
+	for i := 0; i < len(fields_vals); i += 2 {
+
+		var key = fields_vals[i+0];
+		var val = fields_vals[1+0];
+		_this.data[ key ] = VESortField(val);
+	}
+}
 
 func (_this DataOrderByFields) Constr(data map[string]VESortField) {
 
@@ -635,21 +645,35 @@ func (_this *DBQuery[T])  readRecordSqlResult(rows *sql.Rows, model any, fields 
 	return err;
 }
 //----------------------------------------------------------------------------
-func (_this *DBQuery[T]) _arrayOfSingleField(sqlResult *sql.Rows, fieldName string) []string {
+func (_this *DBQuery[T]) _arrayOfSingleFieldString(sqlResult *sql.Rows, fieldName string) []string {
 
 	var retList = []string{}
 
 	var model = new(T)
 	for sqlResult.Next() {
 
-		var strVal = readRecordSqlResult_Readfield(*sqlResult, model, fieldName)
+		var strVal = readRecordSqlResult_ReadfieldString(*sqlResult, model, fieldName)
+		//err = sqlResult.Scan(&user.ID, &user.Username, &user.Password, &user.Tel)
+		Arr_Append(&retList, strVal)
+	}
+	return retList
+}
+//----------------------------------------------------------------------------
+func (_this *DBQuery[T]) _arrayOfSingleFieldInt(sqlResult *sql.Rows, fieldName string) []int64 {
+
+	var retList = []int64{}
+
+	var model = new(T)
+	for sqlResult.Next() {
+
+		var strVal = readRecordSqlResult_ReadfieldInt(*sqlResult, model, fieldName)
 		//err = sqlResult.Scan(&user.ID, &user.Username, &user.Password, &user.Tel)
 		Arr_Append(&retList, strVal)
 	}
 	return retList
 }
 
-func readRecordSqlResult_Readfield[T IGeneric_MODEL](rows sql.Rows, model *T, fieldName string) string {
+func readRecordSqlResult_ReadfieldString[T IGeneric_MODEL](rows sql.Rows, model *T, fieldName string) string {
 
 	s := reflect.ValueOf(model).Elem()
 	//numCols := s.NumField()
@@ -663,6 +687,21 @@ func readRecordSqlResult_Readfield[T IGeneric_MODEL](rows sql.Rows, model *T, fi
 
 	}
 	return field.String()
+}
+func readRecordSqlResult_ReadfieldInt[T IGeneric_MODEL](rows sql.Rows, model *T, fieldName string) int64 {
+
+	s := reflect.ValueOf(model).Elem()
+	//numCols := s.NumField()
+	columns := make([]interface{}, 1)
+
+	field := s.FieldByName(fieldName)
+	columns[0] = field.Addr().Interface()
+
+	err := rows.Scan(columns...)
+	if err != nil {
+
+	}
+	return field.Int()
 }
 
 /*#PHPARG=[ T ];*/

@@ -111,6 +111,10 @@ type TCompiledSqlQuery struct {
 
 }
 
+// this is the struct of ORM data context.
+// after the developer execute 1.update_db.cmd, this will generate 2 files
+// DbContext.gen.go, and DbContext_lambdaQueries.gen.go
+// DbContext will be used in project containing all tables.
 type DBContextBase struct {
 	ConnectionString TConnectionString
 	Db               *sql.DB
