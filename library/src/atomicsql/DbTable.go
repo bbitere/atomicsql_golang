@@ -64,29 +64,31 @@ func (_this *DBTable[T]) CloneGenericModel() *DBTable[IGeneric_MODEL] {
 	return newInst
 }
 
-// Qry( tag ) - transform each tabel request, to a query sequence,
-// the query sequence has all methods to do the sql query
-// it should end in one of :
+// Qry( tag ) - each DBTable can start a query sequence (DBQuery) usign Qry() method,
+//
+// The query sequence has implemented all methods to generate the sql query and it should end in one of :
 //
 // GetModels(), GetFirstModel(),
 // GetModelsRel(), GetFirstModelRel(),
 // GetRecords(), GetFirstRecord(), 
 // GetCount(), GetDistinctCount(),
-// GetSingleDataS(), GetSingleDataI(), GetSingleFieldRows()
-// GetDistinctModels(), GetDistinctRecords()
+// GetSingleDataString(), GetSingleDataInt(), 
+// GetRowsAsFieldString(), GetRowsAsFieldInt()
+// GetDistinctRecords()
 // DeleteModels(), DeleteModel()
 //
-// the argument tag should be non empty, and unique per app only in this 3 example
+// the `tag` argument should be non empty and unique per app only in this 3 examples
 //  context.Table.Qry("tag1").Where( func(x *Table) bool{ ... }).
 // or
 //  atmsql.Select( context.Table.Qry("tag2"), func(x *Table) *TView{ ... }).
 // or
 //  atmsql.Select( orm.Aggregate[ Table, TableAggr ]( context.Table.Qry("tag2")), func(x *TableAggr) *TView{ ... }).
 //
-// Each of this statemets will be translated by the scanner tool, and the inner content will be translated in Sql Query.
+// Each of this statemets will be translated by the scanner tool (using script 4.scan_queries.cmd),
+// and the inner content will be translated in a SQL Query.
 // So this tag, help to do a correct identification of the precompiled sql query.
 // 
-// This is the main diference between this library and linq (C#) or jinq (java)
+// Usign this Qry(tag) method to generate sql query, is the main diference between atomicSql library and linq (C#) or jinq (java)
 func (_this *DBTable[T]) Qry(tagID string) *DBQuery[T] {
 
 	_this.m_ctx.currOperationDTime = time.Now()

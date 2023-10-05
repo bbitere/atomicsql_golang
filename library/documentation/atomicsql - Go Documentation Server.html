@@ -1,0 +1,3168 @@
+<!DOCTYPE html>
+<!-- saved from url=(0094)http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.Where -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>atomicsql - Go Documentation Server</title>
+
+<link type="text/css" rel="stylesheet" href="./atomicsql - Go Documentation Server_files/style.css">
+
+<script>window.initFuncs = [];</script>
+<script src="./atomicsql - Go Documentation Server_files/jquery.js.download" defer=""></script>
+
+
+
+<script>var goVersion = "go1.20.3";</script>
+<script src="./atomicsql - Go Documentation Server_files/godocs.js.download" defer=""></script>
+</head>
+<body>
+
+<div id="lowframe" style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://127.0.0.1:6060/pkg/">Go Documentation Server</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://127.0.0.1:6060/pkg/">GoDoc</a></div>
+<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#" id="menu-button"><span id="menu-button-arrow">▽</span></a>
+<form method="GET" action="http://127.0.0.1:6060/search">
+<div id="menu" style="min-width: 60px;">
+
+<span class="search-box"><input type="search" id="search" name="q" placeholder="Search" aria-label="Search" required=""><button type="submit"><span><!-- magnifying glass: --><svg width="24" height="24" viewBox="0 0 24 24"><title>submit search</title><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></button></span>
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide" tabindex="-1" style="outline: 0px;">
+<div class="container">
+
+
+  <h1>
+    Package atomicsql
+    <span class="text-muted"></span>
+  </h1>
+
+
+
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/bbitere/atomicsql_golang.git/src/atomicsql"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+				
+			</div>
+		</div>
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_AddRange">func Arr_AddRange[T any](a *[]T, a2 *[]T)</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Append">func Arr_Append[T any](a *[]T, value ...T)</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Contains">func Arr_Contains[T comparable](arr *[]T, value T) bool</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_IndexOf">func Arr_IndexOf[T comparable](arr *[]T, index int, value T) int</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_InsertAtIndex">func Arr_InsertAtIndex[T any](a *[]T, index int, value T)</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Remove">func Arr_Remove[T comparable](a *[]T, elem T)</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_RemoveAt">func Arr_RemoveAt[T any](a *[]T, index int)</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Slice">func Arr_Slice[T any](a *[]T, idx int, count int) []T</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IFF">func IFF[T any](b bool, s1 T, s2 T) T</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IFFs">func IFFs(b bool, s1 string, s2 string) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Bool">func Null_Bool(s bool) sql.NullBool</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Byte">func Null_Byte(s byte) sql.NullByte</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Float64">func Null_Float64(s float64) sql.NullFloat64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Int16">func Null_Int16(s int16) sql.NullInt16</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Int32">func Null_Int32(s int32) sql.NullInt32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Int64">func Null_Int64(s int64) sql.NullInt64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_String">func Null_String(s string) sql.NullString</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Time">func Null_Time(s time.Time) sql.NullTime</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#StaticOpenDB">func StaticOpenDB(connStr TConnectionString, dialect string, maxIdle int, maxOpen int) (*sql.DB, error)</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Str_Index">func Str_Index(data string, find string, idx int) int</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Str_SubString">func Str_SubString(s string, index int, len int) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Util_CloneMapString">func Util_CloneMapString[T any](dict *map[string]T) map[string]T</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Util_FromMapKeysToArray">func Util_FromMapKeysToArray[T any](dict *map[string]T) []string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Util_FromMapToArray">func Util_FromMapToArray[T any](dict *map[string]T) []T</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Where1">func Where1(fn func(x int) bool)</a></dd>
+			
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">type DBContextBase</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#OpenDB">func OpenDB(connStr TConnectionString, dialect string, maxIdle int, maxOpen int) (*DBContextBase, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.BeginTx">func (_this *DBContextBase) BeginTx() (*Transaction, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.CommitOrRollBack">func (_this *DBContextBase) CommitOrRollBack(t *Transaction) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Constr">func (_this *DBContextBase) Constr(dialect string, schemaSql TSchemaDef) (*DBContextBase, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Exec">func (_this *DBContextBase) Exec(sqlQuery string) (sql.Result, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.GetTotalDeltaTime">func (_this *DBContextBase) GetTotalDeltaTime() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Log_Fatal">func (_this *DBContextBase) Log_Fatal(formatstr string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Log_Print">func (_this *DBContextBase) Log_Print(formatstr string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.ProcessCompiledQuery">func (_this *DBContextBase) ProcessCompiledQuery(compiledSqlQueries *map[string]TCompiledSqlQuery, bDoAllChecks bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Query">func (_this *DBContextBase) Query(query string, args ...any) (*sql.Rows, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.QueryRow">func (_this *DBContextBase) QueryRow(sqlQuery string) *sql.Row</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">type DBQuery</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Aggregate">func Aggregate[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T]) *DBQuery[V]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Select">func Select[T IGeneric_MODEL, V IGeneric_MODEL](sequence *DBQuery[T], fnSelect func(x *T) *V) *DBQuery[V]</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.Constr">func (_this *DBQuery[T]) Constr(tableInst *DBTable[T]) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.DeleteModel">func (_this *DBQuery[T]) DeleteModel(model *T) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.DeleteModels">func (_this *DBQuery[T]) DeleteModels() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetCount">func (_this *DBQuery[T]) GetCount() (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetDistinct1Count">func (_this *DBQuery[T]) GetDistinct1Count(field string) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetDistinctCount">func (_this *DBQuery[T]) GetDistinctCount(fields []string) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetDistinctRecords">func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetFirstModel">func (_this *DBQuery[T]) GetFirstModel() (*T, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetFirstModelRel">func (_this *DBQuery[T]) GetFirstModelRel(structDefs ...*TDefIncludeRelation) (*T, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetFirstRecord">func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetModels">func (_this *DBQuery[T]) GetModels() ([]*T, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetModelsRel">func (_this *DBQuery[T]) GetModelsRel(structDefs ...*TDefIncludeRelation) ([]*T, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetRecords">func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetRowsAsFieldInt">func (_this *DBQuery[T]) GetRowsAsFieldInt(fieldName string) ([]int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetRowsAsFieldString">func (_this *DBQuery[T]) GetRowsAsFieldString(fieldName string) ([]string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetSingleDataInt">func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetSingleDataString">func (_this *DBQuery[T]) GetSingleDataString(fieldName string) (string, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InFO">func (_this *DBQuery[T]) InFO(field string, operandsIn []any, bNOT bool, bSpaceOrNull bool, fieldFK string) *DBSqlQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertModel">func (_this *DBQuery[T]) InsertModel(model *T) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateModel">func (_this *DBQuery[T]) InsertOrUpdateModel(data *T) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateModels">func (_this *DBQuery[T]) InsertOrUpdateModels(models []*T) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateRecord">func (_this *DBQuery[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *[]string) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateRecords">func (_this *DBQuery[T]) InsertOrUpdateRecords(models []*T, fields []string) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertRecord">func (_this *DBQuery[T]) InsertRecord(data *T, bInsertID bool, fields *[]string) (int64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.OrderAsc">func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.OrderByFields">func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.OrderDesc">func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.ToRTM">func (_this *DBQuery[T]) ToRTM(bRuntime bool, structDefs ...*TDefIncludeRelation) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.UpdateModel">func (_this *DBQuery[T]) UpdateModel(model *T) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.UpdateModels">func (_this *DBQuery[T]) UpdateModels(records *[]*T) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.Where">func (_this *DBQuery[T]) Where(fnWhere func(x *T) bool) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereEq">func (_this *DBQuery[T]) WhereEq(field string, operand any) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereEqFld">func (_this *DBQuery[T]) WhereEqFld(field string, field2 string) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereIn">func (_this *DBQuery[T]) WhereIn(field string, operandsIn []any) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereNotEq">func (_this *DBQuery[T]) WhereNotEq(field string, operand any) *DBQuery[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereNotEqFld">func (_this *DBQuery[T]) WhereNotEqFld(field string, field2 string) *DBQuery[T]</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoin">type DBSqlJoin</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoinCollection">type DBSqlJoinCollection</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoinCollection.Constr">func (_this *DBSqlJoinCollection) Constr() *DBSqlJoinCollection</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlQuery">type DBSqlQuery</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlQuery.Constr">func (_this *DBSqlQuery[T]) Constr(text string) *DBSqlQuery[T]</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">type DBTable</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.CloneGenericModel">func (_this *DBTable[T]) CloneGenericModel() *DBTable[IGeneric_MODEL]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.Constr">func (_this *DBTable[T]) Constr(sqlName string, langName string, ctx *DBContextBase) *DBTable[T]</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.DeatachModel">func (_this *DBTable[T]) DeatachModel(model *T)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.Qry">func (_this *DBTable[T]) Qry(tagID string) *DBQuery[T]</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields">type DataOrderByFields</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields.Constr">func (_this DataOrderByFields) Constr(data map[string]VESortField)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields.SetDictionary">func (_this *DataOrderByFields) SetDictionary(fields_vals ...string)</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_Def">type Generic_Def</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_Def.Def">func (_this *Generic_Def) Def() TDefIncludeRelation</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL">type Generic_MODEL</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL.GetID">func (_this Generic_MODEL) GetID() int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL.GetUID">func (_this Generic_MODEL) GetUID() string</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IDBContext">type IDBContext</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IDBQuery">type IDBQuery</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_Def">type IGeneric_Def</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">type IGeneric_MODEL</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IQueryBase">type IQueryBase</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IRuntimeCollection">type IRuntimeCollection</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeCollection">type RuntimeCollection</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeQuery">type RuntimeQuery</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeQuery.Constr">func (_this *RuntimeQuery[T]) Constr(models []*T, structDefs []*TDefIncludeRelation, collection *IRuntimeCollection[T]) *RuntimeQuery[T]</a></dd>
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TCompiledSqlQuery">type TCompiledSqlQuery</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TConnectionString">type TConnectionString</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefIncludeRelation">type TDefIncludeRelation</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefTable">type TDefTable</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESortField">type TESortField</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESqlDialect">type TESqlDialect</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TExternVar">type TExternVar</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TForeignKey">type TForeignKey</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TFuncStatic">type TFuncStatic</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TGetCount">type TGetCount</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TLangDataBase">type TLangDataBase</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TModel">type TModel</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSchemaDef">type TSchemaDef</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSqlColumnDef">type TSqlColumnDef</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Transaction">type Transaction</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#VESortField">type VESortField</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Vvalue">type Vvalue</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h3>Package files</h3>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go">Array.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go">DBContextBase.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBQuery_lambda.go">DBQuery_lambda.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go">DbQuery.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go">DbQuery_classes.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_collection.go">DbQuery_collection.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_dialect.go">DbQuery_dialect.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go">DbQuery_intern.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbSetupConnection.go">DbSetupConnection.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbTable.go">DbTable.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go">Generic_MODEL.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Transactions.go">Transactions.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		
+
+		
+			<h2 id="pkg-constants">Constants <a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#pkg-constants">¶</a></h2>
+			
+				
+				<pre>const <span id="ATTR_ATOMICSQL_COPY_MODEL">ATTR_ATOMICSQL_COPY_MODEL</span> <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> = "atomicsql:\"copy-model\""</pre>
+			
+				
+				<pre>const <span id="CONCAT_FIELDS">CONCAT_FIELDS</span> <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> = "."</pre>
+			
+				
+				<pre>const <span id="COUNT_NAME">COUNT_NAME</span> = "Count1"</pre>
+			
+				
+				<pre>const <span id="DEF_TABLE_COLUMN_ID">DEF_TABLE_COLUMN_ID</span> = "ID"</pre>
+			
+				
+				<pre>const <span id="DEF_TABLE_ROW_IDX">DEF_TABLE_ROW_IDX</span> = "ROW_IDX"</pre>
+			
+				
+				<pre>const <span id="Generic_MODEL_Name">Generic_MODEL_Name</span> = "Generic_MODEL"</pre>
+			
+				
+				<pre>const <span id="NULL_FK_ID">NULL_FK_ID</span> = 0</pre>
+			
+				
+				<pre>const <span id="ORM_NAME">ORM_NAME</span> <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> = "gatomicsql"</pre>
+			
+				
+				<pre>const <span id="POSTFIX_FIELDS">POSTFIX_FIELDS</span> = "@#}"</pre>
+			
+				<p>{#@field@#}
+{@@staticKey@@}
+
+				</p><pre>const <span id="PREFIX_FIELDS">PREFIX_FIELDS</span> = "{#@"</pre>
+			
+				
+				<pre>const <span id="SQL_ITEM_DEF">SQL_ITEM_DEF</span> <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> = "itm"</pre>
+			
+				
+				<pre>const <span id="SQL_ITEM_DEF_Aggr">SQL_ITEM_DEF_Aggr</span> <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> = "itmAggr"</pre>
+			
+				
+				<pre>const <span id="SQL_ITEM_DEF_SQ">SQL_ITEM_DEF_SQ</span> <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> = "itmq"</pre>
+			
+				
+				<pre>const <span id="SQL_POSTGRESS_RND_UUID">SQL_POSTGRESS_RND_UUID</span> = "gen_random_uuid()"</pre>
+			
+		
+		
+			<h2 id="pkg-variables">Variables <a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#pkg-variables">¶</a></h2>
+			
+				
+				<pre>var <span id="ESortField">ESortField</span> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESortField">TESortField</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESortField.Asc">Asc</a>:  "asc",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESortField.Desc">Desc</a>: "desc",
+}</pre>
+			
+		
+		
+			
+			
+			<h2 id="Arr_AddRange">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=1121:1162#L50">Arr_AddRange</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_AddRange">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_AddRange[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](a *[]T, a2 *[]T)</pre>
+			<p>utility method: array: add range
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Arr_Append">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=1001:1043#L43">Arr_Append</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Append">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_Append[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](a *[]T, value ...T)</pre>
+			<p>utility method: array: append items
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Arr_Contains">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=107:162#L1">Arr_Contains</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Contains">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_Contains[T <a href="http://127.0.0.1:6060/pkg/builtin/#comparable">comparable</a>](arr *[]T, value T) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a></pre>
+			<p>utility method: array: contains
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Arr_IndexOf">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=300:364#L10">Arr_IndexOf</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_IndexOf">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_IndexOf[T <a href="http://127.0.0.1:6060/pkg/builtin/#comparable">comparable</a>](arr *[]T, index <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, value T) <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+			<p>utility method: array: indexof
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Arr_InsertAtIndex">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=552:609#L25">Arr_InsertAtIndex</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_InsertAtIndex">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_InsertAtIndex[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](a *[]T, index <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, value T)</pre>
+			<p>utility method: array: insert at index
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Arr_Remove">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=1524:1569#L67">Arr_Remove</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Remove">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_Remove[T <a href="http://127.0.0.1:6060/pkg/builtin/#comparable">comparable</a>](a *[]T, elem T)</pre>
+			<p>utility method: array: remove object
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Arr_RemoveAt">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=1244:1287#L56">Arr_RemoveAt</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_RemoveAt">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_RemoveAt[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](a *[]T, index <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>)</pre>
+			<p>utility method: array: remove at index
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Arr_Slice">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=874:927#L38">Arr_Slice</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Arr_Slice">¶</a>
+				
+				
+			</h2>
+			<pre>func Arr_Slice[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](a *[]T, idx <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, count <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) []T</pre>
+			<p>utility method: array: insert at create a slice
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="IFF">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=2511:2548#L114">IFF</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IFF">¶</a>
+				
+				
+			</h2>
+			<pre>func IFF[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](b <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, s1 T, s2 T) T</pre>
+			<p>Used to replace operator ?:
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="IFFs">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=1206:1252#L64">IFFs</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IFFs">¶</a>
+				
+				
+			</h2>
+			<pre>func IFFs(b <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, s1 <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, s2 <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Null_Bool">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=4039:4075#L162">Null_Bool</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Bool">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_Bool(s <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullBool">NullBool</a></pre>
+			<p>see the comments for Null_String()
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Null_Byte">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=3907:3942#L155">Null_Byte</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Byte">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_Byte(s <a href="http://127.0.0.1:6060/pkg/builtin/#byte">byte</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullByte">NullByte</a></pre>
+			<p>see the comments for Null_String()
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Null_Float64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=4170:4215#L168">Null_Float64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Float64">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_Float64(s <a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullFloat64">NullFloat64</a></pre>
+			<p>see the comments for Null_String()
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Null_Int16">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=3771:3810#L149">Null_Int16</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Int16">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_Int16(s <a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a></pre>
+			<p>see the comments for Null_String()
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Null_Int32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=3635:3674#L143">Null_Int32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Int32">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_Int32(s <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a></pre>
+			<p>see the comments for Null_String()
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Null_Int64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=3502:3540#L138">Null_Int64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Int64">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_Int64(s <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a></pre>
+			<p>see the comments for Null_String()
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Null_String">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=3361:3403#L132">Null_String</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_String">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_String(s <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a></pre>
+			<p>In the next example you faild to do correct the things
+</p><pre>var user2 = m.User{UserName: UserName2, Money: UserMoney,
+                   UserRoleID: &amp;m.UserRole{ RoleName: RoleNameAdmin, IsActive: true,
+              		RoleStatusID:  &amp;m.StatusRole{ StatusName: { String: StatusNameActive} }}};
+</pre>
+<p>because  StatusName.String = StatusNameActive, and the developer omit to set Status.Valid =true, the code will have an issue
+for this you need to write the code like this:
+</p><pre>var user2 = m.User{UserName: UserName2, Money: UserMoney,
+                   UserRoleID: &amp;m.UserRole{ RoleName: RoleNameAdmin, IsActive: true,
+              		RoleStatusID:  &amp;m.StatusRole{ StatusName: atmsql.Null_String( StatusNameActive ) }}};
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Null_Time">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=4314:4355#L173">Null_Time</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Null_Time">¶</a>
+				
+				
+			</h2>
+			<pre>func Null_Time(s <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullTime">NullTime</a></pre>
+			<p>see the comments for Null_String()
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="StaticOpenDB">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbSetupConnection.go?s=170:273#L5">StaticOpenDB</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#StaticOpenDB">¶</a>
+				
+				
+			</h2>
+			<pre>func StaticOpenDB(connStr <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TConnectionString">TConnectionString</a>, dialect <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, maxIdle <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, maxOpen <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) (*<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#DB">DB</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Str_Index">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=954:1007#L46">Str_Index</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Str_Index">¶</a>
+				
+				
+			</h2>
+			<pre>func Str_Index(data <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, find <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, idx <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Str_SubString">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=1734:1789#L80">Str_SubString</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Str_SubString">¶</a>
+				
+				
+			</h2>
+			<pre>func Str_SubString(s <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, index <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, len <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>utility method: string: substring
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Util_CloneMapString">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=1869:1933#L85">Util_CloneMapString</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Util_CloneMapString">¶</a>
+				
+				
+			</h2>
+			<pre>func Util_CloneMapString[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](dict *map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]T) map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]T</pre>
+			<p>utility method: clone map[string][T]
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Util_FromMapKeysToArray">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=2312:2376#L104">Util_FromMapKeysToArray</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Util_FromMapKeysToArray">¶</a>
+				
+				
+			</h2>
+			<pre>func Util_FromMapKeysToArray[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](dict *map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]T) []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>utility method: convert from map to array. (keys only)
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Util_FromMapToArray">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Array.go?s=2097:2152#L94">Util_FromMapToArray</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Util_FromMapToArray">¶</a>
+				
+				
+			</h2>
+			<pre>func Util_FromMapToArray[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](dict *map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]T) []T</pre>
+			<p>utility method: convert from map to array. (values only)
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Where1">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBQuery_lambda.go?s=571:605#L15">Where1</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Where1">¶</a>
+				
+				
+			</h2>
+			<pre>func Where1(fn func(x <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>)</pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="DBContextBase">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=2386:3067#L108">DBContextBase</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">¶</a>
+				
+				
+			</h2>
+			<p>this is the struct of ORM data context.
+after the developer execute 1.update_db.cmd, this will generate 2 files
+DbContext.gen.go, and DbContext_lambdaQueries.gen.go
+DbContext will be used in project containing all tables.
+
+			</p><pre>type DBContextBase struct {
+<span id="DBContextBase.ConnectionString"></span>    ConnectionString <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TConnectionString">TConnectionString</a>
+<span id="DBContextBase.Db"></span>    Db               *<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#DB">DB</a>
+
+<span id="DBContextBase.SCHEMA_SQL"></span>    SCHEMA_SQL           <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSchemaDef">TSchemaDef</a>
+<span id="DBContextBase.SCHEMA_SQL_BySqlName"></span>    SCHEMA_SQL_BySqlName <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSchemaDef">TSchemaDef</a>
+<span id="DBContextBase.SCHEMA_SQL_Columns"></span>    SCHEMA_SQL_Columns   map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+
+<span id="DBContextBase.FOREIGN_KEYS"></span>    FOREIGN_KEYS map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TForeignKey">TForeignKey</a>
+<span id="DBContextBase.LangDB"></span>    LangDB       <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TLangDataBase">TLangDataBase</a>
+<span id="DBContextBase.Dialect"></span>    Dialect      <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> <span class="comment">//TESqlDialect</span>
+
+<span id="DBContextBase.CompiledSqlQueries"></span>    CompiledSqlQueries map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TCompiledSqlQuery">TCompiledSqlQuery</a>
+
+<span id="DBContextBase.AllTables"></span>    AllTables map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>]
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+				
+				<pre>var <span id="DBConnectionInst">DBConnectionInst</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a></pre>
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="OpenDB">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbSetupConnection.go?s=1345:1449#L51">OpenDB</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#OpenDB">¶</a>
+					
+					
+				</h3>
+				<pre>func OpenDB(connStr <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TConnectionString">TConnectionString</a>, dialect <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, maxIdle <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, maxOpen <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) (*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+			
+
+			
+				
+				<h3 id="DBContextBase.BeginTx">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Transactions.go?s=154:213#L4">BeginTx</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.BeginTx">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) BeginTx() (*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Transaction">Transaction</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBContextBase.CommitOrRollBack">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Transactions.go?s=352:421#L13">CommitOrRollBack</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.CommitOrRollBack">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) CommitOrRollBack(t *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Transaction">Transaction</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBContextBase.Constr">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=5194:5290#L233">Constr</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Constr">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) Constr(dialect <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, schemaSql <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSchemaDef">TSchemaDef</a>) (*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>the constructor
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBContextBase.Exec">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=3169:3239#L142">Exec</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Exec">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) Exec(sqlQuery <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#Result">Result</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>execute sql query
+see sql.Exec()
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBContextBase.GetTotalDeltaTime">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=4991:5046#L226">GetTotalDeltaTime</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.GetTotalDeltaTime">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) GetTotalDeltaTime() <a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBContextBase.Log_Fatal">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=8148:8204#L344">Log_Fatal</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Log_Fatal">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) Log_Fatal(formatstr <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>)</pre>
+				<p>write in log
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBContextBase.Log_Print">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=8300:8356#L351">Log_Print</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Log_Print">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) Log_Print(formatstr <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>)</pre>
+				<p>write in log
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBContextBase.ProcessCompiledQuery">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=8510:8629#L358">ProcessCompiledQuery</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.ProcessCompiledQuery">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) ProcessCompiledQuery(compiledSqlQueries *map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TCompiledSqlQuery">TCompiledSqlQuery</a>, bDoAllChecks <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>)</pre>
+				<p>It must be called in DBcontext_lambdaQueries.gen.go file. internal use
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBContextBase.Query">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=3826:3905#L171">Query</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.Query">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) Query(query <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, args ...<a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>) (*<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#Rows">Rows</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>get Rows executing a sql query
+see sql.Query()
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBContextBase.QueryRow">func (*DBContextBase) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=3498:3561#L156">QueryRow</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase.QueryRow">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) QueryRow(sqlQuery <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#Row">Row</a></pre>
+				<p>get a Row executing a sql query
+see sql.QueryRow()
+
+				
+				
+				
+			
+		
+			
+			
+			</p><h2 id="DBQuery">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=908:2197#L35">DBQuery</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">¶</a>
+				
+				
+			</h2>
+			<p>DBQuery is the struct that will do the magic in atomicsql.
+</p><p>context.Table.Qry(""); -&gt;return DBQuery
+</p><p>DBQuery can put in a sequence a lot of another methods to set attributes, the last will be a method that return or set the data.
+
+			</p><pre>type DBQuery[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>] struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="Aggregate">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=11057:11148#L326">Aggregate</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Aggregate">¶</a>
+					
+					
+				</h3>
+				<pre>func Aggregate[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>, V <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>](
+    _this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T],
+) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[V]</pre>
+				<p>Aggregate() - Applies an accumulator function over a sequence.
+</p><p>Agregate( sequence) - receive a sequence and return an altered sequence.
+</p><p>From this reason - Aggregate() can be used only in tandem/pairs with Select()
+</p><pre>Select( Aggregate[ m.User, TUserAggr ]( sequence ), fnSelect );
+</pre>
+<p>from this reason you need to look first to Select() method documentation
+</p><p>So Let's look to next example: User struct is defined from DataBase and it is exported as struct in golang.
+</p><pre>type User struct /*atomicsql-table:"user"*/ {
+
+	orm.Generic_MODEL
+
+	ID                  int32                         `json:"ID,omitempty"`
+	UserName            string                        `json:"userName"`
+	UUID                string                        `json:"UUID"`
+	UserPsw             string                        `json:"user_psw"`
+	UserRoleID          *UserRole                     `json:"-"`
+	UserRole_ID         sql.NullInt32                 `json:"userRole_ID"`
+	Misc1               []uint8                       `json:"misc1"`
+	Time1               sql.NullTime                  `json:"time1"`
+	Money               float64                       `json:"money"`
+
+}
+</pre>
+<p>First we need to declare the aggregator struct TUserAggr and the translate / select struct TUserView
+</p><p>Lets see that in next section:
+</p><pre> import (
+ m "models"
+ orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+ )
+ type TUserAggr struct {
+
+ 	orm.Generic_MODEL	// all struct should have the basestruct orm.Generic_MODEL
+ 	UserRoleID          *m.UserRole			//should be identic like in m.User
+ 	UserRole_ID         sql.NullInt32		//should be identic like in m.User
+
+		// remark that the fields with [] will be aggregated
+ 	Time1               []sql.NullTime	//should have the name and the basic type like in m.User
+ 	Money               []float64 		//should have the name and the basic type like in m.User
+ }
+ type TUserView struct{
+
+ 	orm.Generic_MODEL	// all struct should have the basestruct orm.Generic_MODEL
+ 	UserRoleName        string				// the RoleName that categorize the data list.
+ 	MinTime1           	sql.NullTime		// the result of aggregated Time1
+ 	SumMoney            float64 			// the result of sum of Money
+ }
+</pre>
+<p>You need to understand the main point how to creeate TUserAggr struct
+column Time, Money are the columns that will be aggreegate
+they need to have the same name and basic type like m.User struct (see the first example)
+the only difference is that they are array
+</p><p>the another columns invovled are : UserRoleID, UserRole_ID and they should be identically like in m.User struct
+</p><p>So, the aggregator will convert m.User structs list in TUserView list.
+</p><pre>usrs, err := orm.Select(
+				orm.Aggregate[ m.User, TUserAggr ]( ctx.User.Qry("evcy58").
+					Where(func(x *m.User) bool {
+						return x.UserRoleID.IsActive == true
+					}),
+				),
+				func (x *TUserAggr ) *TUserView {
+					return &amp;TUserView{
+						UserRoleName: x.UserRoleID.RoleName,	// the foreignkey x.UserRoleID.RoleName will help to categorize the elems in sequence
+						MinTime1: orm.Sql_MinDateN( x.Time1 ),	//x.Time1 is an array and will be aggregate as MinDate
+						SumMoney: orm.Sql_SumF64( x.Money ),	//x.Money is an array and will be aggregate as Sum
+					}
+				}).GetModels();
+</pre>
+<p>**NOTE**: pay attention to Qry("evcy58")
+</p><p>- "evcy58" it is an unique tag per application that help to retrive the sql associated code with this instruction
+</p><p>**NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the Select() argument not placed outside
+
+				
+				
+			
+				
+				</p><h3 id="Select">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=6500:6618#L218">Select</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Select">¶</a>
+					
+					
+				</h3>
+				<pre>func Select[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>, V <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>](
+    sequence *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T],
+    fnSelect func(x *T) *V,
+) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[V]</pre>
+				<p>Select() - Projects each element of a sequence  into a new form.
+</p><p>Let's look to next example. First define a local struct vUser1.
+</p><p>If you wish to extend a model using User as a base, you can use the annotation 'atomicsql:"copy-model"' as shown in the example below.
+</p><pre>import m "models"
+
+type vUser1 struct {
+
+	m.User	`atomicsql:"copy-model"`  	// extends vUser1 struct with struct m.User
+	UserRole string						// add an field that is the forkeignkey UserRoleID.
+}
+</pre>
+<p>And after, look to the call.
+Select contain 2 parameters
+</p><p>1. the sequcence. ctx.User.Qry().Where().Order().. etc
+</p><p>2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return.
+</p><pre>ex:
+usrs4, err := orm.Select( ctx.User.Qry("evcy59").
+
+Where(func(x *m.User) bool {
+
+	return x.UserRoleID.IsActive == true
+}),
+
+func (x *m.User ) *vUser1 {
+
+	return &amp;vUser1{
+
+		User:     *x,						//return the original m.User struct
+		UserRole: x.UserRoleID.RoleName,	//add UserRole field
+	}
+
+}).GetModels();
+</pre>
+<p>**NOTE**: pay attention to Qry("evcy59")
+</p><p>- "evcy59" it is an unique tag per application that help to retrive the sql associated code with this instruction
+</p><p>**NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the Select() argument not placed outside
+
+				
+				
+			
+
+			
+				
+				</p><h3 id="DBQuery.Constr">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=2218:2284#L87">Constr</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.Constr">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) Constr(tableInst *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[T]) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>internal user
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.DeleteModel">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=43072:43125#L1415">DeleteModel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.DeleteModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) DeleteModel(model *T) <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a></pre>
+				<p>Delete a model from database or collection
+</p><pre>ex:
+
+context.Table.Qry("").DeleteModel( model )
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.DeleteModels">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=41903:41949#L1362">DeleteModels</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.DeleteModels">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) DeleteModels() <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a></pre>
+				<p>Delete all models selected in curent sequence (using Where(), WhereEq(), WhereNotEq() ) from database or collection.
+</p><p>You can mix it with a filter condition <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Where">atomicsql.Where</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereEq">atomicsql.WhereEq</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereNotEq">atomicsql.WhereNotEq</a>()
+</p><pre>ex:
+
+context.Table.Qry("").WhereEq("field", "value").DeleteModels()
+</pre>
+<p>or
+</p><pre>context.Table.Qry("").WhereEq( context.Table_.ID, value_ID ).DeleteModels()
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetCount">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=44302:44353#L1465">GetCount</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetCount">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetCount() (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>return the number of elements in a sequence
+</p><p>You can mix it with a filter condition <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Where">atomicsql.Where</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereEq">atomicsql.WhereEq</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereNotEq">atomicsql.WhereNotEq</a>()
+</p><pre>ex:
+
+context.Table.Qry("").WhereEq("field", "value").GetCount()
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetDistinct1Count">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=45552:45624#L1503">GetDistinct1Count</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetDistinct1Count">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetDistinct1Count(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>return the number of distinct elements in a sequence, find the distinct elemnts using field
+</p><p>You can mix it with a filter condition <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Where">atomicsql.Where</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereEq">atomicsql.WhereEq</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereNotEq">atomicsql.WhereNotEq</a>()
+optional you can specify the fields where to select the distinction between elems
+</p><pre>ex:
+
+var count, err = context.Table.Qry("").WhereEq( ctx.Table_.field, "value").GetDistinct1Count(ctx.Table_.field)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetDistinctCount">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=46140:46214#L1516">GetDistinctCount</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetDistinctCount">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetDistinctCount(fields []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>return the number of distinct elements in a sequence, find the distinct elemnts using fields
+</p><p>You can mix it with a filter condition <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Where">atomicsql.Where</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereEq">atomicsql.WhereEq</a>() or <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#WhereNotEq">atomicsql.WhereNotEq</a>()
+optional you can specify the fields where to select the distinction between elems
+</p><pre>ex:
+
+var count, err = context.Table.Qry("").WhereEq( ctx.Table_.field, "value").GetDistinct1Count([]string{ctx.Table_.field})
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetDistinctRecords">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=23965:24039#L733">GetDistinctRecords</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetDistinctRecords">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetDistinctRecords(fields []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) ([]*T, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Return a slice of distinct records from sequence. The uniqueness is provided by pair of fields arg
+</p><pre>ex:
+
+var elems = context.Table.Where().GetDistinctRecords([]string{"ID", "Name"})
+</pre>
+<p>___________________________________________________
+</p><pre>**NOTE**:the diference between Model and Record is that :
+
+the record can have some fields that are not updated from database.
+it is returned from methods (GetRecords, GetRecord, etc) that select only some fields that will be filled with database values, and another fields with invalid values (non selected fields).
+</pre>
+<p>**NOTE**: Using records should be done with precaution, because can impact the app flow
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.GetFirstModel">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=20469:20521#L620">GetFirstModel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetFirstModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetFirstModel() (*T, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Return the first model from sequence. if sequence is empty the returned value is nil
+</p><pre>ex:
+
+var elem = context.Table.Where().GetFirstModel()
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetFirstModelRel">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=25262:25354#L777">GetFirstModelRel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetFirstModelRel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetFirstModelRel(structDefs ...*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefIncludeRelation">TDefIncludeRelation</a>) (*T, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Return the first model from sequence.
+</p><p>this model will have set having the Relation pointer for a foreignkey.
+</p><p>context.Table_ is a avatar of Table that contains the fields definitions
+and for the Relation (Table.RelationID) the Def() method will contains
+the definitions of import the foreignkey
+</p><pre> ex:
+
+ var elem, err = context.Table.Where().GetFirstModelRel( context.Table_.RelationID.Def() )
+
+    if(  elem != nill &amp;&amp; elem.RelationID != nil ){
+
+			fmt.Print( elems.RelationID.Name )
+
+	}
+</pre>
+<p>if this will missing, the returned model will have the relation pointer = nil. (Table.RelationID = nil)
+</p><p>Please check the info
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.GetFirstRecord">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=21800:21868#L662">GetFirstRecord</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetFirstRecord">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetFirstRecord(fields []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (*T, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Return the first record from sequence. If sequence is empty the returned value is nil
+</p><pre>ex:
+
+var elem = context.Table.Where().GetFirstRecord([]string{"ID", "Name"})
+</pre>
+<p>___________________________________________________
+</p><pre>**NOTE**:the diference between Model and Record is that :
+
+the record can have some fields that are not updated from database.
+it is returned from methods (GetRecords, GetRecord, etc) that select only some fields that will be filled with database values, and another fields with invalid values (non selected fields).
+</pre>
+<p>**NOTE**: Using records should be done with precaution, because can impact the app flow
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.GetModels">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=18962:19012#L574">GetModels</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetModels">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetModels() ([]*T, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Return a slice of models from sequence.
+</p><pre>ex:
+
+var elems = context.Table.Where().GetModels()
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetModelsRel">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=26388:26478#L816">GetModelsRel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetModelsRel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetModelsRel(structDefs ...*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefIncludeRelation">TDefIncludeRelation</a>) ([]*T, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Return a slice of models from sequence.
+</p><p>this model will have set the Relation pointer to a foreignkey table.
+</p><p>context.Table_ is a avatar of Table that contains the fields definitions
+and for the Relation (Table.RelationID) the Def() method will contains
+the definitions of import the foreignkey
+</p><pre> ex:
+
+ var elems, err = context.Table.Where().GetModelsRel( context.Table_.RelationID.Def() )
+
+    if( len(elems) &gt; 0 &amp;&amp; elems[0].RelationID != nil ){
+
+			fmt.Print( elems[0].RelationID.Name )
+
+	}
+</pre>
+<p>if this will missing, the returned model will have the relation pointer = nil. (Table.RelationID = nil)
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.GetRecords">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=19673:19739#L591">GetRecords</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetRecords">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetRecords(fields []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) ([]*T, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Return a slice of records from sequence
+</p><pre>ex:
+
+var elems = context.Table.Where().GetRecords([]string{"ID", "Name"})
+</pre>
+<p>___________________________________________________
+</p><pre>**NOTE**:the diference between Model and Record is that :
+
+the record can have some fields that are not updated from database.
+it is returned from methods (GetRecords, GetRecord, etc) that select only some fields that will be filled with database values, and another fields with invalid values (non selected fields).
+</pre>
+<p>Using records should be done with precaution, because can impact the app flow
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.GetRowsAsFieldInt">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=32800:32877#L1016">GetRowsAsFieldInt</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetRowsAsFieldInt">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetRowsAsFieldInt(fieldName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) ([]<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>return an array with data for all elements of sequence from a specific field, (field arg is to determine this field )
+</p><p>this is useful when we want to obtain the Ids- of sequence
+</p><pre>ex:
+
+var ids, err = context.Table.Qry("").Where( .. ).GetRowsAsFieldInt( context.Table_.ID);
+</pre>
+<p>this is echivalent with:
+</p><pre>var models, err = context.Table.Qry("").Where( .. ).GetRecords( []string{context.Table_.ID});
+var ids = []int64{}
+for model := range models {
+    Arr_apend( &amp;ids, int64(model.ID) );
+}
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetRowsAsFieldString">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=31341:31422#L965">GetRowsAsFieldString</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetRowsAsFieldString">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetRowsAsFieldString(fieldName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) ([]<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>return an array with data for all elements of sequence from a specific field, (field arg is to determine this field )
+</p><p>this is useful when we want to obtain the Ids- of sequence
+</p><pre>ex:
+
+var ids, err = context.Table.Qry("").Where( .. ).GetRowsAsFieldString( context.Table_.UUID);
+</pre>
+<p>this is echivalent with:
+</p><pre>var models, err = context.Table.Qry("").Where( .. ).GetRecords( []string{context.Table_.UUID});
+var ids = []String{}
+for model := range models {
+    Arr_apend( &amp;ids, model.UUID );
+}
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.GetSingleDataInt">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=29355:29450#L899">GetSingleDataInt</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetSingleDataInt">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetSingleDataInt(sqlResult *<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#Rows">Rows</a>, fieldName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>return a single integernce from a specific field, (field arg is to determine this field )
+</p><p>this is useful when we want to obtain a property value from a props table
+</p><p>ex:
+Let consider a Table struct having 2 columns
+</p><pre>type Table struct{
+    propName  string  	// the name of Property
+    propValue int	// the value of Property. here can be any type, not only string
+}
+
+var propString, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetSingleDataI(context.Table_.propValue);
+</pre>
+<p>this is echivalent with:
+</p><pre>var modelTable, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetFirstRecord( []String{context.Table_.propValue});
+var propString = modelTable.propValue;
+</pre>
+<p>So, the second case it is a bit complex, we prefer the first one.
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.GetSingleDataString">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=27773:27852#L854">GetSingleDataString</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.GetSingleDataString">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) GetSingleDataString(fieldName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>return a single string from a specific field, (field arg is to determine this field )
+</p><p>this is useful when we want to obtain a property value from a props table
+</p><p>ex:
+Let consider a Table struct having 2 columns
+</p><pre>type Table struct{
+    propName  string  	// the name of Property
+    propValue string	// the value of Property. here can be any type, not only string
+}
+
+var propString, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetSingleDataString(context.Table_.propValue);
+</pre>
+<p>this is echivalent with:
+</p><pre>var modelTable, err = context.Table.Qry("").WhereEq( context.Table_.propName, nameValue ).GetFirstRecord( []String{context.Table_.propValue});
+var propString = modelTable.propValue;
+</pre>
+<p>So, the second case it is a bit complex, we prefer the first one.
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.InFO">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=45690:45817#L1675">InFO</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InFO">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) InFO(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, operandsIn []<a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>,
+    bNOT <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, bSpaceOrNull <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, fieldFK <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlQuery">DBSqlQuery</a>[T]</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.InsertModel">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=37616:37677#L1190">InsertModel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) InsertModel(model *T) (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Insert model arg 'model'
+</p><pre>ex:
+
+context.Table.Qry("").InsertRecord( model)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.InsertOrUpdateModel">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=37870:37938#L1200">InsertOrUpdateModel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) InsertOrUpdateModel(data *T) (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Insert models or Update all data in model arg 'model'
+</p><pre>ex:
+
+context.Table.Qry("").InsertOrUpdateModel( record)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.InsertOrUpdateModels">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=39889:39956#L1278">InsertOrUpdateModels</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateModels">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) InsertOrUpdateModels(models []*T) <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a></pre>
+				<p>Insert models or Update all data in models list arg 'models'
+</p><p>ex: context.Table.Qry("").UpdateModels( records)
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.InsertOrUpdateRecord">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=38235:38339#L1212">InsertOrUpdateRecord</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateRecord">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) InsertOrUpdateRecord(model *T, bInsertID <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, fields *[]<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Insert models or Update all data in model arg 'model'
+</p><pre>ex:
+
+context.Table.Qry("").UpdateModels( records)
+</pre>
+<p>you can use fields to select only same fields for update. For insertion, this arg is ingnored
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.InsertOrUpdateRecords">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=40259:40344#L1290">InsertOrUpdateRecords</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertOrUpdateRecords">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) InsertOrUpdateRecords(models []*T, fields []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a></pre>
+				<p>Insert models or Update all data in models list arg 'models'
+</p><pre>ex:
+
+context.Table.Qry("").UpdateModels( records)
+</pre>
+<p>you can use fields to select only same fields for update. For insertsion, this arg is ingnored
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.InsertRecord">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=39141:39236#L1250">InsertRecord</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.InsertRecord">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) InsertRecord(data *T, bInsertID <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, fields *[]<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) (<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>, <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a>)</pre>
+				<p>Insert model arg 'model'
+</p><pre>ex:
+
+context.Table.Qry("").InsertRecord( record)
+</pre>
+<p>you can use fields to select only same fields for update. For insertsion, this arg is ingnored
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.OrderAsc">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=35998:36057#L1134">OrderAsc</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.OrderAsc">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) OrderAsc(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>Sorts the elements of a sequence in ascending order, using field arg.
+Example:
+</p><pre>var rows = ctx.Table.Qry("").OrderAsc(ctx.Table_.Field1).GetModels();
+</pre>
+<p>the rows are ordered Ascendent by Table.Field1
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.OrderByFields">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=34261:34343#L1065">OrderByFields</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.OrderByFields">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) OrderByFields(orderFields *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields">DataOrderByFields</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>Sorts the elements of a sequence in ascending or descending order, using multiple orderFields arg.
+</p><p>Parameters:
+</p><p>- `orderFields`: is a dictionary that have for each field the asc or desc attribute
+Example:
+var orderFields = DataOrderByFields;
+orderFields.SetDictionary(
+</p><pre>			ctx.Table_.Field1, atomicsql.ESortField.Asc,
+			ctx.Table_.Field2, atomicsql.ESortField.Desc,
+		)
+ var rows = ctx.Table.Qry("").OrderByFields( &amp;orderFields ).GetModels();
+</pre>
+<p>the rows are ordered by Table.Field1 Asc and after Table.Field2 Desc
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.OrderDesc">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=36866:36926#L1162">OrderDesc</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.OrderDesc">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) OrderDesc(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>Sorts the elements of a sequence in descending order, using field arg.
+Example:
+</p><pre>var rows = ctx.Table.Qry("").OrderDesc(ctx.Table_.Field1).GetModels();
+</pre>
+<p>the rows are ordered Descending by Table.Field1
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.ToRTM">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=48969:49064#L1582">ToRTM</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.ToRTM">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) ToRTM(bRuntime <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, structDefs ...*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefIncludeRelation">TDefIncludeRelation</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>ToRTM() - is a method that switch the execution of DB query in golang code, from that point forward.
+</p><p>why this?
+</p><p>Because sometime the speed of DB query can do switched to be test in golang code,
+and compare the speed. you can do it easily if you switch the flag "bRuntime"
+</p><p>Because the ORM engine and scan compiler tool is still in development and might have occasional issues during compilation,
+it can be helpful to switch to runtime execution temporarily
+</p><p>Ex
+</p><pre> var models = context.Table.Qry("tag1").Where( func(x *Table) bool{
+		return  x.proj_id == proj_id &amp;&amp;
+ 			((x.Field.Field2.FieldName == val &amp;&amp; x.Field.Field3.FieldName2 == val2 ) ||
+  			 IIF( x.Field.Field4.Name != nil, val4, val3) )
+             )
+	            }).GetModels()
+</pre>
+<p>And Lets suppose that the scanner compile crash when it try to parse this complex syntax
+</p><p>But, Your project must continue to run, not to be stopped, and the ORM blamed.
+</p><p>So let see what you need to do: You can translate it as:
+</p><pre> var models = context.Table.Qry("tag1").WhereEq( context.Table_.proj_id, proj_id ).  // do a smart filter to reduce the rows transfered to golang app
+ 				ToRTM( RunAsRTM, context.Table_.Field.Field2.Def(), context.Table_.Field.Field3.Def(), context.Table_.Field.Field4.Def() ).  //pass the foreign keys definitions, in order to load the relations
+ 				Where( func(x *Table) bool{  // execute the where in golang code.
+						return
+ 						(x.Field.Field2.FieldName == val &amp;&amp; x.Field.Field3.FieldName2 == val2 ) ||
+  			 			IIF( x.Field.Field4.Name != nil, val4, val3) )
+	            })
+    GetModels()
+</pre>
+<p>if Flag RunAsRTM = true, the execution will be passed in golang code.
+</p><p>After the ORM team will fix the crash of scanner compiler tool,
+</p><p>you can switch back RunAsRTM = false, and the execution of the query will be done on DB server.
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.UpdateModel">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=41323:41376#L1345">UpdateModel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.UpdateModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) UpdateModel(model *T) <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a></pre>
+				<p>Update all data in model arg 'model'
+</p><pre>ex:
+
+context.Table.Qry("").UpdateModels( records)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.UpdateModels">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=41094:41154#L1336">UpdateModels</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.UpdateModels">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) UpdateModels(records *[]*T) <a href="http://127.0.0.1:6060/pkg/builtin/#error">error</a></pre>
+				<p>Update all data in models list arg 'records'
+</p><pre>ex:
+
+context.Table.Qry("").UpdateModels( records)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.Where">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=18192:18260#L537">Where</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.Where">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) Where(fnWhere func(x *T) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>Where() is an unlimited conditioning function. It allows you to add any desired filtering condition, including complex subconditions, even a subquery condition
+</p><p>Ex:
+</p><pre>context.Table.Where( func(x *Table)bool{
+
+return Sql_IIF( x.Relation != nil, x.RelationID.Name, "") != "admin" &amp;&amp;
+             (val == nil || x.Relation_ID == val)
+}
+</pre>
+<p>in this example the Where() add a condition :
+Let see the SQL code:
+</p><pre>IsNull( User.RelationID.Name, "") AND (val is null OR User.Relation_ID = val)
+</pre>
+<p>or you can add a subquery condition
+</p><p>Let's see an example of subquery condition (***This feature is not Implemented yet.***):
+Ex:
+</p><pre>context.Table.Where( func(x *Table)bool{
+
+    var count, _ = context.Table2.WhereEq( context.Table2_.Field1, "val2").GetCount();
+    return Sql_IIF( x.Relation != nil, count, 0) &gt; 5 &amp;&amp;
+             (val == nil || x.Relation_ID == val)
+}
+</pre>
+<p>Or another example more logic:
+Ex:
+</p><pre>context.Table.Where( func(x *Table)bool{
+
+    var ids, _ = context.Table2.WhereEq( context.Table2_.Field1, "val2").GetRowsAsFieldInt( context.Table2_.ID );
+    return Sql_ArrayContain( ids, context.Table.ForeignKey_ID);
+}
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.WhereEq">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=14610:14681#L439">WhereEq</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereEq">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) WhereEq(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, operand <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>WhereEq() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+</p><p>it can apply an additional filter, between a field and a value
+</p><p>Ex: context.Table.WhereEq( context.User_.Name, userName). ...
+</p><p>in this example the whereEq add a condition: User_.Name == userName
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.WhereEqFld">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=15627:15703#L467">WhereEqFld</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereEqFld">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) WhereEqFld(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, field2 <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>WhereEqFld() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+</p><p>it can apply an additional filter, between a field and another field
+</p><pre>ex:
+
+context.Table.WhereEqFld( context.User_.Name, context.User_.Name1). ...
+</pre>
+<p>in this example the WhereEqFld add a condition: User_.Name == User_.Name2
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.WhereIn">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=16300:16378#L486">WhereIn</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereIn">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) WhereIn(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, operandsIn []<a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DBQuery.WhereNotEq">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=15106:15180#L453">WhereNotEq</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereNotEq">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) WhereNotEq(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, operand <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>WhereNotEq() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+</p><p>it can apply an additional filter, between a field and a value
+</p><pre>ex:
+
+context.Table.WhereNotEq( context.User_.Name, userName). ...
+</pre>
+<p>in this example the whereEq add a condition: User_.Name != userName
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBQuery.WhereNotEqFld">func (*DBQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=16160:16239#L481">WhereNotEqFld</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery.WhereNotEqFld">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]) WhereNotEqFld(field <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, field2 <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>WhereNotEqFld() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
+</p><p>it can apply an additional filter, between a field and another field
+</p><pre>ex:
+
+context.Table.WhereNotEqFld( context.User_.Name, context.User_.Name1). ...
+</pre>
+<p>in this example the WhereNotEqFld add a condition: User_.Name == User_.Name2
+
+				
+				
+				
+			
+		
+			
+			
+			</p><h2 id="DBSqlJoin">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=477:586#L13">DBSqlJoin</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoin">¶</a>
+				
+				
+			</h2>
+			<p>internal use
+
+			</p><pre>type DBSqlJoin struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="DBSqlJoinCollection">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=714:820#L25">DBSqlJoinCollection</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoinCollection">¶</a>
+				
+				
+			</h2>
+			<p>internal use
+
+			</p><pre>type DBSqlJoinCollection struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DBSqlJoinCollection.Constr">func (*DBSqlJoinCollection) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=824:887#L31">Constr</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoinCollection.Constr">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoinCollection">DBSqlJoinCollection</a>) Constr() *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlJoinCollection">DBSqlJoinCollection</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DBSqlQuery">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=962:1319#L36">DBSqlQuery</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlQuery">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type DBSqlQuery[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>] struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DBSqlQuery.Constr">func (*DBSqlQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=1323:1398#L54">Constr</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlQuery.Constr">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlQuery">DBSqlQuery</a>[T]) Constr(text <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBSqlQuery">DBSqlQuery</a>[T]</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DBTable">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbTable.go?s=127:287#L1">DBTable</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type DBTable[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>] struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DBTable.CloneGenericModel">func (*DBTable[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbTable.go?s=1337:1406#L46">CloneGenericModel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.CloneGenericModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[T]) CloneGenericModel() *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>]</pre>
+				<p>Do a clone of a DBTable
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBTable.Constr">func (*DBTable[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbTable.go?s=317:413#L10">Constr</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.Constr">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[T]) Constr(sqlName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, langName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, ctx *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBContextBase">DBContextBase</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[T]</pre>
+				<p>Constructor of DBTable
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBTable.DeatachModel">func (*DBTable[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbTable.go?s=1038:1087#L34">DeatachModel</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.DeatachModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[T]) DeatachModel(model *T)</pre>
+				<p>Detache a model from the ORM. From this point you can insert it again in the table.
+
+				
+				
+				
+			
+				
+				</p><h3 id="DBTable.Qry">func (*DBTable[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbTable.go?s=2894:2948#L82">Qry</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable.Qry">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBTable">DBTable</a>[T]) Qry(tagID <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DBQuery">DBQuery</a>[T]</pre>
+				<p>Qry( tag ) - each DBTable can start a query sequence (DBQuery) usign Qry() method,
+</p><p>The query sequence has implemented all methods to generate the sql query and it should end in one of :
+</p><p>GetModels(), GetFirstModel(),
+GetModelsRel(), GetFirstModelRel(),
+GetRecords(), GetFirstRecord(),
+GetCount(), GetDistinctCount(),
+GetSingleDataString(), GetSingleDataInt(),
+GetRowsAsFieldString(), GetRowsAsFieldInt()
+GetDistinctRecords()
+DeleteModels(), DeleteModel()
+</p><p>the `tag` argument should be non empty and unique per app only in this 3 examples
+</p><pre>context.Table.Qry("tag1").Where( func(x *Table) bool{ ... }).
+</pre>
+<p>or
+</p><pre>atmsql.Select( context.Table.Qry("tag2"), func(x *Table) *TView{ ... }).
+</pre>
+<p>or
+</p><pre>atmsql.Select( orm.Aggregate[ Table, TableAggr ]( context.Table.Qry("tag2")), func(x *TableAggr) *TView{ ... }).
+</pre>
+<p>Each of this statemets will be translated by the scanner tool (using script 4.scan_queries.cmd),
+and the inner content will be translated in a SQL Query.
+So this tag, help to do a correct identification of the precompiled sql query.
+</p><p>Usign this Qry(tag) method to generate sql query, is the main diference between atomicSql library and linq (C#) or jinq (java)
+
+				
+				
+				
+			
+		
+			
+			
+			</p><h2 id="DataOrderByFields">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=2281:2346#L112">DataOrderByFields</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type DataOrderByFields struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DataOrderByFields.Constr">func (DataOrderByFields) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=2628:2694#L126">Constr</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields.Constr">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields">DataOrderByFields</a>) Constr(data map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#VESortField">VESortField</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="DataOrderByFields.SetDictionary">func (*DataOrderByFields) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=2348:2418#L115">SetDictionary</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields.SetDictionary">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#DataOrderByFields">DataOrderByFields</a>) SetDictionary(fields_vals ...<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Generic_Def">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=1132:1185#L54">Generic_Def</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_Def">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type Generic_Def struct {
+<span id="Generic_Def.FOREIGN_KEY_DEF"></span>    FOREIGN_KEY_DEF <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Generic_Def.Def">func (*Generic_Def) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=1554:1605#L67">Def</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_Def.Def">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_Def">Generic_Def</a>) Def() <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefIncludeRelation">TDefIncludeRelation</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Generic_MODEL">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=710:754#L27">Generic_MODEL</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type Generic_MODEL struct {
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Generic_MODEL.GetID">func (Generic_MODEL) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=758:798#L31">GetID</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL.GetID">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL">Generic_MODEL</a>) GetID() <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Generic_MODEL.GetUID">func (Generic_MODEL) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=876:918#L38">GetUID</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL.GetUID">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL">Generic_MODEL</a>) GetUID() <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IDBContext">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=3069:3124#L136">IDBContext</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IDBContext">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type IDBContext interface {
+    GetContext() <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IDBContext">IDBContext</a>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IDBQuery">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=521:654#L25">IDBQuery</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IDBQuery">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type IDBQuery interface {
+    <span class="comment">// contains filtered or unexported methods</span>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IGeneric_Def">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=1049:1128#L49">IGeneric_Def</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_Def">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type IGeneric_Def interface {
+    GetFK_IDs(m <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>) []<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>
+    Def() <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_Def">Generic_Def</a>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IGeneric_MODEL">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=593:706#L19">IGeneric_MODEL</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">¶</a>
+				
+				
+			</h2>
+			<p>*
+// Field appears in JSON as key "myName".
+Field int `json:"myName"`
+</p><p>// Field appears in JSON as key "myName" and
+// the field is omitted from the object if its value is empty,
+// as defined above.
+Field int `json:"myName,omitempty"`
+</p><p>// Field appears in JSON as key "Field" (the default), but
+// the field is skipped if empty.
+// Note the leading comma.
+Field int `json:",omitempty"`
+</p><p>// Field is ignored by this package.
+Field int `json:"-"`
+</p><p>// Field appears in JSON as key "-".
+Field int `json:"-,"`
+
+			</p><pre>type IGeneric_MODEL interface {
+    GetID() <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IQueryBase">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=230:470#L10">IQueryBase</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IQueryBase">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type IQueryBase interface {
+    <span class="comment">// contains filtered or unexported methods</span>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IRuntimeCollection">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=2120:2305#L87">IRuntimeCollection</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IRuntimeCollection">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type IRuntimeCollection[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>] interface {
+    DeleteModels(models []*T) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>
+    InsertModels(models []*T)
+    InsertOrUpdateModels(models []*T)
+    GetModels() []*T
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="RuntimeCollection">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=2003:2116#L82">RuntimeCollection</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeCollection">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type RuntimeCollection[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>] struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="RuntimeQuery">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=2398:2595#L102">RuntimeQuery</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeQuery">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type RuntimeQuery[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>] struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RuntimeQuery.Constr">func (*RuntimeQuery[T]) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=2597:2735#L109">Constr</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeQuery.Constr">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeQuery">RuntimeQuery</a>[T]) Constr(models []*T, structDefs []*<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefIncludeRelation">TDefIncludeRelation</a>, collection *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IRuntimeCollection">IRuntimeCollection</a>[T]) *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#RuntimeQuery">RuntimeQuery</a>[T]</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="TCompiledSqlQuery">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=1848:2144#L88">TCompiledSqlQuery</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TCompiledSqlQuery">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TCompiledSqlQuery struct {
+<span id="TCompiledSqlQuery.CompiledQuery"></span>    CompiledQuery   <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TCompiledSqlQuery.SelectSqlFields"></span>    SelectSqlFields map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+    <span class="comment">//joins				[]string</span>
+<span id="TCompiledSqlQuery.Fields"></span>    Fields    map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TCompiledSqlQuery.ExternVar"></span>    ExternVar []<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TExternVar">TExternVar</a>
+
+<span id="TCompiledSqlQuery.Tag"></span>    Tag      <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TCompiledSqlQuery.File"></span>    File     <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TCompiledSqlQuery.StartOff"></span>    StartOff <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>
+<span id="TCompiledSqlQuery.EndOff"></span>    EndOff   <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>
+<span id="TCompiledSqlQuery.Hash"></span>    Hash     <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a> <span class="comment">// for checking the integrity</span>
+
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TConnectionString">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=1658:1779#L75">TConnectionString</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TConnectionString">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TConnectionString struct {
+<span id="TConnectionString.Host"></span>    Host     <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TConnectionString.Port"></span>    Port     <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>
+<span id="TConnectionString.User"></span>    User     <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TConnectionString.Password"></span>    Password <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TConnectionString.DbName"></span>    DbName   <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TDefIncludeRelation">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Generic_MODEL.go?s=1189:1550#L58">TDefIncludeRelation</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefIncludeRelation">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TDefIncludeRelation struct {
+<span id="TDefIncludeRelation.ValueDef"></span>    ValueDef  <a href="http://127.0.0.1:6060/pkg/reflect/">reflect</a>.<a href="http://127.0.0.1:6060/pkg/reflect/#Value">Value</a> <span class="comment">//reflect value of this include Rel model</span>
+<span id="TDefIncludeRelation.FnNewInst"></span>    FnNewInst func() <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>    <span class="comment">//create the new instance of model</span>
+<span id="TDefIncludeRelation.PathFK"></span>    PathFK    <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>        <span class="comment">//full path of include</span>
+<span id="TDefIncludeRelation.RankFK"></span>    RankFK    <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>           <span class="comment">//rank: how many relations are in this include</span>
+<span id="TDefIncludeRelation.KeyFK"></span>    KeyFK     <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>        <span class="comment">// last 2 items, defining the key in dict of ForeinKeys</span>
+
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TDefTable">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=995:1185#L42">TDefTable</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefTable">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TDefTable struct {
+<span id="TDefTable.SchemaTable"></span>    SchemaTable           <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TDefTable.SqlTableName"></span>    SqlTableName          <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TDefTable.PrimaryColumnLangName"></span>    PrimaryColumnLangName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TDefTable.PrimaryColumnSqlName"></span>    PrimaryColumnSqlName  <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TDefTable.Columns"></span>    Columns               []<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSqlColumnDef">TSqlColumnDef</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TESortField">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=2149:2214#L103">TESortField</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESortField">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TESortField struct {
+<span id="TESortField.Asc"></span>    Asc  <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#VESortField">VESortField</a>
+<span id="TESortField.Desc"></span>    Desc <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#VESortField">VESortField</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TESqlDialect">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=109:195#L1">TESqlDialect</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESqlDialect">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TESqlDialect struct {
+<span id="TESqlDialect.Postgress"></span>    Postgress <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TESqlDialect.MySql"></span>    MySql     <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TESqlDialect.MsSql"></span>    MsSql     <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+				
+				<pre>var <span id="ESqlDialect">ESqlDialect</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESqlDialect">TESqlDialect</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESqlDialect">TESqlDialect</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESqlDialect.Postgress">Postgress</a>: "Postgress",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TESqlDialect.MySql">MySql</a>:     "MySql",
+}</pre>
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TExternVar">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=1785:1846#L84">TExternVar</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TExternVar">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TExternVar struct {
+<span id="TExternVar.VarName"></span>    VarName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TExternVar.VarType"></span>    VarType <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TForeignKey">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=1460:1654#L65">TForeignKey</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TForeignKey">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TForeignKey struct {
+<span id="TForeignKey.TgtTable_sqlName"></span>    TgtTable_sqlName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TForeignKey.TgtFldID_sqlName"></span>    TgtFldID_sqlName <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+
+<span id="TForeignKey.RootTable_sqlName"></span>    RootTable_sqlName   <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TForeignKey.RootFldFk_sqlName"></span>    RootFldFk_sqlName   <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TForeignKey.RootFldFk_langName"></span>    RootFldFk_langName  <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TForeignKey.RootFldFk_lang2Name"></span>    RootFldFk_lang2Name <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TFuncStatic">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=59111:59171#L2153">TFuncStatic</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TFuncStatic">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TFuncStatic struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TGetCount">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=43956:44044#L1453">TGetCount</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TGetCount">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TGetCount struct {
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Generic_MODEL">Generic_MODEL</a>
+<span id="TGetCount.Count1"></span>    Count1 <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a> <span class="comment">// the same name as COUNT_NAME</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TLangDataBase">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=546:991#L24">TLangDataBase</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TLangDataBase">¶</a>
+				
+				
+			</h2>
+			<p>language of database: mysql and postgressql
+
+			</p><pre>type TLangDataBase struct {
+<span id="TLangDataBase.Type_BOOL"></span>    Type_BOOL          <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_VARCHAR"></span>    Type_VARCHAR       <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_CHAR"></span>    Type_CHAR          <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_SMALLINT"></span>    Type_SMALLINT      <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_INTEGER"></span>    Type_INTEGER       <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_SERIAL"></span>    Type_SERIAL        <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_FLOAT"></span>    Type_FLOAT         <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_DOUBLE"></span>    Type_DOUBLE        <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_DATATIME"></span>    Type_DATATIME      <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.Type_DATATIME_NULL"></span>    Type_DATATIME_NULL <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.VALUE_TRUE"></span>    VALUE_TRUE         <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.VALUE_FALSE"></span>    VALUE_FALSE        <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.VALUE_NULL"></span>    VALUE_NULL         <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.END_COMMAND"></span>    END_COMMAND        <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TLangDataBase.EMPTY_STRING"></span>    EMPTY_STRING       <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TModel">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_classes.go?s=2311:2392#L96">TModel</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TModel">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TModel[T <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a>] struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TSchemaDef">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=1420:1456#L63">TSchemaDef</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSchemaDef">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TSchemaDef map[<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>]<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TDefTable">TDefTable</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TSqlColumnDef">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DBContextBase.go?s=298:494#L12">TSqlColumnDef</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#TSqlColumnDef">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TSqlColumnDef struct {
+<span id="TSqlColumnDef.LangName"></span>    LangName           <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TSqlColumnDef.SqlName"></span>    SqlName            <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TSqlColumnDef.SqlType"></span>    SqlType            <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TSqlColumnDef.LangType"></span>    LangType           <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TSqlColumnDef.Flags"></span>    Flags              <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TSqlColumnDef.IsPrimary"></span>    IsPrimary          <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>
+<span id="TSqlColumnDef.IsNullable"></span>    IsNullable         <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>
+<span id="TSqlColumnDef.ForeignKeyLangName"></span>    ForeignKeyLangName []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Transaction">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/Transactions.go?s=97:150#L1">Transaction</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Transaction">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type Transaction struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="VESortField">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery_intern.go?s=2124:2147#L102">VESortField</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#VESortField">¶</a>
+				
+				
+			</h2>
+			<p>------------------------------------------------------------------------
+
+			</p><pre>type VESortField <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Vvalue">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql/DbQuery.go?s=472:498#L21">Vvalue</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#Vvalue">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type Vvalue <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql/#IGeneric_MODEL">IGeneric_MODEL</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.20.3.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://127.0.0.1:6060/LICENSE">BSD license</a>.<br>
+<a href="https://golang.org/doc/tos.html">Terms of Service</a> |
+<a href="https://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+
+</body></html>

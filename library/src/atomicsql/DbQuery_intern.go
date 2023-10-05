@@ -17,9 +17,6 @@ import (
 
 	log "log"
 	"reflect"
-	//"sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/common/arrays"
-	//m "sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_models"
-	//fmt "fmt"
 )
 
 const ATTR_ATOMICSQL_COPY_MODEL string = "atomicsql:\"copy-model\"";

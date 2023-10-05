@@ -7,6 +7,8 @@ import (
 	//m "sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_models"
 	"regexp"
 	Str "strings"
+
+	"github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 )
 
 //----------------------------------------------------------------------------------------------
@@ -69,7 +71,7 @@ var  SQL_Int2Str TTextSql = TTextSql{
 	Mysql: "CONVERT(@x1@, INT )",
 	Mssql: "CONVERT(@x1@, INT )",
 }
-//return convert integer value to string
+// convert integer value to string
 // 
 // this method is translated in sql query, when it is using in Where() and Select() methods
 func Sql_Int2Str( val int) string{
@@ -85,7 +87,7 @@ var  SQL_StrTrim TTextSql = TTextSql{
 	Mysql:    "TRIM(@x1@)",
 	Mssql:   	"TRIM(@x1@)",
 }
-//return trim the string (left and right)
+//return the string trimmed (left and right)
 // 
 // this method is translated in sql query, when it is using in Where() and Select() methods
 func Sql_StrTrim( str string) string {
@@ -102,7 +104,7 @@ var  SQL_StrLen TTextSql = TTextSql{
 	Mysql:    	"LEN(@x1@)",
 	Mssql:   	"LEN(@x1@)",
 }
-//return get the lenght of `str`
+//return the lenght of `str`
 // 
 // this method is translated in sql query, when it is using in Where() and Select() methods
 func Sql_StrLen( str string) int {
@@ -130,3 +132,20 @@ func Sql_Concat( arr ... string ) string{
     }
 	return min;
 }
+
+//----------------------------------------------------------------------------------------------
+// internal use
+var  SQL_ArrayContain TTextSql = TTextSql{ 
+	Postgres: 	"@x2@ IN ( @x1@ )",
+	Mysql: 		"@x2@ IN ( @x1@ )",
+	Mssql: 		"@x2@ IN ( @x1@ )",
+}
+//return true: if `val` param is contained in array `arr` parameter
+// 
+// this method is translated in sql query, when it is using in Where() and Select() methods
+func Sql_ArrayContain[T comparable]( arr []T, val T ) bool{
+
+	return atomicsql.Arr_Contains( &arr, val );
+}
+
+

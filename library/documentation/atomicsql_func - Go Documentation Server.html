@@ -1,0 +1,2318 @@
+<!DOCTYPE html>
+<!-- saved from url=(0102)http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_ArrayContain -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>atomicsql_func - Go Documentation Server</title>
+
+<link type="text/css" rel="stylesheet" href="./atomicsql_func - Go Documentation Server_files/style.css">
+
+<script>window.initFuncs = [];</script>
+<script src="./atomicsql_func - Go Documentation Server_files/jquery.js.download" defer=""></script>
+
+
+
+<script>var goVersion = "go1.20.3";</script>
+<script src="./atomicsql_func - Go Documentation Server_files/godocs.js.download" defer=""></script>
+</head>
+<body>
+
+<div id="lowframe" style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://127.0.0.1:6060/pkg/">Go Documentation Server</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://127.0.0.1:6060/pkg/">GoDoc</a></div>
+<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#" id="menu-button"><span id="menu-button-arrow">▽</span></a>
+<form method="GET" action="http://127.0.0.1:6060/search">
+<div id="menu" style="min-width: 60px;">
+
+<span class="search-box"><input type="search" id="search" name="q" placeholder="Search" aria-label="Search" required=""><button type="submit"><span><!-- magnifying glass: --><svg width="24" height="24" viewBox="0 0 24 24"><title>submit search</title><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></button></span>
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide" tabindex="-1" style="outline: 0px;">
+<div class="container">
+
+
+  <h1>
+    Package atomicsql_func
+    <span class="text-muted"></span>
+  </h1>
+
+
+
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+				
+			</div>
+		</div>
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_AddDate">func Sql_AddDate(time time.Time, years int, months int, days int) time.Time</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_ArrayContain">func Sql_ArrayContain[T comparable](arr []T, val T) bool</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Concat">func Sql_Concat(arr ...string) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_ConcatStr">func Sql_ConcatStr(arr []string) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_ConcatStrN">func Sql_ConcatStrN(arr []sql.NullString) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountF32">func Sql_CountF32(arr []float32) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountF64">func Sql_CountF64(arr []float64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountF64N">func Sql_CountF64N(arr []sql.NullFloat64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt">func Sql_CountInt(arr []int) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt16">func Sql_CountInt16(arr []int16) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt16N">func Sql_CountInt16N(arr []sql.NullInt16) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt32">func Sql_CountInt32(arr []int32) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt32N">func Sql_CountInt32N(arr []sql.NullInt32) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt64">func Sql_CountInt64(arr []int64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt64N">func Sql_CountInt64N(arr []sql.NullInt64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountStr">func Sql_CountStr(arr []string) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountStrN">func Sql_CountStrN(arr []sql.NullString) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IIF">func Sql_IIF[T any](b bool, s1 T, s2 T) T</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Int2Str">func Sql_Int2Str(val int) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilBool">func Sql_IsNilBool(val sql.NullBool, defval bool) bool</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilDate">func Sql_IsNilDate(val sql.NullTime, defval time.Time) time.Time</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI08">func Sql_IsNilI08(val sql.NullByte, defval byte) byte</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI16">func Sql_IsNilI16(val sql.NullInt16, defval int16) int16</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI32">func Sql_IsNilI32(val sql.NullInt32, defval int32) int32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI64">func Sql_IsNilI64(val sql.NullInt64, defval int64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilStr">func Sql_IsNilStr(val sql.NullString, defval string) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Like">func Sql_Like(val string, likeFormat string) bool</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MatchRegex">func Sql_MatchRegex(val string, regExFormat string) bool</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxDate">func Sql_MaxDate(arr []time.Time) time.Time</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxDateN">func Sql_MaxDateN(arr []sql.NullTime) sql.NullTime</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxF32">func Sql_MaxF32(arr []float32) float32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxF64">func Sql_MaxF64(arr []float64) float64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxF64N">func Sql_MaxF64N(arr []sql.NullFloat64) sql.NullFloat64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt">func Sql_MaxInt(arr []int) int</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt16">func Sql_MaxInt16(arr []int16) int16</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt16N">func Sql_MaxInt16N(arr []sql.NullInt16) sql.NullInt16</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt32">func Sql_MaxInt32(arr []int32) int32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt32N">func Sql_MaxInt32N(arr []sql.NullInt32) sql.NullInt32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt64">func Sql_MaxInt64(arr []int64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt64N">func Sql_MaxInt64N(arr []sql.NullInt64) sql.NullInt64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxStr">func Sql_MaxStr(arr []string) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxStrN">func Sql_MaxStrN(arr []sql.NullString) sql.NullString</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinDate">func Sql_MinDate(arr []time.Time) time.Time</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinDateN">func Sql_MinDateN(arr []sql.NullTime) sql.NullTime</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinF32">func Sql_MinF32(arr []float32) float32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinF64">func Sql_MinF64(arr []float64) float64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinF64N">func Sql_MinF64N(arr []sql.NullFloat64) sql.NullFloat64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt">func Sql_MinInt(arr []int) int</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt16">func Sql_MinInt16(arr []int16) int16</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt16N">func Sql_MinInt16N(arr []sql.NullInt16) sql.NullInt16</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt32">func Sql_MinInt32(arr []int32) int32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt32N">func Sql_MinInt32N(arr []sql.NullInt32) sql.NullInt32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt64">func Sql_MinInt64(arr []int64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt64N">func Sql_MinInt64N(arr []sql.NullInt64) sql.NullInt64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinStr">func Sql_MinStr(arr []string) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinStrN">func Sql_MinStrN(arr []sql.NullString) sql.NullString</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Now">func Sql_Now() time.Time</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_StrLen">func Sql_StrLen(str string) int</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_StrTrim">func Sql_StrTrim(str string) string</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumF32">func Sql_SumF32(arr []float32) float32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumF64">func Sql_SumF64(arr []float64) float64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumF64N">func Sql_SumF64N(arr []sql.NullFloat64) float64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt">func Sql_SumInt(arr []int) int</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt16">func Sql_SumInt16(arr []int16) int32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt16N">func Sql_SumInt16N(arr []sql.NullInt16) int32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt32">func Sql_SumInt32(arr []int32) int32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt32N">func Sql_SumInt32N(arr []sql.NullInt32) int32</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt64">func Sql_SumInt64(arr []int64) int64</a></dd>
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt64N">func Sql_SumInt64N(arr []sql.NullInt64) int64</a></dd>
+			
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">type TTextSql</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">type TTime</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Compare">func (_this *TTime) Compare(t time.Time) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">func (_this *TTime) Day() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Format">func (_this *TTime) Format(formatStr string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Hour">func (_this *TTime) Hour() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Minute">func (_this *TTime) Minute() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Month">func (_this *TTime) Month() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Second">func (_this *TTime) Second() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.UnixMilli">func (_this *TTime) UnixMilli() int64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Year">func (_this *TTime) Year() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.YearDay">func (_this *TTime) YearDay() int</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h3>Package files</h3>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go">DbSqlFuncs.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go">DbSqlFuncs_AggrCount.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go">DbSqlFuncs_AggrMax.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go">DbSqlFuncs_AggrMin.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go">DbSqlFuncs_AggrSum.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go">DbSqlFuncs_String.go</a>
+			
+				<a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go">DbSqlFuncs_Time.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		
+
+		
+		
+		
+			
+			
+			<h2 id="Sql_AddDate">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=728:805#L18">Sql_AddDate</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_AddDate">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_AddDate(time <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a>, years <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, months <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>, days <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a></pre>
+			<p>return a date = `time` + (year, month, day)
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_ArrayContain">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go?s=4361:4419#L136">Sql_ArrayContain</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_ArrayContain">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_ArrayContain[T <a href="http://127.0.0.1:6060/pkg/builtin/#comparable">comparable</a>](arr []T, val T) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a></pre>
+			<p>return true: if `val` param is contained in array `arr` parameter
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_Concat">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go?s=3775:3815#L116">Sql_Concat</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Concat">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_Concat(arr ...<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>return concat values
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_ConcatStr">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=4309:4350#L134">Sql_ConcatStr</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_ConcatStr">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_ConcatStr(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_ConcatStrN">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=7685:7735#L244">Sql_ConcatStrN</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_ConcatStrN">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_ConcatStrN(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountF32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=3600:3640#L115">Sql_CountF32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountF32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountF32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float32">float32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountF64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=3039:3079#L95">Sql_CountF64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountF64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountF64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountF64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=6934:6983#L234">Sql_CountF64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountF64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountF64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullFloat64">NullFloat64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of valid items in array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountInt">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=787:823#L17">Sql_CountInt</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountInt(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountInt16">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=1343:1383#L36">Sql_CountInt16</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt16">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountInt16(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountInt16N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=5060:5109#L169">Sql_CountInt16N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt16N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountInt16N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of valid items in array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountInt32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=1913:1953#L55">Sql_CountInt32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountInt32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountInt32N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=5685:5734#L190">Sql_CountInt32N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt32N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountInt32N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of valid items in array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountInt64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=2477:2517#L75">Sql_CountInt64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountInt64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountInt64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=6313:6362#L212">Sql_CountInt64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountInt64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountInt64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of valid items in array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountStr">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=4161:4200#L135">Sql_CountStr</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountStr">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountStr(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_CountStrN">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrCount.go?s=7655:7703#L258">Sql_CountStrN</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_CountStrN">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_CountStrN(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return the len of valid items in array
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IIF">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=1043:1086#L31">Sql_IIF</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IIF">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IIF[T <a href="http://127.0.0.1:6060/pkg/builtin/#any">any</a>](b <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>, s1 T, s2 T) T</pre>
+			<p>Sql_IIF() - it replace the conditional operator
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods
+Example:
+</p><pre>var count = ctx.Table.Qry("tag1").Where( func(x *Table) bool {
+					return SQL_IFF( x.Table.Field1 != nil, x.Table.Field1, "") != "" }).GetCount()
+})
+</pre>
+<p>It will be translate in sql as:
+</p><pre>Select COUNT(*) FROM Table WHERE (CASE WHEN (Field1 IS NOT NULL ) THEN Field1 ELSE '' END) &lt;&gt; ''
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sql_Int2Str">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go?s=2442:2475#L67">Sql_Int2Str</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Int2Str">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_Int2Str(val <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>convert integer value to string
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IsNilBool">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=4656:4711#L154">Sql_IsNilBool</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilBool">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IsNilBool(val <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullBool">NullBool</a>, defval <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a></pre>
+			<p>return val or defval if val is nil
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IsNilDate">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=5244:5309#L174">Sql_IsNilDate</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilDate">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IsNilDate(val <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullTime">NullTime</a>, defval <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a>) <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a></pre>
+			<p>return val or defval if val is nil
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IsNilI08">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=1699:1753#L54">Sql_IsNilI08</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI08">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IsNilI08(val <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullByte">NullByte</a>, defval <a href="http://127.0.0.1:6060/pkg/builtin/#byte">byte</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#byte">byte</a></pre>
+			<p>return val or defval if val is nil
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IsNilI16">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=2287:2344#L74">Sql_IsNilI16</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI16">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IsNilI16(val <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a>, defval <a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a></pre>
+			<p>return val or defval if val is nil
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IsNilI32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=2879:2936#L94">Sql_IsNilI32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IsNilI32(val <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a>, defval <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a></pre>
+			<p>return val or defval if val is nil
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IsNilI64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=3470:3527#L114">Sql_IsNilI64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilI64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IsNilI64(val <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a>, defval <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>return val or defval if val is nil
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_IsNilStr">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=4061:4121#L134">Sql_IsNilStr</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_IsNilStr">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_IsNilStr(val <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a>, defval <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>return val or defval if val is nil
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_Like">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go?s=962:1012#L22">Sql_Like</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Like">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_Like(val <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, likeFormat <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a></pre>
+			<p>it is similar with LIKE operator from sql
+Example:
+</p><pre>var count = ctx.Table.Qry("tag1").Where( func(x *Table) bool {
+					return SQL_Like( x.Table.Field1, "%acasa%") }).GetCount()
+})
+</pre>
+<p>It will be translate in sql as:
+</p><pre>Select COUNT(*) FROM Table WHERE Field1 like '%acasa%'
+</pre>
+<p>if( userName LIKE '%jing%') -&gt; will return all rows that userName contains `jing`
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MatchRegex">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go?s=1906:1963#L49">Sql_MatchRegex</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MatchRegex">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MatchRegex(val <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>, regExFormat <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#bool">bool</a></pre>
+			<p>match `val` arg with a reg expression `regExFormat`.
+return true if is match
+Example:
+</p><pre>var count = ctx.Table.Qry("tag1").Where( func(x *Table) bool {
+					return SQL_MatchRegex( x.Table.Field1, "*.acasa*.") }).GetCount()
+})
+</pre>
+<p>It will be translate in sql as:
+</p><pre>Select COUNT(*) FROM Table WHERE Field1 ~ '*.acasa*.'
+</pre>
+<p>this method is translated in sql query, when it is using in Where() and Select() methods
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxDate">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=5153:5198#L171">Sql_MaxDate</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxDate">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxDate(arr []<a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a>) <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxDateN">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=9239:9291#L299">Sql_MaxDateN</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxDateN">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxDateN(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullTime">NullTime</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullTime">NullTime</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument, only for valid items
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxF32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=3898:3938#L127">Sql_MaxF32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxF32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxF32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float32">float32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#float32">float32</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxF64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=3270:3310#L105">Sql_MaxF64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxF64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxF64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxF64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=7947:8004#L258">Sql_MaxF64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxF64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxF64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullFloat64">NullFloat64</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullFloat64">NullFloat64</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxInt">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=770:802#L19">Sql_MaxInt</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxInt(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxInt16">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=1390:1428#L40">Sql_MaxInt16</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt16">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxInt16(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxInt16N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=5822:5877#L193">Sql_MaxInt16N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt16N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxInt16N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxInt32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=2016:2054#L61">Sql_MaxInt32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxInt32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxInt32N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=6529:6584#L214">Sql_MaxInt32N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt32N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxInt32N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxInt64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=2644:2682#L83">Sql_MaxInt64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxInt64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxInt64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=7240:7295#L236">Sql_MaxInt64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxInt64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxInt64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxStr">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=4526:4564#L149">Sql_MaxStr</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxStr">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxStr(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MaxStrN">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMax.go?s=8658:8713#L279">Sql_MaxStrN</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MaxStrN">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MaxStrN(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a></pre>
+			<p>returns the maximum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinDate">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=5137:5182#L171">Sql_MinDate</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinDate">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinDate(arr []<a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a>) <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinDateN">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=9342:9394#L302">Sql_MinDateN</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinDateN">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinDateN(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullTime">NullTime</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullTime">NullTime</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinF32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=3886:3926#L127">Sql_MinF32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinF32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinF32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float32">float32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#float32">float32</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinF64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=3260:3300#L105">Sql_MinF64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinF64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinF64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinF64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=7923:7980#L258">Sql_MinF64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinF64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinF64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullFloat64">NullFloat64</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullFloat64">NullFloat64</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinInt">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=768:800#L19">Sql_MinInt</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinInt(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinInt16">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=1386:1424#L40">Sql_MinInt16</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt16">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinInt16(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinInt16N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=5804:5859#L193">Sql_MinInt16N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt16N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinInt16N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinInt32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=2010:2048#L61">Sql_MinInt32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinInt32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinInt32N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=6509:6564#L214">Sql_MinInt32N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt32N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinInt32N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinInt64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=2636:2674#L83">Sql_MinInt64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinInt64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinInt64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=7218:7273#L236">Sql_MinInt64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinInt64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinInt64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinStr">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=4512:4550#L149">Sql_MinStr</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinStr">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinStr(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_MinStrN">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrMin.go?s=8634:8689#L280">Sql_MinStrN</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_MinStrN">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_MinStrN(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a>) <a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullString">NullString</a></pre>
+			<p>returns the minum value from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_Now">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=1323:1347#L34">Sql_Now</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_Now">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_Now() <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a></pre>
+			<p>return a time with value of current time.
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#SQL_IFF">atomicsql_func.SQL_IFF</a>
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_StrLen">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go?s=3338:3370#L100">Sql_StrLen</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_StrLen">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_StrLen(str <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+			<p>return the lenght of `str`
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_StrTrim">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_String.go?s=2894:2930#L83">Sql_StrTrim</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_StrTrim">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_StrTrim(str <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+			<p>return the string trimmed (left and right)
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumF32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=3704:3744#L114">Sql_SumF32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumF32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumF32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float32">float32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#float32">float32</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumF64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=3111:3151#L94">Sql_SumF64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumF64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumF64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumF64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=6913:6962#L220">Sql_SumF64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumF64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumF64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullFloat64">NullFloat64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#float64">float64</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumInt">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=753:785#L16">Sql_SumInt</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumInt(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumInt16">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=1331:1369#L35">Sql_SumInt16</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt16">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumInt16(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int16">int16</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumInt16N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=4933:4980#L155">Sql_SumInt16N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt16N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumInt16N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt16">NullInt16</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumInt32">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=1929:1967#L54">Sql_SumInt32</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt32">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumInt32(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumInt32N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=5594:5641#L176">Sql_SumInt32N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt32N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumInt32N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt32">NullInt32</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int32">int32</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumInt64">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=2521:2559#L74">Sql_SumInt64</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt64">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumInt64(arr []<a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+			
+			
+			</p><h2 id="Sql_SumInt64N">func <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_AggrSum.go?s=6257:6304#L198">Sql_SumInt64N</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#Sql_SumInt64N">¶</a>
+				
+				
+			</h2>
+			<pre>func Sql_SumInt64N(arr []<a href="http://127.0.0.1:6060/pkg/database/sql/">sql</a>.<a href="http://127.0.0.1:6060/pkg/database/sql/#NullInt64">NullInt64</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+			<p>returns the sum of values from the list received as 'arr' argument, only for valid items
+</p><p>this method is translated in sql query, when it is using in sequence of Select( Aggregate() ) methods, to aggregate data
+
+			
+			
+
+		
+		
+			
+			
+			</p><h2 id="TTextSql">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs.go?s=160:236#L4">TTextSql</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">¶</a>
+				
+				
+			</h2>
+			
+			<pre>type TTextSql struct {
+<span id="TTextSql.Postgres"></span>    Postgres <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TTextSql.Mysql"></span>    Mysql    <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+<span id="TTextSql.Mssql"></span>    Mssql    <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_AddDate">SQL_AddDate</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "ADDDATE(@x1@, @x2@, @x3@, @x4@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ADDDATE(@x1@, @x2@, @x3@, @x4@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ADDDATE(@x1@, @x2@, @x3@, @x4@)",
+}</pre>
+			
+				<p>----------------------------------------------------------------------------------------------
+internal use
+
+				</p><pre>var <span id="SQL_ArrayContain">SQL_ArrayContain</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "@x2@ IN ( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "@x2@ IN ( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "@x2@ IN ( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Compare">SQL_Compare</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "CASE WHEN @THIS@ = @x1@ THEN 0 WHEN @THIS@ &lt; @x1@ THEN -1 ELSE 1 END",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "CASE WHEN @THIS@ = @x1@ THEN 0 WHEN @THIS@ &lt; @x1@ THEN -1 ELSE 1 END",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "CASE WHEN @THIS@ = @x1@ THEN 0 WHEN @THIS@ &lt; @x1@ THEN -1 ELSE 1 END",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Concat">SQL_Concat</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "CONCAT( @xx1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "CONCAT( @xx1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "CONCAT( @xx1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_ConcatStr">SQL_ConcatStr</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "CONCAT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "CONCAT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "CONCAT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_ConcatStrN">SQL_ConcatStrN</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "CONCAT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "CONCAT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "CONCAT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountF32">SQL_CountF32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountF64">SQL_CountF64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountF64N">SQL_CountF64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountInt">SQL_CountInt</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountInt16">SQL_CountInt16</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountInt16N">SQL_CountInt16N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountInt32">SQL_CountInt32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountInt32N">SQL_CountInt32N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountInt64">SQL_CountInt64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountInt64N">SQL_CountInt64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountStr">SQL_CountStr</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_CountStrN">SQL_CountStrN</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "COUNT( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "COUNT( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Day">SQL_Day</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(Day FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "DAY(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "DAY(@THIS@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Format">SQL_Format</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "to_char(@THIS@, @x1@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "DATE_FORMAT(@THIS@, @x1@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "FORMAT(@THIS@, @x1@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Hour">SQL_Hour</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(Hour FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "HOUR(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "HOUR(@THIS@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IIF">SQL_IIF</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "(CASE WHEN (@x1@) THEN @x2@ ELSE @x3@ END)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "(CASE WHEN (@x1@) THEN @x2@ ELSE @x3@ END)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "(CASE WHEN (@x1@) THEN @x2@ ELSE @x3@ END)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Int2Str">SQL_Int2Str</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "CAST(@x1@ AS NUMERIC )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "CONVERT(@x1@, INT )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "CONVERT(@x1@, INT )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IsNilBool">SQL_IsNilBool</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NULLIF(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ISNULL(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ISNULL(@x1@, @x2@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IsNilDate">SQL_IsNilDate</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NULLIF(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ISNULL(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ISNULL(@x1@, @x2@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IsNilI08">SQL_IsNilI08</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NULLIF(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ISNULL(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ISNULL(@x1@, @x2@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IsNilI16">SQL_IsNilI16</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NULLIF(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ISNULL(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ISNULL(@x1@, @x2@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IsNilI32">SQL_IsNilI32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NULLIF(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ISNULL(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ISNULL(@x1@, @x2@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IsNilI64">SQL_IsNilI64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NULLIF(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ISNULL(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ISNULL(@x1@, @x2@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_IsNilStr">SQL_IsNilStr</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NULLIF(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "ISNULL(@x1@, @x2@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "ISNULL(@x1@, @x2@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Like">SQL_Like</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "@x1@ like '@x2@'",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "@x1@ like '@x2@'",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "@x1@ like '@x2@'",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MatchRegex">SQL_MatchRegex</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "@x1@ ~ '@x2@'",
+
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>: "@x1@ REGEXP '@x2@'",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>: "@x1@ LIKE '@x2@'",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxDate">SQL_MaxDate</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxDateN">SQL_MaxDateN</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxF32">SQL_MaxF32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxF64">SQL_MaxF64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxF64N">SQL_MaxF64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxInt">SQL_MaxInt</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxInt16">SQL_MaxInt16</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxInt16N">SQL_MaxInt16N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxInt32">SQL_MaxInt32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxInt32N">SQL_MaxInt32N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxInt64">SQL_MaxInt64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxInt64N">SQL_MaxInt64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxStr">SQL_MaxStr</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MaxStrN">SQL_MaxStrN</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MAX( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MAX( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinDate">SQL_MinDate</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinDateN">SQL_MinDateN</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinF32">SQL_MinF32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinF64">SQL_MinF64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinF64N">SQL_MinF64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinInt">SQL_MinInt</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinInt16">SQL_MinInt16</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinInt16N">SQL_MinInt16N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinInt32">SQL_MinInt32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinInt32N">SQL_MinInt32N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinInt64">SQL_MinInt64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinInt64N">SQL_MinInt64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinStr">SQL_MinStr</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_MinStrN">SQL_MinStrN</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MIN( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MIN( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Minute">SQL_Minute</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(Minute FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "Minute(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "Minute(@THIS@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Month">SQL_Month</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(Month FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MONTH(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MONTH(@THIS@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Now">SQL_Now</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "NOW()::Timestamp",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "NOW()",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "CURRENT_TIMESTAMP()",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Second">SQL_Second</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(Second FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "Second(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "Second(@THIS@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_StrLen">SQL_StrLen</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "LEN(@x1@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "LEN(@x1@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "LEN(@x1@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_StrTrim">SQL_StrTrim</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "TRIM(@x1@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "TRIM(@x1@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "TRIM(@x1@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumF32">SQL_SumF32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumF64">SQL_SumF64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumF64N">SQL_SumF64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumInt">SQL_SumInt</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumInt16">SQL_SumInt16</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumInt16N">SQL_SumInt16N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumInt32">SQL_SumInt32</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumInt32N">SQL_SumInt32N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumInt64">SQL_SumInt64</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_SumInt64N">SQL_SumInt64N</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "SUM( @x1@ )",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "SUM( @x1@ )",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_UnixMilli">SQL_UnixMilli</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(MILLIS FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "MILLIS(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "MILLIS(@THIS@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_Year">SQL_Year</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(Year FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "YEAR(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "YEAR(@THIS@)",
+}</pre>
+			
+				<p>internal use
+
+				</p><pre>var <span id="SQL_YearDay">SQL_YearDay</span> <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a> = <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql">TTextSql</a>{
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Postgres">Postgres</a>: "EXTRACT(YearDay FROM @THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mysql">Mysql</a>:    "YearDay(@THIS@)",
+    <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTextSql.Mssql">Mssql</a>:    "YearDay(@THIS@)",
+}</pre>
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TTime">type <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=185:219#L3">TTime</a>
+				<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">¶</a>
+				
+				
+			</h2>
+			<p>this struct should not be used in your code
+</p><p>this is a mirror of time.Time. use time.Time
+
+			</p><pre>type TTime struct {
+    <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="TTime.Compare">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=6378:6423#L181">Compare</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Compare">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Compare(t <a href="http://127.0.0.1:6060/pkg/time/">time</a>.<a href="http://127.0.0.1:6060/pkg/time/#Time">Time</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return compare this with `t` struct of time.
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.Day">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=2077:2107#L54">Day</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Day() <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return time.day. TTime is identic with time.Time. In your code use time.Time to use time type in Where()
+Example:
+</p><pre>var count = ctx.Table.Qry("tag1").Where( func(x *Table) bool {
+					return SQL_IFF( x.Table.TimeAccess.Day() == 0, "Mon", "" ) == x.Table.DayStart.GetCount()
+})
+</pre>
+<p>It will be translate in sql as:
+</p><pre>Select COUNT(*) FROM Table WHERE (CASE WHEN (Day(TimeAccess) = 0 ) THEN 'Mon' ELSE '' END) = DayStart
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="TTime.Format">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=6947:6999#L197">Format</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Format">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Format(formatStr <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a>) <a href="http://127.0.0.1:6060/pkg/builtin/#string">string</a></pre>
+				<p>return a string formated like Time.Format
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.Hour">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=3593:3624#L102">Hour</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Hour">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Hour() <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return time.hour
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.Minute">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=4105:4138#L117">Minute</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Minute">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Minute() <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return time.minute
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.Month">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=3084:3116#L86">Month</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Month">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Month() <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return time.month
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.Second">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=4621:4654#L132">Second</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Second">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Second() <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return time.second
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.UnixMilli">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=5147:5184#L148">UnixMilli</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.UnixMilli">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) UnixMilli() <a href="http://127.0.0.1:6060/pkg/builtin/#int64">int64</a></pre>
+				<p>return time.millisecond
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.Year">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=2575:2606#L69">Year</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Year">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) Year() <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return time.year
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+				
+				</p><h3 id="TTime.YearDay">func (*TTime) <a href="http://127.0.0.1:6060/src/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/DbSqlFuncs_Time.go?s=5682:5716#L165">YearDay</a>
+					<a class="permalink" href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.YearDay">¶</a>
+					
+					
+				</h3>
+				<pre>func (_this *<a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime">TTime</a>) YearDay() <a href="http://127.0.0.1:6060/pkg/builtin/#int">int</a></pre>
+				<p>return the day of year
+</p><p>this method is translated in sql query, when it is using in Where() and Select() methods. For more info see usage of <a href="http://127.0.0.1:6060/pkg/github.com/bbitere/atomicsql_golang.git/src/atomicsql_func/#TTime.Day">atomicsql_func.TTime.Day</a>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+</p><div id="footer">
+Build version go1.20.3.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://127.0.0.1:6060/LICENSE">BSD license</a>.<br>
+<a href="https://golang.org/doc/tos.html">Terms of Service</a> |
+<a href="https://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+
+</body></html>

@@ -3,11 +3,6 @@ package atomicsql_func
 import (
 	//"reflect"
 	//"unsafe"
-	//sql "database/sql"
-	//fmt "fmt"
-	//reflect "reflect"
-
-	//m "sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_models"
 
 	time "time"
 )

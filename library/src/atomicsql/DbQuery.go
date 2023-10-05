@@ -524,10 +524,12 @@ func (_this *DBQuery[T]) whereNotIn( field string, operandsIn []any)*DBQuery[T]{
 //               (val == nil || x.Relation_ID == val)
 //  } 
 // 
-// in this example the Where() add a condition: IsNull( User.RelationID.Name, "") AND (val is null OR User.Relation_ID = val)
+// in this example the Where() add a condition :
+// Let see the SQL code:
+//   IsNull( User.RelationID.Name, "") AND (val is null OR User.Relation_ID = val)
 // or you can add a subquery condition
 // 
-// Let;s see an example of subquery condition (This feature is not Implemented yet.):
+// Let's see an example of subquery condition (***This feature is not Implemented yet.***):
 // Ex:
 //  context.Table.Where( func(x *Table)bool{
 //  
