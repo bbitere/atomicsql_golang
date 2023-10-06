@@ -11,15 +11,25 @@ import (
 )
 type TestFunc func(step int, bCheckName bool) ( int, error, string);
 
-func Test1_init() (*orm.DBContext, error, string){
+/*
+// it is not commited intentionaly on github. 
+// please write your connection string.
+func Test1_GetConnectionString() atmsql.TConnectionString{
 
 	var connString = atmsql.TConnectionString{
 		Host:     "localhost",
 		Port:     5432,
-		User:     "dev_original",
-		Password: "XCZ12345678",
-		DbName:   "test1",
+		User:     "",
+		Password: "",
+		DbName:   "",
 	}
+	return connString;
+}
+*/
+
+func Test1_init() (*orm.DBContext, error, string){
+
+	var connString = Test1_GetConnectionString();
 	ctxBase, err := atmsql.OpenDB(connString, atmsql.ESqlDialect.Postgress, 10, 10)
 	if ctxBase == nil {
 		return nil, err, "initTest"
@@ -419,3 +429,40 @@ func Test1_10( step int, bCheckName bool) ( int, error, string) {
 	return 1, nil, nameTest;
 }
 
+
+func Test1_11(step int, bCheckName bool) ( int, error, string) {
+
+	//insert 2 users, 1 userrole.test where( FK. )
+	var nameTest = "ORM: SelectString( Where )";
+	
+	var RoleNameDefault = "default";
+	var UserMoney 	float64 =  100;
+	var UserName 	string =  "a";
+	var UserName2	string =  "b";
+
+
+	ctx, err, _ := Test1_init();// (orm.DBContextBase, error, string){	
+	if( ctx != nil ){
+		defer ctx.Close()
+	}
+	if( err != nil ){return 0, err, nameTest;}
+
+	var user = m.User{UserName: UserName, Money: UserMoney,
+			UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: false},};
+	_, err = ctx.User.Qry("").InsertModel(&user);
+
+	var user1 = m.User{UserName: UserName2, Money: UserMoney,
+	UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: true},};
+	_, err = ctx.User.Qry("").InsertModel(&user1);
+
+	//---------------------------
+	
+	var usrName, err1 = ctx.User.Qry("tst253").GetValueString(func(x *m.User) string { 
+							return x.UserRoleID.RoleName; });
+
+	if( err1 != nil || usrName != RoleNameDefault ){
+		return 0, nil, nameTest;
+	}
+
+	return 1, nil, nameTest;
+}

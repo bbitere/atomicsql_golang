@@ -149,6 +149,25 @@ func (_this *DBContext) LoadCompiledQuery(){
 			StartOff: 		12169,
 			EndOff:  		12399,
 			Hash:  			"4AAC82C4C328EB8EB9877CEBA29E506F",
+		},
+		"tst253-V1": 
+		{
+			//CompiledQuery: {#@userRole_ID.roleName@#},
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30=`,
+			
+			SelectSqlFields: nil,
+			
+			Fields:			map[string]string{
+             "RoleName":"{#@userRole_ID.roleName@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"tst253",
+			File: 			"library\\tests\\test1\\test_where\\test1.go",
+			StartOff: 		13650,
+			EndOff:  		13714,
+			Hash:  			"AD142E307B794F8F795DBC178403F9A0",
 		},"tst1_066-W1": 
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#}=true,

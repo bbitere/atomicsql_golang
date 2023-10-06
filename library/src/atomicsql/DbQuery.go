@@ -16,6 +16,13 @@ import (
 
 const NULL_FK_ID = 0
 
+const tag_Select= "S";
+const tag_Where	= "W";
+
+const tag_SelectValue	= "V";
+const tag_SelectValues	= "X";
+
+
 
 type IQueryBase interface {
 
@@ -250,7 +257,7 @@ func Select[T IGeneric_MODEL, V IGeneric_MODEL](
 		return query;
 	}else {
 
-		sequence.subTag = "S"+sequence.tableInst.m_ctx.getSubTag();
+		sequence.subTag = tag_Select + sequence.tableInst.m_ctx.getSubTag();
 		return _Select_query( sequence, fnSelect );
 	}
 }
@@ -439,6 +446,141 @@ func Aggregate1[T IGeneric_MODEL, V IGeneric_MODEL](
 }
 */
 
+
+// GetValueString() - Return a value from the sequence using fnSelect for first element
+//
+// Select contain 2 parameters
+//
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+// 
+// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return. 
+// Example:
+//  usrs4, err := ctx.User.Qry("tag1").GetValueString( func(x *m.User) String {return x.UserRoleID.RoleName;});
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValueString() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValueString( fnSelect func(x *T) string )  (string, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			return fnSelect(_this.pRTM.models[0]), nil
+		}
+		return "", nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+		var queryValue, dbResult1, err = _SelectValue_query( sequence, fnSelect );
+		if( queryValue != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err1 = queryValue.singleDataS( dbResult1, TGetValueModel_VALUE );
+			if( err1 == nil ){
+				return ret, nil;
+			}
+			return "", err1
+		}
+		return "", err		
+	}
+}
+
+// GetValueInt() - Return a value from the sequence using fnSelect for first element
+//
+// Select contain 2 parameters
+//
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+// 
+// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return. 
+// Example:
+//  usrs4, err := ctx.User.Qry("tag1").GetValueInt( func(x *m.User) String {return x.UserRoleID.RoleName;});
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValueInt() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValueInt( fnSelect func(x *T) int64 )  (int64, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			return fnSelect(_this.pRTM.models[0]), nil
+		}
+		return 0, nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+		var queryValue, dbResult1, err = _SelectValue_query( sequence, fnSelect );
+		if( queryValue != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err1 = queryValue.singleDataInt( dbResult1, TGetValueModel_VALUE );
+			if( err1 == nil ){
+				return ret, nil;
+			}
+			return 0, err1
+		}
+		return 0, err		
+	}
+}
+
+// GetValuesString() - Return a value from the sequence using fnSelect for first element
+//
+// Select contain 2 parameters
+//
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+// 
+// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return. 
+// Example:
+//  usrs4, err := ctx.User.Qry("tag1").GetValuesString( func(x *m.User) String {return x.UserRoleID.RoleName;});
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValuesString() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValuesString(fnSelect func(x *T) string )  ([]string, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			var arr = []string{}
+
+			for i := 0; i< len(arr); i++{
+				Arr_Append( &arr, fnSelect( _this.pRTM.models[i] ) )
+			}
+			return arr, nil
+		}
+		return nil, nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+		var tableCnt, dbResult1, err = _SelectValue_query( sequence, fnSelect );
+		if( tableCnt != nil && dbResult1 != nil && err == nil ){
+
+			//var ret, err1 = tableCnt.Qry("")._arrayOfSingleFieldString( dbResult1, TGetValueModel_VALUE );
+			//if( err1 == nil ){
+			//	return ret, nil;
+			//}
+			return nil, err
+		}
+		return nil, err		
+	}
+}
+
 // WhereEq() is a limited filter function. the limitation is because have only 1 condition. For more conditions use Where()
 //
 // it can apply an additional filter, between a field and a value
@@ -558,7 +700,8 @@ func (_this *DBQuery[T]) Where( fnWhere func(x *T) bool) *DBQuery[T] {
 		_this.pRTM.models = arr;
 
 	}else {
-		_this.subTag = "W"+_this.tableInst.m_ctx.getSubTag();
+
+		_this.subTag = tag_Where + _this.tableInst.m_ctx.getSubTag();
 		var querySql = _this._whereGeneric( fnWhere );//"($opText1) AND ($opText2)" );
 
 		if( _this.whereTxt != "" ) {
@@ -1459,10 +1602,15 @@ func (_this *DBQuery[T]) DeleteModel(model *T)  error {
 }
 
 const COUNT_NAME   = "Count1";
-
 type TGetCount struct {
 	Generic_MODEL
 	Count1 int32 // the same name as COUNT_NAME
+}
+
+const TGetValueModel_VALUE   = "Value1";
+type TGetValueModel[V comparable] struct {
+	Generic_MODEL
+	Value1 V // the same name as TGetValueModel_VALUE
 }
 
 // return the number of elements in a sequence

@@ -4,7 +4,6 @@ import (
 	"strconv"
 	"strings"
 
-	//m "sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_models"
 	"regexp"
 	Str "strings"
 

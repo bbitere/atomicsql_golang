@@ -2437,8 +2437,6 @@ func (_this *DBQuery[T])  _whereGeneric(  fnWhere func(x *T) bool ) *DBSqlQuery[
 	return nil;
 }
 
-
-
 func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSelect func(x *T) *V ) *DBQuery[V]{
 
 	var ctx = _this.tableInst.m_ctx
@@ -2471,10 +2469,7 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSel
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ);
 
 		var sql, _selectSqlFields= query.getSqlNativeMethod( compiledDataQuery, unsafe.Pointer(&fnSelect), query.excludeLangFieldsFromGroupBy );
-		if( Str_Index( sql, "itmq1.\"ID\" AS \"ID\"", 0) < 0){
-
-			sql, _selectSqlFields = query.getSqlNativeMethod( compiledDataQuery, unsafe.Pointer(&fnSelect), query.excludeLangFieldsFromGroupBy );
-		}
+		
 		query.querySelectNewRecord_Text = sql;
 		query.querySelectNewRecord_isAgregator =false;
 		//query.joins = _this.joins;
@@ -2495,3 +2490,56 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSel
 	return nil;
 }
 
+
+
+func _SelectValue_query[T IGeneric_MODEL, V comparable](
+	 _this *DBQuery[T], fnSelect func(x *T) V ) (*DBQuery[ TGetValueModel[V] ], *sql.Rows, error){
+
+	var ctx = _this.tableInst.m_ctx
+	//foreach( SQL_WHERE_QUERIES as file =>sqlQueries )
+	var sqlQueries = ctx.CompiledSqlQueries;
+	
+	var fullTag =  _this.myTag + "-" + _this.subTag;
+	var compiledDataQuery, hasQuery = sqlQueries[ fullTag ];
+	if( hasQuery ){
+	
+		var query = (new(DBQuery[T])).Constr(_this.tableInst);
+		query.myTag = _this.myTag;
+		query.parentQuery = _this;//.cloneQuery_GenModel();
+		
+		//query.lamdaSelectNewRecord = _this.m_SQL_ITEM_DEF;
+		query.excludeLangFieldsFromGroupBy = _this.excludeLangFieldsFromGroupBy;
+		_this.excludeLangFieldsFromGroupBy = nil;//move in SELECT , the groupping part
+		query.newJoinCollection();
+		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ);
+
+		var sql, _ = query.getSqlNativeMethod( compiledDataQuery, unsafe.Pointer(&fnSelect), query.excludeLangFieldsFromGroupBy );
+		//_selectSqlFields tre sa fie un singur field, = COUNT_NAME
+
+		sql = fmt.Sprintf(`%s AS %s`, sql, TGetValueModel_VALUE );
+		
+		query.querySelectNewRecord_Text = sql;
+		query.querySelectNewRecord_isAgregator =false;
+
+		var sqlQuery = query._getRows( false, nil, false )
+
+		var ctx = query.tableInst.m_ctx
+		ctx.currOperationDTime2 = time.Now()			
+		dbResult1, err := query.tableInst.m_ctx.Query(sqlQuery)
+		defer queryClose( dbResult1 )
+		ctx.updateDeltaTime2()	
+
+		if( dbResult1 != nil && err == nil ){
+
+			//I used a custom DBTable because _oneRecord(dbResult) read entire model, not 1 single record
+			var tableCnt = (new ( DBTable[ TGetValueModel[V] ])).Constr("", "", _this.tableInst.m_ctx)		
+			return tableCnt.Qry(""), dbResult1, nil;			
+		}
+		
+		_this.checkMySqlError( sqlQuery, err );
+		return nil, nil, err;
+	}
+	var msgErr = fmt.Sprintf( "DBQuery::_SelectValue_query() not found signature, tag: %s! Recompile the project, to regenerate schema", fullTag)
+	log.Print(msgErr)
+	return nil, nil, fmt.Errorf(msgErr)
+}

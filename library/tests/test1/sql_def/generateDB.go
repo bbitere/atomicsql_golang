@@ -22,6 +22,7 @@ func main(){
 	
 	var counter = 0;
 
+		
 	Exec_test( test1.Test1_01, &counter );
 	Exec_test( test1.Test1_02N, &counter );
 	Exec_test( test1.Test1_02, &counter );
@@ -52,6 +53,8 @@ func main(){
 	Exec_test( test1_where.TestMisc_01, &counter );
 
 	Exec_test( test1_where.Test1Rtm_10, &counter );
+
+	Exec_test( test1_where.Test1_11, &counter );
 
 	
 
