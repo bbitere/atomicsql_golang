@@ -448,14 +448,14 @@ func Aggregate1[T IGeneric_MODEL, V IGeneric_MODEL](
 
 
 // GetValueString() - Return a value from the sequence using fnSelect for first element
-//
-// Select contain 2 parameters
-//
-// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
 // 
-// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return. 
 // Example:
-//  usrs4, err := ctx.User.Qry("tag1").GetValueString( func(x *m.User) String {return x.UserRoleID.RoleName;});
+//  usrRoleName, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValueString( func(x *m.User) String {return x.UserRoleID.RoleName;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `string` for first model that the sequence will return. 
 //
 // **NOTE**: pay attention to Qry("tag1")
 //
@@ -477,7 +477,10 @@ func (_this *DBQuery[T]) GetValueString( fnSelect func(x *T) string )  (string, 
 	} else {
 
 		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
-		var queryValue, dbResult1, err = _SelectValue_query( sequence, fnSelect );
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+
+		var queryValue, err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
 		if( queryValue != nil && dbResult1 != nil && err == nil ){
 
 			var ret, err1 = queryValue.singleDataS( dbResult1, TGetValueModel_VALUE );
@@ -491,14 +494,14 @@ func (_this *DBQuery[T]) GetValueString( fnSelect func(x *T) string )  (string, 
 }
 
 // GetValueInt() - Return a value from the sequence using fnSelect for first element
-//
-// Select contain 2 parameters
-//
-// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
 // 
-// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return. 
 // Example:
-//  usrs4, err := ctx.User.Qry("tag1").GetValueInt( func(x *m.User) String {return x.UserRoleID.RoleName;});
+//  usrStatusID, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValueInt( func(x *m.User) int64 {return x.UserRoleID.Status_ID;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `int64` for first model that the sequence will return. 
 //
 // **NOTE**: pay attention to Qry("tag1")
 //
@@ -520,7 +523,10 @@ func (_this *DBQuery[T]) GetValueInt( fnSelect func(x *T) int64 )  (int64, error
 	} else {
 
 		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
-		var queryValue, dbResult1, err = _SelectValue_query( sequence, fnSelect );
+
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+		var queryValue,  err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
 		if( queryValue != nil && dbResult1 != nil && err == nil ){
 
 			var ret, err1 = queryValue.singleDataInt( dbResult1, TGetValueModel_VALUE );
@@ -533,15 +539,110 @@ func (_this *DBQuery[T]) GetValueInt( fnSelect func(x *T) int64 )  (int64, error
 	}
 }
 
-// GetValuesString() - Return a value from the sequence using fnSelect for first element
+
+// GetValueFloat() - Return a value from the sequence using fnSelect for first element
 //
 // Select contain 2 parameters
-//
-// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
 // 
-// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return. 
 // Example:
-//  usrs4, err := ctx.User.Qry("tag1").GetValuesString( func(x *m.User) String {return x.UserRoleID.RoleName;});
+//  usrData, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValueFloat64( func(x *m.User) float64 {return x.UserRoleID.RoleDataFloat;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `float64` for first model that the sequence will return. 
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValueFloat() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValueFloat( fnSelect func(x *T) float64 )  (float64, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			return fnSelect(_this.pRTM.models[0]), nil
+		}
+		return 0, nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+		var queryValue,  err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
+		if( queryValue != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err1 = queryValue.singleDataFloat( dbResult1, TGetValueModel_VALUE );
+			if( err1 == nil ){
+				return ret, nil;
+			}
+			return 0, err1
+		}
+		return 0, err		
+	}
+}
+
+// GetValueBool() - Return a value from the sequence using fnSelect for first element
+// 
+// Example:
+//  usrActive, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValueBool( func(x *m.User) bool {return x.UserRoleID.IsActive;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `bool` for first model that the sequence will return. 
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValueBool() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValueBool( fnSelect func(x *T) bool )  (bool, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			return fnSelect(_this.pRTM.models[0]), nil
+		}
+		return false, nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+		var queryValue,  err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
+		if( queryValue != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err1 = queryValue.singleDataBool( dbResult1, TGetValueModel_VALUE );
+			if( err1 == nil ){
+				return ret, nil;
+			}
+			return false, err1
+		}
+		return false, err		
+	}
+}
+
+// GetValuesString() - Return values from the sequence using fnSelect for each elements
+// 
+// Example:
+//  usrRoles, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValuesString( func(x *m.User) String {return x.UserRoleID.RoleName;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `string` for each model that the sequence will return. 
 //
 // **NOTE**: pay attention to Qry("tag1")
 //
@@ -568,14 +669,159 @@ func (_this *DBQuery[T]) GetValuesString(fnSelect func(x *T) string )  ([]string
 	} else {
 
 		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
-		var tableCnt, dbResult1, err = _SelectValue_query( sequence, fnSelect );
-		if( tableCnt != nil && dbResult1 != nil && err == nil ){
 
-			//var ret, err1 = tableCnt.Qry("")._arrayOfSingleFieldString( dbResult1, TGetValueModel_VALUE );
-			//if( err1 == nil ){
-			//	return ret, nil;
-			//}
-			return nil, err
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+		var query, err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
+		if( query != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err4 = query._arrayOfSingleFieldString( dbResult1, TGetValueModel_VALUE );
+			return ret, err4;
+		}
+		return nil, err		
+	}
+}
+
+// GetValuesInt() - Return values from the sequence using fnSelect for each elements
+// 
+// Example:
+//  usrStatusesID, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValuesInt( func(x *m.User) int64 {return x.UserRoleID.Status_ID;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `int64` for each model that the sequence will return. 
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValuesInt() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValuesInt(fnSelect func(x *T) int64 )  ([]int64, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			var arr = []int64{}
+
+			for i := 0; i< len(arr); i++{
+				Arr_Append( &arr, fnSelect( _this.pRTM.models[i] ) )
+			}
+			return arr, nil
+		}
+		return nil, nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+		var query, err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
+		if( query != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err4 = query._arrayOfSingleFieldInt( dbResult1, TGetValueModel_VALUE );
+			return ret, err4;
+		}
+		return nil, err		
+	}
+}
+
+// GetValuesFloat() - Return values from the sequence using fnSelect for each elements
+// 
+// Example:
+//  usrStatusesID, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValuesFloat( func(x *m.User) float64 {return x.UserRoleID.DataFloat;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `float64` for each model that the sequence will return. 
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValuesFloat() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValuesFloat(fnSelect func(x *T) float64 )  ([]float64, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			var arr = []float64{}
+
+			for i := 0; i< len(arr); i++{
+				Arr_Append( &arr, fnSelect( _this.pRTM.models[i] ) )
+			}
+			return arr, nil
+		}
+		return nil, nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+		var query, err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
+		if( query != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err4 = query._arrayOfSingleFieldFloat( dbResult1, TGetValueModel_VALUE );
+			return ret, err4;
+		}
+		return nil, err		
+	}
+}
+
+
+// GetValuesBool() - Return values from the sequence using fnSelect for each elements
+// 
+// Example:
+//  usrStatusesID, err := ctx.User.Qry("tag1").Where(...).Order(..).GetValuesBool( func(x *m.User) bool {return x.UserRoleID.DataFloat;});
+// In the upper example, we have :
+// 
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc  
+//
+// 2 the literal function fnSelect that will convert from User to `bool` for each model that the sequence will return. 
+//
+// **NOTE**: pay attention to Qry("tag1")
+//
+// - "tag1" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the GetValuesBool() argument not placed outside
+// ...
+func (_this *DBQuery[T]) GetValuesBool(fnSelect func(x *T) bool )  ([]bool, error) {
+
+	var sequence = _this;
+	if( sequence.pRTM != nil ){
+
+		var _this = sequence;
+		if( len(_this.pRTM.models ) > 0 ){
+
+			var arr = []bool{}
+
+			for i := 0; i< len(arr); i++{
+				Arr_Append( &arr, fnSelect( _this.pRTM.models[i] ) )
+			}
+			return arr, nil
+		}
+		return nil, nil;
+	} else {
+
+		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+
+		var dbResult1 *sql.Rows = nil;
+		defer queryClose( dbResult1 )
+		var query, err = _SelectValue_query( sequence, fnSelect, &dbResult1 );
+		if( query != nil && dbResult1 != nil && err == nil ){
+
+			var ret, err4 = query._arrayOfSingleFieldBool( dbResult1, TGetValueModel_VALUE );
+			return ret, err4;
 		}
 		return nil, err		
 	}
@@ -1077,29 +1323,6 @@ func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string)
 	return 0, err
 }
 
-func (_this *DBQuery[T]) singleDataInt(dbResult *sql.Rows, fieldName string) (int64, error) {
-
-	_this.clearCachedSyntax()	
-	model, err := _this._oneRecord(dbResult, []string{fieldName} )
-
-	if model != nil && err == nil{
-		val := reflect.ValueOf(model).Elem().FieldByName(fieldName)
-		return val.Int(), nil
-	}		
-	return 0, err
-}
-func (_this *DBQuery[T]) singleDataS(dbResult *sql.Rows, fieldName string) (string, error) {
-
-	_this.clearCachedSyntax()	
-	model, err := _this._oneRecord(dbResult, []string{fieldName} )
-
-	if model != nil && err == nil{
-		val := reflect.ValueOf(model).Elem().FieldByName(fieldName)
-		return val.String(), nil
-	}		
-	return "", err
-}
-
 // return an array with data for all elements of sequence from a specific field, (field arg is to determine this field )
 // 
 // this is useful when we want to obtain the Ids- of sequence
@@ -1143,8 +1366,7 @@ func (_this *DBQuery[T]) GetRowsAsFieldString(fieldName string) ([]string, error
 
 	if dbResult != nil && err == nil {
 
-		_this.clearCachedSyntax()
-		return _this._arrayOfSingleFieldString(dbResult, fieldName), nil
+		return _this._arrayOfSingleFieldString(dbResult, fieldName)
 	}
 
 	_this.checkMySqlError(sqlQuery, err)
@@ -1194,8 +1416,7 @@ func (_this *DBQuery[T]) GetRowsAsFieldInt(fieldName string) ([]int64, error) {
 
 	if dbResult != nil && err == nil {
 
-		_this.clearCachedSyntax()
-		return _this._arrayOfSingleFieldInt(dbResult, fieldName), nil
+		return _this._arrayOfSingleFieldInt(dbResult, fieldName)
 	}
 
 	_this.checkMySqlError(sqlQuery, err)
@@ -1548,6 +1769,7 @@ func (_this *DBQuery[T]) _deleteModels()  error {
 
 		ctx.currOperationDTime2 = time.Now()		
 		dbResult1, err := _this.tableInst.m_ctx.Exec(sqlQuery)	
+		defer resultClose( dbResult1 )
 		ctx.updateDeltaTime2()
 
 		if( dbResult1 != nil && err == nil ){
@@ -1590,6 +1812,7 @@ func (_this *DBQuery[T]) DeleteModel(model *T)  error {
 
 	ctx.currOperationDTime2 = time.Now()		
 	dbResult1, err := _this.tableInst.m_ctx.Exec(sqlQuery)	
+	defer resultClose( dbResult1 )
 	ctx.updateDeltaTime2()
 
 	if( dbResult1 != nil && err == nil ){

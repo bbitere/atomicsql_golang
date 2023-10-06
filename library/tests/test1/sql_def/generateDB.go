@@ -78,22 +78,29 @@ func printResults(){
 	fmt.Println("**************************");
 	fmt.Printf("Tests Results: %d succeded/ %d totals", testsResult.Succeded, testsResult.Totals)
 	fmt.Println("");
-
 }
 
 func printTest(codeSucceded int, testName string, err error, idx int){
 		
 	testsResult.Totals++;
-
+	
+	//colorRed := "\033[31m"
+    //colorGreen := "\033[32m"
+    //colorYellow := "\033[33m"
+    //colorBlue := "\033[34m"
+    colorPurple := "\033[35m"
+    colorCyan := "\033[36m"
+    //colorWhite := "\033[37m"
+	
 	if( codeSucceded == -1 ){
-		testsResult.Crashed++;
-		fmt.Printf("Test %d crash -> %s", idx, testName)
+		testsResult.Crashed++;		
+		fmt.Println( string( colorCyan), fmt.Errorf("Test %d crash -> %s", idx, testName));
 		fmt.Println("");		
 	}else
 	if( codeSucceded == 0 ){
 
 		testsResult.Failed++;
-		fmt.Printf("Test %d failed -> %s", idx, testName)
+		fmt.Println( string( colorPurple ), fmt.Errorf("Test %d failed -> %s", idx, testName));
 		fmt.Println("");		
 	}else {
 		testsResult.Succeded++;

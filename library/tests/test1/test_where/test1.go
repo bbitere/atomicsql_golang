@@ -12,7 +12,10 @@ import (
 type TestFunc func(step int, bCheckName bool) ( int, error, string);
 
 /*
-// it is not commited intentionaly on github. 
+package test1_where
+import (atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql")
+
+// it is not commited intentionatly on github. 
 // please write your connection string.
 func Test1_GetConnectionString() atmsql.TConnectionString{
 

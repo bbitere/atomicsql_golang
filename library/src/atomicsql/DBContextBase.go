@@ -160,6 +160,11 @@ func (_this *DBContextBase) Exec(sqlQuery string ) (sql.Result, error) {
 		return _this.Db.Exec(sqlQuery);
 	}
 }
+func resultClose( dbResult sql.Result){
+	if( dbResult != nil){
+		
+	}
+}
 
 // get a Row executing a sql query
 // see sql.QueryRow()
@@ -172,7 +177,10 @@ func (_this *DBContextBase) QueryRow(sqlQuery string ) *sql.Row {
 		return tx.tx.QueryRow(sqlQuery);
 	}else{
 		return _this.Db.QueryRow(sqlQuery);
-	}
+	}	
+}
+
+func queryRowClose(result* sql.Row){
 	
 }
 
@@ -187,6 +195,13 @@ func (_this *DBContextBase) Query(query string, args ...any) (*sql.Rows, error) 
 		return tx.tx.Query(query);
 	}else{
 		return _this.Db.Query(query);
+	}
+}
+
+func queryClose(result* sql.Rows){
+
+	if( result != nil){
+		result.Close()
 	}
 }
 

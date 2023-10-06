@@ -12,7 +12,6 @@ func Test1(t *testing.T) {
 	if( xx != 1 ){
 		t.Errorf("day passed")
 		return;
-	}
-	
+	}	
 	//return t.Deadline()
 }

@@ -641,36 +641,9 @@ func (_this *DBQuery[T])  readRecordSqlResult(rows *sql.Rows, model any, fields 
 	err := rows.Scan(columns...)
 	return err;
 }
-//----------------------------------------------------------------------------
-func (_this *DBQuery[T]) _arrayOfSingleFieldString(sqlResult *sql.Rows, fieldName string) []string {
 
-	var retList = []string{}
 
-	var model = new(T)
-	for sqlResult.Next() {
-
-		var strVal = readRecordSqlResult_ReadfieldString(*sqlResult, model, fieldName)
-		//err = sqlResult.Scan(&user.ID, &user.Username, &user.Password, &user.Tel)
-		Arr_Append(&retList, strVal)
-	}
-	return retList
-}
-//----------------------------------------------------------------------------
-func (_this *DBQuery[T]) _arrayOfSingleFieldInt(sqlResult *sql.Rows, fieldName string) []int64 {
-
-	var retList = []int64{}
-
-	var model = new(T)
-	for sqlResult.Next() {
-
-		var strVal = readRecordSqlResult_ReadfieldInt(*sqlResult, model, fieldName)
-		//err = sqlResult.Scan(&user.ID, &user.Username, &user.Password, &user.Tel)
-		Arr_Append(&retList, strVal)
-	}
-	return retList
-}
-
-func readRecordSqlResult_ReadfieldString[T IGeneric_MODEL](rows sql.Rows, model *T, fieldName string) string {
+func readRecordSqlResult_ReadfieldValue[T IGeneric_MODEL](rows* sql.Rows, model *T, fieldName string) (reflect.Value, error) {
 
 	s := reflect.ValueOf(model).Elem()
 	//numCols := s.NumField()
@@ -680,25 +653,7 @@ func readRecordSqlResult_ReadfieldString[T IGeneric_MODEL](rows sql.Rows, model 
 	columns[0] = field.Addr().Interface()
 
 	err := rows.Scan(columns...)
-	if err != nil {
-
-	}
-	return field.String()
-}
-func readRecordSqlResult_ReadfieldInt[T IGeneric_MODEL](rows sql.Rows, model *T, fieldName string) int64 {
-
-	s := reflect.ValueOf(model).Elem()
-	//numCols := s.NumField()
-	columns := make([]interface{}, 1)
-
-	field := s.FieldByName(fieldName)
-	columns[0] = field.Addr().Interface()
-
-	err := rows.Scan(columns...)
-	if err != nil {
-
-	}
-	return field.Int()
+	return field, err
 }
 
 /*#PHPARG=[ T ];*/
@@ -881,9 +836,6 @@ func (_this *DBSqlJoinCollection) createJoinCollection(){
 }
 
 
-
-
-
 func (_this *DBSqlJoinCollection) addJoin(
 	ctx *DBContextBase,
 	thisQuery IQueryBase,
@@ -1019,6 +971,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 
 			ctx.currOperationDTime2 = time.Now()
 			dbResult1, err := _this.tableInst.m_ctx.Exec(sqlQuery)
+			defer resultClose( dbResult1 )
 			ctx.updateDeltaTime2()
 
 			if dbResult1 != nil && err == nil {
@@ -1069,11 +1022,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 	return 0, err
 }
 
-func queryClose(result* sql.Rows){
-	if( result != nil){
-		result.Close()
-	}
-}
+
 
 //---------------------------------------------------------------------------------------
 /*#PHPARG=[ String ];*/
@@ -2493,7 +2442,7 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], fnSel
 
 
 func _SelectValue_query[T IGeneric_MODEL, V comparable](
-	 _this *DBQuery[T], fnSelect func(x *T) V ) (*DBQuery[ TGetValueModel[V] ], *sql.Rows, error){
+	 _this *DBQuery[T], fnSelect func(x *T) V, refDbResult1 **sql.Rows ) (*DBQuery[ TGetValueModel[V] ], error){
 
 	var ctx = _this.tableInst.m_ctx
 	//foreach( SQL_WHERE_QUERIES as file =>sqlQueries )
@@ -2521,25 +2470,149 @@ func _SelectValue_query[T IGeneric_MODEL, V comparable](
 		query.querySelectNewRecord_Text = sql;
 		query.querySelectNewRecord_isAgregator =false;
 
+		query.setLimit(0, 1)
 		var sqlQuery = query._getRows( false, nil, false )
 
 		var ctx = query.tableInst.m_ctx
 		ctx.currOperationDTime2 = time.Now()			
 		dbResult1, err := query.tableInst.m_ctx.Query(sqlQuery)
-		defer queryClose( dbResult1 )
+		//defer queryClose( dbResult1 ) // is moved up, in the caller method.
 		ctx.updateDeltaTime2()	
 
 		if( dbResult1 != nil && err == nil ){
 
 			//I used a custom DBTable because _oneRecord(dbResult) read entire model, not 1 single record
 			var tableCnt = (new ( DBTable[ TGetValueModel[V] ])).Constr("", "", _this.tableInst.m_ctx)		
-			return tableCnt.Qry(""), dbResult1, nil;			
+			*refDbResult1 = dbResult1;
+			return tableCnt.Qry(""), nil;			
 		}
 		
 		_this.checkMySqlError( sqlQuery, err );
-		return nil, nil, err;
+		return nil, err;
 	}
 	var msgErr = fmt.Sprintf( "DBQuery::_SelectValue_query() not found signature, tag: %s! Recompile the project, to regenerate schema", fullTag)
 	log.Print(msgErr)
-	return nil, nil, fmt.Errorf(msgErr)
+	return nil, fmt.Errorf(msgErr)
 }
+
+func (_this *DBQuery[T]) singleDataS(dbResult *sql.Rows, fieldName string) (string, error) {
+
+	_this.clearCachedSyntax()	
+	var model = new(T)
+	for dbResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
+		return value.String(), err;
+	}
+	return "", nil
+	/*
+	model, err := _this._oneRecord(dbResult, []string{fieldName} )
+
+	if model != nil && err == nil{
+		val := reflect.ValueOf(model).Elem().FieldByName(fieldName)
+		return val.String(), nil
+	}		
+	return "", err
+	*/
+}
+
+func (_this *DBQuery[T]) singleDataInt(dbResult *sql.Rows, fieldName string) (int64, error) {
+
+	_this.clearCachedSyntax()	
+	var model = new(T)
+	for dbResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
+		return value.Int(), err;
+	}
+	return 0, nil
+}
+
+func (_this *DBQuery[T]) singleDataFloat(dbResult *sql.Rows, fieldName string) (float64, error) {
+
+	_this.clearCachedSyntax()	
+	var model = new(T)
+	for dbResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
+		return value.Float(), err;
+	}
+	return 0, nil
+}
+func (_this *DBQuery[T]) singleDataBool(dbResult *sql.Rows, fieldName string) (bool, error) {
+
+	_this.clearCachedSyntax()	
+	var model = new(T)
+	for dbResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
+		return value.Bool(), err;
+	}
+	return false, nil
+}
+
+//----------------------------------------------------------------------------
+func (_this *DBQuery[T]) _arrayOfSingleFieldString(sqlResult *sql.Rows, fieldName string) ([]string, error) {
+
+	_this.clearCachedSyntax()
+	var retList = []string{}
+	var model = new(T)
+	for sqlResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
+		if( err != nil) {
+			return nil, err
+		}
+		Arr_Append(&retList, value.String() )
+	}
+	return retList, nil
+}
+//----------------------------------------------------------------------------
+func (_this *DBQuery[T]) _arrayOfSingleFieldInt(sqlResult *sql.Rows, fieldName string) ([]int64, error) {
+
+	_this.clearCachedSyntax()
+	var retList = []int64{}
+	var model = new(T)
+	for sqlResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
+		if( err != nil) {
+			return nil, err
+		}
+		Arr_Append(&retList, value.Int() )
+	}
+	return retList, nil
+}
+//----------------------------------------------------------------------------
+func (_this *DBQuery[T]) _arrayOfSingleFieldFloat(sqlResult *sql.Rows, fieldName string) ([]float64, error) {
+
+	_this.clearCachedSyntax()
+	var retList = []float64{}
+	var model = new(T)
+	for sqlResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
+		if( err != nil) {
+			return nil, err
+		}
+		Arr_Append(&retList, value.Float() )
+	}
+	return retList, nil
+}
+//----------------------------------------------------------------------------
+func (_this *DBQuery[T]) _arrayOfSingleFieldBool(sqlResult *sql.Rows, fieldName string) ([]bool, error) {
+
+	_this.clearCachedSyntax()
+	var retList = []bool{}
+	var model = new(T)
+	for sqlResult.Next() {
+
+		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
+		if( err != nil) {
+			return nil, err
+		}
+		Arr_Append(&retList, value.Bool() )
+	}
+	return retList, nil
+}
+
