@@ -436,7 +436,7 @@ func Test1_10( step int, bCheckName bool) ( int, error, string) {
 func Test1_11(step int, bCheckName bool) ( int, error, string) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
-	var nameTest = "ORM: SelectString( Where )";
+	var nameTest = "ORM: GetValueString";
 	
 	var RoleNameDefault = "default";
 	var UserMoney 	float64 =  100;
@@ -464,6 +464,47 @@ func Test1_11(step int, bCheckName bool) ( int, error, string) {
 							return x.UserRoleID.RoleName; });
 
 	if( err1 != nil || usrName != RoleNameDefault ){
+		return 0, nil, nameTest;
+	}
+
+	return 1, nil, nameTest;
+}
+
+func Test1_12(step int, bCheckName bool) ( int, error, string) {
+
+	//insert 2 users, 1 userrole.test where( FK. )
+	var nameTest = "ORM: GetValuesString( Where )";
+	
+	var RoleNameDefault = "default";
+	var UserMoney 	float64 =  100;
+	var UserName 	string =  "a";
+	var UserName2	string =  "b";
+
+
+	ctx, err, _ := Test1_init();// (orm.DBContextBase, error, string){	
+	if( ctx != nil ){
+		defer ctx.Close()
+	}
+	if( err != nil ){return 0, err, nameTest;}
+
+	var user = m.User{UserName: UserName, Money: UserMoney,
+			UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: false},};
+	_, err = ctx.User.Qry("").InsertModel(&user);
+
+	var user1 = m.User{UserName: UserName2, Money: UserMoney,
+	UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: true},};
+	_, err = ctx.User.Qry("").InsertModel(&user1);
+
+	//---------------------------
+	Nopp();
+	var userRoleIDs, err1 = ctx.User.Qry("tst254").
+							Where( func(x* m.User) bool{
+								return x.UserRoleID.IsActive
+							}).
+							GetValuesInt(func(x *m.User) int64 { 
+							return int64(x.UserRoleID.ID); });
+
+	if( err1 != nil || len(userRoleIDs) == 2 ){
 		return 0, nil, nameTest;
 	}
 

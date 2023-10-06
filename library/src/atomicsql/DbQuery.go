@@ -668,7 +668,7 @@ func (_this *DBQuery[T]) GetValuesString(fnSelect func(x *T) string )  ([]string
 		return nil, nil;
 	} else {
 
-		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+		sequence.subTag = tag_SelectValues + sequence.tableInst.m_ctx.getSubTag();
 
 		var dbResult1 *sql.Rows = nil;
 		defer queryClose( dbResult1 )
@@ -716,7 +716,7 @@ func (_this *DBQuery[T]) GetValuesInt(fnSelect func(x *T) int64 )  ([]int64, err
 		return nil, nil;
 	} else {
 
-		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+		sequence.subTag = tag_SelectValues + sequence.tableInst.m_ctx.getSubTag();
 
 		var dbResult1 *sql.Rows = nil;
 		defer queryClose( dbResult1 )
@@ -764,7 +764,7 @@ func (_this *DBQuery[T]) GetValuesFloat(fnSelect func(x *T) float64 )  ([]float6
 		return nil, nil;
 	} else {
 
-		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+		sequence.subTag = tag_SelectValues + sequence.tableInst.m_ctx.getSubTag();
 
 		var dbResult1 *sql.Rows = nil;
 		defer queryClose( dbResult1 )
@@ -813,7 +813,7 @@ func (_this *DBQuery[T]) GetValuesBool(fnSelect func(x *T) bool )  ([]bool, erro
 		return nil, nil;
 	} else {
 
-		sequence.subTag = tag_SelectValue + sequence.tableInst.m_ctx.getSubTag();
+		sequence.subTag = tag_SelectValues + sequence.tableInst.m_ctx.getSubTag();
 
 		var dbResult1 *sql.Rows = nil;
 		defer queryClose( dbResult1 )

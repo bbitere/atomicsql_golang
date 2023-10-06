@@ -28,8 +28,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"asdax",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		8275,
-			EndOff:  		8413,
+			StartOff: 		8577,
+			EndOff:  		8715,
 			Hash:  			"BA78C254E0BC9C69C4D363F967614D10",
 		},
 		"tst1074-W1": 
@@ -48,8 +48,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst1074",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		8573,
-			EndOff:  		8632,
+			StartOff: 		8875,
+			EndOff:  		8934,
 			Hash:  			"7B5C0D4477A52364A382166ECCC60180",
 		},
 		"evcy59-W1": 
@@ -67,8 +67,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy59",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		10057,
-			EndOff:  		10130,
+			StartOff: 		10359,
+			EndOff:  		10432,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
 		},
 		"evcy59-S2": 
@@ -102,8 +102,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy59",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		10140,
-			EndOff:  		10269,
+			StartOff: 		10442,
+			EndOff:  		10571,
 			Hash:  			"F128F38C0147DBEC1F3DC30C2BA3FD24",
 		},
 		"evcy58-W1": 
@@ -121,8 +121,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy58",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		12075,
-			EndOff:  		12150,
+			StartOff: 		12377,
+			EndOff:  		12452,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
 		},
 		"evcy58-S2": 
@@ -146,8 +146,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy58",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		12169,
-			EndOff:  		12399,
+			StartOff: 		12471,
+			EndOff:  		12701,
 			Hash:  			"4AAC82C4C328EB8EB9877CEBA29E506F",
 		},
 		"tst253-V1": 
@@ -165,9 +165,47 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst253",
 			File: 			"library\\tests\\test1\\test_where\\test1.go",
-			StartOff: 		13650,
-			EndOff:  		13714,
+			StartOff: 		13945,
+			EndOff:  		14009,
 			Hash:  			"AD142E307B794F8F795DBC178403F9A0",
+		},
+		"tst254-W1": 
+		{
+			//CompiledQuery: {#@userRole_ID.isActive@#},
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30=`,
+			
+			SelectSqlFields: nil,
+			
+			Fields:			map[string]string{
+             "IsActive":"{#@userRole_ID.isActive@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"tst254",
+			File: 			"library\\tests\\test1\\test_where\\test1.go",
+			StartOff: 		15073,
+			EndOff:  		15141,
+			Hash:  			"22BAFB9DF4BEC951F91D82A3D6DD75F6",
+		},
+		"tst254-X2": 
+		{
+			//CompiledQuery: {#@userRole_ID.ID@#},
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQuSURAI30=`,
+			
+			SelectSqlFields: nil,
+			
+			Fields:			map[string]string{
+             "ID":"{#@userRole_ID.ID@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"tst254",
+			File: 			"library\\tests\\test1\\test_where\\test1.go",
+			StartOff: 		15166,
+			EndOff:  		15230,
+			Hash:  			"D7206B40862AE8D64139BE634B6424BA",
 		},"tst1_066-W1": 
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#}=true,
@@ -227,8 +265,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst143",
 			File: 			"library\\tests\\test1\\test_where\\test_misc.go",
-			StartOff: 		984,
-			EndOff:  		1101,
+			StartOff: 		972,
+			EndOff:  		1089,
 			Hash:  			"74372D433428301E95B05E49BBD6EED1",
 		},"tst1340-W1": 
 		{

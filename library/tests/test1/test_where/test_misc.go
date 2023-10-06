@@ -29,8 +29,6 @@ func TestMisc_01(step int, bCheckName bool) ( int, error, string) {
 	UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: true},}
 	user_id, err := ctx.User.Qry("").InsertModel( &user );
 	if( err != nil || user_id == 0 ){return  0, err, nameTest;}
-
-	Nopp();
 	
 	var countActive, _ = ctx.User.Qry("tst143").Where( func(x *m.User) bool{
 							return atmsql_func.Sql_IIF( x.UserRoleID != nil, x.UserRoleID.IsActive, false);
