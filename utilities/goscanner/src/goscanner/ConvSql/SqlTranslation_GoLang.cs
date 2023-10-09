@@ -234,6 +234,8 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
 }
 internal static string GoLang_ExportSqlFile( Options options, string allQueries)
 {
+    var dialectName = options.ConvertSql.SqlDialect.GetDialectName();
+
     var text = $@"
     /* this class is generated automatically by compiler AtomicSql.exe exporter*/
 
@@ -248,11 +250,14 @@ internal static string GoLang_ExportSqlFile( Options options, string allQueries)
 
         _this.DBContextBase.ProcessCompiledQuery( &_this.CompiledSqlQueries, false );
     }}
+    
+    func (_this *DBContext) CompiledQueries_GetDialectName(){{ return ""{dialectName}""; }}
         ";
         text = UseTemplate( text, options.ConvertSql.Templ_GoSqlCompiledFile, 
             new Dictionary<string,string>()
             { 
                 { "allQueries", allQueries},
+                { "dialectName", dialectName },
             }
             );
 

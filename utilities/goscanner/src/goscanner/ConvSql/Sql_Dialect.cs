@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ using goscanner.ConvSql;
 
 namespace goscanner.ConvSql
 {
-    public class Sql_Dialect
+    public abstract class Sql_Dialect
     {
         public string TRUE = "true";
         public string FALSE = "false";
@@ -28,6 +28,8 @@ namespace goscanner.ConvSql
             return format;
         }
         public virtual string QuoteField(string fieldName){ return fieldName;}
+
+        public abstract string GetDialectName();//{ return "";}
     }
 
     public class PostgresSql_Dialect :Sql_Dialect
@@ -39,6 +41,7 @@ namespace goscanner.ConvSql
             NULL = "null";
         }
 
+        public override string GetDialectName(){ return "postgres";}
         public override string convertGolangTypeToSqlType( 
             string typeName, ParserRuleContext ctx, SqlConvert convertInst)
         {
@@ -101,6 +104,7 @@ namespace goscanner.ConvSql
             NULL = "null";
         }
 
+        public override string GetDialectName(){ return "mysql";}
         public override string convertGolangTypeToSqlType( 
             string typeName, ParserRuleContext ctx, SqlConvert convertInst)
         {
@@ -168,6 +172,7 @@ namespace goscanner.ConvSql
             NULL = "null";
         }
 
+        public override string GetDialectName(){ return "mssql";}
         public override string convertGolangTypeToSqlType( 
             string typeName, ParserRuleContext ctx, SqlConvert convertInst)
         {
