@@ -48,7 +48,7 @@
 			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
 				
 	"Department": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "def",
 			SqlTableName:          "departm",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -56,7 +56,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -66,8 +66,8 @@
 				{
 					LangName:   "IsActive",
 					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "byte",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -76,7 +76,7 @@
 				{
 					LangName:   "NameDep",
 					SqlName:    "name_dep",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -88,7 +88,7 @@
 		},
 
 	"Employee1": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "def",
 			SqlTableName:          "employee1",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -96,7 +96,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -106,8 +106,8 @@
 				{
 					LangName:   "IsActive",
 					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "byte",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -116,7 +116,7 @@
 				{
 					LangName:   "User_ID",
 					SqlName:    "user_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*User",
 					Flags:      "",
 					IsPrimary:  false,
@@ -126,7 +126,7 @@
 				{
 					LangName:   "Departm_ID",
 					SqlName:    "departm_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*Department",
 					Flags:      "",
 					IsPrimary:  false,
@@ -136,7 +136,7 @@
 				{
 					LangName:   "Departm2_ID",
 					SqlName:    "departm2_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*Department",
 					Flags:      "",
 					IsPrimary:  false,
@@ -148,7 +148,7 @@
 		},
 
 	"Employee2": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "def",
 			SqlTableName:          "employee2",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -156,7 +156,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -168,7 +168,7 @@
 		},
 
 	"Project": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "def",
 			SqlTableName:          "project",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -176,7 +176,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -186,7 +186,7 @@
 				{
 					LangName:   "Name",
 					SqlName:    "name",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -198,7 +198,7 @@
 		},
 
 	"ProjectStatus": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "def",
 			SqlTableName:          "projstatus",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -206,7 +206,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -216,7 +216,7 @@
 				{
 					LangName:   "Name",
 					SqlName:    "name",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -228,15 +228,15 @@
 		},
 
 	"StatusRole": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "statusRole",
+			SchemaTable:           "def",
+			SqlTableName:          "statusrole",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
 			Columns: []orm.TSqlColumnDef{
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -246,7 +246,7 @@
 				{
 					LangName:   "StatusName",
 					SqlName:    "status_name",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "sql.NullString",
 					Flags:      "",
 					IsPrimary:  false,
@@ -258,7 +258,7 @@
 		},
 
 	"User": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "def",
 			SqlTableName:          "user",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -266,7 +266,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -276,7 +276,7 @@
 				{
 					LangName:   "UserName",
 					SqlName:    "userName",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -286,7 +286,7 @@
 				{
 					LangName:   "UUID",
 					SqlName:    "UUID",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -296,7 +296,7 @@
 				{
 					LangName:   "UserPsw",
 					SqlName:    "user_psw",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -306,7 +306,7 @@
 				{
 					LangName:   "UserRole_ID",
 					SqlName:    "userRole_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*UserRole",
 					Flags:      "",
 					IsPrimary:  false,
@@ -316,7 +316,7 @@
 				{
 					LangName:   "Time1",
 					SqlName:    "time1",
-					SqlType:    "timestamp without time zone",
+					SqlType:    "timestamp",
 					LangType:   "sql.NullTime",
 					Flags:      "",
 					IsPrimary:  false,
@@ -326,7 +326,7 @@
 				{
 					LangName:   "Money",
 					SqlName:    "money",
-					SqlType:    "double precision",
+					SqlType:    "double",
 					LangType:   "float64",
 					Flags:      "",
 					IsPrimary:  false,
@@ -338,7 +338,7 @@
 		},
 
 	"UserRole": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "def",
 			SqlTableName:          "user_role",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -346,7 +346,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -356,8 +356,8 @@
 				{
 					LangName:   "IsActive",
 					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "byte",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -366,7 +366,7 @@
 				{
 					LangName:   "RoleName",
 					SqlName:    "roleName",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -376,7 +376,7 @@
 				{
 					LangName:   "Role_status_ID",
 					SqlName:    "role_status_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*StatusRole",
 					Flags:      "",
 					IsPrimary:  false,
@@ -386,8 +386,8 @@
 				{
 					LangName:   "MyActive",
 					SqlName:    "my_active",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "byte",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -534,7 +534,7 @@
 				
 				"user_role.role_status_ID":
 				{  
-					TgtTable_sqlName:"statusRole", 
+					TgtTable_sqlName:"statusrole", 
 					TgtFldID_sqlName:"ID", 
 					
 					RootFldFk_sqlName:"role_status_ID", 
@@ -590,7 +590,7 @@
 			ret.Employee2 =               (new(orm.DBTable[m.Employee2])).Constr("employee2", "Employee2", &ret.DBContextBase)			
 			ret.Project =                 (new(orm.DBTable[m.Project])).Constr("project", "Project", &ret.DBContextBase)			
 			ret.ProjectStatus =           (new(orm.DBTable[m.ProjectStatus])).Constr("projstatus", "ProjectStatus", &ret.DBContextBase)			
-			ret.StatusRole =              (new(orm.DBTable[m.StatusRole])).Constr("statusRole", "StatusRole", &ret.DBContextBase)			
+			ret.StatusRole =              (new(orm.DBTable[m.StatusRole])).Constr("statusrole", "StatusRole", &ret.DBContextBase)			
 			ret.User =                    (new(orm.DBTable[m.User])).Constr("user", "User", &ret.DBContextBase)			
 			ret.UserRole =                (new(orm.DBTable[m.UserRole])).Constr("user_role", "UserRole", &ret.DBContextBase)
 			

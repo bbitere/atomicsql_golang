@@ -61,7 +61,7 @@ namespace src_tool
             {
                 updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect);
 
-                if( dialect.readConstraintors( dictTables  ))
+                if( dialect.readConstraintors( dictTables, arg.config.DirJsons ))
                 {
                     Console.WriteLine("Generate DB defs");
                     if( arg.type_out_file == EOuputLang.GoLang)
@@ -116,7 +116,7 @@ namespace src_tool
 
         }
         private void updateGoLangNameInTablesAndColumns(
-            ref Dictionary<string, DbTable> tables, 
+            ref Dictionary<string, DbTable> dbTables, 
             string delimeter,
             string directoryJsons,
             GenericDialect dialect)
@@ -129,32 +129,52 @@ namespace src_tool
                     file, delimeter, dialect, ref bMustDeleteJsonFile );
 
                 //DbTable tableDBParam = null;
-                var dict = Utils.getDictFromList(list, x=>x.SqlTableNameModel );
+                var dictJsonTables = Utils.getDictFromList(list, x=>x.SqlTableNameModel.ToLower());
+                //var dictDBTables   = Utils.getDictFromList(dbTables, x=>x.SqlTableNameModel.ToLower());
+                var toBeRemoved = new List<string>();
 
-                foreach( var it in tables )
+                foreach( var it in dbTables )
                 {
-                    if( dict.ContainsKey( it.Key ))
+                    var tableSqlName = it.Key.ToLower();
+                    if( dictJsonTables.ContainsKey( tableSqlName ))
                     {
+                        var tableJsonModel = dictJsonTables[tableSqlName];
                         var table = it.Value;
-                        table.LangTableNameModel = dict[it.Key].LangTableNameModel; 
+                        table.LangTableNameModel = tableJsonModel.LangTableNameModel; 
 
-                        var dictCol = Utils.getDictFromList(dict[it.Key].columns, x=>x.sqlName );
+                        var dictJsonCol = Utils.getDictFromList(tableJsonModel.columns, x=>x.sqlName );
                         foreach( var col in table.columns)
                         { 
-                            if( dictCol.ContainsKey( col.sqlName))
+                            if( dictJsonCol.ContainsKey( col.sqlName))
                             {
-                                //col.langName  = dictCol[col.sqlName].langName; 
-                                //col.langName2 = dictCol[col.sqlName].langName2; 
+                                var fkJsonTable = dictJsonCol[col.sqlName].ForeignKey;
+                                if( fkJsonTable != null)
+                                {
+                                    //col.langName  = dictJsonCol[col.sqlName].langName; 
+                                    //col.langName2 = dictJsonCol[col.sqlName].langName2; 
+                                    var tableFKSqlName  = fkJsonTable.SqlTableNameModel.ToLower();
+                                    if (dbTables.ContainsKey(tableFKSqlName))
+                                    {
+                                        col.ForeignKey = dbTables[tableFKSqlName];
+                                    } else
+                                    { 
+                                        dialect.printError($"table {tableSqlName} not found fk {tableFKSqlName}");
+                                    }
+                                }
                             }
                         }
                     }else
                     {
-                        
+                       toBeRemoved.Add( it.Key ); 
                     }
                 }
                 //if( tableDBParam != null )
                 { 
-                    tables.Remove( MigrationDB.TABLE_MIGRATION );
+                    dbTables.Remove( MigrationDB.TABLE_MIGRATION );
+                }
+                foreach( var tb in toBeRemoved)
+                {
+                    dbTables.Remove( tb );
                 }
             }
         }

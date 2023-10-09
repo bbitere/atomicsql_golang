@@ -73,8 +73,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"evcy59-S2": 
 		{
-			//CompiledQuery: {#@ID@#} AS "ID", {#@userName@#} AS "UserName", {#@UUID@#} AS "UUID", {#@user_psw@#} AS "UserPsw", {#@userRole_ID@#} AS "UserRole_ID", {#@time1@#} AS "Time1", {#@money@#} AS "Money", {#@userRole_ID.roleName@#} AS "UserRole",
-			CompiledQuery:`eyNASURAI30gQVMgIklEIiwgeyNAdXNlck5hbWVAI30gQVMgIlVzZXJOYW1lIiwgeyNAVVVJREAjfSBBUyAiVVVJRCIsIHsjQHVzZXJfcHN3QCN9IEFTICJVc2VyUHN3IiwgeyNAdXNlclJvbGVfSURAI30gQVMgIlVzZXJSb2xlX0lEIiwgeyNAdGltZTFAI30gQVMgIlRpbWUxIiwgeyNAbW9uZXlAI30gQVMgIk1vbmV5IiwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlIg==`,
+			//CompiledQuery: {#@ID@#} AS `ID`, {#@userName@#} AS `UserName`, {#@UUID@#} AS `UUID`, {#@user_psw@#} AS `UserPsw`, {#@userRole_ID@#} AS `UserRole_ID`, {#@time1@#} AS `Time1`, {#@money@#} AS `Money`, {#@userRole_ID.roleName@#} AS `UserRole`,
+			CompiledQuery:`eyNASURAI30gQVMgYElEYCwgeyNAdXNlck5hbWVAI30gQVMgYFVzZXJOYW1lYCwgeyNAVVVJREAjfSBBUyBgVVVJRGAsIHsjQHVzZXJfcHN3QCN9IEFTIGBVc2VyUHN3YCwgeyNAdXNlclJvbGVfSURAI30gQVMgYFVzZXJSb2xlX0lEYCwgeyNAdGltZTFAI30gQVMgYFRpbWUxYCwgeyNAbW9uZXlAI30gQVMgYE1vbmV5YCwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlYA==`,
 			
 			SelectSqlFields: map[string]string{
              "ID":"{#@ID@#}",
@@ -127,8 +127,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"evcy58-S2": 
 		{
-			//CompiledQuery: {#@userRole_ID.roleName@#} AS "UserRoleName", MIN( {#@time1@#} ) AS "MinTime1", SUM( {#@money@#} ) AS "SumMoney",
-			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlTmFtZSIsIE1JTiggeyNAdGltZTFAI30gKSBBUyAiTWluVGltZTEiLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgIlN1bU1vbmV5Ig==`,
+			//CompiledQuery: {#@userRole_ID.roleName@#} AS `UserRoleName`, MIN( {#@time1@#} ) AS `MinTime1`, SUM( {#@money@#} ) AS `SumMoney`,
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlTmFtZWAsIE1JTiggeyNAdGltZTFAI30gKSBBUyBgTWluVGltZTFgLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgYFN1bU1vbmV5YA==`,
 			
 			SelectSqlFields: map[string]string{
              "UserRoleName":"{#@userRole_ID.roleName@#}",
@@ -227,8 +227,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"tst1_066-S2": 
 		{
-			//CompiledQuery: {#@userRole_ID.roleName@#} AS "UserRoleName", MIN( {#@time1@#} ) AS "MinTime1", SUM( {#@money@#} ) AS "SumMoney",
-			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlTmFtZSIsIE1JTiggeyNAdGltZTFAI30gKSBBUyAiTWluVGltZTEiLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgIlN1bU1vbmV5Ig==`,
+			//CompiledQuery: {#@userRole_ID.roleName@#} AS `UserRoleName`, MIN( {#@time1@#} ) AS `MinTime1`, SUM( {#@money@#} ) AS `SumMoney`,
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlTmFtZWAsIE1JTiggeyNAdGltZTFAI30gKSBBUyBgTWluVGltZTFgLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgYFN1bU1vbmV5YA==`,
 			
 			SelectSqlFields: map[string]string{
              "UserRoleName":"{#@userRole_ID.roleName@#}",

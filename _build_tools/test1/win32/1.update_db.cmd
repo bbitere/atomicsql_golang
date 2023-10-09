@@ -7,12 +7,12 @@ call 0.common_config.cmd
 
 @echo ------------------------------------------------------
 @echo "2. parse generated_jsons -> generate sql_scripts"
-%GoServerTool% -asql_migration  -sql_lang=postgres -execute_scripts=n -json_dir=%SRCDIR_PATH%\_db_migration -delimeter=@@@@@@@@######@@@@@@^
+%GoServerTool% -asql_migration  -sql_lang=%SQL_LANG% -execute_scripts=n -json_dir=%SRCDIR_PATH%\_db_migration -delimeter=@@@@@@@@######@@@@@@^
 	   -connection_string=%CONNECTION_STRING%
 
 @echo ------------------------------------------------------
 @echo "3. apply sql_scripts in database, iterative and only once."
-%GoServerTool% -migration_db  -sql_lang=postgres -input_dir="%SRCDIR_PATH%\_db_migration"^
+%GoServerTool% -migration_db  -sql_lang=%SQL_LANG% -input_dir="%SRCDIR_PATH%\_db_migration"^
  -out_dir="" -type_out_file=go^
  -connectionString=%CONNECTION_STRING%
   

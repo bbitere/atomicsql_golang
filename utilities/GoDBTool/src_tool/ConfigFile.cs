@@ -132,7 +132,7 @@ namespace src_tool
                 case "FullName_PackageOrm":    this.ImportPackageOrm = content; break;
                 case "FullName_PackageGenSql":       this.PackageGenSql = content; break;
                     
-                case "ConnectionString":    this.ConnectionString = content; break;
+                case "ConnectionString":    this.ConnectionString = removeQuotation( content ); break;
                 case "SqlLang":             this.SqlLang = content; break;
                 case "DELIMETER":           this.Delimeter = content; break;
                 case "DirJsons":           this.DirJsons = content; break;
@@ -144,6 +144,16 @@ namespace src_tool
                 break;
             }
         }
+        private string removeQuotation(string s)
+        { 
+            s = s.Trim();
+            if( s.StartsWith("\"") && s.EndsWith("\""))
+            {
+                return s.Substring(1, s.Length-2);
+            }
+            return s;
+        }
+        
         
         private void setupMLineProperty(string token1, string content)
         {

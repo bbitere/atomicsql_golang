@@ -13,5 +13,6 @@ func Test1_GetConnectionString() atmsql.TConnectionString {
 		Password: "xz021621",
 		DbName:   "test1",
 	}
+
 	return connString
 }

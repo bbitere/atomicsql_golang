@@ -26,9 +26,11 @@ partial class MySqlDialect
             packageImports["sql"] = ("sql \"database/sql\"");
             switch( nameSqlType)
             { 
+                case "tinyint" :    return "sql.NullByte";
                 case "smallint" :   return "sql.NullInt16";
                 case "smallserial": return "sql.NullInt16";
 
+                case "int" :
                 case "integer" :    return "sql.NullInt32";
                 case "serial" :     return "sql.NullInt32";
 
@@ -45,9 +47,11 @@ partial class MySqlDialect
         {
             switch( nameSqlType)
             { 
+                case "tinyint" : return "byte";
                 case "smallint" : return "int16";
                 case "smallserial" : return "int16";
 
+                case "int" : return "int32";
                 case "integer" : return "int32";
                 case "serial" : return "int32";
 
@@ -92,6 +96,16 @@ partial class MySqlDialect
 
         switch( nameSqlType)
         { 
+            case "tinyint" : 
+            {
+                if( column.bIsNullable )
+                {
+                    importPackage["sql"] = ("sql \"database/sql\"");
+                    return nameArr+"sql.NullByte";
+                }
+                else
+                    return nameArr+"byte";
+            }
             case "smallint" : 
             {
                 if( column.bIsNullable )
@@ -112,6 +126,7 @@ partial class MySqlDialect
                 else
                     return nameArr+"int16";
             }
+            case "int" : 
             case "integer" : 
             {
                 if( column.bIsNullable )
@@ -122,6 +137,7 @@ partial class MySqlDialect
                 else
                     return nameArr+"int32";
             }
+            /*
             case "serial" : 
             {
                 if( column.bIsNullable )
@@ -131,7 +147,7 @@ partial class MySqlDialect
                 }
                 else
                     return nameArr+"int32";
-            }
+            }*/
             case "bigint" :
             case "int4" :
             { 
@@ -205,7 +221,7 @@ partial class MySqlDialect
                 else
                     return nameArr+"float64";
             }
-            case "numeric" ://return nameArr+"decimal";
+            case "double" ://return nameArr+"decimal";
             {
                 if( column.bIsNullable )
                 {

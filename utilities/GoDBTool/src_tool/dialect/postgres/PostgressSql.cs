@@ -13,7 +13,7 @@ using src_tool.templates;
 
 namespace src_tool
 {
-    public partial class PostgressDialect : GenericDialect
+    public partial class PostgresqlDialect : GenericDialect
     {
         public NpgsqlConnection connection;
 
@@ -55,7 +55,7 @@ namespace src_tool
             var colID_Name = table.PrimaryColumn.sqlName;
 
             var tableAdd = $@"        
-            -------------------------------------------------------------------	
+            /*------------------------------------------------------------------*/
             CREATE TABLE IF NOT EXISTS {tokenizTable(table)}
             (
                 { columnsDefs}
@@ -290,18 +290,18 @@ namespace src_tool
                 var script1 = part.Trim();
                 if( script1.Length >  0 )
                 {
-                    using( var cmd = new NpgsqlCommand( script1, this.connection))
+                    try
                     {
-                        try
+                        using( var cmd = new NpgsqlCommand( script1, this.connection))
                         {
                             var reader = cmd.ExecuteNonQuery();
-                        }catch(Exception e)
+                        }
+                    }catch(Exception e)
                         {
                             var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
                             Console.WriteLine($"Error exec script part {iPart}: {msg}");
                             throw e;
                         }
-                    }
                 }
                 iPart ++;
             }

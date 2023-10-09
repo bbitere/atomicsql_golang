@@ -1,20 +1,24 @@
         
-            -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."departm"
+            /*------------------------------------------------------------------*/
+            CREATE TABLE IF NOT EXISTS `departm`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "isActive" BOOLEAN NOT NULL,
-                "name_dep" VARCHAR NOT NULL
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `isActive` BOOLEAN NOT NULL,
+                `name_dep` VARCHAR(20000) NOT NULL
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 ;        
-            -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."employee1"
+            /*------------------------------------------------------------------*/
+            CREATE TABLE IF NOT EXISTS `employee1`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "isActive" BOOLEAN NOT NULL,
-                "user_ID" integer NULL CONSTRAINT "fk_user_ID" REFERENCES public."user" ("ID"),
-                "departm_ID" integer NULL CONSTRAINT "fk_departm_ID" REFERENCES public."departm" ("ID")
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `isActive` BOOLEAN NOT NULL,
+                `user_ID` INT NULL, CONSTRAINT `fk_user_ID` FOREIGN KEY (`user_ID`) REFERENCES `user`(`ID`),
+                `departm_ID` INT NULL, CONSTRAINT `fk_departm_ID` FOREIGN KEY (`departm_ID`) REFERENCES `departm`(`ID`)
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src_tool
 {
-partial class PostgressDialect
+partial class PostgresqlDialect
 {
         
     public override string getGoLangTypeIntFk( 

@@ -14,11 +14,11 @@
     type UserRole struct /*atomicsql-table:"user_role"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
-            IsActive            bool                          `json:"isActive"`
+            IsActive            byte                          `json:"isActive"`
             RoleName            string                        `json:"roleName"`
             RoleStatusID        *StatusRole                   `json:"-"`
             Role_status_ID      sql.NullInt32                 `json:"role_status_ID"`
-            MyActive            bool                          `json:"my_active"`
+            MyActive            byte                          `json:"my_active"`
     }
 	*/
     func (model  UserRole) GetID() int64 {

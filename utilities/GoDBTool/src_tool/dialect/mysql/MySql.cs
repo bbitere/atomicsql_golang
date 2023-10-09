@@ -16,6 +16,7 @@ namespace src_tool
 {
     public partial class MySqlDialect : GenericDialect
     {
+        public const int MAX_VAR_CHAR =20000;
         public MySqlConnection connection;
 
         public override string SqlSeparator()
@@ -44,13 +45,13 @@ namespace src_tool
             var columnsArr = new List<string>();
             foreach( var col in table.columns)
             {
-                columnsArr.Add( this._addColumn(col) );
+                columnsArr.Add( this._addColumn(col, true) );
             }
             var columnsDefs = string.Join( ","+NL, columnsArr );
             var colID_Name = table.PrimaryColumn.sqlName;
 
             var tableAdd = $@"        
-            -------------------------------------------------------------------	
+            /*------------------------------------------------------------------*/
             CREATE TABLE IF NOT EXISTS {tokenizIdentif(sqlTableName)}
             (
                 { columnsDefs}
@@ -71,13 +72,13 @@ namespace src_tool
         }
         public override string addColumn(DbTable table, DbColumn column)
         { 
-            var colData = _addColumn( column);
+            var colData = _addColumn( column, false);
             var s = $@"
             ALTER TABLE {tokenizIdentif(table.SqlTableNameModel)}
             ADD COLUMN {colData}";
             return s;
         }
-        public string _addColumn(DbColumn column)
+        public string _addColumn(DbColumn column, bool bInsideTable)
         {
             var colName = column.sqlName;
             if( column.bIsIdentity )
@@ -94,7 +95,10 @@ namespace src_tool
                     var fkName      = tokenizIdentif(column.sqlName);
                     var fk_fkName   = tokenizIdentif($"fk_{column.sqlName}");
 
-                    return $"{fkName} INT NULL, ADD CONSTRAINT {fk_fkName} FOREIGN KEY ({fkName}) REFERENCES {targetTableSqlName}({targetTable_ID})";
+                    if( bInsideTable )
+                        return $"{fkName} INT NULL, CONSTRAINT {fk_fkName} FOREIGN KEY ({fkName}) REFERENCES {targetTableSqlName}({targetTable_ID})";
+                    else
+                        return $"{fkName} INT NULL, ADD CONSTRAINT {fk_fkName} FOREIGN KEY ({fkName}) REFERENCES {targetTableSqlName}({targetTable_ID})";
                 }else
                 {
                     if( column.bIsNullable )
@@ -181,10 +185,10 @@ namespace src_tool
 
             switch( langType )
             { 
-                case "NullString":  bIsNullable= true; return "VARCHAR(MAX)";
+                case "NullString":  bIsNullable= true; return $"VARCHAR({MAX_VAR_CHAR})";
                 case "NullBool":        bIsNullable= true; return "BOOLEAN";
 
-                case "NullByte":        bIsNullable= true; return "SMALLINT";
+                case "NullByte":        bIsNullable= true; return "TINYINT";
                 case "NullInt16":       bIsNullable= true; return "SMALLINT";
                 case "NullInt":         bIsNullable= true; return "INT";
                 case "NullInt32":       bIsNullable= true; return "INT";
@@ -193,7 +197,7 @@ namespace src_tool
                 case "time.NullTime":   bIsNullable= true; return "TIMESTAMP";
                 case "NullTime":        bIsNullable= true; return "TIMESTAMP";
 
-                case "string":      return "VARCHAR(MAX)";
+                case "string":      return $"VARCHAR({MAX_VAR_CHAR})";
                 case "char":        return "CHAR";
                 case "bool":        return "BOOLEAN";
 
@@ -274,17 +278,20 @@ namespace src_tool
                 var script1 = part.Trim();
                 if( script1.Length >  0 )
                 {
-                    using( var cmd = new MySqlCommand( script1, this.connection))
+                    try
                     {
-                        try
+                        using( var cmd = new MySqlCommand( script1, this.connection))
                         {
-                            var reader = cmd.ExecuteNonQuery();
-                        }catch(Exception e)
-                        {
-                            var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
-                            Console.WriteLine($"Error exec script part {iPart}: {msg}");
-                            throw e;
+                        
+                             var reader = cmd.ExecuteNonQuery();
                         }
+                    }catch(Exception e)
+                    {
+                        var msg = e.InnerException != null ? e.InnerException.Message : e.Message;
+                        Console.WriteLine($"Error exec script part {iPart}: {msg}");
+                        Console.WriteLine($"Original script:{script1}");
+                        
+                        throw e;
                     }
                 }
                 iPart ++;

@@ -18,12 +18,12 @@ namespace src_tool
             var requestText = $@"
                 SELECT 
                     table_name,          /*0*/
-                    table_schema,        /*1*/
+                    table_catalog,        /*1*/
                     column_name,         /*2*/ 
                     data_type,           /*3*/
                     table_catalog,       /*4*/
                     is_nullable,         /*5*/
-                    extra,               /*6*/
+                    column_key,          /*6*/
                     column_default,  
                     ordinal_position
                 FROM information_schema.columns
@@ -52,7 +52,7 @@ namespace src_tool
 
                         table.LangTableNameModel = GoModelTemplate.ConvertToIdent_GoLang( tableName );
                         table.Schema = tableSchema;
-                        table.SqlTableNameModel = tableName;
+                        table.SqlTableNameModel = tableName.ToLower();
                         tables[ table.SqlTableNameModel ] = table;
                         
                         var columnName      = getString(reader, 2);
@@ -63,8 +63,8 @@ namespace src_tool
                         var colType         = getString(reader, 3);
                         var colType2        = getString(reader, 4);
                         var colIsNullable   = getString(reader, 5);
-                        //var colIsOrder      = getInteger(reader, 6);
-                        var colIsIdentity   = getString(reader, 7);
+                        var colIsKey        = getString(reader, 6);
+                        //var colIsIdentity   = getString(reader, 7);
 
                         var column  = new DbColumn();
                         column.langName  = GoModelTemplate.ConvertToIdent_GoLang( columnName, true );
@@ -73,7 +73,7 @@ namespace src_tool
                         column.sqlName = columnName;
                         column.sqlType = colType;
                         column.langType =  this.getGoLangType( column, ref packageImports );
-                        column.bIsIdentity = isYes(colIsIdentity);
+                        column.bIsIdentity = colIsKey == "PRI";
                         column.bIsNullable = isYes(colIsNullable);
                         table.columns.Add( column );
 
@@ -111,7 +111,7 @@ namespace src_tool
             return null;
         }
 
-        public override bool readConstraintors( Dictionary<string, DbTable> tables  )
+        public override bool readConstraintors( Dictionary<string, DbTable> tables, string DirJsons )
         {
             var cnn = this.connection;
             var requestText = $@"
@@ -120,16 +120,16 @@ namespace src_tool
                 KC.column_name as column_name,              /*2*/  
                 KC.REFERENCED_TABLE_NAME,                   /*3*/
                 KC.REFERENCED_COLUMN_NAME,                  /*4*/
-                KC.CONSTRAINT_NAME,
-                TC. CONSTRAINT_TYPE AS ConstraintType
+                KC.CONSTRAINT_NAME,                         /*5*/
+                TC. CONSTRAINT_TYPE AS ConstraintType       /*6*/
                 FROM 
                 information_schema.table_constraints TC,  
                 information_schema.key_column_usage KC  
                 WHERE
-                TC.CONSTRAINT_TYPE IN ('FOREIGN KEY', 'PRIMARY KEY') 
+                TC.CONSTRAINT_TYPE IN ('FOREIGN KEY') 
                 and KC.table_name = TC.table_name and KC.TABLE_SCHEMA = TC.TABLE_SCHEMA
                 and KC.CONSTRAINT_NAME = TC.CONSTRAINT_NAME
-                and KC.table_schema = DATABASE();
+                and KC.table_schema = DATABASE()
                 order by table_name asc, column_name
             ";
 
@@ -151,8 +151,8 @@ namespace src_tool
                         var columnName      = getString(reader, 2);
                         var colRefTable     = getString(reader, 3);
                         var colRefColumn    = getString(reader, 4);
-                        //var colIsNullable   = reader.GetString(4);
-                        //var colIsIdentity   = reader.GetString(5);
+                        var colConstName   = reader.GetString(4);
+                        var colConstType   = reader.GetString(5);
 
                         if( colRefTable != null && colRefColumn != null )
                         if( tables.ContainsKey(tableName) )
@@ -191,7 +191,14 @@ namespace src_tool
                     return true;
                 }else
                 {
-                    printError("No rows found. Maybe, The user has no rights to read DB defs");
+                    if (DirJsons != null)
+                    { 
+                        printError("No rows found in table_constraints table. Maybe, The user has no rights to read DB defs. Switch to json definition");
+                        return true;
+                    }else
+                    {
+                        printError("No rows found in table_constraints table. Maybe, The user has no rights to read DB defs.");
+                    }
                 }
             }
             return false;
