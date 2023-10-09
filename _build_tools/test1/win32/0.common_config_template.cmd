@@ -1,5 +1,6 @@
 @echo off
 
+set SQL_LANG=mysql
 set GoScanPath=..\..\tools\atomicsql_compiler
 set GoServerToolPath=..\..\tools\GoServerTool
 

@@ -1,0 +1,198 @@
+
+
+#  this is a config file
+# svc file of TS
+
+$ SvcFile       = C:\Work\SlotMonitor\SlotGames\game-originals-main\__src\_app\svc\Svc.gen.ts
+$ SvcModelsFile = C:\Work\SlotMonitor\SlotGames\game-originals-main\__src\_app\svc\SvcModels.gen.ts
+
+#
+$ TypeLang = ts
+
+#
+$ OutSvcFile = C:\Work\SlotMonitor\SlotGames\server-main\NewtonGamesGo\pkg\ajax_service\svc_controllers.gen.go 
+
+$ RootProject = C:\Work\SlotMonitor\SlotGames\server-main\NewtonGamesGo
+$ GitProject = bitbucket.org/nwt-nevada/server-main.git
+
+$ SourcePathDir  = C:\Work\SlotMonitor\SlotGames\server-main\NewtonGamesGo\pkg\controllers
+$ SourcePathDir2 = C:\Work\SlotMonitor\SlotGames\server-main\NewtonGamesGo\pkg\newton_models
+
+#base for all models, this is how idetify a struct that is a model (golang)
+$ CLASS_Base_MODEL = Generic_MODEL
+
+#base for struct that are Incoming or outcoming in comunication process (golang)
+$ CLASS_InGeneralData = InGeneralData
+$ CLASS_OutGeneralData = OutGeneralData
+
+#base class for svc models. used in ts
+$ CLASS_SvcObj_MODEL = SvcObj_MODEL
+
+
+#prefix of Svc models (used in ts)
+$ SVCM = SVCM
+
+#the name of ID, each model should have this field column
+$ FLD_ID = ID
+
+#if is true, all fields from struct InGeneralData, will not be exposed in the TS functions of input args method. 
+#they will be implicit and they will be set inside the methods that call ajax
+$ InlineAllFields_ClassInGeneralData = true
+
+
+#----------------------------------------------------------------------------------
+# Export any Enums from below
+@ Export_Enums
+
+EServerCodeErrors
+EWheelType
+EMinesKindItem
+
+@#@
+
+#----------------------------------------------------------------------------------
+@ Templ_GoLangMethod 
+func (_this *AjaxSvc) @@{methodName}(c echo.Context) error {
+
+	postData := new(controllers.@@{methodTypeInput})
+	err := c.Bind(postData)
+	if err != nil {
+		return err
+	}
+    data, err := _this.CtxControllers.@@{methodName}(postData)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(http.StatusCreated, data)
+}
+@#@
+
+
+#----------------------------------------------------------------------------------
+@ Templ_GoLang 
+package ajax_service;
+
+import (
+	"net/http"
+	echo "github.com/labstack/echo/v4"
+	controllers "bitbucket.org/nwt-nevada/server-main.git/pkg/controllers"
+)
+
+@@{text_method_controllers}
+
+func Generate_SetupRouter(svcHandler *@@{nameClass}, e *echo.Echo) {
+
+@@{text_method_post}
+}     
+@#@
+
+
+#----------------------------------------------------------------------------------
+@ Templ_TsExportService
+
+	import * as Ajax  from  '../services/AjaxScanTraffic'
+    import * as @@{SVCM}  from  './@@{SvcModelFileName}'
+    type TElement=any
+    
+    
+    /** this file is generated automatically by go_tool.exe */
+    export type SVC_FnError = ( err: string ) => void;
+    
+    export class @@{nameClass}
+    {
+        public static readonly ExportVersion:number = 102;
+        public static readonly ExportVersionName:string = 'VersX';
+        public static readonly CmdID:string = 'Msg';// it is the field from service that make the dispatch
+		public static readonly SessionUID:string = 'SessionUID';
+        
+        constructor()
+        {
+        }
+
+        @@{methods}
+    }
+    export var SVCInst = new Svc();
+@#@
+
+
+#----------------------------------------------------------------------------------
+@ Templ_TsExportModels
+
+/** this file is generated automatically by go_tool.exe */
+    
+    import * as Ajax from  '../services/AjaxScanTraffic'
+    import * as @@{SVCM}  from  './AjaxExport'
+    import {UtilsBase,S,F,I} from '../../_framework/utils/UtilsBase'
+    import {@@{SvcObj_MODEL}, @@{Generic_MODEL} } from '../../_framework/common/Generic_MODEL'
+    
+    type TElement=any
+              
+    export type clsGenericItem = @@{Generic_MODEL};//dtoGenericItem;//replace with something
+        
+    export class dtoGenericItem  extends @@{SvcObj_MODEL}
+    {
+        public constructor( data: any=null)
+        {
+            super(data);
+        }
+    }
+
+    export class AJX_classifList  extends @@{SvcObj_MODEL}
+    {
+        public Contents(): HashMap< Array< clsGenericItem> > { return null; };
+        public Titles():   HashMap<String> { return null; };
+    
+        public constructor( data: any=null)
+        {
+            super(data);
+        }
+    }
+
+    export class @@{CLASS_InGeneralData}  extends @@{SvcObj_MODEL}
+    {
+        public constructor( data: any=null)
+        {
+            super(data);
+        }
+    }
+    
+    export class @@{CLASS_OutGeneralData}  extends @@{SvcObj_MODEL}
+    {
+        public constructor( data: any=null)
+        {
+            super(data);
+        }
+    }
+    
+    
+    export class AJX_ComboDynamic extends @@{CLASS_OutGeneralData}
+    {
+        get options_db(): Array<@@{SVCM}.dtoGenericItem>  { return this.__data['options_db'] as Array<@@{SVCM}.dtoGenericItem>;}
+        set options_db(v: Array<@@{SVCM}.dtoGenericItem>) {        this.__data['options_db'] = v;}
+        get field_id(): string  { return this.__data['field_id'] as string;}
+        set field_id(v: string) {        this.__data['field_id'] = v;} 
+        get field_title(): Array<string>  { return this.__data['field_title'] as Array<string>;}
+        set field_title(v: Array<string>) {        this.__data['field_title'] = v;} 
+    
+        readData(name:string, el:TElement):void
+        {
+            el = Ajax._parseFindRoot(name, el);
+            
+            this.options_db = Ajax._parseArray<@@{SVCM}.dtoGenericItem >( 'options_db', el, function(el:TElement){ return ( function( el: Element ) { var i:@@{SVCM}.dtoGenericItem = new @@{SVCM}.dtoGenericItem(); i.readData('options_db', el ); return i; })(el); } );
+            this.field_id = Ajax._parseString( 'field_id', el );
+            this.field_title = Ajax._parseArray<string >( 'field_title', el, function(el:TElement){ return Ajax._parseString( 'field_title', el ); } );
+        }
+    }
+    
+    @@{models}
+        
+    export enum COL_ID {
+
+        @@{_CollectionFields}
+    }
+	
+	@@{export_enums}
+
+@#@
+
+		

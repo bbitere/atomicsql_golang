@@ -1,0 +1,175 @@
+
+
+#  this is a config file
+# connection string for postgresssql DB
+$ ConnectionString = Host=localhost;Username=dev_original;Password=XCZ12345678;Database=newton_original
+
+$ OutputDBContextFile   = C:\Work\SlotMonitor\SlotMonitor\GoServer\NewtonGames\pkg\newton_sql\DbContext.gen.go
+$ ModelsOutputDir 		= C:\Work\SlotMonitor\SlotMonitor\GoServer\NewtonGames\pkg\newton_models
+$ Models_Extension 		= .gen.go
+
+#base for all models, this is how idetify a struct that is a model (golang)
+$ BaseModelName = Generic_MODEL
+
+#import packets for go lang
+$ FullName_PackageModels 	= sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_models  
+$ FullName_PackageOrm    	= sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_orm  
+$ FullName_PackageGenSql 	= sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_sql
+
+# type of sql lang: postgres, mysql
+$ SqlLang = postgres
+
+$ InlineAllFields_ClassInGeneralData = true;
+
+$ RootProject = C:\Work\SlotMonitor\SlotMonitor\GoServer\NewtonGames
+$ GitProject  = sourcerer.slotmonitor.ro/nevada/frontend.git
+
+
+#----------------------------------------------------------------------------------
+@ Templ_GoLangOrmFile 
+/* this class is generated automatically by DB_Tool.exe exporter*/
+
+		package @@{package}
+
+		import (
+		
+			
+			@@{pkgModels} "@@{import_package_models}"
+			@@{pkgOrm}	  "@@{import_package_orm}"
+		)
+//------------------------------------------------------
+
+		type DBContext struct {
+			@@{pkgOrm}.DBContextBase
+
+			@@{tables_def1}
+		}
+		
+		func (_this *DBContext) Constr(dbBase orm.DBContextBase)  (*DBContext,error) {
+		
+			_this.DBContextBase = dbBase;
+			_this.AllTables = make( map[string]*orm.DBTable[orm.IGeneric_MODEL])
+			
+			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
+				@@{schemaDef}
+			}
+			@@{tables_DefVar}
+			
+			_this.FOREIGN_KEYS = map[string]orm.TForeignKey{
+				@@{txtForeignKeys}
+			}
+			
+			_, err := _this.DBContextBase.Constr( dbBase.Dialect, sqlSchemaDef)
+			
+			_this.LoadCompiledQuery();
+			
+			return _this, err
+		}
+
+		func New_DBContext(dbBase orm.DBContextBase) (*DBContext, error) {
+			
+			ret, err := (new(DBContext)).Constr(dbBase)
+			
+			@@{init_tables}
+			
+			return ret, err
+		}
+
+		
+		func (_this *DBContext) Close(){
+			
+			_this.DBContextBase.Db.Close()
+		}
+
+@#@
+
+
+
+#----------------------------------------------------------------------------------
+@ Templ_GoLangModelFile 
+/* this class is generated automatically by DB_Tool.exe exporter*/
+
+    package @@{packageName}
+	import (
+        "reflect"
+        orm	  "sourcerer.slotmonitor.ro/nevada/frontend.git/pkg/newton_orm"
+    )
+	
+	
+        @@{pkgImport}
+
+    type @@{nameModel} struct /*atomicsql-table:"@@{tableSqlName}"*/ {
+	        orm.@@{baseMode}
+	        @@{txtFieldsModel}
+    }
+
+    func (model  @@{nameModel}) GetID() int64 {
+	    return int64( model.@@{primaryKey} )
+    }
+	func (model  @@{nameModel}) SetID( id int64 ) {
+	    model.@@{primaryKey} = @@{primaryKeyType}(id)
+    }
+
+    type @@{PREF_DEF}@@{nameModel} struct {
+	        
+			orm.Generic_Def
+	        @@{txtDefModel}
+    }
+	
+	func (_this *@@{PREF_DEF}@@{nameModel}) Def() *orm.TDefIncludeRelation{
+        return &orm.TDefIncludeRelation{ 
+            
+            ValueDef: reflect.ValueOf( *_this),
+            FnNewInst:	func()any{ return new (@@{nameModel}) },
+        }
+    }
+@#@
+
+
+#----------------------------------------------------------------------------------
+@ Templ_GoLang_SchemaDefItem
+
+	"@@{table_langName}": orm.TDefTable{
+			SchemaTable:           "@@{table_schema}",
+			SqlTableName:          "@@{table_sqlName}",
+			PrimaryColumnLangName: "@@{table_primaryCol_langName}",
+			PrimaryColumnSqlName:  "@@{table_primaryCol_sqlName}",
+			Columns: []orm.TSqlColumnDef{
+				@@{schemaDefItem_cols}
+			},
+		},
+@#@
+
+#----------------------------------------------------------------------------------
+@ Templ_GoLang_SchemaDefItem_Col
+				{
+					LangName:   "@@{col_LangName}",
+					SqlName:    "@@{col_SqlName}",
+					SqlType:    "@@{col_SqlType}",
+					LangType:   "@@{col_LangType}",
+					Flags:      "",
+					IsPrimary:  @@{col_IsPrimary},
+					IsNullable: @@{col_IsNullable},
+					ForeignKeyLangName:@@{col_foreignKeyLangName},
+				},
+@#@
+
+#----------------------------------------------------------------------------------
+@ Templ_GoLang_ForeignKey
+				
+				"@@{fk}":
+				{  
+					TgtTable_sqlName:"@@{tgtTable_sqlName}", 
+					TgtFldID_sqlName:"@@{tgtFldID_sqlName}", 
+					
+					RootFldFk_sqlName:"@@{rootFldFk_sqlName}", 
+					RootTable_sqlName:"@@{rootTable_sqlName}", 
+					
+					RootFldFk_langName:"@@{rootFldFk_langName}", 
+					RootFldFk_lang2Name:"@@{rootFldFk_lang2Name}", 
+				},
+				
+@#@
+	
+
+

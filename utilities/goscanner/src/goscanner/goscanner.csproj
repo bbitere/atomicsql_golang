@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net7.0</TargetFrameworks>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <RootNamespace>goscanner</RootNamespace>
+    <AssemblyName>goscanner</AssemblyName>
+    <ApplicationIcon></ApplicationIcon>
+    <PackageId>go2cs</PackageId>
+    <Authors>J. Ritchie Carroll</Authors>
+    <Company>Grid Protection Alliance</Company>
+    <Product>go2cs</Product>
+    <PackageDescription>GoLang to C# Code Converter</PackageDescription>
+    <Description>GoLang to C# Code Converter</Description>
+    <Copyright>Copyright © 2022</Copyright>
+    <Version>0.1.2</Version>
+    <DefineConstants>TRACE;DOTNETCORE;NET35PLUS;NET40PLUS;NET45PLUS</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+    <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+    <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <Configurations>Debug;Release;SqlConv</Configurations>
+  </PropertyGroup>
+
+  
+
+  <ItemGroup>
+    <ProjectReference Include="..\goscanner.Common\goscanner_common.csproj" />
+    <ProjectReference Include="..\Utilities\Antlr4.Runtime\Antlr4.Runtime.csproj" />
+    <ProjectReference Include="..\Utilities\CommandLine\CommandLine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dahomey.Json" Version="1.10.1" />
+    <PackageReference Include="Gemstone.Common" Version="1.0.86" />
+    <PackageReference Include="System.CodeDom" Version="4.6.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>Windows</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsOSX)'=='true'">
+    <DefineConstants>OSX</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsLinux)'=='true'">
+    <DefineConstants>Linux</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+    <Optimize>False</Optimize>
+    <DebugType>portable</DebugType>
+    <NoWarn>1701;1702;0649</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <NoWarn>1701;1702;0649</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='SqlConv|net7.0|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <NoWarn>1701;1702;0649</NoWarn>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+</Project>
