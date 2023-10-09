@@ -10,7 +10,7 @@
         "type": "go",
         "request": "launch",
         "mode": "auto",
-        "program": "C:/Work/SlotMonitor/atomicsql_golang/library/tests/test1/sql_def/generateDB.go",
+        "program": "${workspaceFolder}/tests/test1/sql_def/generateDB.go",
         //"program": "${fileDirname}",
         "args": ["-configpath=config.yaml"]
     },
