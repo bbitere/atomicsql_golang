@@ -6,7 +6,7 @@ pause
 
 
 @echo ------------------------------------------------------
-%GoServerTool% -asql_migration  -sql_lang=postgres -execute_scripts=n -json_dir=%SRCDIR_PATH%\_db_migration -delimeter=@@@@@@@@######@@@@@@^
+%GoServerTool% -asql_migration  -sql_lang=%SQL_LANG% -execute_scripts=n -json_dir=%SRCDIR_PATH%\_db_migration -delimeter=@@@@@@@@######@@@@@@^
 	   -connection_string=%CONNECTION_STRING%
 pause
 

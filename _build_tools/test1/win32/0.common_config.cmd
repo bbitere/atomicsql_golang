@@ -1,7 +1,7 @@
 @echo off
 
-set GoScanPath=C:\Work\SlotMonitor\SlotGames\server-tools\atomicsql_compiler_tool\go2cs\go2cs-master\src\go2cs\bin\Sqlconv\net7.0\
-set GoServerToolPath=C:\Work\SlotMonitor\SlotGames\server-tools\GoServerTool\bin\Debug
+set GoScanPath=..\..\tools\atomicsql_compiler
+set GoServerToolPath=..\..\tools\GoServerTool
 
 set PATH=%PATH%;%GoScanPath%
 set PATH=%PATH%;%GoServerToolPath%
@@ -10,6 +10,10 @@ set GoScan=%GoScanPath%\go2cs.exe
 set GoServerTool=%GoServerToolPath%\DBTool.exe
 
 set SRCDIR_PATH=%CD%\..\..\..\library
-set CONNECTION_STRING=Host=localhost;Username=dev_original;Password=XCZ12345678;Database=test1
+rem set CONNECTION_STRING=Host=localhost;Username=?;Password=?;Database=test1
+rem set SQL_LANG=postgres
+set CONNECTION_STRING=Host=localhost;Username=rbitere;Password=xz021621;Database=test1
+set SQL_LANG=mysql
+
 set GITHUB_URL=github.com/bbitere/atomicsql_golang.git
 rem set GITHUB_URL="github.com/bbitere/atomicsql_golang.git/src/atomicsql"
