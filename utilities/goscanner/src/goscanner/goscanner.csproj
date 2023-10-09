@@ -62,5 +62,8 @@
     <NoWarn>1701;1702;0649</NoWarn>
     <Optimize>False</Optimize>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="cd ..\&#xD;&#xA;call copy_build.cmd" />
+  </Target>
 
 </Project>

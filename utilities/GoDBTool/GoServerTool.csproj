@@ -130,8 +130,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>cd .\..\..
+copy_build.cmd</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>rem I delete what is copied from running the project
