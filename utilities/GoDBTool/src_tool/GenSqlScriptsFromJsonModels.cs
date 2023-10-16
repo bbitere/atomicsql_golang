@@ -35,16 +35,19 @@ namespace src_tool
         public class DialectArg: GenericDialectArg
         {
             public string dir_jsons;
+            public string dir_sql;
             public string delimeter;
             public bool   bApplyScripts;
 
             public DialectArg(
                 string strConnection,
                 string dir_jsons,
+                string dir_sql,
                 string delimeter,
                 bool bApplyScripts):base(strConnection)
             {
                 this.dir_jsons = dir_jsons;
+                this.dir_sql = dir_sql;
                 this.delimeter = delimeter;
                 this.bApplyScripts = bApplyScripts;
             }
@@ -168,12 +171,13 @@ namespace src_tool
         public void GenerateScripts( 
                 string sqlLang,
                 string dir_jsons,
+                string dir_sql,
                 string connection_string,
                 string delimeter,
                 bool bApplyScripts
             )
         {
-            var arg = new DialectArg( connection_string, dir_jsons, delimeter, bApplyScripts);
+            var arg = new DialectArg( connection_string, dir_jsons, dir_sql, delimeter, bApplyScripts);
             var dialect = GenericDialect.GetDialectByName(sqlLang);
             if( dialect == null)
                 return;
@@ -189,7 +193,7 @@ namespace src_tool
             string[] files= null;
             try
             {
-                var sqlfiles = Directory.GetFiles( arg.dir_jsons, $"*{EXTENSION_SQL}", SearchOption.AllDirectories);
+                var sqlfiles = Directory.GetFiles( arg.dir_sql, $"*{EXTENSION_SQL}", SearchOption.AllDirectories);
                 foreach( var sqlFile in sqlfiles)
                 {
                     if( !sqlFile.Contains(PATTERN_NAME_SQL) )
@@ -232,8 +236,10 @@ namespace src_tool
                     }
                 }else
                 {
-                    var etichet = tagFile != ""? $"-{tagFile}":"";
-                    var sqlFile = file.Replace(EXTENSION_JSON, $"{etichet}{EXTENSION_SQL}");
+                    var etichet  = tagFile != ""? $"-{tagFile}":"";
+                    var fileName = Utils.getFileInfoName( file );                    
+                    var sqlFile  = $"{arg.dir_sql}\\{fileName}{etichet}{EXTENSION_SQL}";
+                        //file.Replace(EXTENSION_JSON, $"{etichet}{EXTENSION_SQL}");
                     try
                     {
                         File.WriteAllText( sqlFile, content);

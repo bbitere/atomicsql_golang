@@ -41,11 +41,11 @@ namespace src_tool
             if( args[ 0 ] == "-asql_migration")
             {   
                 // -asql_migration  -sql_lang=postgres -execute_scripts=n -json_dir=C:\Work\SlotMonitor\atomicsql_golang\library\_db_migration  -delimeter=@@@@@@@@######@@@@@@  -connection_string=Host=localhost;Username=dev_original;Password=XCZ12345678;Database=newton_original
-                
                 var dictArgs = parseArguments( args, 
                     new String[]{   
                                     "sql_lang",
                                     "json_dir",
+                                    "sql_dir",
                                     "connection_string",
                                     "delimeter",
                                     "execute_scripts",
@@ -53,6 +53,7 @@ namespace src_tool
                     new String[]{ 
                         "sql_lang; the name of sql dialect:postgres, mysql",
                         "json Directory;the directory where all json defs are stored",
+                        "sql_dir Directory;the directory where all sql scritps definitions for migration are stored",
                         "connection string; connection string of db",
                         "delimeter; string that separate the defs of table in json file",
                         "execute the scripts; if execute_scripts=y,n  => execute scripts, else generate the files"
@@ -63,7 +64,8 @@ namespace src_tool
                 var inst = new GenSqlScriptsFromJsonModels();
                 inst.GenerateScripts( 
                                 dictArgs["sql_lang"],
-                                normalizePath(dictArgs[ "json_dir" ]),                                
+                                normalizePath(dictArgs[ "json_dir" ]),
+                                normalizePath(dictArgs[ "sql_dir" ]),                                
                                 dictArgs["connection_string"],
                                 dictArgs["delimeter"],
                                 dictArgs["execute_scripts"] =="y"

@@ -7,34 +7,32 @@
     )
 	
 	
-        /*import (
-	    sql "database/sql"
-        )*/
+        /**/
 	/*
-    type StatusRole struct /*atomicsql-table:"statusRole"* / {
+    type Project struct /*atomicsql-table:"project"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
-            StatusName          sql.NullString                `json:"status_name"`
+            Name                string                        `json:"name"`
     }
 	*/
-    func (model  StatusRole) GetID() int64 {
+    func (model  Project) GetID() int64 {
 	    return int64( model.ID )
     }
-	func (model  StatusRole) SetID( id int64 ) {
+	func (model  Project) SetID( id int64 ) {
 	    model.ID = int32(id)
     }
 
-    type T_StatusRole struct {
+    type T_Project struct {
 	        
 			orm.Generic_Def
 	        ID                  string
-            StatusName          string
+            Name                string
     }
 	
-	func (_this *T_StatusRole) Def() *orm.TDefIncludeRelation{
+	func (_this *T_Project) Def() *orm.TDefIncludeRelation{
         return &orm.TDefIncludeRelation{ 
             
             ValueDef: reflect.ValueOf( *_this),
-            FnNewInst:	func()any{ return new (StatusRole) },
+            FnNewInst:	func()any{ return new (Project) },
         }
     }

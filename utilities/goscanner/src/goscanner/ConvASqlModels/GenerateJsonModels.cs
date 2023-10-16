@@ -5,6 +5,7 @@ using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Antlr4.Runtime.Misc;
 using Dahomey.Json;
@@ -18,6 +19,11 @@ namespace goscanner.ConvASqlModels
     
 internal class GenerateJsonModels 
 {
+
+    public const string EXTENSION_JSON = ".json";
+    public const string PATTERN_NAME_SQL = ".models-";//all files have this in their name
+    public const string RECOGNIZE_FILE_PATTERN=@"^\d{4}\.\d{2}\.\d{2}\.(\d{2}|\d{3}|\d{4}|\d{6})\.(.+)$";
+        
 
 const string TAG_Type ="Type";
 const string TAG_tags ="tags";
@@ -106,6 +112,44 @@ public static string exportJsonModels(
     return jsonOut;
 
     //return Export_SvcModels( "", "", meths);
+}
+
+public static string GetLastJsonFileContent(string dir_jsons)
+{
+    if( dir_jsons == "" || dir_jsons == null)
+        return null;
+    var regex = new Regex(RECOGNIZE_FILE_PATTERN);
+            
+    var listFiles = new List<string>();
+    try
+    {
+        var allFiles = Directory.GetFiles( dir_jsons, "*.json" );
+        foreach( var file in allFiles )
+        {
+            var fileInfo = new FileInfo(file);
+            if( fileInfo.Extension == ".json" 
+                && regex.IsMatch(fileInfo.Name) )
+            {
+                listFiles.Add( file );
+            }
+        }
+    }catch( Exception e)
+    {
+         Console.WriteLine( $"error accessing dir '{dir_jsons}': {e.Message}" );
+    }
+    if( listFiles.Count > 0 )
+    {
+        listFiles = listFiles.OrderByDescending(x=> x ).ToList();
+        try
+        {
+            var txt = System.IO.File.ReadAllText( listFiles[0] );
+            return txt;
+        }catch( Exception e)
+        {
+            Console.WriteLine( $"error accessing dir '{dir_jsons}': {e.Message}" );
+        }
+    }
+    return null;
 }
 
 private static void generateModelsFieldsAndRead(            

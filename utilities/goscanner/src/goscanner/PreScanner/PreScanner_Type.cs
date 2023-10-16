@@ -36,7 +36,7 @@ public partial class PreScanner
 
     public override void ExitStructType(GoParser.StructTypeContext context)
     {
-        var comment = "";
+        //var comment = "";
         List<FieldInfo> fields = new();
 
         /*
