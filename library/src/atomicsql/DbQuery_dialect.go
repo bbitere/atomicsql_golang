@@ -18,52 +18,61 @@ import (
 
 /*#PHPARG=[ String ];*/
 func (_this *DBQuery[T]) _quote( /*#Object*/ data any, columnTable *TSqlColumnDef) string {
-	
+
 	ctx := _this.tableInst.m_ctx
 
 	if data == nil {
 		return ctx.LangDB.VALUE_NULL
 	}
-	
-	switch data.(type) {
-		case time.Time: return data.(time.Time).Format(time.DateTime)
-		
-		case int: return fmt.Sprintf("%d", data.(int))
-		case int32: return fmt.Sprintf("%d", data.(int32))
-		case int64: return fmt.Sprintf("%d", data.(int64))
-		case int16: return fmt.Sprintf("%d", data.(int16))
-		case byte: return fmt.Sprintf("%d", data.(byte))
-		case float32: return fmt.Sprintf("%f", data.(float32))
-		case float64: return fmt.Sprintf("%f", data.(float64))
 
-		case bool:  return IFF( data.(bool), ctx.LangDB.VALUE_TRUE, 
-											 ctx.LangDB.VALUE_FALSE)
-		case string: 
+	switch data.(type) {
+	case time.Time:
+		return data.(time.Time).Format(time.DateTime)
+
+	case int:
+		return fmt.Sprintf("%d", data.(int))
+	case int32:
+		return fmt.Sprintf("%d", data.(int32))
+	case int64:
+		return fmt.Sprintf("%d", data.(int64))
+	case int16:
+		return fmt.Sprintf("%d", data.(int16))
+	case byte:
+		return fmt.Sprintf("%d", data.(byte))
+	case float32:
+		return fmt.Sprintf("%f", data.(float32))
+	case float64:
+		return fmt.Sprintf("%f", data.(float64))
+
+	case bool:
+		return IFF(data.(bool), ctx.LangDB.VALUE_TRUE,
+			ctx.LangDB.VALUE_FALSE)
+	case string:
 		{
-			data = Str.ReplaceAll( data.(string), "'", "''")
+			data = Str.ReplaceAll(data.(string), "'", "''")
 			return fmt.Sprintf("'%s'", data)
 		}
-		case []uint8:
-		{	
-			if( columnTable != nil){
+	case []uint8:
+		{
+			if columnTable != nil {
 				var slice = data.([]uint8)
-				var strData = string( slice );
-				if( strData[0] == '{' && strData[len(strData)-1] == '}'){
+				var strData = string(slice)
+				if strData[0] == '{' && strData[len(strData)-1] == '}' {
 
-					strData = Str_SubString(strData, 1, len(strData)-2 );
+					strData = Str_SubString(strData, 1, len(strData)-2)
 				}
 
-				var typeSqlElement = Str.ReplaceAll( columnTable.SqlType,"[]", "" )
-					
-				var valSql = fmt.Sprintf( "ARRAY[%s]::%s[]", strData, typeSqlElement)
-				return valSql;
+				var typeSqlElement = Str.ReplaceAll(columnTable.SqlType, "[]", "")
+
+				var valSql = fmt.Sprintf("ARRAY[%s]::%s[]", strData, typeSqlElement)
+				return valSql
 			}
-			return "ARRAY[]::text[]"				
-		}								
-		default:
+			return "ARRAY[]::text[]"
+		}
+	default:
 		{
-			dataType:= reflect.ValueOf(data);
-			ctx.Log_Print( fmt.Sprintf("type %s is not processed", dataType ));
+			dataType := reflect.ValueOf(data)
+			ctx.Log_Print(fmt.Sprintf("type %s is not processed", dataType))
 			return ""
 		}
 	}
@@ -72,7 +81,7 @@ func (_this *DBQuery[T]) _quote( /*#Object*/ data any, columnTable *TSqlColumnDe
 
 	//ret := mysqli_real_escape_string(_this.g_DB.connection, S(data))
 	//ret = mysqli_real_escape_string( data);
-	
+
 }
 
 /*#PHPARG=[ String ];*/
@@ -106,30 +115,29 @@ func (_this *DBQuery[T]) clean__quoteTable( /*#String*/ tableName string) string
 /*#PHPARG=[ String ];*/
 func (_this *DBQuery[T]) _quoteTable( /*#String*/ tableName string) string {
 
-	var ctx = _this.tableInst.m_ctx;
+	var ctx = _this.tableInst.m_ctx
 
 	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgress {
-		
-		var table, has = ctx.SCHEMA_SQL_BySqlName[tableName];
-		if( has ){
+
+		var table, has = ctx.SCHEMA_SQL_BySqlName[tableName]
+		if has {
 
 			tableName = str_replace(`"`, "", tableName)
 			return fmt.Sprintf(`"%s"%s"%s"`, table.SchemaTable, CONCAT_FIELDS, tableName)
-		}else
-		{
+		} else {
 			tableName = str_replace(`"`, "", tableName)
 			return fmt.Sprintf(`"%s"`, tableName)
 		}
 
 	} else if _this.tableInst.m_ctx.Dialect == ESqlDialect.MsSql {
 
-		var table, has = ctx.SCHEMA_SQL_BySqlName[tableName];
-		if( has ){
+		var table, has = ctx.SCHEMA_SQL_BySqlName[tableName]
+		if has {
 
 			tableName = str_replace(`"`, "", tableName)
 			return fmt.Sprintf(`[%s]%s[%s]`, table.SchemaTable, CONCAT_FIELDS, tableName)
-		}else{
-		
+		} else {
+
 			tableName = str_replace("[", "", tableName)
 			tableName = str_replace("]", "", tableName)
 			return fmt.Sprintf("[%s]", tableName)
@@ -139,12 +147,16 @@ func (_this *DBQuery[T]) _quoteTable( /*#String*/ tableName string) string {
 
 		//data = str_replace(" ", "_", data)
 
-		var table, has = ctx.SCHEMA_SQL_BySqlName[tableName];
-		if( has ){
+		var table, has = ctx.SCHEMA_SQL_BySqlName[tableName]
+		if has {
 
 			tableName = str_replace("`", "", tableName)
-			return fmt.Sprintf("`%s`%s`%s`", table.SchemaTable, CONCAT_FIELDS, tableName)
-		}else{
+			if !(table.SchemaTable == "def" || table.SchemaTable == "") {
+				return fmt.Sprintf("`%s`%s`%s`", table.SchemaTable, CONCAT_FIELDS, tableName)
+			} else {
+				return fmt.Sprintf("`%s`", tableName)
+			}
+		} else {
 			tableName = str_replace("`", "", tableName)
 			return fmt.Sprintf("`%s`", tableName)
 		}
@@ -215,14 +227,14 @@ func (_this *DBQuery[T]) _quoteTableField1(
 
 			var itemsFK = Arr_Slice(&items, 0, count)
 			var FK_id = Str.Join(itemsFK, CONCAT_FIELDS)
-			FK    = fmt.Sprintf("%s.%s", tableDBName, items[count-1])
+			FK = fmt.Sprintf("%s.%s", tableDBName, items[count-1])
 
-			var item1,err = joinsCollection.addJoin( _this.tableInst.m_ctx, _this,
-						// _this.pivotProvider?_this.pivotProvider.tableNameOrig:
-						item, FK_id, FK, itemFK, &tableDBName)
-			if( err != nil){
-				_this.errorRet = err;
-				return "";
+			var item1, err = joinsCollection.addJoin(_this.tableInst.m_ctx, _this,
+				// _this.pivotProvider?_this.pivotProvider.tableNameOrig:
+				item, FK_id, FK, itemFK, &tableDBName)
+			if err != nil {
+				_this.errorRet = err
+				return ""
 			}
 			ret = fmt.Sprintf("%s.%s", item1, ret)
 			//itemFK = item;//aici era o eroare

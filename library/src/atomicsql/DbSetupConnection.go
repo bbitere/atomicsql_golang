@@ -13,17 +13,17 @@ var DBConnectionInst DBContextBase
 
 var static_db *sql.DB
 
-func StaticOpenDB(connStr TConnectionString, dialect string, maxIdle int, maxOpen int) (*sql.DB, error) {
+func StaticOpenDB(connStr TConnectionString, maxIdle int, maxOpen int) (*sql.DB, error) {
 
 	var dataSource = ""
 	var sqlLang = ""
-	if dialect == ESqlDialect.Postgress {
+	if connStr.SqlLang == ESqlDialect.Postgress {
 
 		sqlLang = "postgres"
 		dataSource = fmt.Sprintf("host=%s port=%d user=%s "+
 			"password=%s dbname=%s sslmode=disable",
 			connStr.Host, connStr.Port, connStr.User, connStr.Password, connStr.DbName)
-	} else if dialect == ESqlDialect.MySql {
+	} else if connStr.SqlLang == ESqlDialect.MySql {
 
 		sqlLang = "mysql"
 		dataSource = fmt.Sprintf(
@@ -34,7 +34,7 @@ func StaticOpenDB(connStr TConnectionString, dialect string, maxIdle int, maxOpe
 			connStr.Port,
 			connStr.DbName,
 		)
-	} else if dialect == ESqlDialect.MsSql {
+	} else if connStr.SqlLang == ESqlDialect.MsSql {
 
 		sqlLang = "mssql"
 		dataSource = fmt.Sprintf(
@@ -72,16 +72,16 @@ func StaticOpenDB(connStr TConnectionString, dialect string, maxIdle int, maxOpe
 	return db, err
 }
 
-func OpenDB(connStr TConnectionString, dialect string, maxIdle int, maxOpen int) (*DBContextBase, error) {
+func OpenDB(connStr TConnectionString, maxIdle int, maxOpen int) (*DBContextBase, error) {
 
-	var db, err = StaticOpenDB(connStr, dialect, maxIdle, maxOpen)
+	var db, err = StaticOpenDB(connStr, maxIdle, maxOpen)
 	if err != nil {
 		return nil, err
 	}
 
 	ctxBase := new(DBContextBase)
 	ctxBase.ConnectionString = connStr
-	ctxBase.Dialect = dialect
+	ctxBase.Dialect = connStr.SqlLang
 	ctxBase.Db = db
 
 	return ctxBase, nil

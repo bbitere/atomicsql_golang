@@ -2,7 +2,7 @@ call 0.common_config.cmd
 
 rem @echo VAR: %GoServerTool%
 @echo ------------------------------------------------------
-%GoServerTool% -migration_db  -sql_lang=%SQL_LANG% -input_dir="%SRCDIR_PATH%\_db_migration"^
+%GoServerTool%  -migration_db  -sql_lang=%SQL_LANG% -input_dir="%SRCDIR_PATH%\_db_migration"^
  -out_dir="" -type_out_file=go^
  -connectionString=%CONNECTION_STRING%
  pause

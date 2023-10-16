@@ -14,7 +14,7 @@
     type Employee1 struct /*atomicsql-table:"employee1"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
-            IsActive            bool                          `json:"isActive"`
+            IsActive            byte                          `json:"isActive"`
             UserID              *User                         `json:"-"`
             User_ID             sql.NullInt32                 `json:"user_ID"`
             DepartmID           *Department                   `json:"-"`

@@ -12,6 +12,9 @@ func Test1_GetConnectionString() atmsql.TConnectionString {
 		User:     "rbitere",
 		Password: "xz021621",
 		DbName:   "test1",
+		//SqlLang:   atmsql.ESqlDialect.Postgress,
+		SqlLang: atmsql.ESqlDialect.MySql,
 	}
+
 	return connString
 }

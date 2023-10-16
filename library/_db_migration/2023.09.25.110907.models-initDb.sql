@@ -1,42 +1,50 @@
         
-            -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."DBParams"
+            /*------------------------------------------------------------------*/
+            CREATE TABLE IF NOT EXISTS `DBParams`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "ParamName" VARCHAR NOT NULL,
-                "ParamValue" VARCHAR NOT NULL
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `ParamName` VARCHAR(20000) NOT NULL,
+                `ParamValue` VARCHAR(20000) NOT NULL
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 ;        
-            -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."statusRole"
+            /*------------------------------------------------------------------*/
+            CREATE TABLE IF NOT EXISTS `statusRole`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "status_name" VARCHAR NULL
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `status_name` VARCHAR(20000) NULL
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 ;        
-            -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."user_role"
+            /*------------------------------------------------------------------*/
+            CREATE TABLE IF NOT EXISTS `user_role`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "isActive" BOOLEAN NOT NULL,
-                "roleName" VARCHAR NOT NULL,
-                "role_status_ID" integer NULL CONSTRAINT "fk_role_status_ID" REFERENCES public."statusRole" ("ID"),
-                "my_active" BOOLEAN NOT NULL
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `isActive` BOOLEAN NOT NULL,
+                `roleName` VARCHAR(20000) NOT NULL,
+                `role_status_ID` INT NULL, CONSTRAINT `fk_role_status_ID` FOREIGN KEY (`role_status_ID`) REFERENCES `statusRole`(`ID`),
+                `my_active` BOOLEAN NOT NULL
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 ;        
-            -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."user"
+            /*------------------------------------------------------------------*/
+            CREATE TABLE IF NOT EXISTS `user`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "userName" VARCHAR NOT NULL,
-                "UUID" VARCHAR NOT NULL,
-                "user_psw" VARCHAR NOT NULL,
-                "userRole_ID" integer NULL CONSTRAINT "fk_userRole_ID" REFERENCES public."user_role" ("ID"),
-                "time1" TIMESTAMP NULL,
-                "money" double precision NOT NULL
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `userName` VARCHAR(20000) NOT NULL,
+                `UUID` VARCHAR(20000) NOT NULL,
+                `user_psw` VARCHAR(20000) NOT NULL,
+                `userRole_ID` INT NULL, CONSTRAINT `fk_userRole_ID` FOREIGN KEY (`userRole_ID`) REFERENCES `user_role`(`ID`),
+                `time1` TIMESTAMP NULL,
+                `money` DOUBLE PRECISION NOT NULL
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 

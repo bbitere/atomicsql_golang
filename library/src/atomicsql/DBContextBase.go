@@ -8,10 +8,11 @@ import (
 	"time"
 )
 
+type VESqlDialect string
 type TESqlDialect struct {
-	Postgress string
-	MySql     string
-	MsSql     string
+	Postgress VESqlDialect
+	MySql     VESqlDialect
+	MsSql     VESqlDialect
 }
 
 var ESqlDialect TESqlDialect = TESqlDialect{
@@ -20,13 +21,13 @@ var ESqlDialect TESqlDialect = TESqlDialect{
 }
 
 type TSqlColumnDef struct {
-	LangName   string
-	SqlName    string
-	SqlType    string
-	LangType   string
-	Flags      string
-	IsPrimary  bool
-	IsNullable bool
+	LangName           string
+	SqlName            string
+	SqlType            string
+	LangType           string
+	Flags              string
+	IsPrimary          bool
+	IsNullable         bool
 	ForeignKeyLangName []string
 }
 
@@ -45,7 +46,7 @@ type TLangDataBase struct {
 	VALUE_TRUE         string
 	VALUE_FALSE        string
 	VALUE_NULL         string
-	END_COMMAND			string
+	END_COMMAND        string
 	EMPTY_STRING       string
 }
 
@@ -57,15 +58,13 @@ type TDefTable struct {
 	Columns               []TSqlColumnDef
 }
 
-
-
-func (_this *TDefTable)getDictColumnByLangName() *map[string](TSqlColumnDef){
+func (_this *TDefTable) getDictColumnByLangName() *map[string](TSqlColumnDef) {
 	var dict = make(map[string](TSqlColumnDef))
 
-	for _, col := range( _this.Columns){
+	for _, col := range _this.Columns {
 
-		dict[ col.LangName ] = col;
-		
+		dict[col.LangName] = col
+
 	}
 	return &dict
 }
@@ -76,9 +75,9 @@ type TForeignKey struct {
 	TgtTable_sqlName string
 	TgtFldID_sqlName string
 
-	RootTable_sqlName string
-	RootFldFk_sqlName string
-	RootFldFk_langName string 
+	RootTable_sqlName   string
+	RootFldFk_sqlName   string
+	RootFldFk_langName  string
 	RootFldFk_lang2Name string
 }
 
@@ -88,26 +87,25 @@ type TConnectionString struct {
 	User     string
 	Password string
 	DbName   string
+	SqlLang  VESqlDialect
 }
-
 
 type TExternVar struct {
 	VarName string
 	VarType string
 }
 type TCompiledSqlQuery struct {
-
-	CompiledQuery 		string
-	SelectSqlFields		map[string]string
+	CompiledQuery   string
+	SelectSqlFields map[string]string
 	//joins				[]string
-	Fields				map[string]string
-	ExternVar			[]TExternVar
+	Fields    map[string]string
+	ExternVar []TExternVar
 
-	Tag					string
-	File 				string
-	StartOff			int
-	EndOff				int
-	Hash				string // for checking the integrity
+	Tag      string
+	File     string
+	StartOff int
+	EndOff   int
+	Hash     string // for checking the integrity
 
 }
 
@@ -119,149 +117,143 @@ type DBContextBase struct {
 	ConnectionString TConnectionString
 	Db               *sql.DB
 
-	SCHEMA_SQL 				TSchemaDef
-	SCHEMA_SQL_BySqlName 	TSchemaDef
-	SCHEMA_SQL_Columns		map[string] map[string]string
+	SCHEMA_SQL           TSchemaDef
+	SCHEMA_SQL_BySqlName TSchemaDef
+	SCHEMA_SQL_Columns   map[string]map[string]string
 
-	FOREIGN_KEYS 			map[string]TForeignKey
-	LangDB     				TLangDataBase
-	Dialect    				string //TESqlDialect
+	FOREIGN_KEYS map[string]TForeignKey
+	LangDB       TLangDataBase
+	Dialect      VESqlDialect //TESqlDialect
 
-	CompiledSqlQueries		map[ string ]TCompiledSqlQuery
+	CompiledSqlQueries map[string]TCompiledSqlQuery
 
-	currOperationDTime 		time.Time
-	currOperationDTime2 	time.Time
-	accumulatorDTimeMicroSec int64
+	currOperationDTime        time.Time
+	currOperationDTime2       time.Time
+	accumulatorDTimeMicroSec  int64
 	accumulatorDTimeMicroSec2 int64
 
-	subTagCounter			int
-	sqlItemDefCounter		int 
+	subTagCounter     int
+	sqlItemDefCounter int
 
-	AllTables				map[ string ]*DBTable[IGeneric_MODEL]
+	AllTables map[string]*DBTable[IGeneric_MODEL]
 
-	stackTransactions		[]*Transaction;	
-	hasError				error
-
+	stackTransactions []*Transaction
+	hasError          error
 }
 type IDBContext interface {
-	GetContext()IDBContext
+	GetContext() IDBContext
 }
 
 // execute sql query
 // see sql.Exec()
-func (_this *DBContextBase) Exec(sqlQuery string ) (sql.Result, error) {
+func (_this *DBContextBase) Exec(sqlQuery string) (sql.Result, error) {
 
-	var cnt = len(_this.stackTransactions);
-	if( cnt > 0 ){
+	var cnt = len(_this.stackTransactions)
+	if cnt > 0 {
 
-		var tx = _this.stackTransactions[ cnt -1];
-		return tx.tx.Exec(sqlQuery);		
-	}else{
-		return _this.Db.Exec(sqlQuery);
+		var tx = _this.stackTransactions[cnt-1]
+		return tx.tx.Exec(sqlQuery)
+	} else {
+		return _this.Db.Exec(sqlQuery)
 	}
 }
-func resultClose( dbResult sql.Result){
-	if( dbResult != nil){
-		
+func resultClose(dbResult sql.Result) {
+	if dbResult != nil {
+
 	}
 }
 
 // get a Row executing a sql query
 // see sql.QueryRow()
-func (_this *DBContextBase) QueryRow(sqlQuery string ) *sql.Row {
-	
-	var cnt = len(_this.stackTransactions);
-	if( cnt > 0 ){
+func (_this *DBContextBase) QueryRow(sqlQuery string) *sql.Row {
 
-		var tx = _this.stackTransactions[ cnt -1];
-		return tx.tx.QueryRow(sqlQuery);
-	}else{
-		return _this.Db.QueryRow(sqlQuery);
-	}	
+	var cnt = len(_this.stackTransactions)
+	if cnt > 0 {
+
+		var tx = _this.stackTransactions[cnt-1]
+		return tx.tx.QueryRow(sqlQuery)
+	} else {
+		return _this.Db.QueryRow(sqlQuery)
+	}
 }
 
-func queryRowClose(result* sql.Row){
-	
+func queryRowClose(result *sql.Row) {
+
 }
 
 // get Rows executing a sql query
 // see sql.Query()
 func (_this *DBContextBase) Query(query string, args ...any) (*sql.Rows, error) {
-	
-	var cnt = len(_this.stackTransactions);
-	if( cnt > 0 ){
 
-		var tx = _this.stackTransactions[ cnt -1];
-		return tx.tx.Query(query);
-	}else{
-		return _this.Db.Query(query);
+	var cnt = len(_this.stackTransactions)
+	if cnt > 0 {
+
+		var tx = _this.stackTransactions[cnt-1]
+		return tx.tx.Query(query)
+	} else {
+		return _this.Db.Query(query)
 	}
 }
 
-func queryClose(result* sql.Rows){
+func queryClose(result *sql.Rows) {
 
-	if( result != nil){
+	if result != nil {
 		result.Close()
 	}
 }
 
+func (_this *DBContextBase) getSubTag() string {
 
-func (_this *DBContextBase) getSubTag() string{
-	
-	_this.subTagCounter++;
-	return fmt.Sprintf("%d",_this.subTagCounter);
+	_this.subTagCounter++
+	return fmt.Sprintf("%d", _this.subTagCounter)
 }
 func (_this *DBContextBase) resetSubTag() {
-	
-	_this.subTagCounter = 0;
+
+	_this.subTagCounter = 0
 }
 
+func (_this *DBContextBase) newSQL_ITEM(prefix string) string {
 
-func (_this *DBContextBase) newSQL_ITEM(prefix string) string{
+	_this.sqlItemDefCounter++
+	var cnt = fmt.Sprintf("%d", _this.sqlItemDefCounter)
 
-	_this.sqlItemDefCounter++;
-	var cnt = fmt.Sprintf("%d", _this.sqlItemDefCounter );
-
-	return prefix+cnt;
+	return prefix + cnt
 }
 
-func (_this *DBContextBase) clearCachedSyntax(){
+func (_this *DBContextBase) clearCachedSyntax() {
 
-	_this.subTagCounter =0;
-	_this.sqlItemDefCounter = 0;
+	_this.subTagCounter = 0
+	_this.sqlItemDefCounter = 0
 }
 
-
-func (_this *DBContextBase) updateDeltaTime2(){
+func (_this *DBContextBase) updateDeltaTime2() {
 
 	var time1 = time.Now()
-	var delta = time1.Sub( _this.currOperationDTime2)
+	var delta = time1.Sub(_this.currOperationDTime2)
 	_this.accumulatorDTimeMicroSec2 += delta.Microseconds()
 }
 
-func (_this *DBContextBase) updateDeltaTime(){
+func (_this *DBContextBase) updateDeltaTime() {
 
 	var time1 = time.Now()
-	var delta = time1.Sub( _this.currOperationDTime)
+	var delta = time1.Sub(_this.currOperationDTime)
 	_this.accumulatorDTimeMicroSec += delta.Microseconds()
 }
 
-
-
-func (_this *DBContextBase) GetTotalDeltaTime() float64{
+func (_this *DBContextBase) GetTotalDeltaTime() float64 {
 
 	return float64(_this.accumulatorDTimeMicroSec) / 1000.0
 	//return float64(_this.accumulatorDTimeMicroSec2) / 1000.0
 }
 
-//the constructor
-func (_this *DBContextBase) Constr(dialect string, schemaSql TSchemaDef) (*DBContextBase, error){
+// the constructor
+func (_this *DBContextBase) Constr(dialect VESqlDialect, schemaSql TSchemaDef) (*DBContextBase, error) {
 
 	_this.SCHEMA_SQL = schemaSql
 
 	var err error
 	_this.SCHEMA_SQL_BySqlName, err = _this.convertSchema(schemaSql)
-	if( err != nil){
+	if err != nil {
 		return nil, err
 	}
 
@@ -283,8 +275,8 @@ func (_this *DBContextBase) Constr(dialect string, schemaSql TSchemaDef) (*DBCon
 			VALUE_TRUE:         "true",
 			VALUE_FALSE:        "false",
 			EMPTY_STRING:       "''",
-			VALUE_NULL:       	"null",
-			END_COMMAND:		";",
+			VALUE_NULL:         "null",
+			END_COMMAND:        ";",
 		}
 	} else if dialect == ESqlDialect.MsSql {
 
@@ -302,10 +294,10 @@ func (_this *DBContextBase) Constr(dialect string, schemaSql TSchemaDef) (*DBCon
 			VALUE_TRUE:         "1",
 			VALUE_FALSE:        "0",
 			EMPTY_STRING:       "''",
-			VALUE_NULL:       	"null",
-			END_COMMAND:		"GO",
+			VALUE_NULL:         "null",
+			END_COMMAND:        "GO",
 		}
-	} else if dialect == ESqlDialect.MySql  {
+	} else if dialect == ESqlDialect.MySql {
 
 		_this.LangDB = TLangDataBase{
 			Type_BOOL:          "BIT",
@@ -321,80 +313,84 @@ func (_this *DBContextBase) Constr(dialect string, schemaSql TSchemaDef) (*DBCon
 			VALUE_TRUE:         "1",
 			VALUE_FALSE:        "0",
 			EMPTY_STRING:       "''",
-			VALUE_NULL:       	"null",
-			END_COMMAND:		";",
+			VALUE_NULL:         "null",
+			END_COMMAND:        ";",
 		}
 	}
 
-	
 	return _this, nil
 }
 
+func (_this *DBContextBase) convertSchema(schemaSql TSchemaDef) (TSchemaDef, error) {
 
-func (_this *DBContextBase) convertSchema( schemaSql TSchemaDef) (TSchemaDef, error) {
+	var newSchema = make(TSchemaDef)
+	for _, val := range schemaSql {
 
-	var newSchema = make( TSchemaDef )
-	for _, val := range(schemaSql) {
-
-		_, has := newSchema[ val.SqlTableName ];
-		if( has ){
-			return nil, fmt.Errorf("duplicate name table in diferent schema: '%s'", val.SqlTableName );
+		_, has := newSchema[val.SqlTableName]
+		if has {
+			return nil, fmt.Errorf("duplicate name table in diferent schema: '%s'", val.SqlTableName)
 		}
-		newSchema[ val.SqlTableName ] = val;
-	}	
-		
+		newSchema[val.SqlTableName] = val
+	}
+
 	return newSchema, nil
 }
 
+func (_this *DBContextBase) convertSchemaLangColumns(schemaSql TSchemaDef) (map[string]map[string]string, error) {
 
+	var newSchema = make(map[string]map[string]string)
 
-func (_this *DBContextBase) convertSchemaLangColumns( schemaSql TSchemaDef ) (map[string] map[string]string, error) {
+	for tableName, val := range schemaSql {
 
-	var newSchema = make( map[string] map[string]string )
+		var newTable = make(map[string]string)
+		newSchema[tableName] = newTable
 
-	for tableName, val := range(schemaSql) {
-
-		var newTable = make( map[string]string ) 
-		newSchema[ tableName ] = newTable;
-		
-		for _, val1 := range(val.Columns) {
+		for _, val1 := range val.Columns {
 			newTable[val1.LangName] = val1.SqlName
 		}
-	}	
-		
+	}
+
 	return newSchema, nil
 }
 
-//write in log
-func (_this *DBContextBase) Log_Fatal( formatstr string) {
+// write in log
+func (_this *DBContextBase) Log_Fatal(formatstr string) {
 
 	//var msg = fmt.Sprintf(formatstr, args)
-	log.Fatalln(formatstr);
+	log.Fatalln(formatstr)
 }
 
-//write in log
-func (_this *DBContextBase) Log_Print( formatstr string) {
+// write in log
+func (_this *DBContextBase) Log_Print(formatstr string) {
 
 	//var msg = fmt.Sprintf(formatstr, args)
-	log.Println(formatstr);
+	log.Println(formatstr)
 }
 
-//It must be called in DBcontext_lambdaQueries.gen.go file. internal use
-func (_this *DBContextBase) ProcessCompiledQuery( compiledSqlQueries* map[string]TCompiledSqlQuery, bDoAllChecks bool ){
+// It must be called in DBcontext_lambdaQueries.gen.go file. internal use
+func (_this *DBContextBase) ProcessCompiledQuery(compiledSqlQueries *map[string]TCompiledSqlQuery, bDoAllChecks bool) {
 
-	for key, val:= range(*compiledSqlQueries) {
+	for key, val := range *compiledSqlQueries {
 
-		var bytes, err = base64.StdEncoding.DecodeString( val.CompiledQuery );
-    	if err != nil {
-			log.Printf("loading compiled query error: %s", err.Error() );
-			return;
+		var bytes, err = base64.StdEncoding.DecodeString(val.CompiledQuery)
+		if err != nil {
+			log.Printf("loading compiled query error: %s", err.Error())
+			return
 		}
-		val.CompiledQuery = string( bytes );
-		(*compiledSqlQueries)[key] = val;
+		val.CompiledQuery = string(bytes)
+		(*compiledSqlQueries)[key] = val
 	}
 
-	if( bDoAllChecks){
+	if bDoAllChecks {
 	}
 
 }
 
+func (_this *DBContextBase) isDialectSupportMultipleStatementsAtOnce() bool {
+
+	if _this.Dialect == ESqlDialect.Postgress ||
+		_this.Dialect == ESqlDialect.MsSql {
+		return true
+	}
+	return false
+}
