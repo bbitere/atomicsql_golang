@@ -4,9 +4,9 @@ import (
 	"fmt"
 	///importer "go/importer"
 
-	test1_crud "github.com/bbitere/atomicsql_golang.git/tests/test1/test_crud"
-	test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/test_where"
-	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/test_where"
+	test1_crud "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_crud"
+	test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
+	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 )
 
 type TestsResult struct{

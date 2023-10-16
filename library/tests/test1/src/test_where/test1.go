@@ -5,8 +5,8 @@ import (
 
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 	atmsql_func "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
-	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/atomicsql_ormdefs"
-	m "github.com/bbitere/atomicsql_golang.git/tests/test1/mymodels"
+	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/src/atomicsql_ormdefs"
+	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
 )
 
 type TestFunc func(step int, bCheckName bool) (int, error, string)

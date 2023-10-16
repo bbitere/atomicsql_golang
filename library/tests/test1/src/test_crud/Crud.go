@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/atomicsql_ormdefs"
-	m "github.com/bbitere/atomicsql_golang.git/tests/test1/mymodels"
-	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/test_where"
+	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/src/atomicsql_ormdefs"
+	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
+	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 )
 
 func Example_init() (*orm.DBContext, error, string) {

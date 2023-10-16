@@ -3,7 +3,7 @@ package test1_where
 import (
 	atmsql_func "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
 	//orm "github.com/bbitere/atomicsql_golang.git/tests/test1/atomicsql_ormdefs"
-	m "github.com/bbitere/atomicsql_golang.git/tests/test1/mymodels"
+	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
 )
 
 func Nopp(){
