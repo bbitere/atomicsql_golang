@@ -251,7 +251,7 @@ internal static string GoLang_ExportSqlFile( Options options, string allQueries)
         _this.DBContextBase.ProcessCompiledQuery( &_this.CompiledSqlQueries, false );
     }}
     
-    func (_this *DBContext) CompiledQueries_GetDialectName(){{ return ""{dialectName}""; }}
+    func (_this *DBContext) CompiledQueries_GetDialectName() string {{ return ""{dialectName}""; }}
         ";
         text = UseTemplate( text, options.ConvertSql.Templ_GoSqlCompiledFile, 
             new Dictionary<string,string>()
