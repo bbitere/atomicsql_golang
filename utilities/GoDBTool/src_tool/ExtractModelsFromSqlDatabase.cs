@@ -94,6 +94,8 @@ namespace src_tool
 
         private string foundLatestJson(string dir)
         {
+            if( dir == "" || dir == null)
+                return null;
             var regex = new Regex(MigrationDB.RECOGNIZE_FILE_PATTERN);
             
             var listFiles = new List<string>();

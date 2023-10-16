@@ -29,6 +29,14 @@ namespace src_tool
             }
             Console.WriteLine( $"GoLangDBTool: v{VERSION}" );
             Console.WriteLine( $"" );
+
+            if( args[ 0 ] == "-x")
+            {
+                WaitDebugger();
+                var lst = args.ToList();
+                lst.RemoveAt(0);
+                args = lst.ToArray();
+            }
             
             if( args[ 0 ] == "-asql_migration")
             {   
