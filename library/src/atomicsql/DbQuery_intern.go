@@ -412,6 +412,7 @@ func (_this *DBQuery[T]) _Aggregate_generateGroupBySql(selectFields []string, ex
 	return sqlQuery
 }
 
+// this return the sql fields based on name of fields from struct def.
 func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string{
 
 	var arrFieldsSql = []string{}
@@ -451,18 +452,44 @@ func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string{
 	return arrFieldsSql;	
 }
 
+// this return the sql fields based on table Name and SCHEMA_SQL
+func (_this *DBQuery[T]) _getRows_fieldsNameRelation(prefixField string) []string{
+
+	var arrFieldsSql = []string{}
+	
+	var table, bKeyExist = _this.tableInst.m_ctx.SCHEMA_SQL[ _this.tableInst.m_langName ]	
+	if( !bKeyExist){
+		//if is view
+		return []string{};
+	}
+
+	for i := 0; i < len(table.Columns); i ++ {
+
+		var sqlFldName = _this._quoteField( table.Columns[i].SqlName )
+		if( prefixField != "" ){
+			Arr_Append( &arrFieldsSql, fmt.Sprintf( `%s.%s`, prefixField, sqlFldName) );
+		}else{
+			Arr_Append( &arrFieldsSql, sqlFldName);
+		}		
+	}
+	return arrFieldsSql;	
+}
 func (_this *DBQuery[T]) _getRows_fields(prefixField string, bUserAnySelect bool ) string{
 	
+	var arrFieldsSql = []string{}
 	if( bUserAnySelect){
 
+		_this._getRows_fieldsNameRelation( prefixField );
+		/*
 		if( prefixField != "" ){
 
 			return fmt.Sprintf( `%s.*`, prefixField);
 		}else{
 			return `*`;
-		}
+		}*/
+	}else{
+		arrFieldsSql = _this._getRows_fieldsName( prefixField );
 	}
-	var arrFieldsSql = _this._getRows_fieldsName( prefixField );
 
 	if( len(arrFieldsSql) == 0 ){
 		if( prefixField != "" ){
