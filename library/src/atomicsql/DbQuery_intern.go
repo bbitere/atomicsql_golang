@@ -432,6 +432,13 @@ func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string{
 		if( sqlFlds == "-"){
 			continue;
 		}
+		var atmFlag = fld.Tag.Get("atomicsql");
+		if( atmFlag == "copy-model" ){
+			return []string{}
+		}
+		if( atmFlag != "" ){
+			sqlFlds = atmFlag;
+		}
 		var sqlFldName = Str.Split( sqlFlds, ",")[0];
 		sqlFldName     = _this._quoteField( sqlFldName );
 
@@ -457,6 +464,13 @@ func (_this *DBQuery[T]) _getRows_fields(prefixField string, bUserAnySelect bool
 	}
 	var arrFieldsSql = _this._getRows_fieldsName( prefixField );
 
+	if( len(arrFieldsSql) == 0 ){
+		if( prefixField != "" ){
+			return fmt.Sprintf( `%s.*`, prefixField);
+		}else{
+			return `*`;
+		}
+	}
 	var txt = Str.Join(arrFieldsSql, ", ")
 	return txt;
 }
