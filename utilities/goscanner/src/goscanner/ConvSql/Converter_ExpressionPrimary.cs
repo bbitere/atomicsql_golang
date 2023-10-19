@@ -320,7 +320,14 @@ public partial class SqlConvert
 
             string selectionExpression = $"{identif1}.{field1}";
             if( sqlField == "" )
-            {   sqlField = getTextSQLError("incorect declaration : not supported in sql translation", context);
+            {   
+                if( genericType != null && genericType.Name !="")
+                { 
+                    sqlField = getTextSQLError($"type {genericType.Name}: not found. Check the $ GitProject settings in sql-config.cfg", context);
+                }else
+                {
+                    sqlField = getTextSQLError("incorect declaration : not supported in sql translation", context);
+                }
             }
 
             var expr5 = new ExpressionInfo

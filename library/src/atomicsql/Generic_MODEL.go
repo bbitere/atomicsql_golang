@@ -36,6 +36,7 @@ type IGeneric_MODEL interface {
 
 type Generic_MODEL struct {
 	//ID string
+	flagIsSaved bool
 }
 
 func (_this Generic_MODEL) GetID() int64 {

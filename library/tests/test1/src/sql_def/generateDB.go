@@ -2,11 +2,18 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	///importer "go/importer"
 
+	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 	test1_crud "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_crud"
 	test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
+
+	log "log"
+	"runtime/debug"
+	"strings"
 )
 
 type TestsResult struct{
@@ -21,8 +28,7 @@ var testsResult TestsResult
 func main(){
 	
 	var counter = 0;
-
-		
+	
 	Exec_test( test1.Test1_01, &counter );
 	Exec_test( test1.Test1_02N, &counter );
 	Exec_test( test1.Test1_02, &counter );
@@ -34,7 +40,6 @@ func main(){
 	Exec_test( test1.Test1_08, &counter );
 	Exec_test( test1.Test1_09, &counter );
 	Exec_test( test1.Test1_10, &counter );
-	
 
 	Exec_test( test1_crud.Tst_Example_CreateUser, &counter );
 	Exec_test( test1_crud.Tst_Example_Create2Users, &counter );
@@ -48,17 +53,10 @@ func main(){
 	Exec_test( test1_crud.Tst_Example_UpdateUsers, &counter );
 
 	Exec_test( test1_crud.Tst_Example_CreateUserRelation, &counter );
-
-
 	Exec_test( test1_where.TestMisc_01, &counter );
-
 	Exec_test( test1_where.Test1Rtm_10, &counter );
-
 	Exec_test( test1_where.Test1_11, &counter );
 	Exec_test( test1_where.Test1_12, &counter );
-	
-
-	
 
 	printResults();
 	
@@ -109,4 +107,30 @@ func printTest(codeSucceded int, testName string, err error, idx int){
 		fmt.Printf("Test %d passed -> %s", idx, testName)
 		fmt.Println("");
 	}
+}
+
+func logPanic(){
+
+	file, err1 := os.OpenFile("logfile.txt", os.O_APPEND, os.ModeAppend );
+		if err1 != nil {
+			log.Fatal("Cannot create log file: ", err1)
+		}
+		defer file.Close()
+		log.SetOutput(file)
+
+		if err := recover(); err != nil {
+			if( err != nil ){
+
+				var linesText = string( debug.Stack() );
+				var lines     = strings.Split( linesText, "\n")
+
+				for i := 0; i < len(lines) && i <= 6; i++ {
+					atmsql.Arr_RemoveAt( &lines, 0 )
+				}
+				var linesCleaned = strings.Join( lines, "\n")
+				log.Printf("panic occurred: %v %s", err, linesCleaned )
+			}
+		}
+		log.SetOutput(os.Stdout)
+		log.Printf("panic occurred: write error in logfile.txt" )
 }

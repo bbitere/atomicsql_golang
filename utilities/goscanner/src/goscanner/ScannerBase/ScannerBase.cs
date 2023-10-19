@@ -942,22 +942,25 @@ public abstract partial class ScannerBase : GoParserBaseListener
                 return metadata;
             }
             //"github.com\\bbitere\\atomicsql_golang.git\\tests\\test1\\atomicsql_ormdefs\\atomicsql_ormdefs.go"
-            if( targetImport == options.ConvertSql.OrmDir_Atomicsql_Git )
+            if( options.ConvertSql != null)
             {
-                metadata = options.ConvertSql.OrmDirAtomicsql_DirMetadata;
-                if (metadata is not null)
+                if( targetImport == options.ConvertSql.OrmDir_Atomicsql_Git )
                 {
-                    updateTypesStructFunctionsVars( metadata, packageName );
-                    return metadata;
+                    metadata = options.ConvertSql.OrmDirAtomicsql_DirMetadata;
+                    if (metadata is not null)
+                    {
+                        updateTypesStructFunctionsVars( metadata, packageName );
+                        return metadata;
+                    }
                 }
-            }
-            if( targetImport == options.ConvertSql.OrmDir_AtomicsqlFunc_Git )
-            {
-                metadata = options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata;
-                if (metadata is not null)
+                if( targetImport == options.ConvertSql.OrmDir_AtomicsqlFunc_Git )
                 {
-                    updateTypesStructFunctionsVars( metadata, packageName );
-                    return metadata;
+                    metadata = options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata;
+                    if (metadata is not null)
+                    {
+                        updateTypesStructFunctionsVars( metadata, packageName );
+                        return metadata;
+                    }
                 }
             }
         }
