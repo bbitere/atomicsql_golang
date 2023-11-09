@@ -420,8 +420,12 @@ func _DBContext_cleanSaveFlagsReflVal(modelRefl reflect.Value,  _this *DBContext
 		}
 		if( field.Type().Kind() == reflect.Pointer){ 
 
-			var model1 = field.Elem()
-			_DBContext_cleanSaveFlagsReflVal( model1, _this );
+			var model1 = field.Elem();
+			//var ptrVal = field.InterfaceData();
+			var ptrVal = field.Pointer()
+			if( ptrVal != 0 && field.CanAddr() ){
+				_DBContext_cleanSaveFlagsReflVal( model1, _this );
+			}
 		}
 	}	
 }
@@ -459,3 +463,4 @@ func DBContext_MarkSaveReflVal(reflVal reflect.Value,  _this *DBContextBase  ) b
 	}	
 	return false;
 }
+

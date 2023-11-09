@@ -1500,7 +1500,8 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 		} else {
 			valSql = fmt.Sprintf("%d", fieldInfo.Int())
 		}
-	} else if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
+	} else 
+	if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
 
 		var value = fieldInfo.Bool()
 		if value == true /*|| value == "true"*/ {
@@ -1508,16 +1509,31 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 		} else if value == false /*|| value == "false"*/ {
 			valSql = ctx.LangDB.VALUE_FALSE
 		}
-	} else if fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
+	} else 
+	if fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
 		fieldInfoTypeT == reflect.TypeOf((*float64)(nil)).Elem() {
 
 		valSql = fmt.Sprintf("%f", fieldInfo.Float())
-	} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
+	} else 
+	if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
 
 		valSql = _this._quote(fieldInfo.String(), columnTable)
-	} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
-		valSql = _this._quote(fieldInfo.String(), columnTable)
-	} else if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
+	} else 
+	if fieldInfoType == reflect.TypeOf((*time.Time)(nil)).Elem() {
+
+		valSql = _this._quote( fieldInfo.Interface().(time.Time).Format(time.RFC3339Nano), columnTable)
+		if( valSql =="'0001-01-01T00:00:00Z'" ){
+			valSql = "CURRENT_TIMESTAMP";
+		}
+		//valSql = _this._quote(fieldInfo.String(), columnTable)
+	}else
+	if fieldInfoType == reflect.TypeOf((*uuid.UUID)(nil)).Elem() {
+
+		valSql = "";
+		//valSql = _this._quote( fieldInfo.Interface().(uuid.UUID).UUIDValue(), columnTable)
+		//valSql = _this._quote(fieldInfo.String(), columnTable)
+	}else
+	if fieldInfoType == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
 		var slice = fieldInfo.Bytes()
 		valSql = _this._quote(slice, columnTable)
@@ -2174,7 +2190,7 @@ func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string /*, colu
 		} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
 			return fldT.String()
 		} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
-			return fldT.String()
+			return fld.Interface().(time.Time).Format(time.RFC3339Nano)
 		} else if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
 			var slice = fldT.Bytes()
@@ -2516,6 +2532,7 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSele
 		//query.lamdaSelectNewRecord = _this.m_SQL_ITEM_DEF;
 		query.excludeLangFieldsFromGroupBy = _this.excludeLangFieldsFromGroupBy
 		_this.excludeLangFieldsFromGroupBy = nil //move in SELECT , the groupping part
+		query.bIsSelectClause = true
 		query.newJoinCollection()
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ)
 
