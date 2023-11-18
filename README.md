@@ -8,7 +8,7 @@ Let's see this Example:<br/>
 var models = ctx.Users.Qry("label1").Where( func(x *m.User) bool{<br/> 
                         return x.Name == userName}).GetModels();<br/>
 
-In this example, the Where() contain a literal function aka lambda expression. This help the developer to have a robust development and having the check of types between data
+In this example, the Where() contain a literal function aka lambda expression. This help the developer to have a robust development and the check of types between data
 
 ------------------------------------------
 Let's see next Example:<br/> 
