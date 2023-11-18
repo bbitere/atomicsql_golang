@@ -71,6 +71,8 @@ namespace goscanner.ConvSql
 
         public string SrcFile;
         public int  SrcLine;
+        public int  SrcCol;
+        
         public long SrcStartOffset;
         public long SrcEndOffset;
         public string Hash;
@@ -100,6 +102,12 @@ namespace goscanner.ConvSql
 
             SrcFile = context.Start.InputStream.SourceName;
             SrcLine = context.Start.Line;
+            SrcCol  = context.Start.Column;
+
+            if(lambdaTag == null && SrcLine == 66)
+            {
+                Utils1.Nop();
+            }
 
             var dirRoot = inst.Options.ConvertSql.SourcePathDir;
             if( !dirRoot.EndsWith( Path.PathSeparator))

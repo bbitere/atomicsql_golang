@@ -941,34 +941,31 @@ public abstract partial class ScannerBase : GoParserBaseListener
                 updateTypesStructFunctionsVars( metadata, packageName );
                 return metadata;
             }
-            //"github.com\\bbitere\\atomicsql_golang.git\\tests\\test1\\atomicsql_ormdefs\\atomicsql_ormdefs.go"
-            if( options.ConvertSql != null)
+        }
+        //"github.com\\bbitere\\atomicsql_golang.git\\tests\\test1\\atomicsql_ormdefs\\atomicsql_ormdefs.go"
+        if( options.ConvertSql != null)
+        {
+            if( targetImport == options.ConvertSql.OrmDir_Atomicsql_Git )
             {
-                if( targetImport == options.ConvertSql.OrmDir_Atomicsql_Git )
+                metadata = options.ConvertSql.OrmDirAtomicsql_DirMetadata;
+                if (metadata is not null)
                 {
-                    metadata = options.ConvertSql.OrmDirAtomicsql_DirMetadata;
-                    if (metadata is not null)
-                    {
-                        updateTypesStructFunctionsVars( metadata, packageName );
-                        return metadata;
-                    }
+                    updateTypesStructFunctionsVars( metadata, packageName );
+                    return metadata;
                 }
-                if( targetImport == options.ConvertSql.OrmDir_AtomicsqlFunc_Git )
+            }
+            if( targetImport == options.ConvertSql.OrmDir_AtomicsqlFunc_Git )
+            {
+                metadata = options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata;
+                if (metadata is not null)
                 {
-                    metadata = options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata;
-                    if (metadata is not null)
-                    {
-                        updateTypesStructFunctionsVars( metadata, packageName );
-                        return metadata;
-                    }
+                    updateTypesStructFunctionsVars( metadata, packageName );
+                    return metadata;
                 }
             }
         }
 
-
         StringBuilder loadWarning = new();
-
-        
 
         if(!(disableWarnings))
         {

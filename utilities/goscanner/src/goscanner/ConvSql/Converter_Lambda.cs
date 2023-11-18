@@ -63,6 +63,12 @@ public partial class SqlConvert
     protected void Lambda_callQryMethod(GoParser.PrimaryExprContext context, string argumentList)
     {
         m_LambdaTag = _getQueryTag(argumentList);
+        if( context.Start.Line ==65 
+         || m_LambdaTag == null
+         || context.Start.TokenSource.SourceName.Contains("test1_rtm"))
+        {
+            Utils.Nop();
+        }
         m_LambdaTagCtx = context;
         m_LambdaFunc_SubTagCounter = 0;
 

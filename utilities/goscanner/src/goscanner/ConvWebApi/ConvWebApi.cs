@@ -191,6 +191,17 @@ public partial class ConvWebApi : goscanner.ConvCommon.ConvCommon
     {
         return new ConvWebApi(tokenStream, parser, options, fileName);
     }
+    public void Log_Error( ParserRuleContext ctx, string message)
+    {
+        Log_Error( ctx.Start, message);
+    }
+    public void Log_Error( IToken loc, string message)
+    {        
+        var location = $"{loc.InputStream.SourceName}:{loc.Line}:{loc.Column}: ";
+        Console.WriteLine(location + message);
+
+        Options.ConvertSql.NumErrors++;
+    }
 
     private static void WriteProjectFiles(Options options)
     {

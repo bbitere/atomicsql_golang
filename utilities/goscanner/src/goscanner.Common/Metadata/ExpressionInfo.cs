@@ -94,14 +94,10 @@ namespace goscanner.Metadata
                 || UID == 1625 
                 || UID == 1624
                 */
-                || UID == 346
-                || UID == 347
-                || UID == 348
-                || UID == 2861
-                || UID == 2863
-                || UID == 2864
-                || UID == 2862
-                || UID == 2789
+                
+                || UID == 3804
+                || UID == 3805
+                || UID == 4076
                 
                 )
             {

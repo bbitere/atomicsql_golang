@@ -20,6 +20,8 @@ namespace goscanner.ConvSql
 
         public const string Class_DBTable       = "DBTable";
         public const string Func_DBTable_Qry    = "Qry";
+        public const string Func_DBTable_ToRTM    = "ToRTM";
+        
 
         public const string Class_DBContext     = "DBContext";
         public const string Func_New_DBContext  = "New_DBContext";

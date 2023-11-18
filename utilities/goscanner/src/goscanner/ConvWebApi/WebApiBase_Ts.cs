@@ -253,6 +253,8 @@ private static void generateModelsFieldsAndRead(
     //TypeInfo baseClass = null;
     foreach (var fld in infoFields)
     {
+        if( isPrivateField( fld.Name) )
+            continue;
         if( fld.Description != null && fld.Description.Contains( OMITEMIT ) )
         {
             //it is included in the definition
@@ -334,7 +336,8 @@ private static void generateModelsFieldsAndRead(
                     modelTypeName, dictCollectionFields);
             }else
             {
-                Console.WriteLine($"Promoted Field should be only struct");
+                Console.WriteLine($"Promoted Field should be only struct `{fld.Type.Name}` ");
+                //scanner.Log_Error( fld, $"Promoted Field should be only struct `{fld.Type.Name}` ");
             }
         }else
         {
@@ -353,6 +356,17 @@ private static void generateModelsFieldsAndRead(
             readData += readTxt;
         }
     }
+}
+
+private static bool isPrivateField( string fldName)
+{
+    if(fldName == null)
+        return true;
+
+    if(fldName.Substring(0,1) == fldName.Substring(0,1).ToLower() )
+        return true;
+
+    return false;
 }
 
 private static string getJsonName(FieldInfo fld)

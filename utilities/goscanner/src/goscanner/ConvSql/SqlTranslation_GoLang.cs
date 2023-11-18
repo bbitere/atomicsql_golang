@@ -52,7 +52,8 @@ internal string GoLang_ExportAllQueries(
         if(lambda.Tag == null){
 
             Console.WriteLine( $"Lambda export: internal error, Tag = null");
-            Console.WriteLine( $"{lambda.SrcFile}:{lambda.SrcFile}:1" );
+            Console.WriteLine( $"{lambda.SrcFile}:{lambda.SrcLine}:{lambda.SrcCol}" );
+                
             continue;
         }
         var queryTag = _getQueryTag( lambda.Tag ) + lambda.SubTag;
@@ -68,7 +69,7 @@ internal string GoLang_ExportAllQueries(
             s_dictLambdaTagPerApp[ queryTag ] = lambda;
         }else
         {
-            var tag = getDefTagNameOfLambda( lambda.SrcFile, lambda.SrcLine );
+            var tag = getDefTagNameOfLambda( lambda.SrcFile, lambda.SrcLine, lambda.SrcCol );
 
             this.Log_Error( lambda.TagCtx, $"{OrmDef.Func_DBTable_Qry}() method should receive a valid tag and unique per app. We suggest to set this tag = \"{tag}\" ");
         }
@@ -98,7 +99,7 @@ private string convertTo1000( int SrcLine )
 
     return ""+val;
 }
-private string getDefTagNameOfLambda( string SrcFile, int SrcLine )
+private string getDefTagNameOfLambda( string SrcFile, int SrcLine, int SrcCol )
 {
     var parts = Utils1.getFileName( SrcFile).Split('.');
     var name = parts[0].ToLower();

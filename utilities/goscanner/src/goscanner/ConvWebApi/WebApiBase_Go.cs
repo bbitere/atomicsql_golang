@@ -210,6 +210,8 @@ public static string ExportGoFile_Method(Options options, string nameClass, stri
         //----------------------------------------------------------------------------------
 func (_this *AjaxSvc) {methodName}(c echo.Context) error {{
 
+    defer util.UtilLog_logPanic();
+
 	postData := new(controllers.{methodTypeInput})
 	err := c.Bind(postData)
 	if err != nil {{
