@@ -1,17 +1,21 @@
         
             -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."projstatus"
+            CREATE TABLE IF NOT EXISTS `projstatus`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "name" VARCHAR NOT NULL
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `name` VARCHAR(MAX) NOT NULL
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 ;        
             -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."project"
+            CREATE TABLE IF NOT EXISTS `project`
             (
-                "ID" serial PRIMARY KEY NOT NULL,
-                "name" VARCHAR NOT NULL
+                `ID` INT NOT NULL AUTO_INCREMENT,
+                `name` VARCHAR(MAX) NOT NULL
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 

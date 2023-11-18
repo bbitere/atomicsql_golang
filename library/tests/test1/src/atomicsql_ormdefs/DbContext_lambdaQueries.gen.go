@@ -70,6 +70,6 @@ func (_this *DBContext) LoadCompiledQuery(){
 	_this.DBContextBase.ProcessCompiledQuery( &_this.DBContextBase.CompiledSqlQueries, false );
 }
 
-func (_this *DBContext) CompiledQueries_GetDialectName() string { return "postgres"; }
+func (_this *DBContext) CompiledQueries_GetDialectName() string { return "mysql"; }
 
 
