@@ -8,7 +8,7 @@ package atomicsql_sqldefs
 
 func (_this *DBContext) LoadCompiledQuery(){
 
-	_this.CompiledSqlQueries	= map[string]orm.TCompiledSqlQuery{
+	_this.DBContextBase.CompiledSqlQueries	= map[string]orm.TCompiledSqlQuery{
 		"evcy59-S0": 
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#}=true,
@@ -67,7 +67,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 	}
 	
-	_this.DBContextBase.ProcessCompiledQuery( &_this.CompiledSqlQueries, false );
+	_this.DBContextBase.ProcessCompiledQuery( &_this.DBContextBase.CompiledSqlQueries, false );
 }
 
 func (_this *DBContext) CompiledQueries_GetDialectName() string { return "postgres"; }

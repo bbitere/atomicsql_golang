@@ -43,7 +43,7 @@
 		func (_this *DBContext) Constr(dbBase orm.DBContextBase)  (*DBContext,error) {
 		
 			_this.DBContextBase = dbBase;
-			_this.AllTables = make( map[string]*orm.DBTable[orm.IGeneric_MODEL])
+			_this.DBContextBase.AllTables = make( map[string]*orm.DBTable[orm.IGeneric_MODEL])
 			
 			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
 				
@@ -504,7 +504,7 @@
 
 		
 			
-			_this.FOREIGN_KEYS = map[string]orm.TForeignKey{
+			_this.DBContextBase.FOREIGN_KEYS = map[string]orm.TForeignKey{
 								
 				"employee1.user_ID":
 				{  
