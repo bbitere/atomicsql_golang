@@ -1,23 +1,18 @@
-/* this class is generated automatically by DB_Tool.exe exporter*/
-
-package atomicsql_sqldefs
-
-import (
-	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
-
-	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-)
-
-//------------------------------------------------------
-
-
-
-		type DBContext struct {
-
-			orm.DBContextBase
-
-
-
+/* this class is generated automatically by DB_Tool.exe exporter*/
+
+		package atomicsql_sqldefs
+
+		import (
+		
+			
+			m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
+			orm	  "github.com/bbitere/atomicsql_golang.git/library/src/atomicsql"
+		)
+//------------------------------------------------------
+
+		type DBContext struct {
+			orm.DBContextBase
+
 			
 			Department          *orm.DBTable[m.Department]
 			Department_           m.T_Department
@@ -42,24 +37,15 @@ import (
 		
 			UserRole            *orm.DBTable[m.UserRole]
 			UserRole_             m.T_UserRole
-		
-
-		}
-
-		
-
-		func (_this *DBContext) Constr(dbBase orm.DBContextBase)  (*DBContext,error) {
-
-		
-
-			_this.DBContextBase = dbBase;
-
-			_this.AllTables = make( map[string]*orm.DBTable[orm.IGeneric_MODEL])
-
-			
-
-			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
-
+		
+		}
+		
+		func (_this *DBContext) Constr(dbBase orm.DBContextBase)  (*DBContext,error) {
+		
+			_this.DBContextBase = dbBase;
+			_this.AllTables = make( map[string]*orm.DBTable[orm.IGeneric_MODEL])
+			
+			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
 				
 	"Department": orm.TDefTable{
 			SchemaTable:           "public",
@@ -410,10 +396,8 @@ import (
 
 			},
 		},
-
-
-			}
-
+
+			}
 			
 			_this.Department_ = m.T_Department {
 	        ID:                  "ID",
@@ -518,12 +502,9 @@ import (
             MyActive:            "my_active",
 			}
 
-		
-
-			
-
-			_this.FOREIGN_KEYS = map[string]orm.TForeignKey{
-
+		
+			
+			_this.FOREIGN_KEYS = map[string]orm.TForeignKey{
 								
 				"employee1.user_ID":
 				{  
@@ -589,34 +570,20 @@ import (
 					RootFldFk_lang2Name:"Departm2_ID", 
 				},
 				
-
-
-			}
-
-			
-
-			_, err := _this.DBContextBase.Constr( dbBase.Dialect, sqlSchemaDef)
-
-			
-
-			_this.LoadCompiledQuery();
-
-			
-
-			return _this, err
-
-		}
-
-
-
-		func New_DBContext(dbBase orm.DBContextBase) (*DBContext, error) {
-
-			
-
-			ret, err := (new(DBContext)).Constr(dbBase)
-
-			
-
+
+			}
+			
+			_, err := _this.DBContextBase.Constr( dbBase.Dialect, sqlSchemaDef)
+			
+			_this.LoadCompiledQuery();
+			
+			return _this, err
+		}
+
+		func New_DBContext(dbBase orm.DBContextBase) (*DBContext, error) {
+			
+			ret, err := (new(DBContext)).Constr(dbBase)
+			
 						
 			ret.Department =              (new(orm.DBTable[m.Department])).Constr("departm", "Department", &ret.DBContextBase)			
 			ret.Employee1 =               (new(orm.DBTable[m.Employee1])).Constr("employee1", "Employee1", &ret.DBContextBase)			
@@ -625,25 +592,14 @@ import (
 			ret.ProjectStatus =           (new(orm.DBTable[m.ProjectStatus])).Constr("projstatus", "ProjectStatus", &ret.DBContextBase)			
 			ret.StatusRole =              (new(orm.DBTable[m.StatusRole])).Constr("statusRole", "StatusRole", &ret.DBContextBase)			
 			ret.User =                    (new(orm.DBTable[m.User])).Constr("user", "User", &ret.DBContextBase)			
-			ret.UserRole =                (new(orm.DBTable[m.UserRole])).Constr("user_role", "UserRole", &ret.DBContextBase)
-
-			
-
-			return ret, err
-
-		}
-
-
-
-		
-
-		func (_this *DBContext) Close(){
-
-			
-
-			_this.DBContextBase.Db.Close()
-
-		}
-
-
-
+			ret.UserRole =                (new(orm.DBTable[m.UserRole])).Constr("user_role", "UserRole", &ret.DBContextBase)
+			
+			return ret, err
+		}
+
+		
+		func (_this *DBContext) Close(){
+			
+			_this.DBContextBase.Db.Close()
+		}
+

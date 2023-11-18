@@ -43,7 +43,6 @@ func Test1Rtm_10( step int, bCheckName bool) ( int, error, string) {
 	_, err = ctx.User.Qry("").InsertModel(&user2);
 
 	//---------------------------
-
 	type TUserAggr struct {
 
 		atmsql.Generic_MODEL
@@ -59,6 +58,7 @@ func Test1Rtm_10( step int, bCheckName bool) ( int, error, string) {
 		MinTime1           	sql.NullTime
 		SumMoney            float64 
 	}
+	Nopp();
 	
 	usrs4, err := atmsql.Select(
 					atmsql.Aggregate[ m.User, TUserAggr ]( 

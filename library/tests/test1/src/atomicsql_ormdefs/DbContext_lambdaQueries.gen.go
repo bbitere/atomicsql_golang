@@ -46,12 +46,30 @@ func (_this *DBContext) LoadCompiledQuery(){
 			StartOff: 		12042,
 			EndOff:  		12111,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
+		},"tst1_066-S0": 
+		{
+			//CompiledQuery: {#@userRole_ID.isActive@#}=true,
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI309dHJ1ZQ==`,
+			
+			SelectSqlFields: nil,
+			
+			Fields:			map[string]string{
+             "IsActive":"{#@userRole_ID.isActive@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"tst1_066",
+			File: 			"src\\test_where\\test1_rtm.go",
+			StartOff: 		2116,
+			EndOff:  		2191,
+			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
 		},
 	}
 	
 	_this.DBContextBase.ProcessCompiledQuery( &_this.CompiledSqlQueries, false );
 }
 
-func (_this *DBContext) CompiledQueries_GetDialectName() string { return "mysql"; }
+func (_this *DBContext) CompiledQueries_GetDialectName() string { return "postgres"; }
 
 

@@ -5,7 +5,7 @@ package mymodels
 import (
 	"reflect"
 
-	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+	orm "github.com/bbitere/atomicsql_golang.git/library/src/atomicsql"
 )
 
 /**/

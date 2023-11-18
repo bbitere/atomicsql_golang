@@ -1,3 +1,3 @@
 
-            ALTER TABLE `project`
-            DROP COLUMN `projStatus2_ID`
+            ALTER TABLE public."project"
+            DROP COLUMN "projStatus2_ID"
