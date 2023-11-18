@@ -5,7 +5,7 @@ using Npgsql;
 
 namespace src_tool
 {
-    partial class PostgresqlDialect
+    partial class PostgressDialect
     {
         public override Dictionary<string, DbTable> readTables( string SqlLang )
         {
@@ -133,7 +133,7 @@ namespace src_tool
             return null;
         }
 
-        public override bool readConstraintors( Dictionary<string, DbTable> tables, string dirJsons  )
+        public override bool readConstraintors( Dictionary<string, DbTable> tables  )
         {
             var cnn = this.connection;
             var requestText = $@"

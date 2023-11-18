@@ -79,11 +79,11 @@ namespace src_tool
                     }
 
                 }
-
             }catch( Exception e )
             {
                 Console.WriteLine(e.Message);
             }
+            this.checkProps();
         }
 
         private string getPropertyValue(string val)
@@ -132,7 +132,7 @@ namespace src_tool
                 case "FullName_PackageOrm":    this.ImportPackageOrm = content; break;
                 case "FullName_PackageGenSql":       this.PackageGenSql = content; break;
                     
-                case "ConnectionString":    this.ConnectionString = removeQuotation( content ); break;
+                case "ConnectionString":    this.ConnectionString = content; break;
                 case "SqlLang":             this.SqlLang = content; break;
                 case "DELIMETER":           this.Delimeter = content; break;
                 case "DirJsons":           this.DirJsons = content; break;
@@ -144,16 +144,6 @@ namespace src_tool
                 break;
             }
         }
-        private string removeQuotation(string s)
-        { 
-            s = s.Trim();
-            if( s.StartsWith("\"") && s.EndsWith("\""))
-            {
-                return s.Substring(1, s.Length-2);
-            }
-            return s;
-        }
-        
         
         private void setupMLineProperty(string token1, string content)
         {
@@ -169,6 +159,67 @@ namespace src_tool
                     Console.WriteLine( $"Not identified token {token1} in multiline declaration ");
                 break;
             }
+        }
+
+        void checkProps()
+        {
+            var retError = checkAllProps();
+            if( retError != "" )
+            {
+                Console.WriteLine( retError );
+            }
+        }
+        string checkAllProps()
+        {
+            if( this.OutputDBContextFile == null )
+                return $"Missing prop OutputDBContextFile";
+
+            if( this.Models_Extension == null)
+                return $"Missing prop Models_Extension";
+
+            if( this.ModelsOutputDir == null)
+                return $"Missing prop ModelsOutputDir";
+
+            if( this.BaseModelName == null)
+                return $"Missing prop BaseModelName";
+
+            if( this.ImportPackageModels == null)
+                return $"Missing prop ImportPackageModels";
+
+            if( this.ImportPackageOrm == null)
+                return $"Missing prop ImportPackageOrm";
+
+            if( this.PackageGenSql == null)
+                return $"Missing prop PackageGenSql";
+
+            if( this.ConnectionString == null)
+                return $"Missing prop ConnectionString";
+
+            if( this.SqlLang == null)
+                return $"Missing prop SqlLang";
+
+            if( this.Delimeter == null)
+                return $"Missing prop Delimeter";
+
+            if( this.DirJsons == null)
+                return $"Missing prop DirJsons";
+
+            if( this.Templ_GoLangOrmFile == null)
+                return $"Missing prop Templ_GoLangOrmFile";
+
+            if( this.Templ_GoLangModelFile == null)
+                return $"Missing prop Templ_GoLangModelFile";
+
+            if( this.Templ_GoLang_SchemaDefItem == null)
+                return $"Missing prop Templ_GoLang_SchemaDefItem";
+
+            if( this.Templ_GoLang_SchemaDefItem_Col == null)
+                return $"Missing prop Templ_GoLang_SchemaDefItem_Col";
+
+            if( this.Templ_GoLang_ForeignKey == null)
+                return $"Missing prop Templ_GoLang_ForeignKey";
+
+            return "";
         }
 
 

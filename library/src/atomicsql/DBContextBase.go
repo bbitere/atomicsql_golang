@@ -5,6 +5,7 @@ import (
 	base64 "encoding/base64"
 	"fmt"
 	log "log"
+	reflect "reflect"
 	"time"
 )
 
@@ -383,7 +384,6 @@ func (_this *DBContextBase) ProcessCompiledQuery(compiledSqlQueries *map[string]
 
 	if bDoAllChecks {
 	}
-
 }
 
 func (_this *DBContextBase) isDialectSupportMultipleStatementsAtOnce() bool {
@@ -394,3 +394,73 @@ func (_this *DBContextBase) isDialectSupportMultipleStatementsAtOnce() bool {
 	}
 	return false
 }
+
+
+func DBContext_cleanSaveFlags[T IGeneric_MODEL](model *T,  _this *DBContextBase  ) {
+
+	var reflVal  = reflect.ValueOf(model).Elem()
+	_DBContext_cleanSaveFlagsReflVal(reflVal, _this );
+}
+
+func _DBContext_cleanSaveFlagsReflVal(modelRefl reflect.Value,  _this *DBContextBase  ) {
+
+	var numCols = modelRefl.NumField()
+
+	for i := 0; i < numCols; i++ {
+
+		var field  = modelRefl.Field(i)
+
+		var nameTypeFld = field.Type().Name();
+		if( nameTypeFld == Generic_MODEL_Name ){ 
+
+			//var model1 = field.Interface().(Generic_MODEL)
+			var model1 = field.Addr().Interface().(*Generic_MODEL)
+			model1.flagIsSaved = false;
+			continue
+		}
+		if( field.Type().Kind() == reflect.Pointer){ 
+
+			var model1 = field.Elem();
+			//var ptrVal = field.InterfaceData();
+			var ptrVal = field.Pointer()
+			if( ptrVal != 0 && field.CanAddr() ){
+				_DBContext_cleanSaveFlagsReflVal( model1, _this );
+			}
+		}
+	}	
+}
+func DBContext_MarkSaved[T IGeneric_MODEL](model *T,  _this *DBContextBase  ) bool{
+
+	var reflVal  = reflect.ValueOf(model).Elem()
+	return DBContext_MarkSaveReflVal(reflVal,  _this );
+}
+
+func DBContext_MarkSaveReflVal1[T IGeneric_MODEL](reflVal reflect.Value,  _this *DBContextBase  ) bool{
+
+	var ret = DBContext_MarkSaveReflVal( reflVal,  _this );
+
+	//check here the value of model
+	var mm = reflVal.Interface().(T)
+	if( mm.GetID() != 0){
+	}
+	return ret;
+}
+func DBContext_MarkSaveReflVal(reflVal reflect.Value,  _this *DBContextBase  ) bool{
+
+	var numCols = reflVal.NumField()
+
+	for i := 0; i < numCols; i++ {
+
+		var field  = reflVal.Field(i)
+		var nameTypeFld = field.Type().Name();
+		if( nameTypeFld == Generic_MODEL_Name ){ 
+
+			//var model1 = field.Interface().(Generic_MODEL)
+			var model1 = field.Addr().Interface().(*Generic_MODEL)
+			model1.flagIsSaved = true;
+			return true;
+		}
+	}	
+	return false;
+}
+

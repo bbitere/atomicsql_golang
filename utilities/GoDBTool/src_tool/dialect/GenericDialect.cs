@@ -45,7 +45,7 @@ namespace src_tool
             string tableName, string colName, string colValue);
 
         public abstract void execScript( string scriptTxt);
-        public abstract bool readConstraintors( Dictionary<string, DbTable> tables, string DirJsons );
+        public abstract bool readConstraintors( Dictionary<string, DbTable> tables  );
         public abstract Dictionary<string, DbTable> readTables( string SqlLang );
 
         public abstract string getGoLangTypeIntFk( DbColumn column, ref Dictionary<string, string> packageImports );
@@ -91,7 +91,7 @@ namespace src_tool
         {
             if( SqlLang == ELangSql.PostgresSql )
             {
-                return new PostgresqlDialect();
+                return new PostgressDialect();
             }else
             if( SqlLang == ELangSql.MySql )
             {

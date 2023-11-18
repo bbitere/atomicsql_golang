@@ -61,7 +61,7 @@ namespace src_tool
             {
                 updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect);
 
-                if( dialect.readConstraintors( dictTables, arg.config.DirJsons ))
+                if( dialect.readConstraintors( dictTables  ))
                 {
                     Console.WriteLine("Generate DB defs");
                     if( arg.type_out_file == EOuputLang.GoLang)
@@ -94,6 +94,8 @@ namespace src_tool
 
         private string foundLatestJson(string dir)
         {
+            if( dir == "" || dir == null)
+                return null;
             var regex = new Regex(MigrationDB.RECOGNIZE_FILE_PATTERN);
             
             var listFiles = new List<string>();
@@ -116,7 +118,7 @@ namespace src_tool
 
         }
         private void updateGoLangNameInTablesAndColumns(
-            ref Dictionary<string, DbTable> dbTables, 
+            ref Dictionary<string, DbTable> tables, 
             string delimeter,
             string directoryJsons,
             GenericDialect dialect)
@@ -129,52 +131,32 @@ namespace src_tool
                     file, delimeter, dialect, ref bMustDeleteJsonFile );
 
                 //DbTable tableDBParam = null;
-                var dictJsonTables = Utils.getDictFromList(list, x=>x.SqlTableNameModel.ToLower());
-                //var dictDBTables   = Utils.getDictFromList(dbTables, x=>x.SqlTableNameModel.ToLower());
-                var toBeRemoved = new List<string>();
+                var dict = Utils.getDictFromList(list, x=>x.SqlTableNameModel );
 
-                foreach( var it in dbTables )
+                foreach( var it in tables )
                 {
-                    var tableSqlName = it.Key.ToLower();
-                    if( dictJsonTables.ContainsKey( tableSqlName ))
+                    if( dict.ContainsKey( it.Key ))
                     {
-                        var tableJsonModel = dictJsonTables[tableSqlName];
                         var table = it.Value;
-                        table.LangTableNameModel = tableJsonModel.LangTableNameModel; 
+                        table.LangTableNameModel = dict[it.Key].LangTableNameModel; 
 
-                        var dictJsonCol = Utils.getDictFromList(tableJsonModel.columns, x=>x.sqlName );
+                        var dictCol = Utils.getDictFromList(dict[it.Key].columns, x=>x.sqlName );
                         foreach( var col in table.columns)
                         { 
-                            if( dictJsonCol.ContainsKey( col.sqlName))
+                            if( dictCol.ContainsKey( col.sqlName))
                             {
-                                var fkJsonTable = dictJsonCol[col.sqlName].ForeignKey;
-                                if( fkJsonTable != null)
-                                {
-                                    //col.langName  = dictJsonCol[col.sqlName].langName; 
-                                    //col.langName2 = dictJsonCol[col.sqlName].langName2; 
-                                    var tableFKSqlName  = fkJsonTable.SqlTableNameModel.ToLower();
-                                    if (dbTables.ContainsKey(tableFKSqlName))
-                                    {
-                                        col.ForeignKey = dbTables[tableFKSqlName];
-                                    } else
-                                    { 
-                                        dialect.printError($"table {tableSqlName} not found fk {tableFKSqlName}");
-                                    }
-                                }
+                                //col.langName  = dictCol[col.sqlName].langName; 
+                                //col.langName2 = dictCol[col.sqlName].langName2; 
                             }
                         }
                     }else
                     {
-                       toBeRemoved.Add( it.Key ); 
+                        
                     }
                 }
                 //if( tableDBParam != null )
                 { 
-                    dbTables.Remove( MigrationDB.TABLE_MIGRATION );
-                }
-                foreach( var tb in toBeRemoved)
-                {
-                    dbTables.Remove( tb );
+                    tables.Remove( MigrationDB.TABLE_MIGRATION );
                 }
             }
         }

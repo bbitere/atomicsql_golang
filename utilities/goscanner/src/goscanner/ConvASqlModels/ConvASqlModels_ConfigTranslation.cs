@@ -16,7 +16,7 @@ namespace goscanner.ConvASqlModels
         // -o -i -h -w=.\export_svc_config.txt C:\Work\SlotMonitor\SlotGames\server-main\NewtonGamesGo\pkg\controllers 
         // C:\Work\SlotMonitor\SlotGames\game-originals-main\tools
 
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.1";
 
         public string  CLASS_InGeneralData;
         public string  CLASS_OutGeneralData;

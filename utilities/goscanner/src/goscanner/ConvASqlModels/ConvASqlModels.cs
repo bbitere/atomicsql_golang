@@ -35,6 +35,8 @@ using Gemstone.StringExtensions;
 using Antlr4.Runtime.Atn;
 using System.Xml.Linq;
 using System.Reflection;
+using Antlr4.Runtime.Misc;
+using goscanner.ConvCommon;
 
 #pragma warning disable SCS0018 // Path traversal
 
@@ -150,8 +152,17 @@ public partial class ConvASqlModels : goscanner.ConvCommon.ConvCommon
         
         //var allTsModels = File.ReadAllText(options.ConvertWebApi.TsSvcModelsFile);
         var txtTsModels = data.textTsSvcModelsFile;
-        File.WriteAllText(options.ConvertAsqlModels.JsonOutputFile, txtTsModels);
-        Console.WriteLine($"Generate file: {options.ConvertAsqlModels.JsonOutputFile}");
+        var dirJsons = Utils1.getDirPathOfFile( options.ConvertAsqlModels.JsonOutputFile );
+        var lastJSon = GenerateJsonModels.GetLastJsonFileContent( dirJsons );
+        if( lastJSon != "" && lastJSon == txtTsModels)
+        {
+            //the last file is identically with this
+            Console.WriteLine($"No change. No Output File is generated");
+        }else
+        {
+            File.WriteAllText(options.ConvertAsqlModels.JsonOutputFile, txtTsModels);
+            Console.WriteLine($"Generate file: {options.ConvertAsqlModels.JsonOutputFile}");
+        }
     }
 
     private static ScannerBase CreateNewConverter(BufferedTokenStream tokenStream, GoParser parser, Options options, string fileName)

@@ -412,9 +412,97 @@ func (_this *DBQuery[T]) _Aggregate_generateGroupBySql(selectFields []string, ex
 	return sqlQuery
 }
 
-/*#PHPARG=[ String ];*/
+// this return the sql fields based on name of fields from struct def.
+func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string{
+
+	var arrFieldsSql = []string{}
+	var ptrT 		 = new (T);
+	var refType      = reflect.TypeOf( ptrT ).Elem()
+	//var refType      = reflect.TypeOf( T )	
+
+	for iField := 0; iField < refType.NumField(); iField++ {
+
+		var fld = refType.Field( iField )
+		if( fld.Name == Generic_MODEL_Name){
+			continue;
+		}
+		if( !fld.IsExported() ){
+			continue;
+		}
+		var sqlFlds = fld.Tag.Get("json");
+		if( sqlFlds == "-"){
+			continue;
+		}
+		var atmFlag = fld.Tag.Get("atomicsql");
+		if( atmFlag == "copy-model" ){
+			return []string{}
+		}
+		if( atmFlag != "" ){
+			sqlFlds = atmFlag;
+		}
+		var sqlFldName = Str.Split( sqlFlds, ",")[0];
+		sqlFldName     = _this._quoteField( sqlFldName );
+
+		if( prefixField != "" ){
+			Arr_Append( &arrFieldsSql, fmt.Sprintf( `%s.%s`, prefixField, sqlFldName) );
+		}else{
+			Arr_Append( &arrFieldsSql, sqlFldName);
+		}		
+	}
+	return arrFieldsSql;	
+}
+
+// this return the sql fields based on table Name and SCHEMA_SQL
+func (_this *DBQuery[T]) _getRows_fieldsNameRelation(prefixField string) []string{
+
+	var arrFieldsSql = []string{}
+	
+	var table, bKeyExist = _this.tableInst.m_ctx.SCHEMA_SQL[ _this.tableInst.m_langName ]	
+	if( !bKeyExist){
+		//if is view
+		return []string{};
+	}
+
+	for i := 0; i < len(table.Columns); i ++ {
+
+		var sqlFldName = _this._quoteField( table.Columns[i].SqlName )
+		if( prefixField != "" ){
+			Arr_Append( &arrFieldsSql, fmt.Sprintf( `%s.%s`, prefixField, sqlFldName) );
+		}else{
+			Arr_Append( &arrFieldsSql, sqlFldName);
+		}		
+	}
+	return arrFieldsSql;	
+}
+func (_this *DBQuery[T]) _getRows_fields(prefixField string, bUserAnySelect bool ) string{
+	
+	var arrFieldsSql = []string{}
+	if( bUserAnySelect){
+
+		_this._getRows_fieldsNameRelation( prefixField );
+		/*
+		if( prefixField != "" ){
+
+			return fmt.Sprintf( `%s.*`, prefixField);
+		}else{
+			return `*`;
+		}*/
+	}else{
+		arrFieldsSql = _this._getRows_fieldsName( prefixField );
+	}
+
+	if( len(arrFieldsSql) == 0 ){
+		if( prefixField != "" ){
+			return fmt.Sprintf( `%s.*`, prefixField);
+		}else{
+			return `*`;
+		}
+	}
+	var txt = Str.Join(arrFieldsSql, ", ")
+	return txt;
+}
 func (_this *DBQuery[T]) _getRows(
-	bDistinct bool, fields []string, bAddFieldsInSelect bool) string {
+	bDistinct bool, fields []string, bAddFieldsInSelect bool, bUserAnySelect bool) string {
 
 	var sourceQry = _this._generateSqlSourceOfData()
 
@@ -465,11 +553,12 @@ func (_this *DBQuery[T]) _getRows(
 		if _this.querySelectNewRecord_Text != "" {
 			/*_this.lamdaSelectNewRecord != ""*/
 
-			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s", _this.querySelectNewRecord_Text, sourceQry, ITEM)
-		} else if joinTxt != "" { //pt ca altfel da eroare, left joinul randeaza si ID-ul de la alte tabele si se suprascrie
-			sqlQuery += fmt.Sprintf("SELECT %s.* FROM %s %s", ITEM, sourceQry, ITEM)
+			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s",  _this.querySelectNewRecord_Text, sourceQry, ITEM )
+		}else
+		if joinTxt != "" { //pt ca altfel da eroare, left joinul randeaza si ID-ul de la alte tabele si se suprascrie
+			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s", _this._getRows_fields(ITEM, bUserAnySelect), sourceQry, ITEM)
 		} else {
-			sqlQuery += fmt.Sprintf("SELECT * FROM %s %s", sourceQry, ITEM)
+			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s", _this._getRows_fields("", bUserAnySelect), sourceQry, ITEM)
 		}
 	}
 
@@ -974,6 +1063,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 					lastID, err := _this.getLastInsertedRowID1(dbResult1) //_this.tableName, primarySqlKey)
 					if err == nil {
 						fldT.SetInt(lastID)
+						DBContext_MarkSaveReflVal( reflValue, ctx)
 					}
 				}
 				ctx.updateDeltaTime()
@@ -1001,6 +1091,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 						if fldTValue.CanSet() {
 
 							fldTValue.SetInt(lastID)
+							DBContext_MarkSaveReflVal( reflValue, ctx)
 						}
 					}
 				}
@@ -1409,7 +1500,8 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 		} else {
 			valSql = fmt.Sprintf("%d", fieldInfo.Int())
 		}
-	} else if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
+	} else 
+	if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
 
 		var value = fieldInfo.Bool()
 		if value == true /*|| value == "true"*/ {
@@ -1417,16 +1509,31 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 		} else if value == false /*|| value == "false"*/ {
 			valSql = ctx.LangDB.VALUE_FALSE
 		}
-	} else if fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
+	} else 
+	if fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
 		fieldInfoTypeT == reflect.TypeOf((*float64)(nil)).Elem() {
 
 		valSql = fmt.Sprintf("%f", fieldInfo.Float())
-	} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
+	} else 
+	if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
 
 		valSql = _this._quote(fieldInfo.String(), columnTable)
-	} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
-		valSql = _this._quote(fieldInfo.String(), columnTable)
-	} else if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
+	} else 
+	if fieldInfoType == reflect.TypeOf((*time.Time)(nil)).Elem() {
+
+		valSql = _this._quote( fieldInfo.Interface().(time.Time).Format(time.RFC3339Nano), columnTable)
+		if( valSql =="'0001-01-01T00:00:00Z'" ){
+			valSql = "CURRENT_TIMESTAMP";
+		}
+		//valSql = _this._quote(fieldInfo.String(), columnTable)
+	}else
+	if fieldInfoType == reflect.TypeOf((*uuid.UUID)(nil)).Elem() {
+
+		valSql = "";
+		//valSql = _this._quote( fieldInfo.Interface().(uuid.UUID).UUIDValue(), columnTable)
+		//valSql = _this._quote(fieldInfo.String(), columnTable)
+	}else
+	if fieldInfoType == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
 		var slice = fieldInfo.Bytes()
 		valSql = _this._quote(slice, columnTable)
@@ -1704,11 +1811,11 @@ func convertToTemplateT[T IGeneric_MODEL](models []any) []*T {
 convert
 */
 func (_this *DBQuery[T]) _getModelRelations(
-	includeRelDefs []*TDefIncludeRelation, fnNewModel func() any) ([]any, error) {
+	includeRelDefs []*TDefIncludeRelation, fnNewModel func() any, bUserAnySelect bool ) ([]any, error) {
 
 	var arrInstModel = []any{}
 
-	sqlQuery := _this._getRows(false, nil, false)
+	sqlQuery := _this._getRows(false, nil, false, bUserAnySelect)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1815,7 +1922,7 @@ func (_this *DBQuery[T]) _getModelRelations(
 		}
 
 		modelsLvl1, err := newQuery.WhereIn(table_ID, ids).
-			_getModelRelations(includeRelDefListFinal, includeRelDef.FnNewInst)
+			_getModelRelations(includeRelDefListFinal, includeRelDef.FnNewInst, bUserAnySelect)
 		if err != nil {
 			return nil, err
 		}
@@ -1943,11 +2050,14 @@ func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) err
 
 	var sqlQuery = ""
 
+	var arrReflectModels = []reflect.Value{}
 	for _, modelData := range *records {
 
 		var bValFirst = true
 		var sqlFieldName_value = ""
 
+		var reflectModel   = reflect.ValueOf( modelData ).Elem();
+		Arr_Append(&arrReflectModels, reflectModel)
 		for langFieldName, columnDef := range *dictFieldsSchema {
 
 			if fields != nil && Arr_Contains(fields, columnDef.SqlName) {
@@ -1956,7 +2066,7 @@ func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) err
 			if columnDef.ForeignKeyLangName != nil {
 				//cand fac update la un model, setez model.FK_ID = model.FKID.ID
 
-				var reflectModel = reflect.ValueOf(modelData).Elem()
+				//var reflectModel = reflect.ValueOf(modelData).Elem()
 				//var colTable   = ctx.SCHEMA_SQL[];
 
 				var retDataGetID = _this.getModel_ForeignKey_getID(ctx, &columnDef, reflectModel)
@@ -2044,6 +2154,9 @@ func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) err
 			return err1
 		}
 	}
+	for _, elem := range(arrReflectModels){
+			DBContext_MarkSaveReflVal1[T]( elem, ctx)
+	}
 	_this.clearCachedSyntax()
 	return nil
 }
@@ -2077,7 +2190,7 @@ func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string /*, colu
 		} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
 			return fldT.String()
 		} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
-			return fldT.String()
+			return fld.Interface().(time.Time).Format(time.RFC3339Nano)
 		} else if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
 			var slice = fldT.Bytes()
@@ -2419,6 +2532,7 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSele
 		//query.lamdaSelectNewRecord = _this.m_SQL_ITEM_DEF;
 		query.excludeLangFieldsFromGroupBy = _this.excludeLangFieldsFromGroupBy
 		_this.excludeLangFieldsFromGroupBy = nil //move in SELECT , the groupping part
+		query.bIsSelectClause = true
 		query.newJoinCollection()
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ)
 
@@ -2474,7 +2588,7 @@ func _SelectValue_query[T IGeneric_MODEL, V comparable](
 		query.querySelectNewRecord_isAgregator = false
 
 		query.setLimit(0, 1)
-		var sqlQuery = query._getRows(false, nil, false)
+		var sqlQuery = query._getRows(false, nil, false, false)
 
 		var ctx = query.tableInst.m_ctx
 		ctx.currOperationDTime2 = time.Now()

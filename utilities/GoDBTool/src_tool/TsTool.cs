@@ -30,22 +30,22 @@ namespace src_tool
             Console.WriteLine( $"GoLangDBTool: v{VERSION}" );
             Console.WriteLine( $"" );
 
-            var iCurrArg = 0;
-            if( args[ iCurrArg ] == "-x")
+            if( args[ 0 ] == "-x")
             {
-                iCurrArg++;
-                doSleep();
+                WaitDebugger();
+                var lst = args.ToList();
+                lst.RemoveAt(0);
+                args = lst.ToArray();
             }
-            var firstArg = args[ iCurrArg ];
             
-            if( firstArg == "-asql_migration")
+            if( args[ 0 ] == "-asql_migration")
             {   
                 // -asql_migration  -sql_lang=postgres -execute_scripts=n -json_dir=C:\Work\SlotMonitor\atomicsql_golang\library\_db_migration  -delimeter=@@@@@@@@######@@@@@@  -connection_string=Host=localhost;Username=dev_original;Password=XCZ12345678;Database=newton_original
-                
-                var dictArgs = parseArguments( iCurrArg, args, 
+                var dictArgs = parseArguments( args, 
                     new String[]{   
                                     "sql_lang",
                                     "json_dir",
+                                    "sql_dir",
                                     "connection_string",
                                     "delimeter",
                                     "execute_scripts",
@@ -53,6 +53,7 @@ namespace src_tool
                     new String[]{ 
                         "sql_lang; the name of sql dialect:postgres, mysql",
                         "json Directory;the directory where all json defs are stored",
+                        "sql_dir Directory;the directory where all sql scritps definitions for migration are stored",
                         "connection string; connection string of db",
                         "delimeter; string that separate the defs of table in json file",
                         "execute the scripts; if execute_scripts=y,n  => execute scripts, else generate the files"
@@ -63,7 +64,8 @@ namespace src_tool
                 var inst = new GenSqlScriptsFromJsonModels();
                 inst.GenerateScripts( 
                                 dictArgs["sql_lang"],
-                                normalizePath(dictArgs[ "json_dir" ]),                                
+                                normalizePath(dictArgs[ "json_dir" ]),
+                                normalizePath(dictArgs[ "sql_dir" ]),                                
                                 dictArgs["connection_string"],
                                 dictArgs["delimeter"],
                                 dictArgs["execute_scripts"] =="y"
@@ -71,12 +73,12 @@ namespace src_tool
 
                 //Console.WriteLine( $"Completed  Generate Models for package {package}");
             }else
-            if( firstArg == "-export_db")
+            if( args[ 0 ] == "-export_db")
             {   
                 //WaitDebugger();
                 //-export_db  -config_file="..\..\config.txt" -type_out_file=go
                 //-export_db -config_file="_cmd\cfg_exportdb.cfg" -type_out_file=go
-                var dictArgs = parseArguments( iCurrArg, args, 
+                var dictArgs = parseArguments( args, 
                     new String[]{ 
                         "config_file", 
                         "type_out_file",
@@ -96,10 +98,10 @@ namespace src_tool
 
                 //Console.WriteLine( $"Completed  Generate Models for package {package}");
             }else  
-            if( firstArg == "-migration_db")
+            if( args[ 0 ] == "-migration_db")
             {                
                 //-migration_db  -input_dir="C:\Work\SlotMonitor\SlotMonitor\GoServer\Database\scripts" -out_models=""  -type_out_file=go -connectionString=Host=localhost;Username=dev_original;Password=XCZ12345678;Database=newton_original
-                var dictArgs = parseArguments( iCurrArg, args, 
+                var dictArgs = parseArguments( args, 
                         new String[]{ 
                             "sql_lang",
                             "connectionString", 
@@ -132,11 +134,11 @@ namespace src_tool
                     Console.WriteLine( $"Completed migration for directory {inputDir}");
                 }
             }else
-            if( firstArg == "-read_svc")
+            if( args[ 0 ] == "-read_svc")
             {
                 // -read_svc -dlls_path="./OEFWEbSvc/bin"  -out_svc_dll="app\services\svc.gen.ts"  -out_file_models="SvcModels.gen.ts"
                 Console.WriteLine( $"Start Generate SVC from {args[ 1 ]} dll");
-                var dictArgs = parseArguments( iCurrArg, args, 
+                var dictArgs = parseArguments( args, 
                                 new String[]{ 
                                     "dlls_path", 
                                     "out_svc_dll", 
@@ -163,25 +165,18 @@ namespace src_tool
             {
                 Console.WriteLine("Not Implemented paramenter");
             }
-        }
 
-        private static void doSleep()
-        { 
-            for(var i = 0; i < 100000000; i++)
-            { 
-                Thread.Sleep(100);
-            }
+            //Debugger.Break();
         }
-        
 
         private static string normalizePath(string path)
         {
             return Utils.normalizePath(path);
         }
 
-        private static Dictionary<string, string> parseArguments( int iCurrArg, String[]args, String[] arg_names, String[] desc_args)
+        private static Dictionary<string, string> parseArguments(String[]args, String[] arg_names, String[] desc_args)
         {
-            var arg0 = args.Length > iCurrArg? args[iCurrArg] : "";
+            var arg0 = args.Length > 0? args[0] : "";
 
             var dictRet = new Dictionary<string, string>();
             for( var iDef = 0; iDef < arg_names.Length; iDef++)
@@ -196,7 +191,7 @@ namespace src_tool
                 }
 
                 string value = null;
-                for( var iArg = iCurrArg+1; iArg < args.Length; iArg++)
+                for( var iArg = 0; iArg < args.Length; iArg++)
                 {
                     var prefixArg = $"-{arg_name}=";
                     if( args[iArg].StartsWith( prefixArg ) )

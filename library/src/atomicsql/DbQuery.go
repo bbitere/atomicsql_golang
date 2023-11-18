@@ -992,7 +992,7 @@ func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error) {
 	if( _this.pRTM != nil ){
 		return _this.pRTM.models, _this.errorRet;
 	}
-	sqlQuery := _this._getRows(false, fields, false)
+	sqlQuery := _this._getRows(false, fields, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -1028,7 +1028,7 @@ func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
 
 	_this.setLimit(0, 1)
 
-	sqlQuery := _this._getRows(false, nil, false)
+	sqlQuery := _this._getRows(false, nil, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -1070,7 +1070,7 @@ func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 
 	_this.setLimit(0, 1)
 
-	sqlQuery := _this._getRows(false, fields, false)
+	sqlQuery := _this._getRows(false, fields, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -1135,7 +1135,7 @@ func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 		return _this._getDistinctRTM( fields, _this.pRTM.models ), _this.errorRet;
 	}
 
-	sqlQuery := _this._getRows(true, fields, false)
+	sqlQuery := _this._getRows(true, fields, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -1184,7 +1184,7 @@ func (_this *DBQuery[T]) GetFirstModelRel( structDefs ... *TDefIncludeRelation )
 	}
 
 	_this.setLimit(0, 1)
-	arrAny, err := _this._getModelRelations(structDefs, nil) 
+	arrAny, err := _this._getModelRelations(structDefs, nil, false) 
 
 	var arr = convertToTemplateT[T](arrAny);
 	if( len(arr) > 0 ){
@@ -1218,7 +1218,7 @@ func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]
 		return _this.pRTM.models, _this.errorRet;
 	}
 
-	arrAny, err := _this._getModelRelations(structDefs, nil) 
+	arrAny, err := _this._getModelRelations(structDefs, nil, false) 
 
 	var arr = convertToTemplateT[T](arrAny);
 	
@@ -1226,7 +1226,7 @@ func (_this *DBQuery[T]) GetModelsRel( structDefs ... *TDefIncludeRelation ) ([]
 }
 func (_this *DBQuery[T]) _getModelsRel( structDefs[] *TDefIncludeRelation ) ([]*T, error) {
 	
-	arrAny, err := _this._getModelRelations(structDefs, nil) 
+	arrAny, err := _this._getModelRelations(structDefs, nil, false ) 
 
 	var arr = convertToTemplateT[T](arrAny);
 	
@@ -1263,7 +1263,7 @@ func (_this *DBQuery[T]) GetSingleDataString( fieldName string) (string, error) 
 		}
 	}
 
-	var sqlQuery = _this._getRows(false, []string{fieldName}, false)
+	var sqlQuery = _this._getRows(false, []string{fieldName}, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -1308,7 +1308,7 @@ func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string)
 		}
 	}
 
-	var sqlQuery = _this._getRows(false, []string{fieldName}, false)
+	var sqlQuery = _this._getRows(false, []string{fieldName}, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -1356,7 +1356,7 @@ func (_this *DBQuery[T]) GetRowsAsFieldString(fieldName string) ([]string, error
 		}
 		return arr, nil;
 	}
-	sqlQuery := _this._getRows(false, []string{fieldName}, false)
+	sqlQuery := _this._getRows(false, []string{fieldName}, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
@@ -1406,7 +1406,7 @@ func (_this *DBQuery[T]) GetRowsAsFieldInt(fieldName string) ([]int64, error) {
 		}
 		return arr, nil;
 	}
-	sqlQuery := _this._getRows(false, []string{fieldName}, false)
+	sqlQuery := _this._getRows(false, []string{fieldName}, false, false)
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()			
