@@ -1,8 +1,8 @@
 @echo off
 
 
-set GoScanPath=..\..\tools\atomicsql_compiler
-set GoServerToolPath=..\..\tools\GoServerTool
+set GoScanPath=..\..\..\..\..\utilities\goscanner\src\goscanner\bin\Debug\net7.0
+set GoServerToolPath=..\..\..\..\..\\utilities\GoDBTool\bin\Debug
 
 set PATH=%PATH%;%GoScanPath%
 set PATH=%PATH%;%GoServerToolPath%
@@ -10,16 +10,23 @@ set PATH=%PATH%;%GoServerToolPath%
 set GoScan=%GoScanPath%\goscanner.exe
 set GoServerTool=%GoServerToolPath%\DBTool.exe
 
-set SRCDIR_PATH=%CD%\..\..\..\library
-set GITHUB_URL=github.com/bbitere/atomicsql_golang.git
+set SRCDIR_PATH_LIBRARY=%CD%\..\..\..\..\..\library
+set SRCDIR_PATH=%CD%\..\..
 
 
-rem set CONNECTION_STRING=Host=localhost;Username=??;Password=??;Database=test1
 rem set SQL_LANG=postgres
+rem set CONNECTION_STRING=Host=localhost;Username=??;Password=??;Database=test1
 
-set CONNECTION_STRING="server=localhost;user id=??;password=??;persistsecurityinfo=True;database=test1"
+
+
 set SQL_LANG=mysql
+set CONNECTION_STRING="server=localhost;user id=??;password=??;persistsecurityinfo=True;database=test1"
 
+
+
+set GITHUB_URL=github.com/bbitere/atomicsql_golang.git
+rem set GITHUB_URL="github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+echo SRCDIR_PATH_LIBRARY = %SRCDIR_PATH_LIBRARY%
 
 
 

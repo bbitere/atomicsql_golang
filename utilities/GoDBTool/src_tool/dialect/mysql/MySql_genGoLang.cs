@@ -92,6 +92,7 @@ partial class MySqlDialect
 
         switch( nameSqlType)
         { 
+            case "tinyint" : 
             case "smallint" : 
             {
                 if( column.bIsNullable )
@@ -112,6 +113,7 @@ partial class MySqlDialect
                 else
                     return nameArr+"int16";
             }
+            case "int" : 
             case "integer" : 
             {
                 if( column.bIsNullable )
@@ -205,6 +207,7 @@ partial class MySqlDialect
                 else
                     return nameArr+"float64";
             }
+            case "double":
             case "numeric" ://return nameArr+"decimal";
             {
                 if( column.bIsNullable )

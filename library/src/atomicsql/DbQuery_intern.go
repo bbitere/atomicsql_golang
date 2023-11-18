@@ -2,21 +2,19 @@ package atomicsql
 
 import (
 	//"reflect"
-
 	//"unsafe"
-
 	sql "database/sql"
 	"fmt"
 	"math"
 	Sort "sort"
 	"time"
 	"unsafe"
-
 	//reflect
-	Str "strings"
-
 	log "log"
 	"reflect"
+	Str "strings"
+
+	uuid "github.com/google/uuid"
 )
 
 const ATTR_ATOMICSQL_COPY_MODEL string = "atomicsql:\"copy-model\""
@@ -413,93 +411,93 @@ func (_this *DBQuery[T]) _Aggregate_generateGroupBySql(selectFields []string, ex
 }
 
 // this return the sql fields based on name of fields from struct def.
-func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string{
+func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string {
 
 	var arrFieldsSql = []string{}
-	var ptrT 		 = new (T);
-	var refType      = reflect.TypeOf( ptrT ).Elem()
-	//var refType      = reflect.TypeOf( T )	
+	var ptrT = new(T)
+	var refType = reflect.TypeOf(ptrT).Elem()
+	//var refType      = reflect.TypeOf( T )
 
 	for iField := 0; iField < refType.NumField(); iField++ {
 
-		var fld = refType.Field( iField )
-		if( fld.Name == Generic_MODEL_Name){
-			continue;
+		var fld = refType.Field(iField)
+		if fld.Name == Generic_MODEL_Name {
+			continue
 		}
-		if( !fld.IsExported() ){
-			continue;
+		if !fld.IsExported() {
+			continue
 		}
-		var sqlFlds = fld.Tag.Get("json");
-		if( sqlFlds == "-"){
-			continue;
+		var sqlFlds = fld.Tag.Get("json")
+		if sqlFlds == "-" {
+			continue
 		}
-		var atmFlag = fld.Tag.Get("atomicsql");
-		if( atmFlag == "copy-model" ){
+		var atmFlag = fld.Tag.Get("atomicsql")
+		if atmFlag == "copy-model" {
 			return []string{}
 		}
-		if( atmFlag != "" ){
-			sqlFlds = atmFlag;
+		if atmFlag != "" {
+			sqlFlds = atmFlag
 		}
-		var sqlFldName = Str.Split( sqlFlds, ",")[0];
-		sqlFldName     = _this._quoteField( sqlFldName );
+		var sqlFldName = Str.Split(sqlFlds, ",")[0]
+		sqlFldName = _this._quoteField(sqlFldName)
 
-		if( prefixField != "" ){
-			Arr_Append( &arrFieldsSql, fmt.Sprintf( `%s.%s`, prefixField, sqlFldName) );
-		}else{
-			Arr_Append( &arrFieldsSql, sqlFldName);
-		}		
+		if prefixField != "" {
+			Arr_Append(&arrFieldsSql, fmt.Sprintf(`%s.%s`, prefixField, sqlFldName))
+		} else {
+			Arr_Append(&arrFieldsSql, sqlFldName)
+		}
 	}
-	return arrFieldsSql;	
+	return arrFieldsSql
 }
 
 // this return the sql fields based on table Name and SCHEMA_SQL
-func (_this *DBQuery[T]) _getRows_fieldsNameRelation(prefixField string) []string{
+func (_this *DBQuery[T]) _getRows_fieldsNameRelation(prefixField string) []string {
 
 	var arrFieldsSql = []string{}
-	
-	var table, bKeyExist = _this.tableInst.m_ctx.SCHEMA_SQL[ _this.tableInst.m_langName ]	
-	if( !bKeyExist){
+
+	var table, bKeyExist = _this.tableInst.m_ctx.SCHEMA_SQL[_this.tableInst.m_langName]
+	if !bKeyExist {
 		//if is view
-		return []string{};
+		return []string{}
 	}
 
-	for i := 0; i < len(table.Columns); i ++ {
+	for i := 0; i < len(table.Columns); i++ {
 
-		var sqlFldName = _this._quoteField( table.Columns[i].SqlName )
-		if( prefixField != "" ){
-			Arr_Append( &arrFieldsSql, fmt.Sprintf( `%s.%s`, prefixField, sqlFldName) );
-		}else{
-			Arr_Append( &arrFieldsSql, sqlFldName);
-		}		
+		var sqlFldName = _this._quoteField(table.Columns[i].SqlName)
+		if prefixField != "" {
+			Arr_Append(&arrFieldsSql, fmt.Sprintf(`%s.%s`, prefixField, sqlFldName))
+		} else {
+			Arr_Append(&arrFieldsSql, sqlFldName)
+		}
 	}
-	return arrFieldsSql;	
+	return arrFieldsSql
 }
-func (_this *DBQuery[T]) _getRows_fields(prefixField string, bUserAnySelect bool ) string{
-	
+func (_this *DBQuery[T]) _getRows_fields(prefixField string, bUserAnySelect bool) string {
+
 	var arrFieldsSql = []string{}
-	if( bUserAnySelect){
+	if bUserAnySelect {
 
-		_this._getRows_fieldsNameRelation( prefixField );
+		_this._getRows_fieldsNameRelation(prefixField)
 		/*
-		if( prefixField != "" ){
+			if( prefixField != "" ){
 
-			return fmt.Sprintf( `%s.*`, prefixField);
-		}else{
-			return `*`;
-		}*/
-	}else{
-		arrFieldsSql = _this._getRows_fieldsName( prefixField );
+				return fmt.Sprintf( `%s.*`, prefixField);
+			}else{
+				return `*`;
+			}*/
+	} else {
+		arrFieldsSql = _this._getRows_fieldsName(prefixField)
 	}
 
-	if( len(arrFieldsSql) == 0 ){
-		if( prefixField != "" ){
-			return fmt.Sprintf( `%s.*`, prefixField);
-		}else{
-			return `*`;
+	if len(arrFieldsSql) == 0 {
+		if prefixField != "" {
+			return fmt.Sprintf(`%s.*`, prefixField)
+		} else {
+			return `*`
 		}
 	}
 	var txt = Str.Join(arrFieldsSql, ", ")
-	return txt;
+	return txt
 }
 func (_this *DBQuery[T]) _getRows(
 	bDistinct bool, fields []string, bAddFieldsInSelect bool, bUserAnySelect bool) string {
@@ -553,9 +551,8 @@ func (_this *DBQuery[T]) _getRows(
 		if _this.querySelectNewRecord_Text != "" {
 			/*_this.lamdaSelectNewRecord != ""*/
 
-			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s",  _this.querySelectNewRecord_Text, sourceQry, ITEM )
-		}else
-		if joinTxt != "" { //pt ca altfel da eroare, left joinul randeaza si ID-ul de la alte tabele si se suprascrie
+			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s", _this.querySelectNewRecord_Text, sourceQry, ITEM)
+		} else if joinTxt != "" { //pt ca altfel da eroare, left joinul randeaza si ID-ul de la alte tabele si se suprascrie
 			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s", _this._getRows_fields(ITEM, bUserAnySelect), sourceQry, ITEM)
 		} else {
 			sqlQuery += fmt.Sprintf("SELECT %s FROM %s %s", _this._getRows_fields("", bUserAnySelect), sourceQry, ITEM)
@@ -1051,7 +1048,8 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 		if _this.tableInst.m_ctx.Dialect == ESqlDialect.MySql {
 
 			ctx.currOperationDTime2 = time.Now()
-			dbResult1, err := _this.tableInst.m_ctx.Exec(sqlQuery)
+			dbResult1, err1 := _this.tableInst.m_ctx.Exec(sqlQuery)
+			err = err1
 			defer resultClose(dbResult1)
 			ctx.updateDeltaTime2()
 
@@ -1063,7 +1061,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 					lastID, err := _this.getLastInsertedRowID1(dbResult1) //_this.tableName, primarySqlKey)
 					if err == nil {
 						fldT.SetInt(lastID)
-						DBContext_MarkSaveReflVal( reflValue, ctx)
+						DBContext_MarkSaveReflVal(reflValue, ctx)
 					}
 				}
 				ctx.updateDeltaTime()
@@ -1074,7 +1072,8 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 			//	   _this.tableInst.m_ctx.Dialect == ESqlDialect.MSSQL){
 
 			ctx.currOperationDTime2 = time.Now()
-			dbResultRows, err := _this.tableInst.m_ctx.Query(sqlQuery)
+			dbResultRows, err1 := _this.tableInst.m_ctx.Query(sqlQuery)
+			err = err1
 			defer queryClose(dbResultRows)
 			ctx.updateDeltaTime2()
 
@@ -1091,7 +1090,7 @@ func (_this *DBQuery[T]) _InsertRecordByReflectValue(
 						if fldTValue.CanSet() {
 
 							fldTValue.SetInt(lastID)
-							DBContext_MarkSaveReflVal( reflValue, ctx)
+							DBContext_MarkSaveReflVal(reflValue, ctx)
 						}
 					}
 				}
@@ -1500,8 +1499,7 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 		} else {
 			valSql = fmt.Sprintf("%d", fieldInfo.Int())
 		}
-	} else 
-	if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
+	} else if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
 
 		var value = fieldInfo.Bool()
 		if value == true /*|| value == "true"*/ {
@@ -1509,31 +1507,26 @@ func (_this *DBQuery[T]) _insertRecord_setField(
 		} else if value == false /*|| value == "false"*/ {
 			valSql = ctx.LangDB.VALUE_FALSE
 		}
-	} else 
-	if fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
+	} else if fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
 		fieldInfoTypeT == reflect.TypeOf((*float64)(nil)).Elem() {
 
 		valSql = fmt.Sprintf("%f", fieldInfo.Float())
-	} else 
-	if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
+	} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
 
 		valSql = _this._quote(fieldInfo.String(), columnTable)
-	} else 
-	if fieldInfoType == reflect.TypeOf((*time.Time)(nil)).Elem() {
+	} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
 
-		valSql = _this._quote( fieldInfo.Interface().(time.Time).Format(time.RFC3339Nano), columnTable)
-		if( valSql =="'0001-01-01T00:00:00Z'" ){
-			valSql = "CURRENT_TIMESTAMP";
+		valSql = _this._quote(fieldInfo.Interface().(time.Time).Format(time.RFC3339Nano), columnTable)
+		if valSql == "'0001-01-01T00:00:00Z'" {
+			valSql = "CURRENT_TIMESTAMP"
 		}
 		//valSql = _this._quote(fieldInfo.String(), columnTable)
-	}else
-	if fieldInfoType == reflect.TypeOf((*uuid.UUID)(nil)).Elem() {
+	} else if fieldInfoTypeT == reflect.TypeOf((*uuid.UUID)(nil)).Elem() {
 
-		valSql = "";
+		valSql = ""
 		//valSql = _this._quote( fieldInfo.Interface().(uuid.UUID).UUIDValue(), columnTable)
 		//valSql = _this._quote(fieldInfo.String(), columnTable)
-	}else
-	if fieldInfoType == reflect.TypeOf((*[]uint8)(nil)).Elem() {
+	} else if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
 		var slice = fieldInfo.Bytes()
 		valSql = _this._quote(slice, columnTable)
@@ -1811,7 +1804,7 @@ func convertToTemplateT[T IGeneric_MODEL](models []any) []*T {
 convert
 */
 func (_this *DBQuery[T]) _getModelRelations(
-	includeRelDefs []*TDefIncludeRelation, fnNewModel func() any, bUserAnySelect bool ) ([]any, error) {
+	includeRelDefs []*TDefIncludeRelation, fnNewModel func() any, bUserAnySelect bool) ([]any, error) {
 
 	var arrInstModel = []any{}
 
@@ -2056,7 +2049,7 @@ func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) err
 		var bValFirst = true
 		var sqlFieldName_value = ""
 
-		var reflectModel   = reflect.ValueOf( modelData ).Elem();
+		var reflectModel = reflect.ValueOf(modelData).Elem()
 		Arr_Append(&arrReflectModels, reflectModel)
 		for langFieldName, columnDef := range *dictFieldsSchema {
 
@@ -2154,8 +2147,8 @@ func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) err
 			return err1
 		}
 	}
-	for _, elem := range(arrReflectModels){
-			DBContext_MarkSaveReflVal1[T]( elem, ctx)
+	for _, elem := range arrReflectModels {
+		DBContext_MarkSaveReflVal1[T](elem, ctx)
 	}
 	_this.clearCachedSyntax()
 	return nil
@@ -2190,7 +2183,7 @@ func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string /*, colu
 		} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
 			return fldT.String()
 		} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
-			return fld.Interface().(time.Time).Format(time.RFC3339Nano)
+			return fldT.Interface().(time.Time).Format(time.RFC3339Nano)
 		} else if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
 
 			var slice = fldT.Bytes()
@@ -2507,6 +2500,16 @@ func (_this *DBQuery[T]) _whereGeneric(fnWhere func(x *T) bool) *DBSqlQuery[T] {
 func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSelect func(x *T) *V) *DBQuery[V] {
 
 	var ctx = _this.tableInst.m_ctx
+
+	var tbl1 = (new(DBTable[V])).Constr(
+		_this.tableInst.m_sqlName,
+		_this.tableInst.m_langName,
+		_this.tableInst.m_ctx)
+
+	var query = (new(DBQuery[V])).Constr(tbl1)
+	query.myTag = _this.myTag
+	query.parentQuery = _this //.cloneQuery_GenModel();
+
 	//foreach( SQL_WHERE_QUERIES as file =>sqlQueries )
 	var sqlQueries = ctx.CompiledSqlQueries
 
@@ -2520,19 +2523,10 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSele
 		//var oldJoins = _this.joins;
 		//var newQuery = (new(DBSqlQuery[T])).Constr( sql );
 
-		var tbl1 = (new(DBTable[V])).Constr(
-			_this.tableInst.m_sqlName,
-			_this.tableInst.m_langName,
-			_this.tableInst.m_ctx)
-
-		var query = (new(DBQuery[V])).Constr(tbl1)
-		query.myTag = _this.myTag
-		query.parentQuery = _this //.cloneQuery_GenModel();
-
 		//query.lamdaSelectNewRecord = _this.m_SQL_ITEM_DEF;
 		query.excludeLangFieldsFromGroupBy = _this.excludeLangFieldsFromGroupBy
 		_this.excludeLangFieldsFromGroupBy = nil //move in SELECT , the groupping part
-		query.bIsSelectClause = true
+		///query.bIsSelectClause = true
 		query.newJoinCollection()
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ)
 
@@ -2555,7 +2549,8 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSele
 		return query
 	}
 	log.Printf("DBQuery::select() not found signature, tag: %s! Recompile the project, to regenerate schema", fullTag)
-	return nil
+
+	return query
 }
 
 func _SelectValue_query[T IGeneric_MODEL, V comparable](

@@ -1,3 +1,3 @@
 
-                ALTER TABLE public."project"
-                DROP CONSTRAINT "fk_projStatus_ID";
+                ALTER TABLE `project`
+                DROP FOREIGN KEY `fk_projStatus_ID`;

@@ -1,8 +1,10 @@
         
             -------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS public."employee2"
+            CREATE TABLE IF NOT EXISTS `employee2`
             (
-                "ID" serial PRIMARY KEY NOT NULL
+                `ID` INT NOT NULL AUTO_INCREMENT
+
+                ,PRIMARY KEY (`ID`)
             )
             TABLESPACE pg_default;
                 
