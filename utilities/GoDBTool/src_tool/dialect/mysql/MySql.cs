@@ -109,7 +109,13 @@ namespace src_tool
             var colName = column.sqlName;
             if( column.bIsIdentity )
             {
-                return $"{tokenizIdentif(colName)} INT NOT NULL AUTO_INCREMENT";
+                if( column.langType == "int64")
+                {
+                    return $"{tokenizIdentif(colName)} BIGINT NOT NULL AUTO_INCREMENT";
+                }else
+                {
+                    return $"{tokenizIdentif(colName)} INT NOT NULL AUTO_INCREMENT";
+                }
             }else
             {
                 var sqlType = column.sqlType;
