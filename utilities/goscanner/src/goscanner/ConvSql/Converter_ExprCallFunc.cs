@@ -44,6 +44,11 @@ namespace goscanner.ConvSql
                 { 
                     Debug_Console("normalizedType1: OrmDef.Class_DBQuery");
                 }else
+                if( normalizedType1 != null
+                  )
+                { 
+                    Debug_Console($"normalizedType1: {normalizedType1.Name}");
+                }else
                 {
                     Debug_Console("normalizedType1: null");
                 }
