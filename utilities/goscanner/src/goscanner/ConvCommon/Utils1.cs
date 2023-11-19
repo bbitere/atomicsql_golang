@@ -44,6 +44,13 @@ namespace goscanner.ConvCommon
             Uri file = new Uri(file1);            
             return file.AbsolutePath;
         }
+        public static string corectPathSeparator(string path)
+        {
+            if( path == null)   
+                return null;
+            path = path.Replace('/', Path.DirectorySeparatorChar);
+            return path.Replace('\\', Path.DirectorySeparatorChar);
+        }
         public static string getAbsoluteDirPath( string directoryPath, string sep = "")
         {
             if( sep != "" )
@@ -58,6 +65,7 @@ namespace goscanner.ConvCommon
                     var dir = file.AbsolutePath;
                     if( dir.EndsWith("/") )
                         dir = dir.Substring(0, dir.Length - 1);
+                    dir = corectPathSeparator(dir);
                     arr.Add(dir);
                 }
             
@@ -68,6 +76,7 @@ namespace goscanner.ConvCommon
                 var dir = file.AbsolutePath;
                 if( dir.EndsWith("/") )
                     dir = dir.Substring(0, dir.Length - 1);
+                dir = corectPathSeparator(dir);
                 return dir;
             }
         }
