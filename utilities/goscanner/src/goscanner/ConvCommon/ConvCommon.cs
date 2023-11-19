@@ -712,9 +712,12 @@ public partial class ConvCommon : ScannerBase
     {
         return identifier.Split(".");
     }
+
+    public bool USE_SHOW_DEBUGGER= false;
     protected void Debug_Console(string msg){
 
-        Console.WriteLine( msg );
+        if(USE_SHOW_DEBUGGER)
+            Console.WriteLine( msg );
     } 
 
 
