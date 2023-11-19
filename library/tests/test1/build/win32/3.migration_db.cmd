@@ -9,6 +9,6 @@ rem @echo VAR: %GoServerTool%
  
  @echo ------------------------------------------------------
  rem create the models from Database
- %GoServerTool% -export_db -config_file="%CD%\cfg_exportdb.cfg" -type_out_file=go
+ %GoServerTool% -x -export_db -config_file="%CD%\cfg_exportdb.cfg" -type_out_file=go
  pause
  

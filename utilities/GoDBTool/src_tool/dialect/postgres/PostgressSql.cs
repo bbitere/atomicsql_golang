@@ -90,7 +90,11 @@ namespace src_tool
             var colName = column.sqlName;
             if( column.bIsIdentity )
             {
-                return $"{tokenizIdentif(colName)} serial PRIMARY KEY NOT NULL";
+                if( column.langType == "int64")
+                {
+                    return $"{tokenizIdentif(colName)} bigserial NOT NULL AUTO_INCREMENT";
+                }else
+                    return $"{tokenizIdentif(colName)} serial PRIMARY KEY NOT NULL";
             }else
             {
                 var sqlType = column.sqlType;

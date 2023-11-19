@@ -40,7 +40,7 @@ public class GoModelTemplate
         //string[] Model_DefVar
         )
     {
-        if(nameModel == "Employee1")
+        if(nameModel == "Bar")
             Utils.Nop();
         var import_package_orm = config.ImportPackageOrm;
         var pkgImport = "";

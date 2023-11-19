@@ -68,8 +68,8 @@
 								{
 					LangName:   "Id",
 					SqlName:    "Id",
-					SqlType:    "int",
-					LangType:   "int32",
+					SqlType:    "bigint",
+					LangType:   "int64",
 					Flags:      "",
 					IsPrimary:  true,
 					IsNullable: false,
@@ -118,8 +118,8 @@
 								{
 					LangName:   "Id",
 					SqlName:    "Id",
-					SqlType:    "int",
-					LangType:   "int32",
+					SqlType:    "bigint",
+					LangType:   "int64",
 					Flags:      "",
 					IsPrimary:  true,
 					IsNullable: false,
@@ -168,8 +168,8 @@
 								{
 					LangName:   "Id",
 					SqlName:    "Id",
-					SqlType:    "int",
-					LangType:   "int32",
+					SqlType:    "bigint",
+					LangType:   "int64",
 					Flags:      "",
 					IsPrimary:  true,
 					IsNullable: false,
