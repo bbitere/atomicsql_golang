@@ -864,7 +864,7 @@ public abstract partial class ScannerBase : GoParserBaseListener
         return options;
     }
 
-    protected static FolderMetadata LoadImportMetadata(Options options, string targetImport, out string warning)
+    protected static FolderMetadata LoadImportMetadata(Options options, string targetImport, out string warning, bool bDebugConsole=false)
     {
         var disableWarnings = false;
         var rootProject = "";
@@ -945,10 +945,15 @@ public abstract partial class ScannerBase : GoParserBaseListener
         //"github.com\\bbitere\\atomicsql_golang.git\\tests\\test1\\atomicsql_ormdefs\\atomicsql_ormdefs.go"
         if( options.ConvertSql != null)
         {
+            if(bDebugConsole)
+                Console.WriteLine($"LoadMeta: {targetImport} <-> {options.ConvertSql.OrmDir_Atomicsql_Git}");
             if( targetImport == options.ConvertSql.OrmDir_Atomicsql_Git )
             {
                 metadata = options.ConvertSql.OrmDirAtomicsql_DirMetadata;
-                if (metadata is not null)
+                if(bDebugConsole)
+                    Console.WriteLine($"LoadMeta: meta = {metadata!= null}");
+
+                if (metadata != null)
                 {
                     updateTypesStructFunctionsVars( metadata, packageName );
                     return metadata;
@@ -957,7 +962,7 @@ public abstract partial class ScannerBase : GoParserBaseListener
             if( targetImport == options.ConvertSql.OrmDir_AtomicsqlFunc_Git )
             {
                 metadata = options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata;
-                if (metadata is not null)
+                if (metadata != null)
                 {
                     updateTypesStructFunctionsVars( metadata, packageName );
                     return metadata;

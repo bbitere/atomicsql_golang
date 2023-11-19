@@ -570,7 +570,7 @@ public partial class ConvCommon : ScannerBase
                 // orm atomic_defs
                 // ctx.Users.Qry() => aici era o eroare
                 var warning = "";
-                var metadata = LoadImportMetadata(Options, alias2.targetImport, out warning);                
+                var metadata = LoadImportMetadata(Options, alias2.targetImport, out warning, bShowDebug);                
                 //if( bShowDebug )
                 //    Debug_Console(metadata != null? $"LoadMetadata: {alias2.targetImport} != null ": $"LoadMetadata: {alias2.targetImport} == null");
                 if(metadata != null ) {
@@ -606,7 +606,7 @@ public partial class ConvCommon : ScannerBase
             // orm atomic_defs
             // ctx.Users.Qry() => aici era o eroare
             var warning = "";
-            var metadata = LoadImportMetadata(Options, alias1.targetImport, out warning);                
+            var metadata = LoadImportMetadata(Options, alias1.targetImport, out warning);
             if(metadata != null ) {
 
                 foreach( var itemMetadata in metadata.Files)
@@ -670,7 +670,7 @@ public partial class ConvCommon : ScannerBase
                 // orm atomic_defs
                 // ctx.Users.Qry() => aici era o eroare
                 
-                var metadata = LoadImportMetadata(Options, alias1.targetImport, out warning);                
+                var metadata = LoadImportMetadata(Options, alias1.targetImport, out warning);
                 if(metadata != null ) {
 
                     foreach( var itemMetadata in metadata.Files)
