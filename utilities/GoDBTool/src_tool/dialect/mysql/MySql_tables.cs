@@ -24,7 +24,7 @@ namespace src_tool
                     table_catalog,       /*4*/
                     is_nullable,         /*5*/
                     extra,               /*6*/
-                    column_default,  
+                    column_default,      /*7*/
                     ordinal_position
                 FROM information_schema.columns
                 WHERE table_schema = DATABASE()
@@ -53,6 +53,8 @@ namespace src_tool
                         table.LangTableNameModel = GoModelTemplate.ConvertToIdent_GoLang( tableName );
                         table.Schema = tableSchema;
                         table.SqlTableNameModel = tableName;
+                        if( tableName == "user_role")
+                            Utils.Nop();
                         tables[ table.SqlTableNameModel ] = table;
                         
                         var columnName      = getString(reader, 2);
@@ -63,8 +65,8 @@ namespace src_tool
                         var colType         = getString(reader, 3);
                         var colType2        = getString(reader, 4);
                         var colIsNullable   = getString(reader, 5);
-                        //var colIsOrder      = getInteger(reader, 6);
-                        var colIsIdentity   = getString(reader, 7);
+                        var colIsIdentity   = getString(reader, 6);
+                        var colDefalut      = getString(reader, 7);
 
                         var column  = new DbColumn();
                         column.langName  = GoModelTemplate.ConvertToIdent_GoLang( columnName, true );
@@ -73,7 +75,7 @@ namespace src_tool
                         column.sqlName = columnName;
                         column.sqlType = colType;
                         column.langType =  this.getGoLangType( column, ref packageImports );
-                        column.bIsIdentity = isYes(colIsIdentity);
+                        column.bIsIdentity = colIsIdentity != null && colIsIdentity.Contains("auto_increment");
                         column.bIsNullable = isYes(colIsNullable);
                         table.columns.Add( column );
 
@@ -129,8 +131,8 @@ namespace src_tool
                 TC.CONSTRAINT_TYPE IN ('FOREIGN KEY', 'PRIMARY KEY') 
                 and KC.table_name = TC.table_name and KC.TABLE_SCHEMA = TC.TABLE_SCHEMA
                 and KC.CONSTRAINT_NAME = TC.CONSTRAINT_NAME
-                and KC.table_schema = DATABASE();
-                order by table_name asc, column_name
+                and KC.table_schema = DATABASE()
+                order by table_name asc, column_name;
             ";
 
             //var cmd = cnn.CreateCommand();

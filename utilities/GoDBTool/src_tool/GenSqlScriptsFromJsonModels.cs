@@ -680,7 +680,7 @@ namespace src_tool
                     //column.sqlName     = getSqlName(tags);//`json:"ID'
                     //column.sqlType     = dialect.getSqlType( column.langType, ref column.bIsNullable);
                     var bIsNullable = false;
-                    var sqlType = dialect.getSqlType( langType, ref bIsNullable);
+                    var sqlType = dialect.getSqlType( langType, ref bIsNullable, sqlName);
 
                     column.initLangSql(
                         langName: langName,

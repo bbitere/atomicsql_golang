@@ -9,31 +9,33 @@
 	
         /**/
 	/*
-    type ProjectStatus struct /*atomicsql-table:"projstatus"* / {
+    type Dbparams struct /*atomicsql-table:"dbparams"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
-            Name                string                        `json:"name"`
+            ParamName           string                        `json:"ParamName"`
+            ParamValue          string                        `json:"ParamValue"`
     }
 	*/
-    func (model  ProjectStatus) GetID() int64 {
+    func (model  Dbparams) GetID() int64 {
 	    return int64( model.ID )
     }
-	func (model  ProjectStatus) SetID( id int64 ) {
+	func (model  Dbparams) SetID( id int64 ) {
 	    model.ID = int32(id)
     }
 
-    type T_ProjectStatus struct {
+    type T_Dbparams struct {
 	        
 			orm.Generic_Def
 	        ID                  string
-            Name                string
+            ParamName           string
+            ParamValue          string
     }
 	
-	func (_this *T_ProjectStatus) Def() *orm.TDefIncludeRelation{
+	func (_this *T_Dbparams) Def() *orm.TDefIncludeRelation{
         return &orm.TDefIncludeRelation{ 
             
             ValueDef: reflect.ValueOf( *_this),
-			SqlTable:	"projstatus",
-            FnNewInst:	func()any{ return new (ProjectStatus) },
+			SqlTable:	"dbparams",
+            FnNewInst:	func()any{ return new (Dbparams) },
         }
     }

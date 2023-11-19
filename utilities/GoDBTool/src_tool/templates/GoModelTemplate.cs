@@ -104,6 +104,7 @@ public class GoModelTemplate
             return &{pkgOrm}.TDefIncludeRelation{{ 
             
                 ValueDef: reflect.ValueOf( *_this),
+                SqlTable:	""{tableSqlName}"",
                 FnNewInst:	func()any{{ return new ({nameModel}) }},
             }}
         }}

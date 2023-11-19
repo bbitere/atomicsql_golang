@@ -9,6 +9,7 @@ import (
 	Sort "sort"
 	"time"
 	"unsafe"
+
 	//reflect
 	log "log"
 	"reflect"
@@ -410,11 +411,21 @@ func (_this *DBQuery[T]) _Aggregate_generateGroupBySql(selectFields []string, ex
 	return sqlQuery
 }
 
+func (_this *DBQuery[T]) new_Model_T() any {
+
+	if _this.fnNewInstance != nil {
+
+		return _this.fnNewInstance()
+	} else {
+		return new(T)
+	}
+}
+
 // this return the sql fields based on name of fields from struct def.
 func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string {
 
 	var arrFieldsSql = []string{}
-	var ptrT = new(T)
+	var ptrT = _this.new_Model_T()
 	var refType = reflect.TypeOf(ptrT).Elem()
 	//var refType      = reflect.TypeOf( T )
 
@@ -1837,7 +1848,14 @@ func (_this *DBQuery[T]) _getModelRelations(
 		return nil, err
 	}
 
+	var dictFnNewRelPerTable = make(map[string]func() any)
 	var dictIncludedRel = make(map[string]*[]*TDefIncludeRelation)
+
+	for i := 0; i < len(includeRelDefs); i++ {
+
+		var includeRelDef = includeRelDefs[i]
+		dictFnNewRelPerTable[includeRelDef.SqlTable] = includeRelDef.FnNewInst
+	}
 
 	//compute for all includeRelDefs
 	for i := 0; i < len(includeRelDefs); i++ {
@@ -1892,7 +1910,7 @@ func (_this *DBQuery[T]) _getModelRelations(
 		}
 		///_this.collectForeignKeysID( arrFKeys, structDef)
 
-		newQuery, err := _this._changeTable(table)
+		newQuery, err := _this._changeTable(table, &dictFnNewRelPerTable)
 		if err != nil {
 			return nil, err
 		}
@@ -1930,7 +1948,8 @@ func (_this *DBQuery[T]) _getModelRelations(
 
 func (_this *DBQuery[T]) _getModelRelations_setFKRel(
 	includeRelDef *TDefIncludeRelation, valCol string,
-	dictIncludedRel *map[string]*[]*TDefIncludeRelation) {
+	dictIncludedRel *map[string]*[]*TDefIncludeRelation, //dictionary with all relation that should be have the next call for getModelRel()
+) {
 
 	//valCol = userRole_ID.ID
 	var valColParts = Str.Split(valCol, CONCAT_FIELDS)
@@ -2014,15 +2033,16 @@ func (_this *DBQuery[T]) _replaceFKeyValues(
 	}
 }
 
-func (_this *DBQuery[T]) _changeTable(tableName string) (*DBQuery[IGeneric_MODEL], error) {
+func (_this *DBQuery[T]) _changeTable(sqlTableName string, dictFnNewRelPerTable *map[string]func() any) (*DBQuery[IGeneric_MODEL], error) {
 
-	var table, has = _this.tableInst.m_ctx.AllTables[tableName]
+	var table, has = _this.tableInst.m_ctx.AllTables[sqlTableName]
 	if has {
 		var query = (new(DBQuery[IGeneric_MODEL])).Constr(table)
+		query.fnNewInstance, _ = (*dictFnNewRelPerTable)[sqlTableName]
 
 		return query, nil
 	}
-	return nil, fmt.Errorf("table %s not found", tableName)
+	return nil, fmt.Errorf("table %s not found", sqlTableName)
 }
 
 func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) error {

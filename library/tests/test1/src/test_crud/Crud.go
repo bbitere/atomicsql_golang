@@ -24,7 +24,7 @@ func Example_init() (*orm.DBContext, error, string) {
 
 	ctx.User.Qry("").DeleteModels()
 	ctx.UserRole.Qry("").DeleteModels()
-	ctx.StatusRole.Qry("").DeleteModels()
+	ctx.Statusrole.Qry("").DeleteModels()
 
 	return ctx, err, "initTest1"
 }

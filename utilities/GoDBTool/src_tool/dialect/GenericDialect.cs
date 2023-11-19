@@ -32,7 +32,7 @@ namespace src_tool
         public abstract string dropFKConstrictor(DbTable table,DbColumn column);
         public abstract string addFKConstrictor(DbTable table,DbColumn column);
 
-        public abstract string getSqlType( string langType, ref bool bIsNullable);
+        public abstract string getSqlType( string langType, ref bool bIsNullable, string nameOfColumn="");
 
         public abstract bool startConnection(GenericDialectArg arg);
 
@@ -102,5 +102,16 @@ namespace src_tool
                 return null;
             }
         }
+
+        public bool isLongType(string sqlColumnName)
+        {
+            if (sqlColumnName != null && sqlColumnName != "")
+            {
+                if( sqlColumnName.StartsWith("_"))
+                    return true;
+            }
+            return false;
+        }
+        
     }
 }

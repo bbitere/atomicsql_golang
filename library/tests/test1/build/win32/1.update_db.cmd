@@ -14,13 +14,13 @@ call 0.common_config.cmd
 
 @echo ------------------------------------------------------
 @echo "3. apply sql_scripts in database, iterative and only once."
-%GoServerTool% -migration_db  -sql_lang=%SQL_LANG% -input_dir="%SRCDIR_PATH%\_db_migration"^
+%GoServerTool%  -migration_db  -sql_lang=%SQL_LANG% -input_dir="%SRCDIR_PATH%\_db_migration"^
  -out_dir="" -type_out_file=go^
  -connectionString=%CONNECTION_STRING%
   
 @echo ------------------------------------------------------ 
 @echo "4. create the additional golang models information from database, useful for atomicsql engine"
-%GoServerTool% -export_db -config_file="%CD%\cfg_exportdb.cfg" -type_out_file=go
+%GoServerTool%  -export_db -config_file="%CD%\cfg_exportdb.cfg" -type_out_file=go
 pause
 
 @echo ------------------------------------------------------ 

@@ -12,6 +12,27 @@ using System.IO;
 using src_tool.templates;
 using MySql.Data.MySqlClient;
 
+
+/**
+pt mssql: se dezactiveaza indecsii cand stergem chestii mari
+  ALTER INDEX ALL ON schema_name.table_name DISABLE;
+
+ALTER INDEX ALL ON schema_name.table_name REBUILD WITH (ONLINE = ON);
+
+pt mysql
+
+ALTER TABLE table_name DISABLE KEYS;
+ALTER TABLE table_name ENABLE KEYS;
+SET FOREIGN_KEY_CHECKS=0;
+SET FOREIGN_KEY_CHECKS=1;
+
+pentru a investiga paramentrii procedurilor stocate
+SELECT * from INFORMATION_SCHEMA.PARAMETERS
+
+
+
+
+*/
 namespace src_tool
 {
     public partial class MySqlDialect : GenericDialect
@@ -40,25 +61,30 @@ namespace src_tool
             var NL = 
                 @"
                 ";
+            var constraintorList = new List<string>();
             var sqlTableName = table.SqlTableNameModel;
+
             var columnsArr = new List<string>();
             foreach( var col in table.columns)
             {
-                columnsArr.Add( this._addColumn(col) );
+                columnsArr.Add( this._addColumn(col, ref constraintorList) );
             }
             var columnsDefs = string.Join( ","+NL, columnsArr );
             var colID_Name = table.PrimaryColumn.sqlName;
 
+            var constraintors = string.Join( ","+NL, constraintorList );
+            if( constraintors != "")
+                constraintors = $",{NL}{constraintors}";
+
             var tableAdd = $@"        
-            -------------------------------------------------------------------	
+            #-------------------------------------------------------------------	
             CREATE TABLE IF NOT EXISTS {tokenizIdentif(sqlTableName)}
             (
                 { columnsDefs}
 
                 ,PRIMARY KEY ({tokenizIdentif(colID_Name)})
-            )
-            TABLESPACE pg_default;
-                ";
+                {constraintors}
+            ) ENGINE=InnoDB";
 
                 return tableAdd;
         }
@@ -71,13 +97,14 @@ namespace src_tool
         }
         public override string addColumn(DbTable table, DbColumn column)
         { 
-            var colData = _addColumn( column);
+            var listConstraintors = new  List<string>();
+            var colData = _addColumn( column, ref listConstraintors);
             var s = $@"
             ALTER TABLE {tokenizIdentif(table.SqlTableNameModel)}
             ADD COLUMN {colData}";
             return s;
         }
-        public string _addColumn(DbColumn column)
+        public string _addColumn(DbColumn column, ref List<string> listConstraintors)
         {
             var colName = column.sqlName;
             if( column.bIsIdentity )
@@ -94,7 +121,10 @@ namespace src_tool
                     var fkName      = tokenizIdentif(column.sqlName);
                     var fk_fkName   = tokenizIdentif($"fk_{column.sqlName}");
 
-                    return $"{fkName} INT NULL, ADD CONSTRAINT {fk_fkName} FOREIGN KEY ({fkName}) REFERENCES {targetTableSqlName}({targetTable_ID})";
+                    listConstraintors.Add($"CONSTRAINT {fk_fkName} FOREIGN KEY ({fkName}) REFERENCES {targetTableSqlName}({targetTable_ID})");
+                    //listConstraintors.Add($"CONSTRAINT {fk_fkName} FOREIGN KEY ({fkName}) REFERENCES {targetTableSqlName}({targetTable_ID}) ON DELETE RESTRICT");
+                    
+                    return $"{fkName} INT NULL";
                 }else
                 {
                     if( column.bIsNullable )
@@ -171,7 +201,7 @@ namespace src_tool
                 DROP FOREIGN KEY {fk_fkName};";
             return s;
         }
-        public override string getSqlType( string langType, ref bool bIsNullable)
+        public override string getSqlType( string langType, ref bool bIsNullable, string nameOfColumn)
         {
             langType = cleanNameGoStruct(langType);
             if(langType.StartsWith("[]"))
@@ -181,7 +211,7 @@ namespace src_tool
 
             switch( langType )
             { 
-                case "NullString":  bIsNullable= true; return "VARCHAR(MAX)";
+                case "NullString":      bIsNullable= true; return isLongType(nameOfColumn)?"TEXT":"VARCHAR(255)";
                 case "NullBool":        bIsNullable= true; return "BOOLEAN";
 
                 case "NullByte":        bIsNullable= true; return "SMALLINT";
@@ -193,7 +223,7 @@ namespace src_tool
                 case "time.NullTime":   bIsNullable= true; return "TIMESTAMP";
                 case "NullTime":        bIsNullable= true; return "TIMESTAMP";
 
-                case "string":      return "VARCHAR(MAX)";
+                case "string":      return isLongType(nameOfColumn)?"TEXT":"VARCHAR(255)";
                 case "char":        return "CHAR";
                 case "bool":        return "BOOLEAN";
 

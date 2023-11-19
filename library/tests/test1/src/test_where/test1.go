@@ -50,7 +50,7 @@ func Test_cleanUp(ctx *orm.DBContext) {
 
 	ctx.User.Qry("").DeleteModels()
 	ctx.UserRole.Qry("").DeleteModels()
-	ctx.StatusRole.Qry("").DeleteModels()
+	ctx.Statusrole.Qry("").DeleteModels()
 
 	//return errcode, err, nameTest;
 }
@@ -187,7 +187,7 @@ func Test1_03(step int, bCheckName bool) (int, error, string) {
 	//insert user.fk.fk
 	var user2 = m.User{UserName: UserName2, Money: UserMoney,
 		UserRoleID: &m.UserRole{RoleName: RoleNameAdmin, IsActive: true,
-			RoleStatusID: &m.StatusRole{StatusName: atmsql.Null_String(StatusNameActive)}}}
+			RoleStatusID: &m.Statusrole{StatusName: atmsql.Null_String(StatusNameActive)}}}
 	_, err = ctx.User.Qry("").InsertModel(&user2)
 	if err != nil || user2.ID == 0 ||
 		user2.UserRoleID.ID == 0 ||

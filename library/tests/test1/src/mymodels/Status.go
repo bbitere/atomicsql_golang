@@ -8,12 +8,9 @@ import (
 	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 )
 
-
-type StatusRole struct /*atomicsql-table:"statusRole"*/ {
-
+type Statusrole struct /*atomicsql-table:"statusRole"*/ {
 	orm.Generic_MODEL
 
-	ID                  int32                         `json:"ID,omitempty"`
-	StatusName          sql.NullString                `json:"status_name"`
-
+	ID         int32          `json:"ID,omitempty"`
+	StatusName sql.NullString `json:"status_name"`
 }

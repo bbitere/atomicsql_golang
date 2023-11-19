@@ -188,7 +188,7 @@ namespace src_tool
         }
 
         
-        public override string getSqlType( string langType, ref bool bIsNullable)
+        public override string getSqlType( string langType, ref bool bIsNullable, string nameOfColumn)
         {
             langType = cleanNameGoStruct(langType);
             if(langType.StartsWith("[]"))
@@ -198,7 +198,7 @@ namespace src_tool
 
             switch( langType )
             { 
-                case "NullString":      bIsNullable= true; return "VARCHAR";
+                case "NullString":      bIsNullable= true; return isLongType(nameOfColumn)?"TEXT":"VARCHAR";
                 case "NullBool":        bIsNullable= true; return "BOOLEAN";
 
                 case "NullByte":        bIsNullable= true; return "SMALLINT";
@@ -210,7 +210,7 @@ namespace src_tool
                 case "time.NullTime":   bIsNullable= true; return "TIMESTAMP";
                 case "NullTime":        bIsNullable= true; return "TIMESTAMP";
 
-                case "string":      return "VARCHAR";
+                case "string":      return isLongType(nameOfColumn)?"TEXT":"VARCHAR";
                 case "char":        return "CHAR";
                 case "bool":        return "BOOLEAN";
 

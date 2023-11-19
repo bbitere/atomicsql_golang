@@ -202,8 +202,8 @@ namespace src_tool
             var isNullable = false;
             var tableMigration = new DbTable();
             tableMigration.columns.Add( new DbColumn().initSqlPrimary("ID") );
-            tableMigration.columns.Add( new DbColumn().initSql(ParamName,  dialect.getSqlType("string", ref isNullable), isNullable) );
-            tableMigration.columns.Add( new DbColumn().initSql(ParamValue, dialect.getSqlType("string", ref isNullable), isNullable) );
+            tableMigration.columns.Add( new DbColumn().initSql(ParamName,  dialect.getSqlType("string", ref isNullable,""), isNullable) );
+            tableMigration.columns.Add( new DbColumn().initSql(ParamValue, dialect.getSqlType("string", ref isNullable,""), isNullable) );
             //tableMigration.columns.Add( new DbColumn().initSql(ParamType,  dialect.getSqlType("string", ref isNullable), isNullable) );
             tableMigration.initSql( TABLE_MIGRATION, tableMigration.columns[0] );
 
