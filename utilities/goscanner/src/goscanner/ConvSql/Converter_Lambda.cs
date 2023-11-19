@@ -56,6 +56,7 @@ public partial class SqlConvert
     //when is calling Select() or Where()
     protected void Lambda_createSubtagID(string subTagName)
     {
+        Debug_Console($"m_LambdaFunc_SubTags: {subTagName}{m_LambdaFunc_SubTagCounter}");
         m_LambdaFunc_SubTags.Add( new SubTag($"{subTagName}{m_LambdaFunc_SubTagCounter}" )); //OrmDef.SubTag_Where
     }
     
@@ -205,6 +206,8 @@ public partial class SqlConvert
     {
         if( m_LambdaFunc_SubTags.Count > 0 )
         {
+            Debug_Console($"Lambda_enterFuncLit: {m_LambdaTag} -> {m_LambdaFunc_SubTags[m_LambdaFunc_SubTags.Count-1]}");
+
             m_LambdaCode = new TLambdaCode( this, m_LambdaTag, 
                                 m_LambdaFunc_SubTags[m_LambdaFunc_SubTags.Count-1], 
                                 m_LambdaCode, m_LambdaCode_IsQueuedSelect,

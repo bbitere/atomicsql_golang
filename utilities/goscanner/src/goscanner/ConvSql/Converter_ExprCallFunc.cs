@@ -190,7 +190,7 @@ namespace goscanner.ConvSql
 
             string argumentList = string.Join(", ", arguments);
             //string argumentSQLList = string.Join(", ", arguments_SQL);
-            if( funcName == OrmDef.Func_DBTable_Qry && argumentList == "\"tst143\"u8")
+            if( funcName == OrmDef.Func_DBTable_Qry && argumentList == "\"asdax\"u8")
             {
                 Utils.Nop();
             }
@@ -199,6 +199,8 @@ namespace goscanner.ConvSql
              && normalizedType1.Name == OrmDef.Class_DBTable 
              && normalizedType1.PackageName!= "" )
             {
+                if(argumentList != "\"\"u8")
+                    Debug_Console($"Func_DBTable_Qry: {argumentList}");
                 this.Lambda_callQryMethod( context, argumentList);
             }else
             {
