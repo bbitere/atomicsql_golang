@@ -108,6 +108,22 @@ namespace goscanner.ConvSql
 
             if( IncludeFiles  == null )
                 Console.WriteLine("Include_files - not set");
+
+            if( OrmDir_AtomicSql  == null )
+                Console.WriteLine("OrmDir_Atomicsql - not set");
+            else
+                Console.WriteLine($"OrmDir_AtomicSql = {OrmDir_AtomicSql}");
+
+            if( OrmDir_Atomicsql_Git  == null )
+                Console.WriteLine("OrmDir_Atomicsql_Git - not set");
+            else
+                Console.WriteLine($"OrmDir_Atomicsql_Git = {OrmDir_Atomicsql_Git}");
+
+            if( OrmDir_AtomicSqlFunc  == null )
+                Console.WriteLine("OrmDir_AtomicsqlFunc - not set");
+
+            if( OrmDir_AtomicsqlFunc_Git  == null )
+                Console.WriteLine("OrmDir_AtomicsqlFunc_Git - not set");
             
         }
         protected override void setupMLineProperty(string token1, string content)

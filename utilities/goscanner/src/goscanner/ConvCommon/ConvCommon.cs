@@ -571,8 +571,8 @@ public partial class ConvCommon : ScannerBase
                 // ctx.Users.Qry() => aici era o eroare
                 var warning = "";
                 var metadata = LoadImportMetadata(Options, alias2.targetImport, out warning);                
-                if( bShowDebug )
-                    Debug_Console(metadata != null? $"LoadMetadata: {alias2.targetImport} != null ": $"LoadMetadata: {alias2.targetImport} == null");
+                //if( bShowDebug )
+                //    Debug_Console(metadata != null? $"LoadMetadata: {alias2.targetImport} != null ": $"LoadMetadata: {alias2.targetImport} == null");
                 if(metadata != null ) {
 
                     foreach( var itemMetadata in metadata.Files)
