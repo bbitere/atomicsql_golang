@@ -251,7 +251,9 @@ namespace Antlr4.Runtime.Atn
 
 		/** SLL, LL, or LL + exact ambig detection? */
 
-		private PredictionMode mode = PredictionMode.LL;
+        //private PredictionMode mode = PredictionMode.SLL;
+		private PredictionMode mode = PredictionMode.LL;        
+        //private PredictionMode mode = PredictionMode.LL_EXACT_AMBIG_DETECTION;
 
 		/** Each prediction operation uses a cache for merge of prediction contexts.
 		 *  Don't keep around as it wastes huge amounts of memory. DoubleKeyMap

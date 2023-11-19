@@ -14,12 +14,13 @@
     type Employee1 struct /*atomicsql-table:"employee1"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
-            IsActive            int16                         `json:"isActive"`
+            IsActive            bool                          `json:"isActive"`
             UserID              *User                         `json:"-"`
-            User_ID                                           `json:"user_ID"`
+            User_ID             sql.NullInt32                 `json:"user_ID"`
             DepartmID           *Department                   `json:"-"`
-            Departm_ID                                        `json:"departm_ID"`
-            Departm2ID          sql.NullInt32                 `json:"departm2_ID"`
+            Departm_ID          sql.NullInt32                 `json:"departm_ID"`
+            Departm2ID          *Department                   `json:"-"`
+            Departm2_ID         sql.NullInt32                 `json:"departm2_ID"`
     }
 	*/
     func (model  Employee1) GetID() int64 {
@@ -38,7 +39,8 @@
             User_ID             string
             DepartmID           T_Department
             Departm_ID          string
-            Departm2ID          string
+            Departm2ID          T_Department
+            Departm2_ID         string
     }
 	
 	func (_this *T_Employee1) Def() *orm.TDefIncludeRelation{

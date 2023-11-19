@@ -7684,7 +7684,8 @@ public partial class GoParser : GoParserBase {
 				EnterOuterAlt(_localctx, 3);
 				{
 				State = 1018;
-				if (!(lineTerminatorAhead())) throw new FailedPredicateException(this, "lineTerminatorAhead()");
+				if (!(lineTerminatorAhead())) 
+                            throw new FailedPredicateException(this, "lineTerminatorAhead()");
 				}
 				break;
 			case 4:

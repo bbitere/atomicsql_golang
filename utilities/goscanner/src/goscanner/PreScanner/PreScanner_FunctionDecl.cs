@@ -208,7 +208,16 @@ public partial class PreScanner
                             Type = TypeInfo.VarType,
                             //InitExpr = LastDictElement,
                         };
+                    if( LastDictElement != null )
+                    {
                         varInfo.setInitExpr(LastDictElement);
+                    }else
+                    {
+                        var literal = exprCtx[0].primaryExpr()?.operand()?.literal()?.compositeLit()?.literalValue();
+                        var elemList = literal.elementList();
+                        //bbitere: SLL da eroare aici
+                        //varInfo.setInitExpr(LastDictElement);
+                    }
                     m_globalVariables.Add(variableName, varInfo);
                 }
             }
