@@ -158,9 +158,10 @@ namespace goscanner.ConvSql
                 }
 
                 packageName = normalizedType1.PackageName;
-                if( searchFunctionInImports( funcName, normalizedType1.PackageInfo, out functionInfo ))
+                if( searchFunctionInImports( funcName, normalizedType1.PackageInfo, out functionInfo, funcName == "Qry" ))
                 {
                 }
+                
             }else
             {
                 packageName  = getPackageAliasOfFunction( functionName );

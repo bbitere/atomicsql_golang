@@ -761,9 +761,6 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         }
         return false;
     }
-    protected void Debug_Console(string msg){
-
-        Console.WriteLine( msg );
-    }    
+       
 
 }
