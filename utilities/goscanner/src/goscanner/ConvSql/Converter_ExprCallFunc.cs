@@ -200,7 +200,7 @@ namespace goscanner.ConvSql
              && normalizedType1.PackageName!= "" )
             {
                 if(argumentList != "\"\"u8")
-                    Debug_Console($"Func_DBTable_Qry: {argumentList}");
+                    Debug_Console($"Func_DBTable_Qry: {argumentList} -> {_getQueryTag(argumentList)}");
                 this.Lambda_callQryMethod( context, argumentList);
             }else
             {

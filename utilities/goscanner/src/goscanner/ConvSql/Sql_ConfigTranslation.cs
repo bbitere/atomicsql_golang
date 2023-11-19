@@ -19,7 +19,7 @@ namespace goscanner.ConvSql
     public class Sql_ConfigTranslation : goscanner.ConvCommon.ConfigFile
     { 
         public const string CONV_SOURCE_PATH_SEP =  ";";
-        public const string Version = "2.0.2";
+        public const string Version = "2.0.3";
         // 2.0.2 - Add GetValue<>() and GetValues<>()
 
         public Sql_Dialect SqlDialect = new PostgresSql_Dialect();
