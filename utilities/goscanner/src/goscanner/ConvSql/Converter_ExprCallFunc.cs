@@ -36,6 +36,19 @@ namespace goscanner.ConvSql
             if( funcName == OrmDef.Func_Select )                
                 Utils.Nop();
 
+            if( context.Start.InputStream.SourceName.EndsWith("Test.go") 
+              &&  funcName == OrmDef.Func_DBQuery_Where )
+            {
+                if( normalizedType1 != null
+                 && normalizedType1.Name == OrmDef.Class_DBQuery )
+                { 
+                    Debug_Console("normalizedType1: OrmDef.Class_DBQuery");
+                }else
+                {
+                    Debug_Console("normalizedType1: null");
+                }
+            }
+
             if( normalizedType1 != null
              && normalizedType1.Name == OrmDef.Class_DBQuery )
             {
@@ -200,7 +213,7 @@ namespace goscanner.ConvSql
              && normalizedType1.PackageName!= "" )
             {
                 if(argumentList != "\"\"u8")
-                    Debug_Console($"Func_DBTable_Qry: {argumentList} -> {_getQueryTag(argumentList)}");
+                    Debug_Console($"Func_DBTable_Qry: {argumentList}");
                 this.Lambda_callQryMethod( context, argumentList);
             }else
             {

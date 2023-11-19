@@ -82,7 +82,7 @@ public partial class SqlConvert
                     this.Log_Error( context, $"{OrmDef.Func_DBTable_Qry}() method should receive a valid tag unique per app. See: {OrmDef.Func_DBTable_Qry}(\"{m_LambdaTag}\") ");
                 }
             }
-            Debug_Console($"Func_DBTable_Qry1: {m_LambdaTag}");
+            //Debug_Console($"Func_DBTable_Qry1: {m_LambdaTag}");
             dictLambdaTag[ m_LambdaTag] = context;
         }
     }
