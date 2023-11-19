@@ -36,7 +36,7 @@ namespace goscanner.ConvSql
             if( funcName == OrmDef.Func_Select )                
                 Utils.Nop();
 
-            if( context.Start.InputStream.SourceName.EndsWith("Test.go") 
+            if( context.Start.InputStream.SourceName.EndsWith("test1.go") 
               &&  funcName == OrmDef.Func_DBQuery_Where )
             {
                 if( normalizedType1 != null
