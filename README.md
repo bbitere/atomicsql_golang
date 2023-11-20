@@ -3,6 +3,13 @@
 <br/>
 <br/>All of these tricks are done to have a robust/flexible implementation in your code.
 <br/>We have implemented: DataBase First, or Models First, and these are explained here, in a bottom section.
+------------------------------------------
+<br/> **Simple query interogation** . 
+<br/> Let's see this Example:
+<br/> var models = ctx.Users.Qry("label1").Where( func(x *m.User) bool{
+<br/> &emsp;&emsp;&emsp;   return x.Name == userName}).GetModels();
+<br/> 
+<br/> In this example, the Where() contains a literal function aka lambda expression. This help the developer to have a robust development and the check of types between data
 
 ------------------------------------------
 <br/>Also, we have 2 utilities running under .net framework 7.0 (also for linux).
