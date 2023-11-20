@@ -1,8 +1,8 @@
 ------------------------------------------
-<br/>**Atomicsql_golang** is a **ORM library** for Golang having implemented, beside clasical implementation of any ORM, a special usage for **Where() method** and **Select() method**, using literal function aka lambda expression.
+<br/>Atomicsql_golang is a ORM library for Golang having implemented, beside clasical implementation of any ORM, a special usage for Where() method and Select() method, using literal function aka lambda expression.
 <br/>
-<br/>All of these tricks are done to have a **robust**/**flexible implementation** in your code.
-<br/>We have implemented: **DataBase First**, or **Models First**, and these are explained here, in a bottom section.
+<br/>All of these tricks are done to have a robust/flexible implementation in your code.
+<br/>We have implemented: DataBase First, or Models First, and these are explained here, in a bottom section.
 ------------------------------------------
 <br/> **Simple query interogation**. 
 <br/> Let's see this Example:
