@@ -35,27 +35,29 @@ return a list with users, but having also the UserRole as the name of RoleName f
 
 ------------------------------------------
 
-Also, we have 2 utilities running with .net framework 7.0.<br/>
+<br/>Also, we have 2 utilities running with .net framework 7.0.
 <br/>
-goscanner.exe: <br/>
-- compile the code and collects all Models marked to be in Database and generate 1 json file with these definitions, using flag:-e. <br/>
+<br/>goscanner.exe: 
+<br/>-compile the code and collects all Models marked to be in Database and generate 1 json file with these definitions, using flag:-e.
+<br/>&emsp;   (Step 1 in <B>Model First</B>)
 <br/>
-- compile the code and generate lambda expressions. (Step 1 in Model First), using flag:-q <br/>
-<br/>
-<br/>
-DBTool.exe:<br/>
-<br/>
-- extract from jsons definitions of models and generate the sql scripts, using flag: -asql_migration. (Step 2 in Model First)<br/>
-    the sql scripts reflect the incremental update of Database using the diferences of json files,<br/>
-<br/>
-- apply all sql scripts to update Database, using flag: migration_db. The directory is located at:<br/>
-	.\library\tests\test1\_db_migration<br/>
-	(Step 3 in Model First, but also used in DataBase First)<br/>
-<br/>
-- extract directly from DataBase all tables and generate golang models using flag: -export_db<br/>
-	(Step 4 in Model First, but also used in DataBase First)<br/>
+<br/>-compile the code and generate lambda expressions, using flag:-q
+<br/>&emsp;   (Step 5 in <B>Model First</B>, but also used in <B>DataBase First</B>)
 <br/>
 <br/>
-Both these utilities are used in batch files in a example. Its location is directory:<br/>
-    .\library\tests\test1\build\win32<br/>
+<br/>DBTool.exe:
+<br/>
+<br/>- extract from jsons definitions of models and generate the sql scripts, using flag: -asql_migration. (Step 2 in <B>Model First</B>)
+<br/>&emsp;    the sql scripts reflect the incremental updates for Database using the diferences of json files
+<br/>
+<br/>- apply all sql scripts to update Database, using flag: -migration_db. The directory is located at:
+<br/>&emsp;	.\library\tests\test1\_db_migration
+<br/>&emsp;	(Step 3 in <B>Model First</B>, but also used in <B>DataBase First</B>)
+<br/><br/>
+<br/>- extract directly from DataBase all tables and generate golang models using flag: -export_db
+<br/>&emsp;	(Step 4 in <B>Model First</B>, but also used in <B>DataBase First</B>)<br/>
+<br/>
+<br/>
+<br/>Both these utilities are used in batch files in a example. Its location is directory:
+<br/>&emsp;    .\library\tests\test1\build\win32
 <br/>
