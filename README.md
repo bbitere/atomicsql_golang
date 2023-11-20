@@ -41,8 +41,6 @@ Description
 
 ------------------------------------------
 
-------------------------------------------
-
 <br/> **Using foreign key in Where** + **get Models having pointer to relation** . 
 <br/> Let's see next Example: 
 <br/>
@@ -71,7 +69,7 @@ Description
 <br/>
 <br/> and struct vUser1 is defined as:
 <br/>&emsp;type vUser1 struct {
-<br/>&emsp;&emsp;		m.User   `atomicsql:"copy-model"`
+<br/>&emsp;&emsp;		m.User   \`atomicsql:"copy-model"\`
 <br/>&emsp;&emsp;		UserRole string
 <br/>&emsp;	}
 <br/>
