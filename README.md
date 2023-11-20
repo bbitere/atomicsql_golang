@@ -1,4 +1,6 @@
 ------------------------------------------
+HOME
+------------------------------------------
 <br/>**Atomicsql_golang** is a ORM library for Golang having implemented, beside clasical implementation of any ORM, a special usage for Where() method and Select() method, using literal function aka lambda expression.
 <br/>
 <br/>All of these tricks are done to have a robust/flexible implementation in your code.
@@ -10,7 +12,6 @@
 <br/> &emsp;&emsp;&emsp;   return x.Name == userName}).GetModels();
 <br/> 
 <br/> In this example, the Where() contains a literal function aka lambda expression. This help the developer to have a robust development and the check of types between data
-
 ------------------------------------------
 <br/>Also, we have 2 utilities running under .net framework 7.0 (also for linux).
 <br/>
