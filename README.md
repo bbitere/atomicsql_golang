@@ -16,7 +16,30 @@ Description
 <br/> var models = ctx.Users.Qry("label1").Where( func(x *m.User) bool{
 <br/> &emsp;&emsp;&emsp;   return x.Name == userName}).GetModels();
 <br/> 
+<br/> The engine translate this instruction in a sql query, using precompile lambda instructions placed inside WHERE() as following: 
+<br/> &emsp;SELECT \* FROM users usr 
+<br/> &emsp;&emsp;  WHERE usr.Name = @1 
+<br/> 
 <br/> In this example, the Where() contains a literal function aka lambda expression. This help the developer to have a robust development and the check of types between data
+
+------------------------------------------
+
+<br/> **Using foreign key in Where** 
+<br/> Let's see next Example: 
+<br/>
+<br/> var roleName = "admin";
+<br/> var models = ctx.Users.Qry("label2").Where( func(x *m.User) bool{
+<br/> &emsp;&emsp;&emsp;   return x.RoleNameID.RoleName == roleName}).
+<br/> &emsp;&emsp;     GetModels();
+<br/> 
+<br/> The engine translate this instruction in a sql query, using precompile lambda instructions placed inside WHERE() as following: 
+<br/> &emsp; SELECT \* FROM users usr 
+<br/> &emsp;&emsp;  WHERE role.RoleName = @1 
+<br/> &emsp;&emsp;  LEFT JOIN user_role role on role.ID = usr.UserRole_ID
+<br/> 
+<br/> In this example, the Where() make a compare using the FK relation (implicit inner join) and also return the relation as a pointer. Note: ctx._Users.UserRole is the definition of FK table relation.
+
+------------------------------------------
 
 ------------------------------------------
 
@@ -51,6 +74,11 @@ Description
 <br/>&emsp;&emsp;		m.User   `atomicsql:"copy-model"`
 <br/>&emsp;&emsp;		UserRole string
 <br/>&emsp;	}
+<br/>
+<br/> The engine translate this instruction in a sql query, using precompile lambda instructions placed inside WHERE() + Select() as following: 
+<br/> &emsp; SELECT role.RoleName AS User FROM users usr 
+<br/> &emsp;&emsp;  WHERE role.IsActive = 1 
+<br/> &emsp;&emsp;  LEFT JOIN user_role role on role.ID = usr.UserRole_ID
 <br/>
 <br/>this code does: return a list with users, but having also the UserRole as the name of RoleName from FK relation of UserRoleID. Here is no need to use GetModelsRel() method as in previous example, to obtain the FK relation.
 
