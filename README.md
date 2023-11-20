@@ -11,6 +11,8 @@ Description
 
 <br/> **Simple query interogation** . 
 <br/> Let's see this Example:
+<br/>
+<br/> var userName = "john1234";
 <br/> var models = ctx.Users.Qry("label1").Where( func(x *m.User) bool{
 <br/> &emsp;&emsp;&emsp;   return x.Name == userName}).GetModels();
 <br/> 
@@ -20,8 +22,10 @@ Description
 
 <br/> **Using foreign key in Where** + **get Models having pointer to relation** . 
 <br/> Let's see next Example: 
+<br/>
+<br/> var roleName = "admin";
 <br/> var models = ctx.Users.Qry("label2").Where( func(x *m.User) bool{
-<br/> &emsp;&emsp;&emsp;   return x.RoleNameID.RolName == roleName}).
+<br/> &emsp;&emsp;&emsp;   return x.RoleNameID.RoleName == roleName}).
 <br/> &emsp;&emsp;     GetModelsRel( ctx._Users.UserRole );
 <br/> 
 <br/> if( len(models) > 0 && models[0].UserRoleID != nil && models[0].UserRoleID.RoleName == roleName){
@@ -34,6 +38,7 @@ Description
 
 <br/> **Using Select()**. 
 <br/>Let's see the an example with Select()
+<br/>
 <br/>usersAsView, _ := atmsql.Select( ctx.User.Qry("label3").
 <br/>&emsp;&emsp;&emsp;                      Where(func(x *m.User) bool {
 <br/>&emsp;&emsp;&emsp;&emsp;                      return x.UserRoleID.IsActive == true }),
@@ -41,7 +46,13 @@ Description
 <br/>&emsp;&emsp;&emsp;&emsp;                            return &vUser1{ User: *x, UserRole: x.UserRoleID.RoleName, } }).
 <br/>&emsp;&emsp;&emsp;                      GetModels()
 <br/>
-<br/>return a list with users, but having also the UserRole as the name of RoleName from FK relation of UserRoleID. Here is no need to use GetModelsRel() method as in previous example, to obtain the FK relation.
+<br/> and struct vUser1 is defined as:
+<br/>&emsp;type vUser1 struct {
+<br/>&emsp;&emsp;		m.User   `atomicsql:"copy-model"`
+<br/>&emsp;&emsp;		UserRole string
+<br/>&emsp;	}
+<br/>
+<br/>this code does: return a list with users, but having also the UserRole as the name of RoleName from FK relation of UserRoleID. Here is no need to use GetModelsRel() method as in previous example, to obtain the FK relation.
 
 ------------------------------------------
 
@@ -68,6 +79,6 @@ Description
 <br/>&emsp;	(Step 4 in **Model First**, but also used in **DataBase First**)<br/>
 <br/>
 <br/>
-<br/>Both these utilities are used in batch files in a example. Its location is directory:
+<br/>Both these utilities are used in batch files in a example. Its location is in directory:
 <br/>&emsp;    .\library\tests\test1\build\win32
 <br/>
