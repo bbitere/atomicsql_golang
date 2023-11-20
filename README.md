@@ -1,6 +1,7 @@
-**Atomicsql_golang** is a **ORM library** for Golang having implemented, beside clasical implementation of any ORM, a special usage for **Where() method** and **Select() method**, using literal function aka lambda expression.
+------------------------------------------
+<br/>**Atomicsql_golang** is a **ORM library** for Golang having implemented, beside clasical implementation of any ORM, a special usage for **Where() method** and **Select() method**, using literal function aka lambda expression.
 <br/>
-<br/>All of these tricks are done to have **a robust/flexible implementation** in your code.
+<br/>All of these tricks are done to have a **robust**/**flexible implementation** in your code.
 <br/>We have implemented: **DataBase First**, or **Models First**, and these are explained here, in a bottom section.
 ------------------------------------------
 <br/> **Simple query interogation**. 
@@ -10,7 +11,7 @@
 <br/> 
 <br/> In this example, the Where() contains a literal function aka lambda expression. This help the developer to have a robust development and the check of types between data
 ------------------------------------------
-<br/> **Using foreign key in Where + get Models having pointer to relation**. 
+<br/> **Using foreign key in Where** + **get Models having pointer to relation**. 
 <br/> Let's see next Example: 
 <br/> var models = ctx.Users.Qry("label2").Where( func(x *m.User) bool{
 <br/> &emsp;&emsp;&emsp;   return x.RoleNameID.RolName == roleName}).
