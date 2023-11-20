@@ -74,7 +74,7 @@ Description
 <br/>&emsp;	}
 <br/>
 <br/> The engine translate this instruction in a sql query, using precompile lambda instructions placed inside WHERE() + Select() as following: 
-<br/> &emsp; SELECT role.RoleName AS User FROM users usr 
+<br/> &emsp; SELECT usr.*, role.RoleName AS User FROM users usr 
 <br/> &emsp;&emsp;  WHERE role.IsActive = 1 
 <br/> &emsp;&emsp;  LEFT JOIN user_role role on role.ID = usr.UserRole_ID
 <br/>
