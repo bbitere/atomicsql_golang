@@ -16,6 +16,11 @@ Description
 <br/> var models = ctx.Users.Qry("label1").Where( func(x *m.User) bool{
 <br/> &emsp;&emsp;&emsp;   return x.Name == userName}).GetModels();
 <br/> 
+<br/> Compare this kind of instruction with clasical ORM:
+<br/> var models = ctx.Users.Where( "Name", "=", userName).GetModels();
+<br/> 
+<br/> Even the instruction is a little bit shorter, it doesn't check the types between value and field and the field is hardcoded. You don't have any guarantee that this will change appropriately in a refactor.
+<br/> 
 <br/> The engine translate this instruction in a sql query, using precompile lambda instructions placed inside WHERE() as following: 
 <br/> &emsp;SELECT \* FROM users usr 
 <br/> &emsp;&emsp;  WHERE usr.Name = @1 
@@ -91,24 +96,24 @@ Description
 <br/>in directory library\tests\test1\build\win32, 
 <br/>you can find some scripts and you can generate the models for your project as follows:
 <br/>
-<br/>Paradigma **DataBase First**: generate models using **1.updateDb_DataBaseFirst.cmd** and this does next steps:
+<br/>Paradigma **DataBase First**: generate models using **1.updateDb_DataBaseFirst.cmd**  in next steps:
 <br/> - 1. extract directly from DataBase all tables and generate golang models using **DBTool.exe** with flag: -export_db
-<br/> - 2. compile the code and generate lambda expressions, using **goscanner.exe** with flag:-q
+<br/> - 2. compile the code and generate sql queries for lambda expressions, using **goscanner.exe** with flag:-q
 <br/>
 <br/>
-<br/>Paradigma: **Model First**": generate models using **1.updateDb_ModelFirst.cmd** and this does next steps:
+<br/>Paradigma: **Model First**: generate models using **1.updateDb_ModelFirst.cmd** in next steps:
 <br/>- 1. compile the code and collects all Models marked to be in Database and generate 1 json file with these definitions, using **goscanner.exe** with flag:-e.
-<br/>&emsp;&emsp;the marked model should be defined as: type Model struct /*atomicsql-table:"sqlmodel"*/{ ... }
+<br/>&emsp;&emsp;the marked model should be defined as: type Model struct /\*atomicsql-table:"sqlmodel"\*/{ ... }
 <br/>
-<br/>- 2. extract from all jsons definitions of models from dir .\library\tests\test1\_db_jsons  and generate the sql scripts, using **DBTool.exe** with flag: -asql_migration. 
-<br/>&emsp;    the sql scripts reflect the incremental updates for Database using the diferences of json files
+<br/>- 2. extract from all jsons definitions of models from dir .\library\tests\test1\_db_jsons  and generate the incremental sql scripts, using **DBTool.exe** with flag: -asql_migration. 
+<br/>&emsp;    the sql scripts reflect the incremental updates for Database using the diferences of json files from json file to json file.
 <br/>
 <br/>- 3. apply all sql scripts to update Database, using **DBTool.exe** with flag: -migration_db. The directory is located at:
 <br/>&emsp;	.\library\tests\test1\_db_migration
 <br/>
 <br/>- 4. extract directly from DataBase all tables and generate golang models using **DBTool.exe** with flag: -export_db
 <br/>
-<br/>- 5. compile the code and generate lambda expressions, using **goscanner.exe** with flag:-q
+<br/>- 5. compile the code and generate sql queries for lambda expressions, using **goscanner.exe** with flag:-q
 <br/>
 <br/>
 <br/>Both these utilities are used in batch files in a example. Its location is in directory:
