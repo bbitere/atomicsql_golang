@@ -40,7 +40,7 @@ func Arr_InsertAtIndex[T any](a *[]T, index int, value T) {
 
 	} else {
 		*a = append((*a)[:index+1], (*a)[index:]...) // index < len(a)
-		(*a)[index] = value
+		(*a)[index] = value		
 	}
 }
 
@@ -100,6 +100,7 @@ func Util_CloneMapString[T any](dict *map[string]T) map[string]T {
 	}
 	return ret
 }
+type Aaa struct {m []string }
 // utility method: convert from map to array. (values only)
 func Util_FromMapToArray[T any](dict *map[string]T) []T {
 
@@ -107,6 +108,7 @@ func Util_FromMapToArray[T any](dict *map[string]T) []T {
 	for _, val := range *dict {
 		Arr_Append(&ret, val)
 	}
+	
 	return ret
 }
 

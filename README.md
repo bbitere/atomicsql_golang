@@ -84,25 +84,31 @@ Description
 
 <br/>Also, we have 2 utilities running under .net framework 7.0 (also for linux).
 <br/>
-<br/>**goscanner.exe**: 
-<br/>-compile the code and collects all Models marked to be in Database and generate 1 json file with these definitions, using flag:-e.
-<br/>&emsp;   (Step 1 in **Model First**)
-<br/>
-<br/>-compile the code and generate lambda expressions, using flag:-q
-<br/>&emsp;   (Step 5 in **Model First**, but also used in **DataBase First**)
+<br/>**goscanner.exe**: - compile the golang source code and generate depending by case: a json with model defs or sql query for lambda expresions
+<br/>**DBTool.exe**: - do a lot of things related with database or generate golang models files
 <br/>
 <br/>
-<br/>**DBTool.exe**:
+<br/>in directory library\tests\test1\build\win32, 
+<br/>you can find some scripts and you can generate the models for your project as follows:
 <br/>
-<br/>- extract from jsons definitions of models and generate the sql scripts, using flag: -asql_migration. (Step 2 in **Model First**)
+<br/>Paradigma **DataBase First**: generate models using **1.updateDb_DataBaseFirst.cmd** and this does next steps:
+<br/> - 1. extract directly from DataBase all tables and generate golang models using **DBTool.exe** with flag: -export_db
+<br/> - 2. compile the code and generate lambda expressions, using **goscanner.exe** with flag:-q
+<br/>
+<br/>
+<br/>Paradigma: **Model First**": generate models using **1.updateDb_ModelFirst.cmd** and this does next steps:
+<br/>- 1. compile the code and collects all Models marked to be in Database and generate 1 json file with these definitions, using **goscanner.exe** with flag:-e.
+<br/>&emsp;&emsp;the marked model should be defined as: type Model struct /*atomicsql-table:"sqlmodel"*/{ ... }
+<br/>
+<br/>- 2. extract from all jsons definitions of models from dir .\library\tests\test1\_db_jsons  and generate the sql scripts, using **DBTool.exe** with flag: -asql_migration. 
 <br/>&emsp;    the sql scripts reflect the incremental updates for Database using the diferences of json files
 <br/>
-<br/>- apply all sql scripts to update Database, using flag: -migration_db. The directory is located at:
+<br/>- 3. apply all sql scripts to update Database, using **DBTool.exe** with flag: -migration_db. The directory is located at:
 <br/>&emsp;	.\library\tests\test1\_db_migration
-<br/>&emsp;	(Step 3 in **Model First**, but also used in **DataBase First**)
-<br/><br/>
-<br/>- extract directly from DataBase all tables and generate golang models using flag: -export_db
-<br/>&emsp;	(Step 4 in **Model First**, but also used in **DataBase First**)<br/>
+<br/>
+<br/>- 4. extract directly from DataBase all tables and generate golang models using **DBTool.exe** with flag: -export_db
+<br/>
+<br/>- 5. compile the code and generate lambda expressions, using **goscanner.exe** with flag:-q
 <br/>
 <br/>
 <br/>Both these utilities are used in batch files in a example. Its location is in directory:

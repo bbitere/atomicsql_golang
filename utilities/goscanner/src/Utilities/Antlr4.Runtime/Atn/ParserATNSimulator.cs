@@ -8,6 +8,8 @@ using Antlr4.Runtime.Dfa;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Sharpen;
 
+
+
 namespace Antlr4.Runtime.Atn
 {
 
@@ -251,8 +253,11 @@ namespace Antlr4.Runtime.Atn
 
 		/** SLL, LL, or LL + exact ambig detection? */
 
-        //private PredictionMode mode = PredictionMode.SLL;
-		private PredictionMode mode = PredictionMode.LL;        
+        #if PredictionMode_LL
+            private PredictionMode mode = PredictionMode.LL;        
+        #else
+		    private PredictionMode mode = PredictionMode.SLL;
+        #endif
         //private PredictionMode mode = PredictionMode.LL_EXACT_AMBIG_DETECTION;
 
 		/** Each prediction operation uses a cache for merge of prediction contexts.

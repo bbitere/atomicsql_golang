@@ -35,15 +35,14 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.Diagnostics.DebuggerNonUserCode]
 [System.CLSCompliant(false)]
 public partial class GoParserBaseListener : IGoParserListener {
-
-    public virtual void AfterFirstChildEveryRule(ParserRuleContext _context){ }
-
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="GoParser.sourceFile"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-    
+    /// 
+    public virtual void AfterFirstChildEveryRule(ParserRuleContext _context){ }
+
 	public virtual void EnterSourceFile([NotNull] GoParser.SourceFileContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by <see cref="GoParser.sourceFile"/>.

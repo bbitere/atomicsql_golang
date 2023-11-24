@@ -134,3 +134,8 @@ func logPanic(){
 		log.SetOutput(os.Stdout)
 		log.Printf("panic occurred: write error in logfile.txt" )
 }
+
+func test1M(){
+
+
+}

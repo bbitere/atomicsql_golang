@@ -61,6 +61,7 @@
     <DebugType>portable</DebugType>
     <NoWarn>1701;1702;0649</NoWarn>
     <Optimize>False</Optimize>
+    <DefineConstants>$(DefineConstants);PredictionMode_LL</DefineConstants>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="cd ..\&#xD;&#xA;call copy_build.cmd" />

@@ -22,6 +22,7 @@
 //******************************************************************************************************
 
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using goscanner.ConvCommon;
 using goscanner.Metadata;
 using System;
@@ -148,7 +149,13 @@ public partial class PreScanner : ScannerBase
 
     public static void Scan(Options options)
     {
-        Console.WriteLine($"GoScan.exe: Version {options.GetVersion() }");
+        var typeVersion = "";
+        #if PredictionMode_LL
+            typeVersion = "predictive mode LL";
+        #else
+            typeVersion = "predictive mode SLL";            
+        #endif
+        Console.WriteLine($"GoScan.exe ({typeVersion}): Version {options.GetVersion() }");
         Console.WriteLine("Starting Go code pre-scan to update metadata...");
         Console.WriteLine();
 

@@ -33,6 +33,8 @@
 /*
  * A Go grammar for ANTLR 4 derived from the Go Language Specification
  * https://golang.org/ref/spec
+ 
+  @leftfactor{state_field_path_expression}
  */
 
 parser grammar GoParser;
@@ -167,14 +169,14 @@ fallthroughStmt: FALLTHROUGH;
 deferStmt: DEFER expression;
 
 ifStmt:
-    IF (simpleStmt SEMI)? expression block (
+    IF (simpleStmt SEMI)? {setFlagNoCurly();} expression {clearFlagNoCurly();} block (
         ELSE (ifStmt | block)
     )?;
 
 switchStmt: exprSwitchStmt | typeSwitchStmt;
 
 exprSwitchStmt:
-    SWITCH (simpleStmt SEMI)? expression? L_CURLY exprCaseClause* R_CURLY;
+    SWITCH (simpleStmt SEMI)? ({setFlagNoCurly();} expression {clearFlagNoCurly();})? L_CURLY exprCaseClause* R_CURLY;
 
 exprCaseClause: exprSwitchCase COLON statementList?;
 
@@ -207,7 +209,8 @@ forClause:
 rangeClause: (
         expressionList ASSIGN
         | identifierList DECLARE_ASSIGN
-    )? RANGE expression;
+    )? RANGE {setFlagNoCurly();} expression {clearFlagNoCurly();};
+	
 
 goStmt: GO expression;
 
@@ -267,8 +270,8 @@ parameterDecl: identifierList? ELLIPSIS? type_;
 expression:
     primaryExpr
     | unaryExpr
-    | expression mul_op = (
-        STAR
+    | expression {noTerminator()}? mul_op = (
+          STAR
         | DIV
         | MOD
         | LSHIFT
@@ -276,29 +279,30 @@ expression:
         | AMPERSAND
         | BIT_CLEAR
     ) expression
-    | expression add_op = (PLUS | MINUS | OR | CARET) expression
-    | expression rel_op = (
-        EQUALS
+    | expression {noTerminator()}? add_op = (PLUS | MINUS | OR | CARET) expression
+    | expression {noTerminator()}? rel_op = (
+          EQUALS
         | NOT_EQUALS
         | LESS
         | LESS_OR_EQUALS
         | GREATER
         | GREATER_OR_EQUALS
     ) expression
-    | expression LOGICAL_AND expression
-    | expression LOGICAL_OR expression;
+    | expression {noTerminator()}? LOGICAL_AND expression
+    | expression {noTerminator()}? LOGICAL_OR expression;
 
-primaryExpr:
-    operand
+primaryExpr  :
+      operand
     | conversion
     | methodExpr
-    | primaryExpr (
+    | primaryExpr {noTerminator()}? (
         (DOT IDENTIFIER)
         | index
         | slice_
         | typeAssertion
         | arguments
     );
+
 
 unaryExpr:
     primaryExpr
@@ -342,12 +346,23 @@ qualifiedIdent: IDENTIFIER DOT IDENTIFIER;
 compositeLit: literalType literalValue;
 
 literalType:
-    structType
-    | arrayType
-    | L_BRACKET ELLIPSIS R_BRACKET elementType
-    | sliceType
-    | mapType
-    | typeName;
+    {(!isFlagNoCurly())}? 
+	(
+		  structType
+		| arrayType
+		| L_BRACKET ELLIPSIS R_BRACKET elementType
+		| sliceType
+		| mapType
+		| typeName
+	)
+	| 
+	{(isFlagNoCurly())}? 
+	(		 
+		  arrayType
+		| L_BRACKET ELLIPSIS R_BRACKET elementType
+		| sliceType
+		| mapType		
+	);
 
 literalValue: L_CURLY (elementList COMMA?)? R_CURLY;
 

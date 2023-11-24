@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Antlr4.Runtime;
+using goscanner.Metadata;
 
 // JRC: Code cleaned up compared to posted base class
 // ReSharper disable InconsistentNaming
@@ -76,7 +78,15 @@ public abstract class GoParserBase : Parser
     protected bool noTerminatorBetween(int tokenOffset)
     {
         BufferedTokenStream stream = (BufferedTokenStream)tokenStream;
-        IList<IToken> tokens = stream.GetHiddenTokensToLeft(LT(stream, tokenOffset).TokenIndex);
+        var token1 = LT(stream, tokenOffset);
+        if( token1 == null)
+            Debugger.Break();
+
+        IList<IToken> tokens = null;
+        if( tokenOffset < 0 )
+            tokens = stream.GetHiddenTokensToRight(token1.TokenIndex);
+        else
+            tokens = stream.GetHiddenTokensToLeft(token1.TokenIndex);
 
         if (tokens == null)
             return true;
@@ -88,6 +98,29 @@ public abstract class GoParserBase : Parser
         }
 
         return true;
+    }
+
+    bool  bIsFlagNoCurly = false;
+    protected bool isFlagNoCurly() 
+    {
+        return bIsFlagNoCurly;
+    }
+    protected void setFlagNoCurly()
+    {
+        bIsFlagNoCurly = true;
+    }
+    protected void clearFlagNoCurly()
+    {
+        bIsFlagNoCurly = false;
+    }
+    protected bool isTerminatorAfterParams(int tokenOffset)
+    { 
+        return !noTerminatorAfterParams(tokenOffset);
+    }
+
+    protected bool noTerminator()
+    {
+        return noTerminatorBetween(-1);
     }
 
     /// <summary>
