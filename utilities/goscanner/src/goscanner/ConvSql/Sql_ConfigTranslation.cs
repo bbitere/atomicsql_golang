@@ -77,7 +77,7 @@ namespace goscanner.ConvSql
 
                 case "OrmDir_AtomicsqlFunc":        this.OrmDir_AtomicSqlFunc = Utils1.getAbsoluteDirPath( content ); break;
                 case "OrmDir_AtomicsqlFunc_Git":    this.OrmDir_AtomicsqlFunc_Git = content; break;
-                case "OrmDir_AtomicsqlFunc_Metdata":this.OrmDir_AtomicsqlFunc_MetadataFile = content; break;
+                case "OrmDir_AtomicsqlFunc_Metadata":this.OrmDir_AtomicsqlFunc_MetadataFile = content; break;
                     
                 
                 default: 

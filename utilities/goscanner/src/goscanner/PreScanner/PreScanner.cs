@@ -23,6 +23,7 @@
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using goscanner.AST;
 using goscanner.ConvCommon;
 using goscanner.Metadata;
 using System;
@@ -87,6 +88,9 @@ public partial class PreScanner : ScannerBase
         fileMetadata.Functions = m_functions;
         fileMetadata.GlobalVariables = m_globalVariables;
         fileMetadata.LastUpdate = DateTime.UtcNow;
+
+        var packageName = Utils1.getFileName(FolderMetadataFileName);
+        updateTypesStructFunctionsVars( folderMetadata, packageName );
 
     #if !DEBUG
         try

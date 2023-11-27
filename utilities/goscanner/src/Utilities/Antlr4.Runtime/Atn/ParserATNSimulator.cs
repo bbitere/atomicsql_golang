@@ -254,7 +254,7 @@ namespace Antlr4.Runtime.Atn
 		/** SLL, LL, or LL + exact ambig detection? */
 
         #if PredictionMode_LL
-            private PredictionMode mode = PredictionMode.LL;        
+            private PredictionMode mode = PredictionMode.LL;
         #else
 		    private PredictionMode mode = PredictionMode.SLL;
         #endif
