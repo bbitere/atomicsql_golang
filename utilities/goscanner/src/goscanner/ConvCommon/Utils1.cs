@@ -1,13 +1,16 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Gemstone.CharExtensions;
+
 
 namespace goscanner.ConvCommon
 {
@@ -151,6 +154,43 @@ namespace goscanner.ConvCommon
             if( identifName[0] == identifName[0].ToUpper())
                 return true;
             return false;
+        }
+
+        public static string readFile(string filename )
+        {
+            if( filename.StartsWith("http://")
+             || filename.StartsWith("https://"))
+            {
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    try
+                    {
+                        // Trimiteți cererea HTTP GET și obțineți răspunsul
+                        var response = httpClient.GetAsync(filename);
+                        response.Wait(10000);
+                        response.Result.EnsureSuccessStatusCode();
+
+                        // Asigurați-vă că cererea a avut succes
+                        //response.EnsureSuccessStatusCode();
+
+                        // Citirea conținutului răspunsului
+                        var content = response.Result.Content.ReadAsStringAsync();
+                        content.Wait(20000);
+
+                        // Afișați conținutul
+                        return content.Result;
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        Console.WriteLine($"Eroare HTTP: {ex.Message}");
+                    }
+                }
+            }else
+            {
+                string content = File.ReadAllText(filename);
+                return content;
+            }
+            return null;
         }
     }
 }

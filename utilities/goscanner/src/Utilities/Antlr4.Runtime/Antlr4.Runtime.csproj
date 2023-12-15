@@ -37,11 +37,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>lib\Debug</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>lib\Release</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'!='net35'">
@@ -52,5 +52,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='SqlConv|net7.0|AnyCPU'">
     <Optimize>True</Optimize>
+    <DefineConstants>$(DefineConstants);PredictionMode_LL</DefineConstants>
   </PropertyGroup>
 </Project>

@@ -825,8 +825,18 @@ namespace Antlr4.Runtime
             _ctx = (ParserRuleContext)_ctx.Parent;
         }
 
+        bool m_bFoundLocation = false;
         public virtual void EnterOuterAlt(ParserRuleContext localctx, int altNum)
         {
+            var loc =localctx.Start;
+            if( loc != null 
+            && (loc.Line == 947 )
+             && loc.InputStream.SourceName.Contains( "DbQuery_intern.go" ) )
+            {
+                if( !m_bFoundLocation)
+                    m_bFoundLocation = true;
+            }
+
         	localctx.setAltNumber(altNum);
             // if we have new localctx, make sure we replace existing ctx
             // that is previous child of parse tree

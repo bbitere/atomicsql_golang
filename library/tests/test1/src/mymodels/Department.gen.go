@@ -12,7 +12,7 @@
     type Department struct /*atomicsql-table:"departm"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
-            IsActive            int16                         `json:"isActive"`
+            IsActive            bool                          `json:"isActive"`
             NameDep             string                        `json:"name_dep"`
     }
 	*/

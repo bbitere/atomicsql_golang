@@ -26,8 +26,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"asdax",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		8408,
-			EndOff:  		8537,
+			StartOff: 		8414,
+			EndOff:  		8543,
 			Hash:  			"2BD856B2CC369E11ECD3F9D24B3C2A29",
 		},
 		"tst1074-W1": 
@@ -44,8 +44,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst1074",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		8696,
-			EndOff:  		8754,
+			StartOff: 		8702,
+			EndOff:  		8760,
 			Hash:  			"3FC12F87D4546693DF4D2809784E04B9",
 		},
 		"evcy59-W1": 
@@ -61,14 +61,14 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy59",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		10144,
-			EndOff:  		10211,
+			StartOff: 		10150,
+			EndOff:  		10217,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
 		},
 		"evcy59-S2": 
 		{
-			//CompiledQuery: {#@ID@#} AS `ID`, {#@userName@#} AS `UserName`, {#@UUID@#} AS `UUID`, {#@user_psw@#} AS `UserPsw`, {#@userRole_ID@#} AS `UserRole_ID`, {#@time1@#} AS `Time1`, {#@money@#} AS `Money`, {#@userRole_ID.roleName@#} AS `UserRole`,
-			CompiledQuery:`eyNASURAI30gQVMgYElEYCwgeyNAdXNlck5hbWVAI30gQVMgYFVzZXJOYW1lYCwgeyNAVVVJREAjfSBBUyBgVVVJRGAsIHsjQHVzZXJfcHN3QCN9IEFTIGBVc2VyUHN3YCwgeyNAdXNlclJvbGVfSURAI30gQVMgYFVzZXJSb2xlX0lEYCwgeyNAdGltZTFAI30gQVMgYFRpbWUxYCwgeyNAbW9uZXlAI30gQVMgYE1vbmV5YCwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlYA==`,			
+			//CompiledQuery: {#@ID@#} AS "ID", {#@userName@#} AS "UserName", {#@UUID@#} AS "UUID", {#@user_psw@#} AS "UserPsw", {#@userRole_ID@#} AS "UserRole_ID", {#@time1@#} AS "Time1", {#@money@#} AS "Money", {#@userRole_ID.roleName@#} AS "UserRole",
+			CompiledQuery:`eyNASURAI30gQVMgIklEIiwgeyNAdXNlck5hbWVAI30gQVMgIlVzZXJOYW1lIiwgeyNAVVVJREAjfSBBUyAiVVVJRCIsIHsjQHVzZXJfcHN3QCN9IEFTICJVc2VyUHN3IiwgeyNAdXNlclJvbGVfSURAI30gQVMgIlVzZXJSb2xlX0lEIiwgeyNAdGltZTFAI30gQVMgIlRpbWUxIiwgeyNAbW9uZXlAI30gQVMgIk1vbmV5IiwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlIg==`,			
 			SelectSqlFields: map[string]string{
              "ID":"{#@ID@#}",
              "UserName":"{#@userName@#}",
@@ -94,8 +94,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy59",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		10218,
-			EndOff:  		10330,
+			StartOff: 		10224,
+			EndOff:  		10336,
 			Hash:  			"84B8D21C767C75A054571BCA27A1F625",
 		},
 		"evcy58-W1": 
@@ -111,14 +111,14 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy58",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		12042,
-			EndOff:  		12111,
+			StartOff: 		12048,
+			EndOff:  		12117,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
 		},
 		"evcy58-S2": 
 		{
-			//CompiledQuery: {#@userRole_ID.roleName@#} AS `UserRoleName`, MIN( {#@time1@#} ) AS `MinTime1`, SUM( {#@money@#} ) AS `SumMoney`,
-			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlTmFtZWAsIE1JTiggeyNAdGltZTFAI30gKSBBUyBgTWluVGltZTFgLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgYFN1bU1vbmV5YA==`,			
+			//CompiledQuery: {#@userRole_ID.roleName@#} AS "UserRoleName", MIN( {#@time1@#} ) AS "MinTime1", SUM( {#@money@#} ) AS "SumMoney",
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlTmFtZSIsIE1JTiggeyNAdGltZTFAI30gKSBBUyAiTWluVGltZTEiLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgIlN1bU1vbmV5Ig==`,			
 			SelectSqlFields: map[string]string{
              "UserRoleName":"{#@userRole_ID.roleName@#}",
              "MinTime1":"MIN( {#@time1@#} )",
@@ -134,8 +134,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy58",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		12124,
-			EndOff:  		12338,
+			StartOff: 		12130,
+			EndOff:  		12344,
 			Hash:  			"8B5687E0DE678F62832408F1E304EFCC",
 		},
 		"tst253-V1": 
@@ -151,8 +151,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst253",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		13551,
-			EndOff:  		13610,
+			StartOff: 		13557,
+			EndOff:  		13616,
 			Hash:  			"C9B74D6F70CBFC75B718CFFD7208EBE3",
 		},
 		"tst254-W1": 
@@ -168,8 +168,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst254",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		14641,
-			EndOff:  		14700,
+			StartOff: 		14647,
+			EndOff:  		14706,
 			Hash:  			"2FB1357DACB09276B8F66871D9084958",
 		},
 		"tst254-X2": 
@@ -185,8 +185,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst254",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		14720,
-			EndOff:  		14781,
+			StartOff: 		14726,
+			EndOff:  		14787,
 			Hash:  			"BACD3298080469A33137FE4B42BF083B",
 		},"tst1_066-W1": 
 		{
@@ -207,8 +207,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"tst1_066-S2": 
 		{
-			//CompiledQuery: {#@userRole_ID.roleName@#} AS `UserRoleName`, MIN( {#@time1@#} ) AS `MinTime1`, SUM( {#@money@#} ) AS `SumMoney`,
-			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlTmFtZWAsIE1JTiggeyNAdGltZTFAI30gKSBBUyBgTWluVGltZTFgLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgYFN1bU1vbmV5YA==`,			
+			//CompiledQuery: {#@userRole_ID.roleName@#} AS "UserRoleName", MIN( {#@time1@#} ) AS "MinTime1", SUM( {#@money@#} ) AS "SumMoney",
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlTmFtZSIsIE1JTiggeyNAdGltZTFAI30gKSBBUyAiTWluVGltZTEiLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgIlN1bU1vbmV5Ig==`,			
 			SelectSqlFields: map[string]string{
              "UserRoleName":"{#@userRole_ID.roleName@#}",
              "MinTime1":"MIN( {#@time1@#} )",
@@ -269,6 +269,6 @@ func (_this *DBContext) LoadCompiledQuery(){
 	_this.DBContextBase.ProcessCompiledQuery( &_this.DBContextBase.CompiledSqlQueries, false );
 }
 
-func (_this *DBContext) CompiledQueries_GetDialectName() string { return "mysql"; }
+func (_this *DBContext) CompiledQueries_GetDialectName() string { return "postgres"; }
 
 

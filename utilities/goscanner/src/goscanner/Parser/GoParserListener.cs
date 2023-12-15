@@ -19,7 +19,6 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using IParseTreeListener = Antlr4.Runtime.Tree.IParseTreeListener;
 using IToken = Antlr4.Runtime.IToken;
@@ -35,8 +34,6 @@ public interface IGoParserListener : IParseTreeListener {
 	/// Enter a parse tree produced by <see cref="GoParser.sourceFile"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-    /// 
-    void AfterFirstChildEveryRule(ParserRuleContext _context);
 	void EnterSourceFile([NotNull] GoParser.SourceFileContext context);
 	/// <summary>
 	/// Exit a parse tree produced by <see cref="GoParser.sourceFile"/>.

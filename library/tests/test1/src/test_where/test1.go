@@ -30,7 +30,9 @@ func Test1_GetConnectionString() atmsql.TConnectionString{
 }
 */
 
+
 func Test1_init() (*orm.DBContext, error, string) {
+
 
 	var connString = Test1_GetConnectionString()
 	ctxBase, err := atmsql.OpenDB(connString, 10, 10)
@@ -42,6 +44,7 @@ func Test1_init() (*orm.DBContext, error, string) {
 	if err != nil {
 		return nil, err, "initTest1"
 	}
+
 	Test_cleanUp(ctx)
 	return ctx, err, "initTest1"
 }

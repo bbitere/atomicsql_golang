@@ -383,17 +383,72 @@ public abstract partial class ScannerBase : GoParserBaseListener
                     {
                         scanDirectory(bTranslate, options.ConvertSql.SourcePathDir2, options, showParseTree, createNewScanner, fileNeedsScan, handleSkippedScan);
                     }
+                    if( options.ConvertSql.OrmDir_Atomicsql_Git != null 
+                     && options.ConvertSql.OrmDir_Atomicsql_MetadataFile != null )
+                    {
+                        var folder = PreScanner.GetFolderMetadataByMetadataFileName( 
+                                            options, options.ConvertSql.OrmDir_Atomicsql_MetadataFile);
+
+                        if( folder != null )
+                        {
+                            options.ConvertSql.OrmDirAtomicsql_DirMetadata = folder;
+                        }
+                    }else
                     if( options.ConvertSql.OrmDir_AtomicSql!= null )
                     {
                         scanDirectory(bTranslate, options.ConvertSql.OrmDir_AtomicSql, 
                                         options, showParseTree, createNewScanner, 
                                         ScanOrmMetadataOutOfDate, handleSkippedScan);
+
+                        if( options.ConvertSql.OrmDirAtomicsql_DirMetadata == null)
+                        {
+                            var message = "";
+                            FolderMetadata folder = null;
+                            var r = PreScanner.MetadataOutOfDate1( options, 
+                                options.ConvertSql.OrmDir_AtomicSql+Path.DirectorySeparatorChar+"Array.go", out message, ref folder);
+
+                            if( folder != null )
+                            {
+                                options.ConvertSql.OrmDirAtomicsql_DirMetadata = folder;
+                            }
+                        }
+                    }else
+                    {
+                        Console.WriteLine("directory or metadata file for atomicsql is not set");
                     }
+
+                    if( options.ConvertSql.OrmDir_AtomicsqlFunc_Git != null 
+                     && options.ConvertSql.OrmDir_AtomicsqlFunc_MetadataFile != null )
+                    {
+                        var folder = PreScanner.GetFolderMetadataByMetadataFileName( 
+                                            options, options.ConvertSql.OrmDir_AtomicsqlFunc_MetadataFile);
+
+                        if( folder != null )
+                        {
+                            options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata = folder;
+                        }
+                    }else
                     if( options.ConvertSql.OrmDir_AtomicSqlFunc!= null )
                     {
                         scanDirectory(bTranslate, options.ConvertSql.OrmDir_AtomicSqlFunc, 
                                         options, showParseTree, createNewScanner, 
                                         ScanOrmFuncMetadataOutOfDate, handleSkippedScan);
+
+                        if( options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata == null)
+                        {
+                            var message = "";
+                            FolderMetadata folder = null;
+                            var r = PreScanner.MetadataOutOfDate1( options, 
+                                options.ConvertSql.OrmDir_AtomicSqlFunc+Path.DirectorySeparatorChar+"DbSqlFuncs.go", out message, ref folder);
+
+                            if( folder != null )
+                            {
+                                options.ConvertSql.OrmDirAtomicsqlFunc_DirMetadata = folder;
+                            }
+                        }
+                    }else
+                    {
+                        Console.WriteLine("directory or metadata file for atomicsql is not set");
                     }
 
                     foreach( var file in options.ConvertSql.IncludeFiles  )
@@ -545,10 +600,13 @@ public abstract partial class ScannerBase : GoParserBaseListener
             }
         }
 
-        if (s_processedFiles.Contains(fileName))
-            return;
+        //if( !options.bForceScanDirectory )
+        {
+            if (s_processedFiles.Contains(fileName))
+                return;
 
-        s_processedFiles.Add(fileName);
+            s_processedFiles.Add(fileName);
+        }
 
         if (!fileNeedsScan(options, fileName, out string message))
         {
@@ -771,13 +829,20 @@ public abstract partial class ScannerBase : GoParserBaseListener
         if (folderMetadataFileName.Equals(s_currentFolderMetadataFileName, StringComparison.OrdinalIgnoreCase) && s_currentFolderMetadata is not null)
             return s_currentFolderMetadata;
 
+        return GetFolderMetadataByMetadataFileName( options, folderMetadataFileName);
+    }
+    protected static FolderMetadata GetFolderMetadataByMetadataFileName(
+        Options options, string folderMetadataFileName)
+    {
+        
+
         FolderMetadata folderMetadata;
 
     #if !DEBUG
         try
         {
     #endif
-        string serializedData = File.ReadAllText(folderMetadataFileName);
+        string serializedData = Utils1.readFile(folderMetadataFileName);
         folderMetadata = JsonSerializer.Deserialize<FolderMetadata>(serializedData, GetSerializationOptions());
     #if !DEBUG
         }
@@ -985,7 +1050,7 @@ public abstract partial class ScannerBase : GoParserBaseListener
         warning = loadWarning.ToString();
         return null;
     }
-    private static void updateTypesStructFunctionsVars( FolderMetadata metadataFolder, string packageName)
+    protected static void updateTypesStructFunctionsVars( FolderMetadata metadataFolder, string packageName)
     {
         foreach( var file in metadataFolder.Files)
         {

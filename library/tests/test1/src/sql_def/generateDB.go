@@ -5,6 +5,9 @@ import (
 	"os"
 	"strconv"
 
+	//"sync"
+	//"time"
+
 	///importer "go/importer"
 
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
@@ -26,14 +29,15 @@ type TestsResult struct {
 
 var testsResult TestsResult
 
-func main() {
-
-	var counter = 0
-
-	Exec_test(test1.Test1_01, &counter)
-	Exec_test(test1.Test1_02N, &counter)
-	Exec_test(test1.Test1_02, &counter)
-	Exec_test(test1.Test1_03, &counter)
+func main(){
+	
+	test1M();
+	var counter = 0;
+	
+	Exec_test( test1.Test1_01, &counter );
+	Exec_test( test1.Test1_02N, &counter );
+	Exec_test( test1.Test1_02, &counter );
+	Exec_test( test1.Test1_03, &counter );
 	//Exec_test( test1.Test1_0, &counter );
 	Exec_test(test1.Test1_05, &counter)
 	//orm.Arr_Append( &arrTests, test1.Test1_06 );
@@ -132,47 +136,111 @@ func logPanic() {
 			var linesCleaned = strings.Join(lines, "\n")
 			log.Printf("panic occurred: %v %s", err, linesCleaned)
 		}
-	}
-	log.SetOutput(os.Stdout)
-	log.Printf("panic occurred: write error in logfile.txt")
+		log.SetOutput(os.Stdout)
+		log.Printf("panic occurred: write error in logfile.txt" )
 }
 
-func mytest() int {
-
-	var s = "turnig"
-	var n = 2
-	var arrInt = parseString(s)
-	var sum int64 = 0
-
-	for iLoop := 0; iLoop < n; iLoop++ {
-
-		sum = 0
-		for i := 0; i < len(arrInt); i++ {
-			sum += int64(arrInt[i])
-		}
-		var sumStr = strconv.FormatInt(sum, 10)
-		arrInt = parseString(sumStr)
-	}
-	return int(sum)
+/*
+type ChannelData struct{
+	data string
 }
 
-func parseString(s string) []int {
-
-	s = strings.ToLower(s)
-
-	var ret []int = []int{}
-
-	for i := 0; i < len(s); i++ {
-		var ch = s[i]
-		if '0' < ch && ch < '9' {
-
-			var chInt int = int(ch - '0')
-			ret = append(ret, chInt)
-		} else {
-			var chInt = int(ch - 'a' + 1)
-			ret = append(ret, (int)(chInt/10))
-			ret = append(ret, (int)(chInt%10))
-		}
-	}
-	return ret
+type Channel struct{
+	ch chan ChannelData
 }
+func new_ChannelAcquire(permits int) *Channel{
+	
+	return &Channel{ 
+		ch : make( chan ChannelData, permits),
+	}
+}
+func (This *Channel) Acquire(){
+
+	This.ch <- ChannelData{ data: "data1"}
+}
+func (This *Channel) Release(){
+
+	<- This.ch
+}
+func (This *Channel) Send(msg string){
+
+	This.ch <- ChannelData{ data: msg}
+}
+
+
+func WgDone(wg* sync.WaitGroup, id int){ 
+	
+	var msg = fmt.Sprintf("routine %d - decrease counter ", id );
+	fmt.Println(msg);
+	wg.Done();
+}
+
+var wg sync.WaitGroup;
+var mutex1 sync.Mutex
+
+func taskRoutine( id int, channelComm *Channel) {
+
+	defer WgDone( &wg, id );		
+	var data = <- channelComm.ch
+	if( data.data != "" ){
+
+		var msg1 = fmt.Sprintf("routine %s has msg", data.data );
+		fmt.Println(msg1);
+	}
+	mutex1.Lock()
+	{
+		var msg1 = fmt.Sprintf("routine %d has the permission", id );
+		fmt.Println(msg1);
+
+		time.Sleep( time.Second );
+		var msg2 = fmt.Sprintf("routine %d realease the permission", id );
+		fmt.Println(msg2);
+	}
+	mutex1.Unlock()
+}
+
+func test1M(){
+
+	test2M();
+	test3M();
+}
+
+func test3M(){
+
+	var channelsComm = []*Channel{};
+	for i := 0; i < 3; i++{
+
+		wg.Add( i )
+		var ch = new_ChannelAcquire(0);
+		atmsql.Arr_Append( &channelsComm, ch );
+
+		go taskRoutine( i, ch );
+
+	}
+	time.Sleep( 2*time.Second );
+	for i := 0; i < 3; i++{
+
+		channelsComm[i].Send("data1");
+	}
+	
+	//semaphore.Release()
+	wg.Wait();
+	
+}
+
+func test2M(){
+
+	var channelComm = new_ChannelAcquire(0)
+
+	go func(){
+		time.Sleep( 2*time.Second);
+		close( channelComm.ch )
+	}()
+
+	fmt.Println("wait");
+	<- channelComm.ch
+	fmt.Println("close");
+}
+/*/
+func test1M(){}
+//*/
