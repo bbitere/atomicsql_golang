@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	///importer "go/importer"
 
@@ -16,121 +17,162 @@ import (
 	"strings"
 )
 
-type TestsResult struct{
-
-	Succeded 	int
-	Totals	 	int
-	Crashed 	int 
-	Failed 		int 
+type TestsResult struct {
+	Succeded int
+	Totals   int
+	Crashed  int
+	Failed   int
 }
+
 var testsResult TestsResult
 
-func main(){
-	
-	var counter = 0;
-	
-	Exec_test( test1.Test1_01, &counter );
-	Exec_test( test1.Test1_02N, &counter );
-	Exec_test( test1.Test1_02, &counter );
-	Exec_test( test1.Test1_03, &counter );
+func main() {
+
+	var counter = 0
+
+	Exec_test(test1.Test1_01, &counter)
+	Exec_test(test1.Test1_02N, &counter)
+	Exec_test(test1.Test1_02, &counter)
+	Exec_test(test1.Test1_03, &counter)
 	//Exec_test( test1.Test1_0, &counter );
-	Exec_test( test1.Test1_05, &counter );
+	Exec_test(test1.Test1_05, &counter)
 	//orm.Arr_Append( &arrTests, test1.Test1_06 );
 	//orm.Arr_Append( &arrTests, test1.Test1_07 );
-	Exec_test( test1.Test1_08, &counter );
-	Exec_test( test1.Test1_09, &counter );
-	Exec_test( test1.Test1_10, &counter );
+	Exec_test(test1.Test1_08, &counter)
+	Exec_test(test1.Test1_09, &counter)
+	Exec_test(test1.Test1_10, &counter)
 
-	Exec_test( test1_crud.Tst_Example_CreateUser, &counter );
-	Exec_test( test1_crud.Tst_Example_Create2Users, &counter );
-	Exec_test( test1_crud.Tst_Example_RetrieveUser, &counter );
-	Exec_test( test1_crud.Tst_Example_RetrieveUsers, &counter );
+	Exec_test(test1_crud.Tst_Example_CreateUser, &counter)
+	Exec_test(test1_crud.Tst_Example_Create2Users, &counter)
+	Exec_test(test1_crud.Tst_Example_RetrieveUser, &counter)
+	Exec_test(test1_crud.Tst_Example_RetrieveUsers, &counter)
 
-	Exec_test( test1_crud.Tst_Example_DeleteUser, &counter );
-	Exec_test( test1_crud.Tst_Example_DeleteUsers, &counter );
+	Exec_test(test1_crud.Tst_Example_DeleteUser, &counter)
+	Exec_test(test1_crud.Tst_Example_DeleteUsers, &counter)
 
-	Exec_test( test1_crud.Tst_Example_UpdateUser, &counter );
-	Exec_test( test1_crud.Tst_Example_UpdateUsers, &counter );
+	Exec_test(test1_crud.Tst_Example_UpdateUser, &counter)
+	Exec_test(test1_crud.Tst_Example_UpdateUsers, &counter)
 
-	Exec_test( test1_crud.Tst_Example_CreateUserRelation, &counter );
-	Exec_test( test1_where.TestMisc_01, &counter );
-	Exec_test( test1_where.Test1Rtm_10, &counter );
-	Exec_test( test1_where.Test1_11, &counter );
-	Exec_test( test1_where.Test1_12, &counter );
+	Exec_test(test1_crud.Tst_Example_CreateUserRelation, &counter)
+	Exec_test(test1_where.TestMisc_01, &counter)
+	Exec_test(test1_where.Test1Rtm_10, &counter)
+	Exec_test(test1_where.Test1_11, &counter)
+	Exec_test(test1_where.Test1_12, &counter)
 
-	printResults();
-	
+	printResults()
+
+	mytest()
+
 }
 
-func Exec_test(fnTest test1.TestFunc, pIndex *int){
+func Exec_test(fnTest test1.TestFunc, pIndex *int) {
 
-	(*pIndex)++;
-	var ret = 0;
-	var err error;
-	var msg = "";
-	ret, err, msg = fnTest( *pIndex, false );
-			
-	printTest(ret, msg, err, *pIndex);
+	(*pIndex)++
+	var ret = 0
+	var err error
+	var msg = ""
+	ret, err, msg = fnTest(*pIndex, false)
+
+	printTest(ret, msg, err, *pIndex)
 }
 
-func printResults(){
+func printResults() {
 
-	fmt.Println("**************************");
+	fmt.Println("**************************")
 	fmt.Printf("Tests Results: %d succeded/ %d totals", testsResult.Succeded, testsResult.Totals)
-	fmt.Println("");
+	fmt.Println("")
 }
 
-func printTest(codeSucceded int, testName string, err error, idx int){
-		
-	testsResult.Totals++;
-	
-	//colorRed := "\033[31m"
-    //colorGreen := "\033[32m"
-    //colorYellow := "\033[33m"
-    //colorBlue := "\033[34m"
-    colorPurple := "\033[35m"
-    colorCyan := "\033[36m"
-    //colorWhite := "\033[37m"
-	
-	if( codeSucceded == -1 ){
-		testsResult.Crashed++;		
-		fmt.Println( string( colorCyan), fmt.Errorf("Test %d crash -> %s", idx, testName));
-		fmt.Println("");		
-	}else
-	if( codeSucceded == 0 ){
+func printTest(codeSucceded int, testName string, err error, idx int) {
 
-		testsResult.Failed++;
-		fmt.Println( string( colorPurple ), fmt.Errorf("Test %d failed -> %s", idx, testName));
-		fmt.Println("");		
-	}else {
-		testsResult.Succeded++;
+	testsResult.Totals++
+
+	//colorRed := "\033[31m"
+	//colorGreen := "\033[32m"
+	//colorYellow := "\033[33m"
+	//colorBlue := "\033[34m"
+	colorPurple := "\033[35m"
+	colorCyan := "\033[36m"
+	//colorWhite := "\033[37m"
+
+	if codeSucceded == -1 {
+		testsResult.Crashed++
+		fmt.Println(string(colorCyan), fmt.Errorf("Test %d crash -> %s", idx, testName))
+		fmt.Println("")
+	} else if codeSucceded == 0 {
+
+		testsResult.Failed++
+		fmt.Println(string(colorPurple), fmt.Errorf("Test %d failed -> %s", idx, testName))
+		fmt.Println("")
+	} else {
+		testsResult.Succeded++
 		fmt.Printf("Test %d passed -> %s", idx, testName)
-		fmt.Println("");
+		fmt.Println("")
 	}
 }
 
-func logPanic(){
+func logPanic() {
 
-	file, err1 := os.OpenFile("logfile.txt", os.O_APPEND, os.ModeAppend );
-		if err1 != nil {
-			log.Fatal("Cannot create log file: ", err1)
-		}
-		defer file.Close()
-		log.SetOutput(file)
+	file, err1 := os.OpenFile("logfile.txt", os.O_APPEND, os.ModeAppend)
+	if err1 != nil {
+		log.Fatal("Cannot create log file: ", err1)
+	}
+	defer file.Close()
+	log.SetOutput(file)
 
-		if err := recover(); err != nil {
-			if( err != nil ){
+	if err := recover(); err != nil {
+		if err != nil {
 
-				var linesText = string( debug.Stack() );
-				var lines     = strings.Split( linesText, "\n")
+			var linesText = string(debug.Stack())
+			var lines = strings.Split(linesText, "\n")
 
-				for i := 0; i < len(lines) && i <= 6; i++ {
-					atmsql.Arr_RemoveAt( &lines, 0 )
-				}
-				var linesCleaned = strings.Join( lines, "\n")
-				log.Printf("panic occurred: %v %s", err, linesCleaned )
+			for i := 0; i < len(lines) && i <= 6; i++ {
+				atmsql.Arr_RemoveAt(&lines, 0)
 			}
+			var linesCleaned = strings.Join(lines, "\n")
+			log.Printf("panic occurred: %v %s", err, linesCleaned)
 		}
-		log.SetOutput(os.Stdout)
-		log.Printf("panic occurred: write error in logfile.txt" )
+	}
+	log.SetOutput(os.Stdout)
+	log.Printf("panic occurred: write error in logfile.txt")
+}
+
+func mytest() int {
+
+	var s = "turnig"
+	var n = 2
+	var arrInt = parseString(s)
+	var sum int64 = 0
+
+	for iLoop := 0; iLoop < n; iLoop++ {
+
+		sum = 0
+		for i := 0; i < len(arrInt); i++ {
+			sum += int64(arrInt[i])
+		}
+		var sumStr = strconv.FormatInt(sum, 10)
+		arrInt = parseString(sumStr)
+	}
+	return int(sum)
+}
+
+func parseString(s string) []int {
+
+	s = strings.ToLower(s)
+
+	var ret []int = []int{}
+
+	for i := 0; i < len(s); i++ {
+		var ch = s[i]
+		if '0' < ch && ch < '9' {
+
+			var chInt int = int(ch - '0')
+			ret = append(ret, chInt)
+		} else {
+			var chInt = int(ch - 'a' + 1)
+			ret = append(ret, (int)(chInt/10))
+			ret = append(ret, (int)(chInt%10))
+		}
+	}
+	return ret
 }
