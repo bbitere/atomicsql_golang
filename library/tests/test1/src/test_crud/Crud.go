@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+	atmf "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
 	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/src/atomicsql_ormdefs"
 	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
 	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
@@ -496,6 +497,33 @@ func Example_RetrieveUserRelation2(ctx *orm.DBContext, uuid string) (*m.User, er
 				x.UUID == uuid
 		}).
 		GetFirstModelRel(ctx.User_.UserRoleID.Def())
+	if err1 != nil {
+		return nil, err1
+	}
+
+	if model != nil && model.UserRoleID != nil && model.UserRoleID.RoleName == "admin" {
+
+	}
+
+	return model, nil
+}
+
+func Example_RetrieveUserRelation3(ctx *orm.DBContext, uuid string) (*m.User, error) {
+
+	//Nopp();
+	var model, err1 = ctx.User.Qry("tst1340").
+		WhereSubQ(func(q atmsql.IDBQuery, x *m.User) bool {
+
+			ids, _ := ctx.User.QryS("ids", q).
+				Where(func(y *m.User) bool {
+					return y.UserRoleID.IsActive == true &&
+						y.UserRoleID.RoleName == "admin" &&
+						y.UUID == x.UUID && x.UserRoleID.IsActive
+				}).GetRowsAsFieldInt(ctx.User_.ID)
+
+			return q.IsRTM() && (x.UserRoleID.IsActive == true &&
+				atmf.Sql_ArrayContain(ids, int64(x.ID)))
+		}).GetFirstModelRel(ctx.User_.UserRoleID.Def())
 	if err1 != nil {
 		return nil, err1
 	}

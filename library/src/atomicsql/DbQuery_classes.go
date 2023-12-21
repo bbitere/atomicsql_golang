@@ -27,7 +27,7 @@ type DBSqlJoin struct {
 }
 
 /*#PHPARG=[ String ];*/
-func (_this *DBSqlJoin) getSqlTxt( itm string ) string {
+func (_this *DBSqlJoin) getSqlTxt(itm string) string {
 	return _this.sql
 }
 
@@ -38,9 +38,9 @@ type DBSqlJoinCollection struct {
 	_joins map[string]*DBSqlJoin
 }
 
-func (_this *DBSqlJoinCollection) Constr() *DBSqlJoinCollection{
-	_this._joins = nil;//make(map[string]*DBSqlJoin)
-	return _this;
+func (_this *DBSqlJoinCollection) Constr() *DBSqlJoinCollection {
+	_this._joins = nil //make(map[string]*DBSqlJoin)
+	return _this
 }
 
 type DBSqlQuery[T IGeneric_MODEL] struct {
@@ -52,7 +52,8 @@ type DBSqlQuery[T IGeneric_MODEL] struct {
 	m_operand1 string
 	m_operand2 any
 	/*#PHPARG=[ Delegate1< BOOL, T> ];*/
-	fnWhere func(x *T) bool
+	fnWhere  func(x *T) bool
+	fnWhereS func(q IDBQuery, x *T) bool
 
 	/*#PHPARG=[ Array<DBSqlQuery> ];*/
 	m_listOperands []*DBSqlQuery[T]
@@ -67,21 +68,21 @@ func (_this *DBSqlQuery[T]) Constr( /*#String*/ text string) *DBSqlQuery[T] {
 	return _this
 }
 
-func (_this *DBSqlQuery[T]) cloneSqlQuery_GenModel()*DBSqlQuery[IGeneric_MODEL] {
+func (_this *DBSqlQuery[T]) cloneSqlQuery_GenModel() *DBSqlQuery[IGeneric_MODEL] {
 
-	var newQ = (new (DBSqlQuery[IGeneric_MODEL])).Constr(_this.text);
-	newQ.text = _this.text;
+	var newQ = (new(DBSqlQuery[IGeneric_MODEL])).Constr(_this.text)
+	newQ.text = _this.text
 
-	newQ.m_op = _this.m_op;
-	newQ.m_field1  = _this.m_field1;
-	newQ.m_field2  = _this.m_field2 ;
-	newQ.m_operand1 = _this.m_operand1;
-	newQ.m_operand2 = _this.m_operand2;
-	newQ.m_listOperandsStr = _this.m_listOperandsStr;
+	newQ.m_op = _this.m_op
+	newQ.m_field1 = _this.m_field1
+	newQ.m_field2 = _this.m_field2
+	newQ.m_operand1 = _this.m_operand1
+	newQ.m_operand2 = _this.m_operand2
+	newQ.m_listOperandsStr = _this.m_listOperandsStr
 
-	//fnWhere 
-	//m_listOperands 
-	return newQ;
+	//fnWhere
+	//m_listOperands
+	return newQ
 }
 
 /*#PHPARG=[ String ];*/
@@ -90,36 +91,34 @@ func (_this *DBSqlQuery[T]) getText() string {
 }
 
 type RuntimeCollection[T IGeneric_MODEL] struct {
-	structDefs []*TDefIncludeRelation
-	modelsCollection []*T;
+	structDefs       []*TDefIncludeRelation
+	modelsCollection []*T
 }
 
-type IRuntimeCollection[T IGeneric_MODEL]  interface {
-
-	DeleteModels( models []*T ) bool;
-	InsertModels( models []*T );
-	InsertOrUpdateModels( models []*T );
-	GetModels() []*T;
+type IRuntimeCollection[T IGeneric_MODEL] interface {
+	DeleteModels(models []*T) bool
+	InsertModels(models []*T)
+	InsertOrUpdateModels(models []*T)
+	GetModels() []*T
 }
-
 
 type TModel[T IGeneric_MODEL] struct {
-	model 	*T;
-	dict 	map[string]string;
+	model *T
+	dict  map[string]string
 }
-
 
 type RuntimeQuery[T IGeneric_MODEL] struct {
 	structDefs []*TDefIncludeRelation
-	models [] *T
+	models     []*T
 
 	// the collection where can we can insert, update, delete
-	collection *IRuntimeCollection[T];
+	collection *IRuntimeCollection[T]
 }
-func (_this *RuntimeQuery[T]) Constr( models [] *T, structDefs []*TDefIncludeRelation, collection *IRuntimeCollection[T]) *RuntimeQuery[T] {
 
-	_this.models = models;
-	_this.structDefs = structDefs;
-	_this.collection = collection;
-	return _this;
+func (_this *RuntimeQuery[T]) Constr(models []*T, structDefs []*TDefIncludeRelation, collection *IRuntimeCollection[T]) *RuntimeQuery[T] {
+
+	_this.models = models
+	_this.structDefs = structDefs
+	_this.collection = collection
+	return _this
 }

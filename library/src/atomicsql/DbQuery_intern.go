@@ -840,7 +840,11 @@ func (_this *DBQuery[T]) checkMySqlError( /*#String*/ sqlQuery string, err error
  */
 func (_this *DBQuery[T]) generateSqlText( /*#DBSqlQuery< T >*/ query *DBSqlQuery[T]) string {
 
-	if query.fnWhere != nil {
+	if query.fnWhereS != nil {
+
+		query1 := _this._whereGenericS(query.fnWhereS) //"(opText1) AND (opText2)" );
+		return query1.getText()
+	} else if query.fnWhere != nil {
 
 		query1 := _this._whereGeneric(query.fnWhere) //"(opText1) AND (opText2)" );
 		return query1.getText()
@@ -2517,8 +2521,53 @@ func (_this *DBQuery[T]) _whereGeneric(fnWhere func(x *T) bool) *DBSqlQuery[T] {
 	return nil
 }
 
+func (_this *DBQuery[T]) _whereGenericS(fnWhereS func(q IDBQuery, x *T) bool) *DBSqlQuery[T] {
+
+	var ctx = _this.tableInst.m_ctx
+	//foreach( SQL_WHERE_QUERIES as file =>sqlQueries )
+	var sqlQueries = ctx.CompiledSqlQueries
+
+	var fullTag = _this.myTag + "-" + _this.subTag
+	var query, hasQuery = sqlQueries[fullTag]
+	if hasQuery {
+
+		var sql, _ = _this.getSqlNativeMethod(query, unsafe.Pointer(&fnWhereS), nil)
+
+		var ret = (new(DBSqlQuery[T])).Constr(sql) //"(opText1) AND (opText2)" );
+		ret.fnWhereS = fnWhereS
+
+		if _this.m_queryAND == nil {
+
+			_this.m_queryAND = (new(DBSqlQuery[T])).Constr("") //"(opText1) AND (opText2)" );
+			_this.m_queryAND.m_op = "AND"
+			_this.m_queryAND.m_listOperands = []*DBSqlQuery[T]{}
+		}
+
+		array_push(&_this.m_queryAND.m_listOperands, ret)
+
+		return ret
+	}
+	log.Printf("DBQuery::where() not found signature, tag: %s! Recompile the project, to regenerate schema", fullTag)
+	//UtilLog::errorMsg("DBSqlProvider::where() not found signature! Recompile the project, to regenerate DBSchemaAdapter_MySqlProc.gen.php");
+	return nil
+}
+
 func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSelect func(x *T) *V) *DBQuery[V] {
 
+	if _this.pRTM != nil {
+
+	}
+	return _Select_query1[T, V](_this, unsafe.Pointer(&fnSelect))
+}
+func _Select_queryS[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSelectS func(q IDBQuery, x *T) *V) *DBQuery[V] {
+
+	if _this.pRTM != nil {
+
+	}
+	return _Select_query1[T, V](_this, unsafe.Pointer(&fnSelectS))
+}
+
+func _Select_query1[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], pointerFnSelect unsafe.Pointer) *DBQuery[V] {
 	var ctx = _this.tableInst.m_ctx
 
 	var tbl1 = (new(DBTable[V])).Constr(
@@ -2550,7 +2599,7 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSele
 		query.newJoinCollection()
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ)
 
-		var sql, _selectSqlFields = query.getSqlNativeMethod(compiledDataQuery, unsafe.Pointer(&fnSelect), query.excludeLangFieldsFromGroupBy)
+		var sql, _selectSqlFields = query.getSqlNativeMethod(compiledDataQuery, pointerFnSelect, query.excludeLangFieldsFromGroupBy)
 
 		query.querySelectNewRecord_Text = sql
 		query.querySelectNewRecord_isAgregator = false

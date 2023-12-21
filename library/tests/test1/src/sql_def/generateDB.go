@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 
 	//"sync"
 	//"time"
@@ -29,15 +28,15 @@ type TestsResult struct {
 
 var testsResult TestsResult
 
-func main(){
-	
-	test1M();
-	var counter = 0;
-	
-	Exec_test( test1.Test1_01, &counter );
-	Exec_test( test1.Test1_02N, &counter );
-	Exec_test( test1.Test1_02, &counter );
-	Exec_test( test1.Test1_03, &counter );
+func main() {
+
+	test1M()
+	var counter = 0
+
+	Exec_test(test1.Test1_01, &counter)
+	Exec_test(test1.Test1_02N, &counter)
+	Exec_test(test1.Test1_02, &counter)
+	Exec_test(test1.Test1_03, &counter)
 	//Exec_test( test1.Test1_0, &counter );
 	Exec_test(test1.Test1_05, &counter)
 	//orm.Arr_Append( &arrTests, test1.Test1_06 );
@@ -65,7 +64,7 @@ func main(){
 
 	printResults()
 
-	mytest()
+	//mytest()
 
 }
 
@@ -137,73 +136,77 @@ func logPanic() {
 			log.Printf("panic occurred: %v %s", err, linesCleaned)
 		}
 		log.SetOutput(os.Stdout)
-		log.Printf("panic occurred: write error in logfile.txt" )
+		log.Printf("panic occurred: write error in logfile.txt")
+	}
 }
 
 /*
-type ChannelData struct{
-	data string
-}
-
-type Channel struct{
-	ch chan ChannelData
-}
-func new_ChannelAcquire(permits int) *Channel{
-	
-	return &Channel{ 
-		ch : make( chan ChannelData, permits),
+	type ChannelData struct{
+		data string
 	}
-}
+
+	type Channel struct{
+		ch chan ChannelData
+	}
+
+func new_ChannelAcquire(permits int) *Channel{
+
+		return &Channel{
+			ch : make( chan ChannelData, permits),
+		}
+	}
+
 func (This *Channel) Acquire(){
 
-	This.ch <- ChannelData{ data: "data1"}
-}
+		This.ch <- ChannelData{ data: "data1"}
+	}
+
 func (This *Channel) Release(){
 
-	<- This.ch
-}
+		<- This.ch
+	}
+
 func (This *Channel) Send(msg string){
 
-	This.ch <- ChannelData{ data: msg}
-}
+		This.ch <- ChannelData{ data: msg}
+	}
 
+func WgDone(wg* sync.WaitGroup, id int){
 
-func WgDone(wg* sync.WaitGroup, id int){ 
-	
-	var msg = fmt.Sprintf("routine %d - decrease counter ", id );
-	fmt.Println(msg);
-	wg.Done();
-}
+		var msg = fmt.Sprintf("routine %d - decrease counter ", id );
+		fmt.Println(msg);
+		wg.Done();
+	}
 
 var wg sync.WaitGroup;
 var mutex1 sync.Mutex
 
 func taskRoutine( id int, channelComm *Channel) {
 
-	defer WgDone( &wg, id );		
-	var data = <- channelComm.ch
-	if( data.data != "" ){
+		defer WgDone( &wg, id );
+		var data = <- channelComm.ch
+		if( data.data != "" ){
 
-		var msg1 = fmt.Sprintf("routine %s has msg", data.data );
-		fmt.Println(msg1);
-	}
-	mutex1.Lock()
-	{
-		var msg1 = fmt.Sprintf("routine %d has the permission", id );
-		fmt.Println(msg1);
+			var msg1 = fmt.Sprintf("routine %s has msg", data.data );
+			fmt.Println(msg1);
+		}
+		mutex1.Lock()
+		{
+			var msg1 = fmt.Sprintf("routine %d has the permission", id );
+			fmt.Println(msg1);
 
-		time.Sleep( time.Second );
-		var msg2 = fmt.Sprintf("routine %d realease the permission", id );
-		fmt.Println(msg2);
+			time.Sleep( time.Second );
+			var msg2 = fmt.Sprintf("routine %d realease the permission", id );
+			fmt.Println(msg2);
+		}
+		mutex1.Unlock()
 	}
-	mutex1.Unlock()
-}
 
 func test1M(){
 
-	test2M();
-	test3M();
-}
+		test2M();
+		test3M();
+	}
 
 func test3M(){
 
@@ -222,25 +225,28 @@ func test3M(){
 
 		channelsComm[i].Send("data1");
 	}
-	
+
 	//semaphore.Release()
 	wg.Wait();
-	
+
 }
 
 func test2M(){
 
-	var channelComm = new_ChannelAcquire(0)
+		var channelComm = new_ChannelAcquire(0)
 
-	go func(){
-		time.Sleep( 2*time.Second);
-		close( channelComm.ch )
-	}()
+		go func(){
+			time.Sleep( 2*time.Second);
+			close( channelComm.ch )
+		}()
 
-	fmt.Println("wait");
-	<- channelComm.ch
-	fmt.Println("close");
-}
-/*/
-func test1M(){}
+		fmt.Println("wait");
+		<- channelComm.ch
+		fmt.Println("close");
+	}
+
+/
+*/
+func test1M() {}
+
 //*/

@@ -95,7 +95,13 @@ func (_this *DBTable[T]) CloneGenericModel() *DBTable[IGeneric_MODEL] {
 //
 // Usign this Qry(tag) method to generate sql query, is the main diference between atomicSql library and linq (C#) or jinq (java)
 func (_this *DBTable[T]) Qry(tagID string) *DBQuery[T] {
+	return _this.QryS(tagID, nil)
+}
+func (_this *DBTable[T]) QryS(tagID string, q IDBQuery) *DBQuery[T] {
 
+	if q != nil {
+		tagID = q.GetTagID() + tagID
+	}
 	_this.m_ctx.currOperationDTime = time.Now()
 	_this.m_ctx.resetSubTag()
 

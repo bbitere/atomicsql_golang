@@ -39,6 +39,8 @@ type Vvalue IGeneric_MODEL
 
 type IDBQuery interface {
 	_generateSelectSql(selectFields string, ITEM string, bLimit bool, select_sqlFields []string) string
+	GetTagID() string
+	IsRTM() bool
 }
 
 // DBQuery is the struct that will do the magic in atomicsql.
@@ -124,6 +126,15 @@ func (_this *DBQuery[T]) Constr(tableInst *DBTable[T]) *DBQuery[T] {
 	_this.pRTM = nil
 
 	return _this
+}
+
+func (_this *DBQuery[T]) GetTagID() string {
+
+	return ""
+}
+func (_this *DBQuery[T]) IsRTM() bool {
+
+	return _this.pRTM != nil
 }
 
 func (_this *DBQuery[T]) cloneQuery() *DBQuery[T] {
@@ -957,13 +968,30 @@ func (_this *DBQuery[T]) whereNotIn(field string, operandsIn []any) *DBQuery[T] 
 //	}
 func (_this *DBQuery[T]) Where(fnWhere func(x *T) bool) *DBQuery[T] {
 
+	return _this._whereSubQuery(nil, fnWhere)
+}
+func (_this *DBQuery[T]) WhereSubQ(fnWhereS func(q IDBQuery, x *T) bool) *DBQuery[T] {
+
+	return _this._whereSubQuery(fnWhereS, nil)
+}
+
+func (_this *DBQuery[T]) _whereSubQuery(
+	fnWhereS func(q IDBQuery, x *T) bool,
+	fnWhere func(x *T) bool) *DBQuery[T] {
+
 	if _this.pRTM != nil {
 
 		var arr = []*T{}
 		for _, itm := range _this.pRTM.models {
 
-			if fnWhere(itm) {
-				Arr_Append(&arr, itm)
+			if fnWhereS != nil {
+				if fnWhereS(_this, itm) {
+					Arr_Append(&arr, itm)
+				}
+			} else {
+				if fnWhere(itm) {
+					Arr_Append(&arr, itm)
+				}
 			}
 		}
 		_this.pRTM.models = arr
@@ -971,7 +999,12 @@ func (_this *DBQuery[T]) Where(fnWhere func(x *T) bool) *DBQuery[T] {
 	} else {
 
 		_this.subTag = tag_Where + _this.tableInst.m_ctx.getSubTag()
-		var querySql = _this._whereGeneric(fnWhere) //"($opText1) AND ($opText2)" );
+		var querySql *DBSqlQuery[T] = nil
+		if fnWhereS != nil {
+			querySql = _this._whereGenericS(fnWhereS) //"($opText1) AND ($opText2)" );
+		} else {
+			querySql = _this._whereGeneric(fnWhere) //"($opText1) AND ($opText2)" );
+		}
 
 		if _this.whereTxt != "" {
 			_this.whereTxt += " AND "
@@ -1983,7 +2016,7 @@ func (_this *DBQuery[T]) GetDistinctCount(fields []string) (int64, error) {
 //	             )
 //		            }).GetModels()
 //
-// And Lets suppose that the scanner compile crash when it try to parse this complex syntax
+// # And Lets suppose that the scanner compile crash when it try to parse this complex syntax
 //
 // But, Your project must continue to run, not to be stopped, and the ORM blamed.
 //
