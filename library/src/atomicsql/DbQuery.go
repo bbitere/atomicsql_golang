@@ -1457,6 +1457,12 @@ func (_this *DBQuery[T]) GetRowsAsFieldInt(fieldName string) ([]int64, error) {
 	return nil, err
 }
 
+func (_this *DBQuery[T]) Sqlquery_GetRowsAsFieldInt(fieldName string) string {
+
+	sqlQuery := _this._getRows(false, []string{fieldName}, false, false)
+	return sqlQuery
+}
+
 // Sorts the elements of a sequence in ascending or descending order, using multiple orderFields arg.
 //
 // Parameters:

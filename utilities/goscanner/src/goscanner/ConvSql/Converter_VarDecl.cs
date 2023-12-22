@@ -84,6 +84,41 @@ public partial class SqlConvert
 
     
     
+    public override void EnterVarSpec(GoParser.VarSpecContext context)
+    {
+        
+        //firstIdentif
+
+        /*
+        if (!Identifiers.TryGetValue(identifierList, out string[] identifiers))
+        {
+            AddWarning(context, $"No identifiers specified in var specification expression: {context.GetText()}");
+            return;
+        }*/
+
+        if( this.m_LambdaCode != null ) 
+        {
+            var firstVar       = context.identifierList()?.IDENTIFIER(0);
+            var primExpression = context.expressionList()?.expression(0)?.primaryExpr();
+
+            var ctxArgs    = primExpression?.arguments();
+            var ctxIdentif = primExpression?.primaryExpr()?.IDENTIFIER();
+            
+            if( ctxArgs != null && firstVar != null && ctxIdentif != null )
+            {
+                var identif = ctxIdentif.Symbol.Text;
+                if( identif != null ) 
+                {                   
+                    if( OrmDef.Func_DBQuery_End.ToList().Contains(identif) )
+                    {
+                        this.AddSubquery( this.m_LambdaCode, context,
+                                firstVar.GetText(), identif,
+                                primExpression.GetText() );
+                    }
+                }
+            }
+        }
+    }
 
     /// <remarks>
     /// See related operations:
@@ -95,10 +130,12 @@ public partial class SqlConvert
         // varSpec
         //     : identifierList ( type ( '=' expressionList ) ? | '=' expressionList )
 
+        PopSubquery( context);
+
         if (m_varIdentifierCount == 0 && m_varMultipleDeclaration)
             m_targetOutputFile.Append(RemoveFirstLineFeed(CheckForCommentsLeft(context)));
 
-        GoParser.IdentifierListContext identifierList = context.identifierList();
+        var identifierList = context.identifierList();
 
         if (!Identifiers.TryGetValue(identifierList, out string[] identifiers))
         {

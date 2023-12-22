@@ -21,9 +21,11 @@
 //
 //******************************************************************************************************
 
+using Antlr4.Runtime;
 using goscanner.Metadata;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using static goscanner.Common;
 
@@ -103,6 +105,41 @@ public partial class SqlConvert
         return block.ToString();
     }
 
+    public override void EnterShortVarDecl(GoParser.ShortVarDeclContext context)
+    {
+        
+        //firstIdentif
+
+        /*
+        if (!Identifiers.TryGetValue(identifierList, out string[] identifiers))
+        {
+            AddWarning(context, $"No identifiers specified in var specification expression: {context.GetText()}");
+            return;
+        }*/
+
+        if( this.m_LambdaCode != null ) 
+        {
+            var firstVar = context.identifierList()?.IDENTIFIER(0);
+            var primExpression = context.expressionList()?.expression(0)?.primaryExpr();
+            var ctxArgs = primExpression?.arguments();
+            var ctxIdentif = primExpression?.primaryExpr()?.IDENTIFIER();
+            
+            if( ctxArgs != null && firstVar != null && ctxIdentif != null )
+            {
+                var identif = ctxIdentif.Symbol.Text;
+                if( identif != null ) 
+                {                   
+                    if( OrmDef.Func_DBQuery_End.ToList().Contains(identif) )
+                    {
+                        this.AddSubquery( this.m_LambdaCode, context,
+                            firstVar.GetText(), identif,
+                                          primExpression.GetText() );
+                    }
+                }
+            }
+        }
+    }
+
     /// <remarks>
     /// See related operations:
     /// <see cref="ExitVarSpec(GoParser.VarSpecContext)"/>
@@ -112,6 +149,8 @@ public partial class SqlConvert
     {
         // shortVarDecl
         //     : identifierList ':=' expressionList
+
+        PopSubquery( context);
 
         GoParser.IdentifierListContext identifierList = context.identifierList();
 

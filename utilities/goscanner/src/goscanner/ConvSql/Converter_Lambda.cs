@@ -32,6 +32,7 @@ public partial class SqlConvert
 
     internal List<TLambdaCode> m_exportedLambdas = new List<TLambdaCode>();
 
+    internal List<SubQuery>    m_listLambdaSubqueries = new List<SubQuery>();
     internal TLambdaCode m_LambdaCode = null;
     internal String      m_LambdaTag = null;
     //internal String      m_LambdaSubTag = null;
@@ -40,6 +41,74 @@ public partial class SqlConvert
 
     //------------------------------------------------------------------
 
+    protected string GenerateSqlSubquery( TLambdaCode lambdaCode, string varName )
+    {
+        if( lambdaCode != null && lambdaCode.SubQueries != null )
+        {
+            foreach( var subquery in lambdaCode.SubQueries)
+            {
+                if( subquery.VariableStorageName == varName )
+                { 
+                    var arguments = new List<string>();
+                    foreach(var arg in subquery.StaticsVarNames)
+                    {
+                        arguments.Add( arg.Name );
+                    }
+                    var txtArguments = string.Join( ",", arguments.ToArray() );
+                    return $" {OrmDef.START_SUBQUERY} {txtArguments} {OrmDef.END_SUBQUERY} ";
+                }
+            }
+        }
+        return null;
+    }
+    protected SubQuery AddSubquery(
+        TLambdaCode lambdaCode, ParserRuleContext context,
+        string varAssign, string methName, string golangText )
+    {
+        golangText = golangText.Trim();
+        golangText = golangText.Replace( $"{OrmDef.Func_DBTable_Qry}(\"\")",
+                                         $"{OrmDef.Func_DBTable_Qry}(__tagQuery)");
+
+        golangText = golangText.Replace( $"{methName}(",  $"Sqlquery_{methName}(");
+        golangText = golangText.Replace( $"{methName} (", $"Sqlquery_{methName}(");
+
+        var q = new SubQuery();
+        q.VariableStorageName = varAssign;
+        q.GolangCode = golangText;
+        q.context    = context;
+
+        ++SqlConvert.s_SubQueries_uniqueID;
+        //q.UniqueID = $"@_SUBQUERY_{SqlConvert.s_SubQueries_uniqueID}";
+
+        if( lambdaCode.SubQueries == null )
+            lambdaCode.SubQueries = new List<SubQuery>();
+
+        lambdaCode.SubQueries.Add( q );
+        m_listLambdaSubqueries.Add( q );
+        return q;
+    }
+    protected SubQuery PopSubquery(ParserRuleContext context)
+    {
+        if( m_listLambdaSubqueries.Count > 0 )
+        {
+            var top =  m_listLambdaSubqueries[ m_listLambdaSubqueries.Count-1];
+            if( top.context == context ) 
+            {
+                m_listLambdaSubqueries.RemoveAt( m_listLambdaSubqueries.Count-1 );
+                return top;
+            }
+        }
+        return null;
+    }
+    protected SubQuery GetTopSubquery()
+    {
+        if( m_listLambdaSubqueries.Count > 0 )
+        {
+            var top =  m_listLambdaSubqueries[ m_listLambdaSubqueries.Count-1];
+            return top;
+        }
+        return null;
+    }
     protected void Lambda_endSequence()
     {
         if( this.m_LambdaCode == null 
@@ -147,6 +216,10 @@ public partial class SqlConvert
         {
             return getTextSQLError( $"internal error 194. Not found {identifExpr}", ctx);
         }
+        var subQuerySql  = GenerateSqlSubquery( m_LambdaCode, fldName);
+        if( subQuerySql != null)
+            return subQuerySql;
+
         if( sqlField == "" )
         {
             //m_LambdaCode.Fields[identif] = new TField(field, genType.Name );
@@ -164,7 +237,9 @@ public partial class SqlConvert
             if( sqlIdentif.Contains( PREFIX_VAR ) 
                 && sqlIdentif.Contains( POSTFIX_VAR ) )
             { 
-                Log_Error( ctx, $"Not support,yet, external variable having type a struct inside Lambda function, {identifExpr??""}" );
+                var subQuery = this.GetTopSubquery();
+                if( subQuery == null )
+                    Log_Error( ctx, $"Not support,yet, external variable having type a struct inside Lambda function, {identifExpr??""}" );
             }
             if( !m_LambdaCode.Fields.ContainsKey(sqlIdentif))
             {

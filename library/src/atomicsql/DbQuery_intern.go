@@ -35,6 +35,13 @@ const DEF_TABLE_ROW_IDX = "ROW_IDX"
 const PREFIX_FIELDS = "{#@"
 const POSTFIX_FIELDS = "@#}"
 
+const START_STATIC = "{@@"
+const END_STATIC = "@@}"
+
+const START_SUBQUEY =  "@_SUBQUERY("; //@_SUBQUERY( {@@Name1@@}, {@@Name2@@} )@ 
+const END_SUBQUEY   = ")@ ";
+
+
 const SQL_POSTGRESS_RND_UUID = "gen_random_uuid()"
 
 var gFOREIGN_KEYS map[string]([]string) = map[string]([]string){
@@ -2412,22 +2419,33 @@ func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_f
 	var fields = compiledQry.Fields
 	var sql = compiledQry.CompiledQuery
 
-	for staticKey, staticVal := range statics {
+	if( compiledQry.SubQueries != nil){
+		//add subquery content
+		for iSubQuery := 0; iSubQuery < len(compiledQry.SubQueries); iSubQuery++{
+			
+			var subQueryTag = compiledQry.Tag + "_SQ_" + fmt.Sprintf("%d",iSubQuery);
+			var fn 			= compiledQry.SubQueries[ iSubQuery ];
+			//var sqlQueryOfSubQuery, subQueryUID = fn( _this.tableInst.m_ctx, &statics, subQueryTag );
+			//sql = str_replace( subQueryUID, sqlQueryOfSubQuery, sql)
 
-		//if( gettype(staticVal) == "object" ){
-		//	continue;
-		//}
+			var textSubQuery, args = _this.findSubQueryTag( sql, statics );
+			var sqlQueryOfSubQuery = fn( _this.tableInst.m_ctx, args, subQueryTag );
+			sql = str_replace( textSubQuery, sqlQueryOfSubQuery, sql)
+		}
+	}
+
+	for staticKey, staticVal := range statics {
 
 		if staticVal == true {
 
-			sql = str_replace("{@@"+staticKey+"@@}", "(1=1)", sql)
+			sql = str_replace(START_STATIC + staticKey + END_STATIC, "(1=1)", sql)
 		} else if staticVal == false {
 
-			sql = str_replace("{@@"+staticKey+"@@}", "(1=0)", sql)
+			sql = str_replace(START_STATIC + staticKey + END_STATIC, "(1=0)", sql)
 		} else {
 
 			var staticVal1 = _this._quote(staticVal, nil)
-			sql = str_replace("{@@"+staticKey+"@@}", staticVal1, sql)
+			sql = str_replace(START_STATIC + staticKey + END_STATIC, staticVal1, sql)
 		}
 	}
 
@@ -2470,10 +2488,48 @@ func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_f
 		}
 		sql = str_replace(fieldSql, itm, sql)
 	}
+
+	
+
 	if selectAggregatedFields != nil && len(selectAggregatedFields) > 0 {
 		return sql, Util_FromMapToArray(&selectAggregatedFields)
 	}
 	return sql, nil
+}
+
+func (_this *DBQuery[T]) findSubQueryTag( sql string, statics map[string]any ) (string, []any){
+
+	var ret = ""
+	var args = []any{}
+	//var prefix_subquery = START_SUBQUEY; //@_SUBQUERY( {@@Name1@@}, {@@Name2@@} )@ 
+	//var end_subquery    = END_SUBQUEY;
+	var idx = Str.Index( sql, START_SUBQUEY)
+	if( idx >= 0 ){
+
+		var lenStr = Str.Index( sql[idx:], END_SUBQUEY)
+		if( lenStr >= 0 ){
+			ret =  Str_SubString( sql, idx, lenStr + len(END_SUBQUEY));
+
+			var argContent =  Str_SubString( sql, idx + len(START_SUBQUEY), lenStr -len(START_SUBQUEY)/*-len(START_SUBQUEY)*/ );
+
+			var argsTxt = Str.Split(argContent, ",")
+			for i := 0; i < len(argsTxt); i ++{
+
+				var argName = Str.TrimSpace( argsTxt[i]);
+				//Arr_Append(&args, argName );
+				
+				for staticKey, staticVal := range statics {
+
+					if( argName == START_STATIC + staticKey + END_STATIC ){
+							//var data any = staticVal.(string)
+							Arr_Append(&args, staticVal );
+					}
+				}
+			}
+		}
+	}
+
+	return ret, args;
 }
 
 func (_this *DBQuery[T]) _getNameAndID(model *T) (string, int64, reflect.Value) {

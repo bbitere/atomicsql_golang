@@ -11,6 +11,7 @@ import (
 
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 	test1_crud "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_crud"
+	test1_subquery "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_subquery"
 	test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 
@@ -61,6 +62,8 @@ func main(){
 	Exec_test( test1_where.Test1Rtm_10, &counter );
 	Exec_test( test1_where.Test1_11, &counter );
 	Exec_test( test1_where.Test1_12, &counter );
+
+	Exec_test( test1_subquery.Test1_01, &counter );
 
 	printResults();
 	

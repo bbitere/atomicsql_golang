@@ -95,6 +95,17 @@ type TExternVar struct {
 	VarName string
 	VarType string
 }
+
+//type TSubQuery = func(_ctx *DBContextBase, staticsVars *map[string]any, tagQuery string) (string,string)
+type TSubQueryArg struct{ 
+	Value 			any			// the value for statics, for sql fields is : 34563456 or '34563456'
+	Orginal_val 	string		// 34563456 or '34563456'
+	SqlCode 		string		// u1.UserRoleID
+	ArgName 		string 		// userRoleID
+	} 
+type TSubQuery = func(_ctx *DBContextBase, argNames []any, tagQuery string) string
+
+
 type TCompiledSqlQuery struct {
 	CompiledQuery   string
 	SelectSqlFields map[string]string
@@ -107,8 +118,11 @@ type TCompiledSqlQuery struct {
 	StartOff int
 	EndOff   int
 	Hash     string // for checking the integrity
+	SubQueries []TSubQuery
 
 }
+
+
 
 // this is the struct of ORM data context.
 // after the developer execute 1.update_db.cmd, this will generate 2 files
@@ -140,6 +154,8 @@ type DBContextBase struct {
 
 	stackTransactions []*Transaction
 	hasError          error
+
+	GenericContext any /* *DBContext */
 }
 type IDBContext interface {
 	GetContext() IDBContext
@@ -248,9 +264,10 @@ func (_this *DBContextBase) GetTotalDeltaTime() float64 {
 }
 
 // the constructor
-func (_this *DBContextBase) Constr(dialect VESqlDialect, schemaSql TSchemaDef) (*DBContextBase, error) {
+func (_this *DBContextBase) Constr(dialect VESqlDialect, schemaSql TSchemaDef, ctxGeneric any) (*DBContextBase, error) {
 
 	_this.SCHEMA_SQL = schemaSql
+	_this.GenericContext = ctxGeneric;
 
 	var err error
 	_this.SCHEMA_SQL_BySqlName, err = _this.convertSchema(schemaSql)
@@ -464,3 +481,14 @@ func DBContext_MarkSaveReflVal(reflVal reflect.Value,  _this *DBContextBase  ) b
 	return false;
 }
 
+//used for subqueries replacement
+func SQ_int(token string) 		int{return 0;}
+func SQ_int32(token string) 	int32{return 0;}
+func SQ_int64(token string) 	int64{return 0;}
+func SQ_int16(token string) 	int16{return 0;}
+func SQ_int8(token string)  	int8{return 0;}
+func SQ_float32(token string) 	float32{return 0;}
+func SQ_float64(token string) 	float64{return 0;}
+func SQ_bool(token string) 		bool{return false;}
+func SQ_string(token string) 	string{return "";}
+func SQ_time(token string) 		time.Time{return time.Now();}

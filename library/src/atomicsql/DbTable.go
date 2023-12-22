@@ -14,6 +14,7 @@ type DBTable[T IGeneric_MODEL] struct {
 	m_langName    string
 	m_schemaTable string
 	m_ctx         *DBContextBase
+	//m_ctxGeneric  any /*  *DBContext */
 }
 
 // Constructor of DBTable
@@ -61,6 +62,9 @@ func (_this *DBTable[T]) CloneGenericModel() *DBTable[IGeneric_MODEL] {
 	newInst.m_langName = _this.m_langName
 	newInst.m_schemaTable = _this.m_schemaTable
 	newInst.m_ctx = _this.m_ctx
+	//newInst.m_ctxGeneric = _this.m_ctxGeneric
+
+	
 	return newInst
 }
 

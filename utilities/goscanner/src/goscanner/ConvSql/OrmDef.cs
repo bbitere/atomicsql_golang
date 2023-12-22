@@ -21,6 +21,12 @@ namespace goscanner.ConvSql
         public const string Class_DBTable       = "DBTable";
         public const string Func_DBTable_Qry    = "Qry";
         public const string Func_DBTable_ToRTM    = "ToRTM";
+
+
+        public const string START_SUBQUERY    = "@_SUBQUERY(";
+        public const string END_SUBQUERY    = ")@ ";
+
+        
         
 
         public const string Class_DBContext     = "DBContext";
@@ -60,6 +66,22 @@ namespace goscanner.ConvSql
             "GetValueString", "GetValueInt", "GetValueFloat","GetValueBool", "GetValueTime",
             "GetValuesString", "GetValuesInt", "GetValuesFloat","GetValuesBool", "GetValuesTime",
             "ToRTM"
+        };
+
+        public static readonly Dictionary<string,string> SubQueryTransform = new Dictionary<string,string>
+        { 
+            { "SQ_int", "int" },
+            { "SQ_int8", "int8" },
+            { "SQ_int16", "int16" },
+            { "SQ_int32", "int32" },
+            { "SQ_int64", "int64" },
+            
+            { "SQ_float32", "float32" },
+            { "SQ_float64", "float64" },
+
+            { "SQ_bool", "bool" },
+            { "SQ_string", "string" },
+            { "SQ_time", "time" },
         };
         
 

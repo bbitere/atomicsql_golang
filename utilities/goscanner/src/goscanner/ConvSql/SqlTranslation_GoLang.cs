@@ -17,10 +17,10 @@ namespace goscanner.ConvSql;
 
 public partial class SqlConvert 
 {
-    const string PREFIX_FIELD = "{#@";
+    const string PREFIX_FIELD  = "{#@";
     const string POSTFIX_FIELD = "@#}";
 
-    const string PREFIX_VAR = "{@@";
+    const string PREFIX_VAR  = "{@@";
     const string POSTFIX_VAR = "@@}";
 
     static Dictionary<string, TLambdaCode> s_dictLambdaTagPerApp = new();
@@ -194,6 +194,47 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
     var queryTag1 = _getQueryTag( lambda.Tag );
     var queryTag  = $"{queryTag1}-{lambda.SubTag}";
 
+    var querySubQueries = "null";
+    if( lambda.SubQueries != null )
+    {
+        var queries = "";
+        /*
+        foreach( var subQuery in lambda.SubQueries)
+        {
+            
+            var subquery_golang = subQuery.GolangCode;
+            //subquery_golang.Replace();
+
+            var querySubQuery = $@"                  
+				        func(_ctx *orm.DBContextBase, args []any, __tagQuery string)string{{
+										        
+					        var ctx = _ctx.GenericContext.(*DBContext);
+					        var sqlQuery = {subquery_golang};
+					        return sqlQuery;
+				        }},
+                        ";
+            queryTag = UseTemplate( queryTag, this.Options.ConvertSql.Templ_SubQuery, 
+            new Dictionary<string,string>()
+            { 
+                //{ "arguments", arguments},
+                { "subquery_golang", subquery_golang},
+            });
+            queries += querySubQuery;
+        }
+
+        querySubQueries = $@" 
+                 []orm.TSubQuery{{
+                    {queries}
+                }}";
+        querySubQueries = UseTemplate( querySubQueries, this.Options.ConvertSql.Templ_SubQueries, 
+            new Dictionary<string,string>()
+            { 
+                { "queries", queries},
+            });
+        */
+
+    }
+
     var text = $@"
     ""{queryTag}"": 
 	{{
@@ -211,8 +252,10 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
 		StartOff: 		{queryFileStartOffset},
 		EndOff:  		{queryFileEndOffset},
 		Hash:  			""{queryHash}"",
+        SubQueries:    {querySubQueries},
 	}},
         ";
+
         text = UseTemplate( text, this.Options.ConvertSql.Templ_GoSqlCompiledQuery, 
             new Dictionary<string,string>()
             { 
@@ -227,7 +270,9 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
                 { "queryFile", queryFile},
                 { "queryFileStartOffset", ""+queryFileStartOffset},
                 { "queryFileEndOffset", ""+queryFileEndOffset},
-                { "queryHash", queryHash}
+                { "queryHash", queryHash},
+                { "querySubQueries", querySubQueries}
+                
             }
             );
 

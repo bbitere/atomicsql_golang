@@ -49,6 +49,26 @@ namespace goscanner.ConvSql
         }
             
     }
+
+    public class SubQueryVar
+    {
+        public string Name { get; set; }
+
+        //golang type name def
+        public string Type { get; set; }   
+    }
+
+    public class SubQuery
+    {
+        public ParserRuleContext context;
+        public List<SubQueryVar> StaticsVarNames = new List<SubQueryVar>();
+        public string VariableStorageName =""; // var ids = ctx.Users.where()..
+        public string GolangCode = "";   //ctx.Users.where(x=> UserName== userName).sqlQuery_GetCount();
+        public List<TLambdaCode> Queries = new List<TLambdaCode>(); //UserName== userName
+        //public string UniqueID = "";
+    }
+    
+
     public class TLambdaCode
     {        
         public bool IsAllowArray = false;
@@ -81,6 +101,10 @@ namespace goscanner.ConvSql
 
         public bool  returnClause = false;
         public ParserRuleContext ctxTag;
+
+        public List<SubQuery> SubQueries { get; set; } = null;
+        
+
 
         public TLambdaCode( 
             SqlConvert inst, string lambdaTag, SqlConvert.SubTag lambdaSubTag, 

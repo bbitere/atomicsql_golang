@@ -27,6 +27,9 @@ namespace goscanner.ConvSql
         public ConvCommon.TemplateItem Templ_GoSqlCompiledFile;
         public ConvCommon.TemplateItem Templ_GoSqlCompiledQuery;
         public ConvCommon.TemplateItem Templ_GoSqlVarDef;
+        public ConvCommon.TemplateItem Templ_SubQuery;
+        public ConvCommon.TemplateItem Templ_SubQueries;
+        public ConvCommon.TemplateItem Templ_SubQueryVardef;
         //public ConvCommon.TemplateItem Templ_Include_files;
 
         public List<string> IncludeFiles = new List<string>();
@@ -106,6 +109,16 @@ namespace goscanner.ConvSql
             if( Templ_GoSqlVarDef  == null )
                 Console.WriteLine("Templ_GoSqlVarDef - not set");
 
+            if( Templ_SubQuery  == null )
+                Console.WriteLine("Templ_SubQuery - not set");
+
+            if( Templ_SubQueries  == null )
+                Console.WriteLine("Templ_SubQueries - not set");
+
+            if( Templ_SubQueryVardef  == null )
+                Console.WriteLine("Templ_SubQueryVardef - not set");
+            
+
             if( IncludeFiles  == null )
                 Console.WriteLine("Include_files - not set");
 
@@ -133,6 +146,12 @@ namespace goscanner.ConvSql
                 case "Templ_GoSqlCompiledFile":     this.Templ_GoSqlCompiledFile    = new ConvCommon.TemplateItem( token1, content ); break;
                 case "Templ_GoSqlCompiledQuery":    this.Templ_GoSqlCompiledQuery   = new ConvCommon.TemplateItem( token1, content ); break;
                 case "Templ_GoSqlVarDef":           this.Templ_GoSqlVarDef          = new ConvCommon.TemplateItem( token1, content ); break;
+                case "Templ_SubQuery":              this.Templ_SubQuery             = new ConvCommon.TemplateItem( token1, content ); break;
+                case "Templ_SubQueries":            this.Templ_SubQueries           = new ConvCommon.TemplateItem( token1, content ); break;
+                case "Templ_SubQueryVardef":        this.Templ_SubQueryVardef       = new ConvCommon.TemplateItem( token1, content ); break;
+                    
+                    
+                    
                 case "Include_files":               this.IncludeFiles               = processExportListItems( content ); break;
                 //case "Include_types":               this.IncludeTypes               = processExportListItems( content ); break;
                 //case "Include_funcs":               this.IncludeFuncs              = processExportListItems( content ); break;

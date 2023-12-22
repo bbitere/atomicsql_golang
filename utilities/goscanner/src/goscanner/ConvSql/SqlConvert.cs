@@ -52,11 +52,21 @@ class ESqlOutputType
     public const string Mssql = "mssql";
 }
 
+//this are used in def of SQL_Method()
+class SqlFuncDef
+{
+    public const string Postgres = "Postgres";
+    public const string Mysql = "Mysql";
+    public const string Mssql = "Mssql";
+}
+    
+
 public delegate void FnTagUpdate( string tagName);
 
 public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
 {
     public const string sql_NULL = "NULL";
+    public static int  s_SubQueries_uniqueID = 0;
     
     
     
@@ -364,10 +374,19 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         public string msSqlText{ get; set;}
     }
 
+    protected bool findSqlSubqueryMethod( string funcName, string packageName, TypeInfo normalizedTypeReceiver )
+    {
+        if( OrmDef.SubQueryTransform.ContainsKey(funcName) )
+        {
+            return true;
+        }
+        return false;
+    }
     
     protected (TTextSql,FunctionInfo) findSqlNativeMethod( string funcName, string packageName, 
                     TypeInfo normalizedTypeReceiver )
     {
+        
         if( funcName.StartsWith(OrmDef.FuncSql_PrefixMeth) )
         {
             if( ImportMetadata.TryGetValue( packageName, out FolderMetadata metaImport))
@@ -382,9 +401,9 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                         {
                             var sqlFunc = new TTextSql();
                             var initExpr = varInfo.getInitExpr();
-                            sqlFunc.postgresSqlText = extractString( initExpr["Postgres"] );
-                            sqlFunc.mySqlText = extractString( initExpr["Mysql"] );
-                            sqlFunc.msSqlText = extractString( initExpr["Mssql"] );
+                            sqlFunc.postgresSqlText = extractString( initExpr[SqlFuncDef.Postgres] );
+                            sqlFunc.mySqlText       = extractString( initExpr[SqlFuncDef.Mysql] );
+                            sqlFunc.msSqlText       = extractString( initExpr[SqlFuncDef.Mssql] );
                     
                             return (sqlFunc, functionInfo);
                         }

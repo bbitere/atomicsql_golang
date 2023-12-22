@@ -363,6 +363,13 @@ namespace goscanner.ConvSql
             }
             else
             {
+                /*
+                if( findSqlSubqueryMethod( funcName, packageName, normalizedType1 )
+                    && arguments.Count == 1 )
+                {
+                    SQLText = arguments[0];
+                }*/
+
                 var (sqlMethod, funcInfo1) = findSqlNativeMethod( funcName, packageName, normalizedType1 );
                 if( sqlMethod != null && funcInfo1 != null ) 
                 {

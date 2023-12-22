@@ -26,9 +26,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"asdax",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		8414,
-			EndOff:  		8543,
+			StartOff: 		8412,
+			EndOff:  		8541,
 			Hash:  			"2BD856B2CC369E11ECD3F9D24B3C2A29",
+			SubQueries: 	null,
+			},
+
 		},
 		"tst1074-W1": 
 		{
@@ -44,9 +47,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst1074",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		8702,
-			EndOff:  		8760,
+			StartOff: 		8700,
+			EndOff:  		8758,
 			Hash:  			"3FC12F87D4546693DF4D2809784E04B9",
+			SubQueries: 	null,
+			},
+
 		},
 		"evcy59-W1": 
 		{
@@ -61,9 +67,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy59",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		10150,
-			EndOff:  		10217,
+			StartOff: 		10148,
+			EndOff:  		10215,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
+			SubQueries: 	null,
+			},
+
 		},
 		"evcy59-S2": 
 		{
@@ -94,9 +103,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy59",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		10224,
-			EndOff:  		10336,
+			StartOff: 		10222,
+			EndOff:  		10334,
 			Hash:  			"84B8D21C767C75A054571BCA27A1F625",
+			SubQueries: 	null,
+			},
+
 		},
 		"evcy58-W1": 
 		{
@@ -111,9 +123,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy58",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		12048,
-			EndOff:  		12117,
+			StartOff: 		12046,
+			EndOff:  		12115,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
+			SubQueries: 	null,
+			},
+
 		},
 		"evcy58-S2": 
 		{
@@ -134,9 +149,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"evcy58",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		12130,
-			EndOff:  		12344,
+			StartOff: 		12128,
+			EndOff:  		12342,
 			Hash:  			"8B5687E0DE678F62832408F1E304EFCC",
+			SubQueries: 	null,
+			},
+
 		},
 		"tst253-V1": 
 		{
@@ -151,9 +169,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst253",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		13557,
-			EndOff:  		13616,
+			StartOff: 		13555,
+			EndOff:  		13614,
 			Hash:  			"C9B74D6F70CBFC75B718CFFD7208EBE3",
+			SubQueries: 	null,
+			},
+
 		},
 		"tst254-W1": 
 		{
@@ -168,9 +189,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst254",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		14647,
-			EndOff:  		14706,
+			StartOff: 		14645,
+			EndOff:  		14704,
 			Hash:  			"2FB1357DACB09276B8F66871D9084958",
+			SubQueries: 	null,
+			},
+
 		},
 		"tst254-X2": 
 		{
@@ -185,9 +209,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tst254",
 			File: 			"src\\test_where\\test1.go",
-			StartOff: 		14726,
-			EndOff:  		14787,
+			StartOff: 		14724,
+			EndOff:  		14785,
 			Hash:  			"BACD3298080469A33137FE4B42BF083B",
+			SubQueries: 	null,
+			},
+
 		},"tst1_066-W1": 
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#}=true,
@@ -204,6 +231,9 @@ func (_this *DBContext) LoadCompiledQuery(){
 			StartOff: 		2116,
 			EndOff:  		2191,
 			Hash:  			"6CFA253FCAB447A6E1C2AA01869B10E9",
+			SubQueries: 	null,
+			},
+
 		},
 		"tst1_066-S2": 
 		{
@@ -227,6 +257,9 @@ func (_this *DBContext) LoadCompiledQuery(){
 			StartOff: 		2210,
 			EndOff:  		2440,
 			Hash:  			"4AAC82C4C328EB8EB9877CEBA29E506F",
+			SubQueries: 	null,
+			},
+
 		},"tst143-W1": 
 		{
 			//CompiledQuery: (CASE WHEN ({#@userRole_ID@#} IS NOT NULL) THEN {#@userRole_ID.isActive@#} ELSE false END),
@@ -244,6 +277,9 @@ func (_this *DBContext) LoadCompiledQuery(){
 			StartOff: 		976,
 			EndOff:  		1093,
 			Hash:  			"74372D433428301E95B05E49BBD6EED1",
+			SubQueries: 	null,
+			},
+
 		},"tst1340-W1": 
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#}=true AND {#@userRole_ID.roleName@#}='admin' AND {#@UUID@#}={@@uuid@@},
@@ -263,6 +299,73 @@ func (_this *DBContext) LoadCompiledQuery(){
 			StartOff: 		12088,
 			EndOff:  		12219,
 			Hash:  			"B8F7275000F6AB0B7895B045C38B915A",
+			SubQueries: 	null,
+			},
+
+		},"tsql082-W2": 
+		{
+			//CompiledQuery: ,
+			CompiledQuery:``,			
+			SelectSqlFields: nil,			
+			Fields:			map[string]string{
+            },
+			ExternVar:			[]orm.TExternVar{
+																	{VarName:"ctx", VarType:"DBContext"},
+ 
+								},
+			Tag: 			"tsql082",
+			File: 			"src\\test_subquery\\test1.go",
+			StartOff: 		2322,
+			EndOff:  		2624,
+			Hash:  			"930DA7905000D1DAB21553B9F6C9A079",
+			SubQueries: 	null,
+			},
+
+		},
+		"-W1": 
+		{
+			//CompiledQuery: {#@roleName@#}={@@RoleNameDefault@@} AND {#@ID@#}={#@userRole_ID@#},
+			CompiledQuery:`eyNAcm9sZU5hbWVAI309e0BAUm9sZU5hbWVEZWZhdWx0QEB9IEFORCB7I0BJREAjfT17I0B1c2VyUm9sZV9JREAjfQ==`,			
+			SelectSqlFields: nil,			
+			Fields:			map[string]string{
+             "RoleName":"{#@roleName@#}",
+             "ID":"{#@ID@#}",
+             "UserRole_ID":"{#@userRole_ID@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+																	{VarName:"RoleNameDefault", VarType:"string"},
+ 
+								},
+			Tag: 			"",
+			File: 			"src\\test_subquery\\test1.go",
+			StartOff: 		2387,
+			EndOff:  		2489,
+			Hash:  			"4AA4236F4A7AF1C9B044210E8966919D",
+			SubQueries: 	null,
+			},
+
+		},
+		"tsql082-W1": 
+		{
+			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND <error 107>,
+			CompiledQuery:`eyNAbW9uZXlAI30+PXtAQFVzZXJNb25leUBAfSBBTkQgPGVycm9yIDEwNz4=`,			
+			SelectSqlFields: nil,			
+			Fields:			map[string]string{
+             "Money":"{#@money@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+																	{VarName:"ctx", VarType:"DBContext"},
+									{VarName:"UserMoney", VarType:"float64"},
+ 
+								},
+			Tag: 			"tsql082",
+			File: 			"src\\test_subquery\\test1.go",
+			StartOff: 		4085,
+			EndOff:  		4252,
+			Hash:  			"C006A1F43AF479A864ECF0DE19CCEA6F",
+			SubQueries: 	null,
+			},
+
 		},
 	}
 	
