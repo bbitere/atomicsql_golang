@@ -26,6 +26,8 @@ func Test1_init() (*orm.DBContext, error, string) {
 	return ctx, err, "initTest1"
 }
 
+
+
 func Test_cleanUp(ctx *orm.DBContext) {
 
 	ctx.User.Qry("").DeleteModels()
@@ -39,7 +41,6 @@ func Test_cleanUp(ctx *orm.DBContext) {
 
 func Test1_01(step int, bCheckName bool) (int, error, string) {
 
-	//insert 2 users, 1 userrole.test where( FK. )
 	var nameTest = "ORM: Test Subquery + var := "
 
 	var RoleNameDefault = "default"
@@ -63,7 +64,8 @@ func Test1_01(step int, bCheckName bool) (int, error, string) {
 
 	//do the FK relation
 	var user = m.User{UserName: UserName, Money: UserMoney}
-	user.UserRoleID, err = ctx.UserRole.Qry("").WhereEq(ctx.UserRole_.RoleName, RoleNameDefault).GetFirstModel()
+	user.UserRoleID, err = ctx.UserRole.Qry("").
+							WhereEq(ctx.UserRole_.RoleName, RoleNameDefault).GetFirstModel()
 	if err != nil {
 		return 0, err, nameTest
 	}
@@ -78,24 +80,27 @@ func Test1_01(step int, bCheckName bool) (int, error, string) {
 		return 0, err, nameTest
 	}
 
+	var bActive = true;
 	//do the query using subquery
-	usersCnt, err := ctx.User.Qry("tsql082").Where(func(x *m.User) bool {
+	usersCnt, err := ctx.User.Qry("tsql082").WhereSubQ( func(x *m.User, q atmsql.IDBQuery) bool {
 
-		ids, _ := ctx.UserRole.Qry("").Where(func(y *m.UserRole) bool {
+		ids, _ := ctx.UserRole.QryS("ids", q).Where(func(y *m.UserRole) bool {
 			return y.RoleName == RoleNameDefault && y.ID == x.UserRole_ID.Int32
 		}).GetRowsAsFieldInt(ctx.UserRole_.ID);
 
-		return x.Money >= UserMoney && atmf.Sql_ArrayContain( ids, int64(x.UserRole_ID.Int32) )
+		return x.Money >= UserMoney && 
+		       atmf.Sql_ArrayContain( ids, int64(x.UserRole_ID.Int32) ) && 
+			   bActive
 	}).GetCount()
 	
 	if err != nil {
 		return 0, err, nameTest
 	}
 	if( usersCnt == 1 ){
-
+		return 1, nil, nameTest
 	}
 
-	return 1, nil, nameTest
+	return 0, nil, nameTest
 }
 
 //---------------------------------------------------------
@@ -141,19 +146,24 @@ func Test1_02(step int, bCheckName bool) (int, error, string) {
 		return 0, err, nameTest
 	}
 
+	var bActive = true;
 	//do the query using subquery
-	usersCnt, err := ctx.User.Qry("tsql082").Where(func(x *m.User) bool {
+	usersCnt, err := ctx.User.Qry("tsql147").WhereSubQ(func(x *m.User, q atmsql.IDBQuery) bool {
 
-		var cnt, _ = ctx.UserRole.Qry("").WhereEq( ctx.UserRole_.ID, x.UserRole_ID.Int32 ).GetCount()
-		return x.Money >= UserMoney && cnt > 0;
+		//var cnt, _ = ctx.UserRole.QryS("cnt", q).WhereEq( ctx.UserRole_.ID, x.UserRole_ID.Int32 ).GetCount()
+		var cnt, _ = ctx.UserRole.QryS("cnt", q).
+						Where( func(y *m.UserRole)bool{ return y.ID == x.UserRole_ID.Int32
+							}).GetCount();
+		return x.Money >= UserMoney && cnt > 0 && bActive;
 	}).GetCount()
 	
 	if err != nil {
 		return 0, err, nameTest
 	}
 	if( usersCnt == 1 ){
-
+		return 1, nil, nameTest
 	}
 
-	return 1, nil, nameTest
+	return 0, nil, nameTest
 }
+

@@ -34,6 +34,7 @@ public partial class SqlConvert
             }
         }
     }
+    
 
     public override void ExitPrimaryExpr(GoParser.PrimaryExprContext context)
     {
@@ -221,7 +222,7 @@ public partial class SqlConvert
                         {
                             LastToken = field1,
                             Text = $"{identif1}.{field1}",
-                            SQLText = getTextSQLIdentif( $"{identif1}.{field1}", identifSQL1, sqlField, field.Type, field.Name, context ),
+                            SQLText = getTextSQLIdentif( $"{identif1}.{field1}", identifSQL1, sqlField, field.Type, field.Name, context, identif1 ),
                             OperandKind = EOperandKind.Simple,
                             Type = field.Type,
                             Types = new_ParameterInfo_TypeInfo(field.Type ),
@@ -317,16 +318,34 @@ public partial class SqlConvert
                 }
             }
             */
-
             string selectionExpression = $"{identif1}.{field1}";
-            if( sqlField == "" )
-            {   
-                if( genericType != null && genericType.Name !="")
-                { 
-                    sqlField = getTextSQLError($"type {genericType.Name}: not found. Check the $ GitProject settings in sql-config.cfg", context);
-                }else
-                {
-                    sqlField = getTextSQLError("incorect declaration : not supported in sql translation", context);
+            var subQuery = this.GetTopSubquery();
+            if( subQuery != null )
+            {
+                // in this case, subquery is starting  'ids, _ :=' and end at GetRowsAsFieldInt(ctx.UserRole_.ID);
+                //
+                // usersCnt, err := ctx.User.Qry("tsql082").WhereSubQ( func(x *m.User, q atmsql.IDBQuery) bool {
+		        //      ids, _ := StartHere-> ctx.UserRole.QryS("ids", q).Where(func(y *m.UserRole) bool {
+			    //                      return y.RoleName == RoleNameDefault && y.ID == x.UserRole_ID.Int32
+		        //      }).GetRowsAsFieldInt(ctx.UserRole_.ID);  <- EndHere
+                //
+		        //  return q.IsRTM() && x.Money >= UserMoney && 
+		        //  atmf.Sql_ArrayContain( ids, int64(x.UserRole_ID.Int32) )
+	            //}).GetCount()
+
+                //
+                sqlField = $"{identif1}.{field1}";
+            }else
+            {
+                if( sqlField == "" )
+                {   
+                    if( genericType != null && genericType.Name !="")
+                    { 
+                        sqlField = getTextSQLError($"type {genericType.Name}: not found. Check the $ GitProject settings in sql-config.cfg", context);
+                    }else
+                    {
+                        sqlField = getTextSQLError("incorect declaration : not supported in sql translation", context);
+                    }
                 }
             }
 
@@ -334,7 +353,7 @@ public partial class SqlConvert
             {
                 Text = selectionExpression,
                 LastToken = field1,
-                SQLText = getTextSQLIdentif( selectionExpression, identifSQL1, sqlField, typeInfo ?? primaryExpression?.Type, field1, context ),
+                SQLText = getTextSQLIdentif( selectionExpression, identifSQL1, sqlField, typeInfo ?? primaryExpression?.Type, field1, context, identif1 ),
                 OperandKind = EOperandKind.Simple,
                 Type = typeInfo ?? primaryExpression?.Type,
                 Types = typeInfo != null ? new_ParameterInfo_TypeInfo(typeInfo ) : primaryExpression?.Types
@@ -500,8 +519,7 @@ public partial class SqlConvert
         //---------------------------------------------------------------------------------------------------
         else if (context.arguments() is not null)
         {
-            ExpressionCall( context, primaryExpression, packageImport );
-            
+            ExpressionCall( context, primaryExpression, packageImport );            
         }
         else
         {

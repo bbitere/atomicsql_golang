@@ -119,10 +119,10 @@ public partial class SqlConvert
 
         if( this.m_LambdaCode != null ) 
         {
-            var firstVar = context.identifierList()?.IDENTIFIER(0);
-            var primExpression = context.expressionList()?.expression(0)?.primaryExpr();
-            var ctxArgs = primExpression?.arguments();
-            var ctxIdentif = primExpression?.primaryExpr()?.IDENTIFIER();
+            var firstVar        = context.identifierList()?.IDENTIFIER(0);
+            var primExpression  = context.expressionList()?.expression(0)?.primaryExpr();
+            var ctxArgs         = primExpression?.arguments();
+            var ctxIdentif      = primExpression?.primaryExpr()?.IDENTIFIER();
             
             if( ctxArgs != null && firstVar != null && ctxIdentif != null )
             {
@@ -150,7 +150,8 @@ public partial class SqlConvert
         // shortVarDecl
         //     : identifierList ':=' expressionList
 
-        PopSubquery( context);
+        var firstVar       = context.identifierList()?.IDENTIFIER(0);
+        PopSubquery( context, firstVar.GetText() );
 
         GoParser.IdentifierListContext identifierList = context.identifierList();
 

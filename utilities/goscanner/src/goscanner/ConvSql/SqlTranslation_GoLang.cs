@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Antlr4.Runtime.Misc;
 using goscanner.ConvCommon;
 using goscanner.Metadata;
 using static System.Net.Mime.MediaTypeNames;
@@ -20,8 +21,14 @@ public partial class SqlConvert
     const string PREFIX_FIELD  = "{#@";
     const string POSTFIX_FIELD = "@#}";
 
+    const string SUBQ_PREFIX_FIELD  = "{#$";
+    const string SUBQ_POSTFIX_FIELD = "$#}";
+
     const string PREFIX_VAR  = "{@@";
     const string POSTFIX_VAR = "@@}";
+
+    public const string START_SUBQUERY      = "{@$";
+    public const string END_SUBQUERY        = "$@}";
 
     static Dictionary<string, TLambdaCode> s_dictLambdaTagPerApp = new();
 
@@ -30,8 +37,7 @@ internal string GoLang_externVar( TField vardef)
     var varName = vardef.SqlName;
     var varType = vardef.TypeLang;
 
-    var text = $@"
-                    {{varName:""{varName}"", varType:""{varType}""}},";
+    var text = $@"{{varName:""{varName}"", varType:""{varType}""}},";
 
     text = UseTemplate( text, Options.ConvertSql.Templ_GoSqlVarDef, 
         new Dictionary<string,string>()
@@ -61,8 +67,9 @@ internal string GoLang_ExportAllQueries(
         {
             this.Log_Error( lambda.TagCtx, $"{OrmDef.Func_DBTable_Qry}() method should receive a valid tag unique per app");
         }
-        if( queryTag == "tst1340-W1")
-            Utils1.Nop();
+        //if( queryTag.Contains( "tst1074") )
+        //    Utils1.Nop();
+        
 
         if( !s_dictLambdaTagPerApp.ContainsKey( queryTag ))
         {
@@ -153,13 +160,16 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
 {
     var queryVars = "";
     //var queryFields = "";
+
+    if( lambda.Tag == "tsql082")
+        Utils.Nop();
     
 
     var exportedDictFields = new Dictionary<string, string>();
     foreach( var field in lambda.Fields ) 
     {
         var fldSignature = $@"{PREFIX_FIELD}{field.Key}{POSTFIX_FIELD}";
-        if( lambda.SqlCode.Contains(fldSignature) )
+        //if( lambda.SqlCode.Contains(fldSignature) ) am comentat pt ca in semnatura unui subquery poate sa apara un cammp, dar el nu apare in semnatura princiapla
         {
             //queryFields += $@" ""{fldName}"",";
             var identifKey = field.Value.LangName;
@@ -190,34 +200,31 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
     var queryFileStartOffset = lambda.SrcStartOffset;
     var queryFileEndOffset = lambda.SrcEndOffset;
     var queryHash = lambda.Hash;
+    var queryIsQryS = lambda.isQryS;
 
     var queryTag1 = _getQueryTag( lambda.Tag );
     var queryTag  = $"{queryTag1}-{lambda.SubTag}";
 
-    var querySubQueries = "null";
+    var querySubQueries = "nil";
     if( lambda.SubQueries != null )
     {
         var queries = "";
-        /*
+        
         foreach( var subQuery in lambda.SubQueries)
         {
-            
-            var subquery_golang = subQuery.GolangCode;
+            //var subquery_golang = subQuery.GolangCode;
             //subquery_golang.Replace();
+            var varName = subQuery.VariableStorageName;
 
             var querySubQuery = $@"                  
-				        func(_ctx *orm.DBContextBase, args []any, __tagQuery string)string{{
-										        
-					        var ctx = _ctx.GenericContext.(*DBContext);
-					        var sqlQuery = {subquery_golang};
-					        return sqlQuery;
+				        {{ 
+					        VariableName : ""{varName}"",
 				        }},
                         ";
-            queryTag = UseTemplate( queryTag, this.Options.ConvertSql.Templ_SubQuery, 
+            querySubQuery = UseTemplate( querySubQuery, this.Options.ConvertSql.Templ_SubQuery, 
             new Dictionary<string,string>()
             { 
-                //{ "arguments", arguments},
-                { "subquery_golang", subquery_golang},
+                { "varName", varName},
             });
             queries += querySubQuery;
         }
@@ -231,8 +238,7 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
             { 
                 { "queries", queries},
             });
-        */
-
+        querySubQueries = querySubQueries.Trim();
     }
 
     var text = $@"
@@ -252,6 +258,8 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
 		StartOff: 		{queryFileStartOffset},
 		EndOff:  		{queryFileEndOffset},
 		Hash:  			""{queryHash}"",
+        IsQryS:	        ""{queryIsQryS}"",
+
         SubQueries:    {querySubQueries},
 	}},
         ";
@@ -266,17 +274,18 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
                 { "querySelectSqlFields", querySelectSqlFields},
                 
                 { "queryFields", queryFields},
-                { "queryVars", queryVars},
+                { "queryVars", queryVars.Trim()},
                 { "queryFile", queryFile},
                 { "queryFileStartOffset", ""+queryFileStartOffset},
                 { "queryFileEndOffset", ""+queryFileEndOffset},
                 { "queryHash", queryHash},
+                { "queryIsQryS", queryIsQryS?"true":"false"},                
                 { "querySubQueries", querySubQueries}
                 
             }
             );
 
-    return text;
+    return "\n\t\t"+(text.Trim());
 }
 internal static string GoLang_ExportSqlFile( Options options, string allQueries)
 {

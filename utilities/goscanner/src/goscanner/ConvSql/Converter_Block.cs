@@ -50,7 +50,7 @@ public partial class SqlConvert
     private string PopBlock(bool appendToPrevious = true)
     {
         var lastBlock = m_blocks.Pop();
-        m_LambdaCode = lastBlock.lambda;
+        setLambdaCode( lastBlock.lambda);
 
         var lastTarget = lastBlock.genCode;
         string block = RemoveLastDuplicateLineFeed(m_targetOutputFile.ToString());

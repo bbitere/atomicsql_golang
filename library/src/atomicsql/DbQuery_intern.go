@@ -32,14 +32,17 @@ const DEF_TABLE_ROW_IDX = "ROW_IDX"
 
 // {#@field@#}
 // {@@staticKey@@}
-const PREFIX_FIELDS = "{#@"
-const POSTFIX_FIELDS = "@#}"
+const PREFIX_FIELD = "{#@"
+const POSTFIX_FIELD = "@#}"
+
+const SUBQ_PREFIX_FIELD  = "{#$";
+const SUBQ_POSTFIX_FIELD = "$#}";
 
 const START_STATIC = "{@@"
 const END_STATIC = "@@}"
 
-const START_SUBQUEY =  "@_SUBQUERY("; //@_SUBQUERY( {@@Name1@@}, {@@Name2@@} )@ 
-const END_SUBQUEY   = ")@ ";
+const START_SUBQUERY =  "{@$";
+const END_SUBQUERY   = "$@}";
 
 
 const SQL_POSTGRESS_RND_UUID = "gen_random_uuid()"
@@ -59,7 +62,12 @@ func array_push[T any](arr *[]T, e T) {
 }
 func Str_Index(data string, find string, idx int) int {
 
-	return Str.Index(data[idx:], find)
+	var s = data[idx:];
+	var ret = Str.Index( s, find)
+	if( ret >= 0){
+		return ret + idx;
+	}
+	return -1;
 }
 
 func isset(data any) bool {
@@ -847,7 +855,11 @@ func (_this *DBQuery[T]) checkMySqlError( /*#String*/ sqlQuery string, err error
  */
 func (_this *DBQuery[T]) generateSqlText( /*#DBSqlQuery< T >*/ query *DBSqlQuery[T]) string {
 
-	if query.fnWhere != nil {
+	if query.fnWhereS != nil {
+
+		query1 := _this._whereGenericS(query.fnWhereS) //"(opText1) AND (opText2)" );
+		return query1.getText()
+	} else if query.fnWhere != nil {
 
 		query1 := _this._whereGeneric(query.fnWhere) //"(opText1) AND (opText2)" );
 		return query1.getText()
@@ -1827,6 +1839,9 @@ func (_this *DBQuery[T]) _getModelRelations(
 	var arrInstModel = []any{}
 
 	sqlQuery := _this._getRows(false, nil, false, bUserAnySelect)
+	if( _this.finishSubQuery(sqlQuery)){
+		return nil, nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -2232,39 +2247,42 @@ type TFuncStatic struct {
 	varValue any
 }
 
-func toany(val *int, typeVar string) (int, any) {
+func toany(val *int, typeVar string) (bool, int, any) {
 
 	var sizeInt = unsafe.Sizeof(val)
-	var cellInt = 1 //consider 64 bits
+	var cellInt64 = 1 //consider 64 bits
 	if sizeInt == 4 {
-		cellInt = 2
+		cellInt64 = 2
 	}
 	if sizeInt == 8 {
-		cellInt = 1
+		cellInt64 = 1
 	}
 
 	switch typeVar {
 
+	case "int8":
+		return true, 1, *((*int8)((unsafe.Pointer(val))))
 	case "int16":
-		return 1, *((*int16)((unsafe.Pointer(val))))
+		return true, 1, *((*int16)((unsafe.Pointer(val))))
 	case "int32":
-		return 1, *((*int32)((unsafe.Pointer(val))))
+		return true, 1, *((*int32)((unsafe.Pointer(val))))
 	case "int":
-		return 1, *val
+		return true, 1, *val
 	case "int64":
-		return cellInt, *((*int64)((unsafe.Pointer(val))))
+		return true, cellInt64, *((*int64)((unsafe.Pointer(val))))
 	case "float32":
-		return 1, *((*float32)((unsafe.Pointer(val))))
+		return true, 1, *((*float32)((unsafe.Pointer(val))))
 	case "float64":
-		return cellInt, *((*float64)((unsafe.Pointer(val))))
+		return true, cellInt64, *((*float64)((unsafe.Pointer(val))))
 	case "bool":
-		return 1, *((*bool)((unsafe.Pointer(val))))
+		return true, 1, *((*bool)((unsafe.Pointer(val))))
 	case "string":
 		{
 
 			var tt string = ""
 			var sizeOfString = unsafe.Sizeof(tt)
-			return int(math.Round(float64(sizeOfString) / float64(sizeInt))),
+			var cellInts = int(math.Round(float64(sizeOfString) / float64(sizeInt)))
+			return true, cellInts,
 				*((*string)((unsafe.Pointer(val))))
 		}
 	case "time":
@@ -2272,11 +2290,18 @@ func toany(val *int, typeVar string) (int, any) {
 
 			var tt time.Time
 			var sizeOfTime = unsafe.Sizeof(tt)
-			return int(math.Round(float64(sizeOfTime) / float64(sizeInt))),
+			var cellInts = int(math.Round(float64(sizeOfTime) / float64(sizeInt)))
+			return true, cellInts,
 				*((*time.Time)((unsafe.Pointer(val))))
 		}
+	case "DBContext":
+		{
+			return false, 1,
+				*((**int)((unsafe.Pointer(val))))
+		}
 	}
-	return 1, nil
+	
+	return false, 1, nil
 }
 func (_this *DBQuery[T]) _extractStaticVarFromFunc(
 	ptr_fnWhere unsafe.Pointer,
@@ -2311,63 +2336,67 @@ func (_this *DBQuery[T]) _extractStaticVarFromFunc(
 	for i := 0; i < len(externalVarsSignature); i++ {
 
 		var varType = externalVarsSignature[i].VarType
+		var bValid = false;
 		var idx = 0
 		var val any = nil
 
 		switch off {
 		case 0:
 			{
-				idx, val = toany(&ptr.f.i1, varType)
+				bValid, idx, val = toany(&ptr.f.i1, varType)
 			}
 		case 1:
 			{
-				idx, val = toany(&ptr.f.i2, varType)
+				bValid, idx, val = toany(&ptr.f.i2, varType)
 			}
 		case 2:
 			{
-				idx, val = toany(&ptr.f.i3, varType)
+				bValid, idx, val = toany(&ptr.f.i3, varType)
 			}
 		case 3:
 			{
-				idx, val = toany(&ptr.f.i4, varType)
+				bValid, idx, val = toany(&ptr.f.i4, varType)
 			}
 		case 4:
 			{
-				idx, val = toany(&ptr.f.i5, varType)
+				bValid, idx, val = toany(&ptr.f.i5, varType)
 			}
 		case 5:
 			{
-				idx, val = toany(&ptr.f.i6, varType)
+				bValid, idx, val = toany(&ptr.f.i6, varType)
 			}
 		case 6:
 			{
-				idx, val = toany(&ptr.f.i7, varType)
+				bValid, idx, val = toany(&ptr.f.i7, varType)
 			}
 		case 7:
 			{
-				idx, val = toany(&ptr.f.i8, varType)
+				bValid, idx, val = toany(&ptr.f.i8, varType)
 			}
 		case 8:
 			{
-				idx, val = toany(&ptr.f.i9, varType)
+				bValid, idx, val = toany(&ptr.f.i9, varType)
 			}
 		case 9:
 			{
-				idx, val = toany(&ptr.f.i10, varType)
+				bValid, idx, val = toany(&ptr.f.i10, varType)
 			}
 		case 10:
 			{
-				idx, val = toany(&ptr.f.i11, varType)
+				bValid, idx, val = toany(&ptr.f.i11, varType)
 			}
 		case 11:
 			{
-				idx, val = toany(&ptr.f.i12, varType)
+				bValid, idx, val = toany(&ptr.f.i12, varType)
 			}
 		}
 
 		off += idx
-		//arrays.Append( &arr, val )
-		dictVar[externalVarsSignature[i].VarName] = val
+		if( bValid ){
+
+			//arrays.Append( &arr, val )
+			dictVar[externalVarsSignature[i].VarName] = val
+		}
 	}
 
 	return dictVar
@@ -2423,15 +2452,24 @@ func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_f
 		//add subquery content
 		for iSubQuery := 0; iSubQuery < len(compiledQry.SubQueries); iSubQuery++{
 			
-			var subQueryTag = compiledQry.Tag + "_SQ_" + fmt.Sprintf("%d",iSubQuery);
-			var fn 			= compiledQry.SubQueries[ iSubQuery ];
+			var varNameID = compiledQry.SubQueries[iSubQuery].VariableName;
+			
+			var sqlOfSubQuery, has = _this.dictSubQueryStrs[varNameID];
+			if( has ){
+				sql = str_replace( START_SUBQUERY+varNameID+END_SUBQUERY, "("+sqlOfSubQuery+")", sql)
+			}
+			//var subQueryTag = compiledQry.Tag + "_SQ_" + fmt.Sprintf("%d",iSubQuery);
+			//var fn 			= compiledQry.SubQueries[ iSubQuery ];
 			//var sqlQueryOfSubQuery, subQueryUID = fn( _this.tableInst.m_ctx, &statics, subQueryTag );
 			//sql = str_replace( subQueryUID, sqlQueryOfSubQuery, sql)
 
-			var textSubQuery, args = _this.findSubQueryTag( sql, statics );
-			var sqlQueryOfSubQuery = fn( _this.tableInst.m_ctx, args, subQueryTag );
-			sql = str_replace( textSubQuery, sqlQueryOfSubQuery, sql)
+			//var textSubQuery, args = _this.findSubQueryTag( sql, statics );
+			//var sqlQueryOfSubQuery = fn( _this.tableInst.m_ctx, args, subQueryTag );
+			//sql = str_replace( textSubQuery, sqlQueryOfSubQuery, sql)
 		}
+		//replace the used var of my Table in subquery
+		sql = str_replace( SUBQ_PREFIX_FIELD,  PREFIX_FIELD, sql)
+		sql = str_replace( SUBQ_POSTFIX_FIELD, POSTFIX_FIELD, sql)
 	}
 
 	for staticKey, staticVal := range statics {
@@ -2449,8 +2487,8 @@ func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_f
 		}
 	}
 
-	var PREFIX_FIELDS_len = len(PREFIX_FIELDS)
-	var POSTFIX_FIELDS_len = len(POSTFIX_FIELDS)
+	var PREFIX_FIELDS_len = len(PREFIX_FIELD)
+	var POSTFIX_FIELDS_len = len(POSTFIX_FIELD)
 
 	var selectAggregatedFields = map[string]string{} // = arrays.CloneMapString( &compiledQry.SelectSqlFields);
 
@@ -2496,7 +2534,7 @@ func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_f
 	}
 	return sql, nil
 }
-
+/*
 func (_this *DBQuery[T]) findSubQueryTag( sql string, statics map[string]any ) (string, []any){
 
 	var ret = ""
@@ -2510,7 +2548,7 @@ func (_this *DBQuery[T]) findSubQueryTag( sql string, statics map[string]any ) (
 		if( lenStr >= 0 ){
 			ret =  Str_SubString( sql, idx, lenStr + len(END_SUBQUEY));
 
-			var argContent =  Str_SubString( sql, idx + len(START_SUBQUEY), lenStr -len(START_SUBQUEY)/*-len(START_SUBQUEY)*/ );
+			var argContent =  Str_SubString( sql, idx + len(START_SUBQUEY), lenStr -len(START_SUBQUEY) );
 
 			var argsTxt = Str.Split(argContent, ",")
 			for i := 0; i < len(argsTxt); i ++{
@@ -2531,6 +2569,7 @@ func (_this *DBQuery[T]) findSubQueryTag( sql string, statics map[string]any ) (
 
 	return ret, args;
 }
+*/ 
 
 func (_this *DBQuery[T]) _getNameAndID(model *T) (string, int64, reflect.Value) {
 
@@ -2573,8 +2612,53 @@ func (_this *DBQuery[T]) _whereGeneric(fnWhere func(x *T) bool) *DBSqlQuery[T] {
 	return nil
 }
 
+func (_this *DBQuery[T]) _whereGenericS(fnWhereS func( x *T, q IDBQuery) bool) *DBSqlQuery[T] {
+
+	var ctx = _this.tableInst.m_ctx
+	//foreach( SQL_WHERE_QUERIES as file =>sqlQueries )
+	var sqlQueries = ctx.CompiledSqlQueries
+
+	var fullTag = _this.myTag + "-" + _this.subTag
+	var query, hasQuery = sqlQueries[fullTag]
+	if hasQuery {
+
+		var sql, _ = _this.getSqlNativeMethod(query, unsafe.Pointer(&fnWhereS), nil)
+
+		var ret = (new(DBSqlQuery[T])).Constr(sql) //"(opText1) AND (opText2)" );
+		ret.fnWhereS = fnWhereS
+
+		if _this.m_queryAND == nil {
+
+			_this.m_queryAND = (new(DBSqlQuery[T])).Constr("") //"(opText1) AND (opText2)" );
+			_this.m_queryAND.m_op = "AND"
+			_this.m_queryAND.m_listOperands = []*DBSqlQuery[T]{}
+		}
+
+		array_push(&_this.m_queryAND.m_listOperands, ret)
+
+		return ret
+	}
+	log.Printf("DBQuery::where() not found signature, tag: %s! Recompile the project, to regenerate schema", fullTag)
+	//UtilLog::errorMsg("DBSqlProvider::where() not found signature! Recompile the project, to regenerate DBSchemaAdapter_MySqlProc.gen.php");
+	return nil
+}
+
 func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSelect func(x *T) *V) *DBQuery[V] {
 
+	if _this.pRTM != nil {
+
+	}
+	return _Select_query1[T, V](_this, unsafe.Pointer(&fnSelect))
+}
+func _Select_querySubQ[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSelectS func( x *T, q IDBQuery) *V) *DBQuery[V] {
+
+	if _this.pRTM != nil {
+
+	}
+	return _Select_query1[T, V](_this, unsafe.Pointer(&fnSelectS))
+}
+
+func _Select_query1[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], pointerFnSelect unsafe.Pointer) *DBQuery[V] {
 	var ctx = _this.tableInst.m_ctx
 
 	var tbl1 = (new(DBTable[V])).Constr(
@@ -2606,7 +2690,7 @@ func _Select_query[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], fnSele
 		query.newJoinCollection()
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_SQ)
 
-		var sql, _selectSqlFields = query.getSqlNativeMethod(compiledDataQuery, unsafe.Pointer(&fnSelect), query.excludeLangFieldsFromGroupBy)
+		var sql, _selectSqlFields = query.getSqlNativeMethod(compiledDataQuery, pointerFnSelect, query.excludeLangFieldsFromGroupBy)
 
 		query.querySelectNewRecord_Text = sql
 		query.querySelectNewRecord_isAgregator = false
@@ -2660,6 +2744,9 @@ func _SelectValue_query[T IGeneric_MODEL, V comparable](
 
 		query.setLimit(0, 1)
 		var sqlQuery = query._getRows(false, nil, false, false)
+		if( query.finishSubQuery(sqlQuery) ){
+			return nil,nil
+		}
 
 		var ctx = query.tableInst.m_ctx
 		ctx.currOperationDTime2 = time.Now()
@@ -2805,4 +2892,11 @@ func (_this *DBQuery[T]) _arrayOfSingleFieldBool(sqlResult *sql.Rows, fieldName 
 		Arr_Append(&retList, value.Bool())
 	}
 	return retList, nil
+}
+
+
+func (_this *DBQuery[T]) generateModel() *T{
+
+	var model *T = new (T);
+	return model;
 }

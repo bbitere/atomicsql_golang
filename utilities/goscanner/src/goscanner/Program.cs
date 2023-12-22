@@ -51,6 +51,7 @@ internal class Program
             //Console.WriteLine();
             if( options.ConvertSql != null && options.ConvertSql.NumErrors > 0 )
             {
+                Console.WriteLine($"!!!!!----------------!!!!!!!");
                 Console.WriteLine($"Num of Errors in translation = {options.ConvertSql.NumErrors} ");
             }else
             {

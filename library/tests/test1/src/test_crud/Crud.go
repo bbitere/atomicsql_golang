@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+	//atmf "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
 	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/src/atomicsql_ormdefs"
 	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
 	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
@@ -506,3 +507,4 @@ func Example_RetrieveUserRelation2(ctx *orm.DBContext, uuid string) (*m.User, er
 
 	return model, nil
 }
+

@@ -19,12 +19,13 @@ namespace goscanner.ConvSql
         //public const string SELECT_STRCT_ITM    = "##slItm##";
 
         public const string Class_DBTable       = "DBTable";
+        public const string Class_IDBQuery      = "IDBQuery";
+        
         public const string Func_DBTable_Qry    = "Qry";
-        public const string Func_DBTable_ToRTM    = "ToRTM";
+        public const string Func_DBTable_QryS   = "QryS";
 
-
-        public const string START_SUBQUERY    = "@_SUBQUERY(";
-        public const string END_SUBQUERY    = ")@ ";
+        public const string Func_DBTable_ToRTM  = "ToRTM";
+        public const string Func_DBTable_IsRTM  = "IsRTM";
 
         
         
@@ -32,15 +33,23 @@ namespace goscanner.ConvSql
         public const string Class_DBContext     = "DBContext";
         public const string Func_New_DBContext  = "New_DBContext";
         public const string Func_Select         = "Select";    //Select[T IGeneric_MODEL, V IGeneric_MODEL]
+        public const string Func_SelectSubQ     = "SelectSubQ";
         public const string Func_Aggregate      = "Aggregate";  //Aggregate[T IGeneric_MODEL, V IGeneric_MODEL]
 
-        public const string Class_DBQuery       = "DBQuery";
-        public const string Func_DBQuery_Where  = "Where";
+        public const string Class_DBQuery           = "DBQuery";
+        public const string Func_DBQuery_Where      = "Where";
+        public const string Func_DBQuery_WhereSubQ  = "WhereSubQ";
 
-        public const string SubTag_Where = "W";
-        public const string SubTag_Select = "S";
-        public const string SubTag_GetValue  = "V";
-        public const string SubTag_GetValues = "X";
+        public const string Func_DBQuery_WhereEq      = "WhereEq";
+        public const string Func_DBQuery_WhereEqFld   = "WhereEqFld";
+
+
+        public const string SubTag_WhereSubQ        = "Q";
+        public const string SubTag_Where            = "W";
+        public const string SubTag_Select           = "S";
+        public const string SubTag_SelectSubQ       = "Z";
+        public const string SubTag_GetValue         = "V";
+        public const string SubTag_GetValues        = "X";
 
         public static readonly string[] Func_DBQuery_GetValueArr = new string[]
         {
@@ -65,7 +74,10 @@ namespace goscanner.ConvSql
             "DeleteModels", "DeleteModel",
             "GetValueString", "GetValueInt", "GetValueFloat","GetValueBool", "GetValueTime",
             "GetValuesString", "GetValuesInt", "GetValuesFloat","GetValuesBool", "GetValuesTime",
-            "ToRTM"
+            /*"ToRTM"*///asta nu trebuie 
+            "InsertModel",  "InsertOrUpdateModel",  "InsertOrUpdateModels",  "UpdateModels", "UpdateModel",
+            "InsertRecord", "InsertOrUpdateRecord", "InsertOrUpdateRecords", "UpdateRecords", "UpdateRecord",
+
         };
 
         public static readonly Dictionary<string,string> SubQueryTransform = new Dictionary<string,string>
@@ -147,11 +159,19 @@ namespace goscanner.ConvSql
             if( OrmDef.Func_DBQuery_GetValuesArr.Contains(funcName) )
                 return OrmDef.SubTag_GetValues;
 
+
             if( Func_DBQuery_Where == funcName)
                 return OrmDef.SubTag_Where;
 
+            if( Func_DBQuery_WhereSubQ == funcName)
+                return OrmDef.SubTag_WhereSubQ;
+
+
             if( Func_Select == funcName)
                 return OrmDef.SubTag_Select;
+
+            if( Func_SelectSubQ == funcName)
+                return OrmDef.SubTag_SelectSubQ;
             return "";
         }
         

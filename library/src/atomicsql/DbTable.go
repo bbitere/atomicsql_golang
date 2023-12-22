@@ -99,17 +99,43 @@ func (_this *DBTable[T]) CloneGenericModel() *DBTable[IGeneric_MODEL] {
 //
 // Usign this Qry(tag) method to generate sql query, is the main diference between atomicSql library and linq (C#) or jinq (java)
 func (_this *DBTable[T]) Qry(tagID string) *DBQuery[T] {
+	return _this.QryS(tagID, nil)
+}
 
+// QryS( tag, query ) - identical as Qry(tag), but is using only in lit func of WhereSubQ() and SelectSubQ()
+//
+func (_this *DBTable[T]) QryS(tagID string, containerQuery IDBQuery) *DBQuery[T] {
+
+	
 	_this.m_ctx.currOperationDTime = time.Now()
 	_this.m_ctx.resetSubTag()
 
 	//var this2 any = any(_this)
 	//var this1 = _this.(*DBTable[models.IGeneric_MODEL, models.IGeneric_MODEL])
 	query := (new(DBQuery[T])).Constr(_this)
-	query.myTag = tagID
+
+	if containerQuery != nil {		
+		query.myTag = containerQuery.GetTagID() + "."+ tagID;
+		query.currentSubQueryID    = tagID;
+		query.parentContainerQuery = containerQuery;
+	}else{
+		query.myTag = tagID
+	}
+	
 
 	//query.rows = _this.getRows()
 	return query
+}
+
+func (_this *DBQuery[T]) finishSubQuery(sqlQuery string) bool {
+
+	if( _this.parentContainerQuery != nil){
+		
+		_this.clearCachedSyntax();
+		_this.parentContainerQuery.SetSubQueryString( _this.currentSubQueryID, sqlQuery);
+		return true;
+	}
+	return false;
 }
 
 func (_this *DBTable[T]) getSchemaTable() string {

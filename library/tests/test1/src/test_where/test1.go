@@ -57,6 +57,24 @@ func Test_cleanUp(ctx *orm.DBContext) {
 	//return errcode, err, nameTest;
 }
 
+func Test1_00(step int, bCheckName bool) (int, error, string) {
+
+	var nameTest = "ORM: CheckIntegrity()"
+	
+
+	ctx, err, _ := Test1_init() // (orm.DBContextBase, error, string){
+	if ctx != nil {
+		defer ctx.Close()
+	}
+	if err != nil {
+		return 0, err, nameTest
+	}
+	var bResult = ctx.DBContextBase.CheckIntegrity("..\\..\\");
+	if( bResult != ""){
+		return 0, err, nameTest
+	}
+	return 1, err, nameTest
+}
 //---------------------------------------------------------
 
 func Test1_01(step int, bCheckName bool) (int, error, string) {

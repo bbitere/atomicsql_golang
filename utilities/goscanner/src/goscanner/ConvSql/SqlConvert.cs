@@ -77,12 +77,34 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
 
     }
 
+    protected void setLambdaCode(TLambdaCode lamdbaCode )
+    {
+        if( m_LambdaCode != lamdbaCode )
+        {
+            if( lamdbaCode != null && lamdbaCode.Tag == "tsql082")
+                Utils.Nop();
+
+            if( m_LambdaCode != null && m_LambdaCode.ParentLambda != null
+                && m_LambdaCode.ParentLambda == lamdbaCode)
+            {
+                var top = this.Lambda_getTopQueryTag();
+                if( top != null && top.LambdaCodeContainer == lamdbaCode)
+                {   //exit from a function, discard current subtag
+                    Lambda_popQueryTag(lamdbaCode);
+                }
+            }
+            m_LambdaCode = lamdbaCode;
+        }
+    }
     public bool AddLambda(TLambdaCode lambda)
     {
-        foreach( var it in m_exportedLambdas)
+        if( lambda.ctxTag != null ) 
         {
-            if( it.ctxTag == lambda.ctxTag && it.SubTag == lambda.SubTag )
-                return false;
+            foreach( var it in m_exportedLambdas)
+            {
+                if( it.ctxTag == lambda.ctxTag && it.SubTag == lambda.SubTag )
+                    return false;
+            }
         }
         m_exportedLambdas.Add(lambda);  
         return true;
@@ -533,9 +555,9 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
     }
 
     //$"{identif1}.{sqlField}"
-    protected string getTextSQLIdentif(string identifExpr, string sqlIdentif, string sqlField, TypeInfo type, string fldName, ParserRuleContext ctx)
+    protected string getTextSQLIdentif(string identifExpr, string sqlIdentif, string sqlField, TypeInfo type, string fldName, ParserRuleContext ctx, string operandDOT)
     {
-        var str = this.Lambda_getSQLIdentif( identifExpr,  sqlIdentif, sqlField, type, fldName, ctx);
+        var str = this.Lambda_getSQLIdentif( identifExpr,  sqlIdentif, sqlField, type, fldName, ctx, operandDOT);
         if( str != null ) 
         {
             return str;
@@ -545,10 +567,18 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
 
     protected string getTextSQLVarIdentif(string identif, TypeInfo type, ParserRuleContext ctx)
     {
+        var topSubQuery = this.GetTopSubquery();
+        if( topSubQuery != null && topSubQuery.VariableStorageName == identif)
+        {
+            return $"{START_SUBQUERY}{identif}{END_SUBQUERY}";
+        }
+
         var txtSql = this.Lambda_getSQLVarIdentif( identif, type, ctx);
         if( txtSql != null ) {
             return txtSql;
         }
+        if(identif == "ids")
+             Utils.Nop();
         return $"{PREFIX_VAR}{identif}{POSTFIX_VAR}";
     }
     private string convertToBool( string arg, EOperandKind bIsOperator )
@@ -606,26 +636,31 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
     {
         var sqlText = "";
         TypeInfo typeExpr = null;
+        var operandDOT = "";
         if( Expressions.TryGetValue( expression, out var exprElem) ) 
         {
             sqlText = exprElem.SQLText;
+            operandDOT =  exprElem.Text;
             typeExpr = exprElem.Type;
         }else
         if( Operands.TryGetValue( expression, out var operand) ) 
         {
             sqlText = operand.SQLText;
+            operandDOT =  operand.Text;
             typeExpr = operand.Type;
         }
         else
         if( PrimaryExpressions.TryGetValue( expression, out var primaryExpr) ) 
         {
             sqlText = primaryExpr.SQLText;
+            operandDOT =  primaryExpr.Text;
             typeExpr = primaryExpr.Type;
         } 
         else
         if( UnaryExpressions.TryGetValue( expression, out var unaryExpr) ) 
         {
             sqlText = unaryExpr.SQLText;
+            operandDOT =  unaryExpr.Text;
             typeExpr = unaryExpr.Type;
         }
 
@@ -656,7 +691,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                                 if( sqlField == null )
                                     continue;// do not export pointer field. only the foreignbkey_id
 
-                                var sqlFieldIdentif = getTextSQLIdentif(null, "", sqlField, fldType2, f1.Name, context);
+                                var sqlFieldIdentif = getTextSQLIdentif(null, "", sqlField, fldType2, f1.Name, context, operandDOT);
 
                                 //arr.Add( $" {ITM}.{sqlField} as {f1.Name}" );
                                 select_Fields[f1.Name] = sqlFieldIdentif;

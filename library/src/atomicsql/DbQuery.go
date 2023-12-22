@@ -17,7 +17,9 @@ import (
 const NULL_FK_ID = 0
 
 const tag_Select = "S"
+const tag_SelectSubQ = "C"
 const tag_Where = "W"
+const tag_WhereSubQ = "Q"
 
 const tag_SelectValue = "V"
 const tag_SelectValues = "X"
@@ -39,6 +41,9 @@ type Vvalue IGeneric_MODEL
 
 type IDBQuery interface {
 	_generateSelectSql(selectFields string, ITEM string, bLimit bool, select_sqlFields []string) string
+	GetTagID() string
+	IsRTM() bool
+	SetSubQueryString( key string, sqlQuery string);
 }
 
 // DBQuery is the struct that will do the magic in atomicsql.
@@ -91,6 +96,11 @@ type DBQuery[T IGeneric_MODEL] struct {
 	subTag         string
 	pRTM           *RuntimeQuery[T]
 
+
+	dictSubQueryStrs  		map[string]string;
+	parentContainerQuery	IDBQuery
+	currentSubQueryID 		string
+
 	/*#PHPARG=[ DBSqlQuery ];*/
 	m_queryAND *DBSqlQuery[T]
 
@@ -124,6 +134,20 @@ func (_this *DBQuery[T]) Constr(tableInst *DBTable[T]) *DBQuery[T] {
 	_this.pRTM = nil
 
 	return _this
+}
+
+func (_this *DBQuery[T]) SetSubQueryString( key string, sqlQuery string) {
+
+	_this.dictSubQueryStrs[ key ] = sqlQuery;
+}
+
+func (_this *DBQuery[T]) GetTagID() string {
+
+	return _this.myTag;
+}
+func (_this *DBQuery[T]) IsRTM() bool {
+
+	return _this.pRTM != nil
 }
 
 func (_this *DBQuery[T]) cloneQuery() *DBQuery[T] {
@@ -259,6 +283,81 @@ func Select[T IGeneric_MODEL, V IGeneric_MODEL](
 
 		sequence.subTag = tag_Select + sequence.tableInst.m_ctx.getSubTag()
 		return _Select_query(sequence, fnSelect)
+	}
+}
+
+
+// Select() - Projects each element of a sequence  into a new form.
+//
+// Let's look to next example. First define a local struct vUser1.
+//
+// If you wish to extend a model using User as a base, you can use the annotation 'atomicsql:"copy-model"' as shown in the example below.
+//
+//	import m "models"
+//
+//	type vUser1 struct {
+//
+//		m.User	`atomicsql:"copy-model"`  	// extends vUser1 struct with struct m.User
+//		UserRole string						// add an field that is the forkeignkey UserRoleID.
+//	}
+//
+// And after, look to the call.
+// Select contain 2 parameters
+//
+// 1. the sequcence. ctx.User.Qry().Where().Order().. etc
+//
+// 2 the literal function fnSelect that will convert from User to vUser1 for each model that the sequence will return.
+//
+//	ex:
+//	usrs4, err := orm.Select( ctx.User.Qry("evcy59").
+//
+//	Where(func(x *m.User) bool {
+//
+//		return x.UserRoleID.IsActive == true
+//	}),
+//
+//	func (x *m.User ) *vUser1 {
+//
+//		return &vUser1{
+//
+//			User:     *x,						//return the original m.User struct
+//			UserRole: x.UserRoleID.RoleName,	//add UserRole field
+//		}
+//
+//	}).GetModels();
+//
+// **NOTE**: pay attention to Qry("evcy59")
+//
+// - "evcy59" it is an unique tag per application that help to retrive the sql associated code with this instruction
+//
+// **NOTE2**: pay attention: literal function fnSelect and sequence should be stacked in the Select() argument not placed outside
+func SelectSubQ[T IGeneric_MODEL, V IGeneric_MODEL](
+	sequence *DBQuery[T],
+	fnSelect func(x *T, q IDBQuery) *V,
+) *DBQuery[V] {
+
+	if sequence.pRTM != nil {
+
+		var _this = sequence
+		var tbl1 = (new(DBTable[V])).Constr(
+			_this.tableInst.m_sqlName,
+			_this.tableInst.m_langName,
+			_this.tableInst.m_ctx)
+
+		var query = (new(DBQuery[V])).Constr(tbl1)
+
+		var arr = []*V{}
+		for _, itm := range _this.pRTM.models {
+
+			Arr_Append(&arr, fnSelect(itm, _this))
+		}
+		query.pRTM = (new(RuntimeQuery[V])).Constr(arr, _this.pRTM.structDefs, nil)
+
+		return query
+	} else {
+
+		sequence.subTag = tag_SelectSubQ + sequence.tableInst.m_ctx.getSubTag()
+		return _Select_querySubQ(sequence, fnSelect)
 	}
 }
 
@@ -940,38 +1039,82 @@ func (_this *DBQuery[T]) whereNotIn(field string, operandsIn []any) *DBQuery[T] 
 // Let's see an example of subquery condition (***This feature is not Implemented yet.***):
 // Ex:
 //
-//	context.Table.Where( func(x *Table)bool{
+//	context.Table.Qry("label").Where( func(x *Table)bool{
 //
-//	    var count, _ = context.Table2.WhereEq( context.Table2_.Field1, "val2").GetCount();
+//	    var count, _ = context.Table2.Qry("").WhereEq( context.Table2_.Field1, "val2").GetCount();
 //	    return Sql_IIF( x.Relation != nil, count, 0) > 5 &&
 //	             (val == nil || x.Relation_ID == val)
 //	}
-//
-// Or another example more logic:
-// Ex:
-//
-//	context.Table.Where( func(x *Table)bool{
-//
-//	    var ids, _ = context.Table2.WhereEq( context.Table2_.Field1, "val2").GetRowsAsFieldInt( context.Table2_.ID );
-//	    return Sql_ArrayContain( ids, context.Table.ForeignKey_ID);
-//	}
 func (_this *DBQuery[T]) Where(fnWhere func(x *T) bool) *DBQuery[T] {
+
+	return _this._whereSubQuery(nil, fnWhere)
+}
+
+// WhereSubQ() is an unlimited conditioning function. It allows you to add any desired filtering condition, including complex subconditions, even a subquery condition but also having subqueries
+//
+// Ex:
+// import (
+//	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+//	atmfunc "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
+// )
+//	context.Table.Qry("label1").WhereSubQ( func(x *Table, q atmsql.IDBQuery)bool{
+//
+//	    var ids, _ = context.Table2.QryS("ids",q).WhereEq( context.Table2_.Field1, "val2").GetRowsAsFieldInt( context.Table2_.ID );
+//	    return atmfunc.Sql_ArrayContain( ids, context.Table.ForeignKey_ID);
+//	}
+//  you observe that in this example inside we are using 
+//  QryS("ids",q), where the label is the name of variable ids.
+// 
+// Let see the SQL code:
+//
+//	    WHERE User.RelationID IN ( SELECT ID FROM Table2 WHERE Field1 = 'val2' )
+//
+func (_this *DBQuery[T]) WhereSubQ(fnWhereS func( x *T, q IDBQuery) bool) *DBQuery[T] {
+
+	if _this.pRTM == nil {
+		//collect subquery strings
+		_this.dictSubQueryStrs = make( map[string]string);
+		var model = _this.generateModel();
+		fnWhereS( model, _this);
+	}
+
+	return _this._whereSubQuery(fnWhereS, nil)
+}
+
+func (_this *DBQuery[T]) _whereSubQuery(
+	fnWhereS func( x *T, q IDBQuery) bool,
+	fnWhere func(x *T) bool) *DBQuery[T] {
 
 	if _this.pRTM != nil {
 
 		var arr = []*T{}
 		for _, itm := range _this.pRTM.models {
 
-			if fnWhere(itm) {
-				Arr_Append(&arr, itm)
+			if fnWhereS != nil {
+				if fnWhereS( itm, _this) {
+					Arr_Append(&arr, itm)
+				}
+			} else {
+				if fnWhere(itm) {
+					Arr_Append(&arr, itm)
+				}
 			}
 		}
 		_this.pRTM.models = arr
 
 	} else {
 
-		_this.subTag = tag_Where + _this.tableInst.m_ctx.getSubTag()
-		var querySql = _this._whereGeneric(fnWhere) //"($opText1) AND ($opText2)" );
+		if fnWhereS != nil {
+			_this.subTag = tag_WhereSubQ + _this.tableInst.m_ctx.getSubTag()
+		}else {
+			_this.subTag = tag_Where + _this.tableInst.m_ctx.getSubTag()
+		}
+		var querySql *DBSqlQuery[T] = nil
+		if fnWhereS != nil {
+			querySql = _this._whereGenericS(fnWhereS) //"($opText1) AND ($opText2)" );
+		} else {
+			querySql = _this._whereGeneric(fnWhere) //"($opText1) AND ($opText2)" );
+		}
 
 		if _this.whereTxt != "" {
 			_this.whereTxt += " AND "
@@ -1018,6 +1161,10 @@ func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error) {
 	}
 	sqlQuery := _this._getRows(false, fields, false, false)
 
+	if( _this.finishSubQuery(sqlQuery)){
+		return nil, nil
+	}
+
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
 	dbResult, err := _this.tableInst.m_ctx.Query(sqlQuery)
@@ -1053,6 +1200,9 @@ func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
 	_this.setLimit(0, 1)
 
 	sqlQuery := _this._getRows(false, nil, false, false)
+	if( _this.finishSubQuery(sqlQuery)){
+		return nil, nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1096,6 +1246,9 @@ func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 	_this.setLimit(0, 1)
 
 	sqlQuery := _this._getRows(false, fields, false, false)
+	if( _this.finishSubQuery(sqlQuery)){
+		return nil, nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1163,6 +1316,9 @@ func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 	}
 
 	sqlQuery := _this._getRows(true, fields, false, false)
+	if( _this.finishSubQuery(sqlQuery)){
+		return nil, nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1295,6 +1451,9 @@ func (_this *DBQuery[T]) GetSingleDataString(fieldName string) (string, error) {
 	}
 
 	var sqlQuery = _this._getRows(false, []string{fieldName}, false, false)
+	if( _this.finishSubQuery(sqlQuery) ){
+		return "",nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1343,6 +1502,9 @@ func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string)
 	}
 
 	var sqlQuery = _this._getRows(false, []string{fieldName}, false, false)
+	if( _this.finishSubQuery(sqlQuery) ){
+		return 0,nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1391,6 +1553,9 @@ func (_this *DBQuery[T]) GetRowsAsFieldString(fieldName string) ([]string, error
 		return arr, nil
 	}
 	sqlQuery := _this._getRows(false, []string{fieldName}, false, false)
+	if( _this.finishSubQuery(sqlQuery)){
+		return nil, nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1441,6 +1606,9 @@ func (_this *DBQuery[T]) GetRowsAsFieldInt(fieldName string) ([]int64, error) {
 		return arr, nil
 	}
 	sqlQuery := _this._getRows(false, []string{fieldName}, false, false)
+	if( _this.finishSubQuery(sqlQuery)){
+		return nil, nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1897,6 +2065,9 @@ func (_this *DBQuery[T]) GetCount() (int64, error) {
 	}
 
 	var sqlQuery = _this._getCount(COUNT_NAME)
+	if( _this.finishSubQuery(sqlQuery) ){
+		return 0,nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1950,6 +2121,9 @@ func (_this *DBQuery[T]) GetDistinctCount(fields []string) (int64, error) {
 		return 0, fmt.Errorf("arg fields is empty")
 	}
 	var sqlQuery = _this._getDistinctCount(COUNT_NAME, fields)
+	if( _this.finishSubQuery(sqlQuery) ){
+		return 0,nil
+	}
 
 	var ctx = _this.tableInst.m_ctx
 	ctx.currOperationDTime2 = time.Now()
@@ -1989,7 +2163,7 @@ func (_this *DBQuery[T]) GetDistinctCount(fields []string) (int64, error) {
 //	             )
 //		            }).GetModels()
 //
-// And Lets suppose that the scanner compile crash when it try to parse this complex syntax
+// # And Lets suppose that the scanner compile crash when it try to parse this complex syntax
 //
 // But, Your project must continue to run, not to be stopped, and the ORM blamed.
 //

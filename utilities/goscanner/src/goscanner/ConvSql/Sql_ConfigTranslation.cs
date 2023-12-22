@@ -29,7 +29,7 @@ namespace goscanner.ConvSql
         public ConvCommon.TemplateItem Templ_GoSqlVarDef;
         public ConvCommon.TemplateItem Templ_SubQuery;
         public ConvCommon.TemplateItem Templ_SubQueries;
-        public ConvCommon.TemplateItem Templ_SubQueryVardef;
+        //public ConvCommon.TemplateItem Templ_SubQueryVardef;
         //public ConvCommon.TemplateItem Templ_Include_files;
 
         public List<string> IncludeFiles = new List<string>();
@@ -115,8 +115,8 @@ namespace goscanner.ConvSql
             if( Templ_SubQueries  == null )
                 Console.WriteLine("Templ_SubQueries - not set");
 
-            if( Templ_SubQueryVardef  == null )
-                Console.WriteLine("Templ_SubQueryVardef - not set");
+            //if( Templ_SubQueryVardef  == null )
+            //    Console.WriteLine("Templ_SubQueryVardef - not set");
             
 
             if( IncludeFiles  == null )
@@ -148,7 +148,7 @@ namespace goscanner.ConvSql
                 case "Templ_GoSqlVarDef":           this.Templ_GoSqlVarDef          = new ConvCommon.TemplateItem( token1, content ); break;
                 case "Templ_SubQuery":              this.Templ_SubQuery             = new ConvCommon.TemplateItem( token1, content ); break;
                 case "Templ_SubQueries":            this.Templ_SubQueries           = new ConvCommon.TemplateItem( token1, content ); break;
-                case "Templ_SubQueryVardef":        this.Templ_SubQueryVardef       = new ConvCommon.TemplateItem( token1, content ); break;
+                //case "Templ_SubQueryVardef":        this.Templ_SubQueryVardef       = new ConvCommon.TemplateItem( token1, content ); break;
                     
                     
                     

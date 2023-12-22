@@ -181,19 +181,32 @@ public partial class SqlConvert
             {
                 OperandKind = EOperandKind.Operator;
                 var sqlText =  leftOperandExpression.SQLText;
-                if( binaryOP == "+")
+                var binaryOperator = binaryOP.Trim();
+                if( binaryOperator == "+")
                     sqlText =  $"{leftOperandExpression.SQLText}+{rightOperandExpression.SQLText}";
                 else
-                if( binaryOP == "-")
+                if( binaryOperator == "-")
                     sqlText =  $"{leftOperandExpression.SQLText}-{rightOperandExpression.SQLText}";
                 else
-                if( binaryOP == "*")
+                if( binaryOperator == "*")
                     sqlText =  $"{leftOperandExpression.SQLText}*{rightOperandExpression.SQLText}";
                 else
-                if( binaryOP == "/")
+                if( binaryOperator == "/")
                     sqlText =  $"{leftOperandExpression.SQLText}/{rightOperandExpression.SQLText}";
-                else                
-                    sqlText = getTextSQLError($"operator {binaryOP} not supproted in sql translation ", context);
+                else
+                if( binaryOperator == ">")
+                    sqlText =  $"{leftOperandExpression.SQLText} > {rightOperandExpression.SQLText}";
+                else
+                if( binaryOperator == ">=")
+                    sqlText =  $"{leftOperandExpression.SQLText} >= {rightOperandExpression.SQLText}";
+                else
+                if( binaryOperator == "<")
+                    sqlText =  $"{leftOperandExpression.SQLText} < {rightOperandExpression.SQLText}";
+                else
+                if( binaryOperator == "<=")
+                    sqlText =  $"{leftOperandExpression.SQLText} <= {rightOperandExpression.SQLText}";
+                else
+                    sqlText = getTextSQLError($"operator {binaryOperator} not supproted in sql translation ", context);
 
                 // TODO: If both operands are integer, expression should be treated as arbitrary-precision numbers until assigned to a variable
                 Expressions[context] = new ExpressionInfo
@@ -1043,7 +1056,7 @@ public partial class SqlConvert
                         var tableName = getSqlTableNameFromStructInfo( structInfo);
                         if( tableName != "")
                         {
-                            SQLText = getTextSQLIdentif( null, tableName, "", typeVar.Type, "", context);
+                            SQLText = getTextSQLIdentif( null, tableName, "", typeVar.Type, "", context, "");
                         }else
                         {
                             if( m_LambdaCode != null && m_LambdaCode.IsQueuedSelect)

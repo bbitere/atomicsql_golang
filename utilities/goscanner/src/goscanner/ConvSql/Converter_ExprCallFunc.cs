@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Gemstone.Units;
 using goscanner.Metadata;
+using static GoParser;
+
+
 
 namespace goscanner.ConvSql
 {
@@ -21,12 +25,16 @@ namespace goscanner.ConvSql
                 Utils.Nop();
 
             string functionName = primaryExpression.Text;
+
+            
           
             //FunctionInfo functionInfo = null;
             
             var funcName = getIdentOfFunction( functionName );
             if( funcName == OrmDef.Func_New_DBContext )
                 Utils.Nop();
+
+            context.m_funcMethodName  = functionName;
 
             var detailsType = new TGenTypeDetails();
             var normalizedType1 = primaryExpression.Type.getNormalizedType();
@@ -44,8 +52,7 @@ namespace goscanner.ConvSql
                 { 
                     Debug_Console("normalizedType1: OrmDef.Class_DBQuery");
                 }else
-                if( normalizedType1 != null
-                  )
+                if( normalizedType1 != null)
                 { 
                     Debug_Console($"normalizedType1: {normalizedType1.Name}");
                 }else
@@ -57,11 +64,27 @@ namespace goscanner.ConvSql
             if( normalizedType1 != null
              && normalizedType1.Name == OrmDef.Class_DBQuery )
             {
+                context.m_classMethod     = normalizedType1.Name;
+                context.m_funcMethodName  = funcName;
+
+                if( this.GetTopSubquery() != null)
+                { 
+                    if( funcName == OrmDef.Func_DBQuery_WhereEq
+                     || funcName == OrmDef.Func_DBQuery_WhereEqFld)
+                    {
+                        Log_Error(context, $"method {OrmDef.Func_DBQuery_WhereEq}() or {OrmDef.Func_DBQuery_WhereEqFld}() is not allowed inside of func lit of {OrmDef.Func_DBQuery_WhereSubQ} or {OrmDef.Func_SelectSubQ}");
+                    }
+                }
+                /*
                 var subTagName= OrmDef.GetSubTabByFuncName( funcName );
                 if( subTagName != "" )
                 {
-                    this.Lambda_createSubtagID(subTagName);
-                }
+                    if( !(subTagName == OrmDef.SubTag_Select
+                       || subTagName == OrmDef.SubTag_SelectSubQ))
+                    {
+                        this.Lambda_createSubtagID(subTagName, context);
+                    }
+                }*/
                 /*
                 if( OrmDef.Func_DBQuery_End.Contains(funcName) )
                 {
@@ -73,14 +96,25 @@ namespace goscanner.ConvSql
             if( packageName == Options.ConvertSql.OrmDir_Atomicsql_Git
              || ( normalizedType1 != null && normalizedType1.Name == OrmDef.Class_DBContext ) )
             {
+                context.m_classMethod     = normalizedType1 != null? normalizedType1.Name: null;
+                context.m_funcMethodName  = funcName;
+
+                //if( funcName == OrmDef.Func_Select )
+                //    context.m_SubTagMethodSelectCall = OrmDef.SubTag_Select;
+
+                //if( funcName == OrmDef.Func_SelectSubQ )
+                //    context.m_SubTagMethodSelectCall = OrmDef.Func_SelectSubQ;
+                /*
                 if( funcName == OrmDef.Func_Select )
                 {
-                    //m_LambdaFunc_SubTagCounter++;
-                    //if( m_LambdaCode != null )
-                    //    m_LambdaCode.PrevSubTag = m_LambdaSubTag;
-                    //m_LambdaFunc_SubTags.Add( new SubTag($"{OrmDef.SubTag_Select}{m_LambdaFunc_SubTagCounter}") );
-                    this.Lambda_createSubtagID(OrmDef.SubTag_Select);
+                    //Lambda_createSubtagID(OrmDef.SubTag_Select);
+                    Lambda_createSubtag_AtQueryOrSelect("", OrmDef.SubTag_Select);
                 }
+                if( funcName == OrmDef.Func_SelectSubQ )
+                {
+                    //Lambda_createSubtagID(OrmDef.SubTag_Select);
+                    Lambda_createSubtag_AtQueryOrSelect("", OrmDef.Func_SelectSubQ);
+                }*/
                 if( funcName == OrmDef.Func_Aggregate )
                 {
                     if( context.arguments()?.typeNameGenericList()?.Length == 1 )
@@ -154,7 +188,7 @@ namespace goscanner.ConvSql
                 if( normalizedType1.Name == OrmDef.Class_DBQuery 
                   && OrmDef.Func_DBQuery_End.Contains(funcName) )
                 {
-                    this.Lambda_endSequence();
+                    this.Lambda_endChainOfQuery();
                 }
 
                 packageName = normalizedType1.PackageName;
@@ -209,19 +243,41 @@ namespace goscanner.ConvSql
             }
 
             string argumentList = string.Join(", ", arguments);
+
+            string argument0 = arguments.Count > 0 ? arguments[0]:"";
             //string argumentSQLList = string.Join(", ", arguments_SQL);
-            if( funcName == OrmDef.Func_DBTable_Qry && argumentList == "\"asdax\"u8")
+            if( funcName == OrmDef.Func_DBTable_QryS && argument0 == "\"ids\"u8")
             {
                 Utils.Nop();
             }
             if( normalizedType1 != null 
-             && funcName == OrmDef.Func_DBTable_Qry 
+             && (funcName == OrmDef.Func_DBTable_Qry || funcName == OrmDef.Func_DBTable_QryS )
              && normalizedType1.Name == OrmDef.Class_DBTable 
              && normalizedType1.PackageName!= "" )
             {
-                if(argumentList != "\"\"u8")
-                    Debug_Console($"Func_DBTable_Qry: {argumentList}");
-                this.Lambda_callQryMethod( context, argumentList);
+                if(argument0 == "\"tst1074\"u8")
+                    Debug_Console($"Func_DBTable_Qry: {argument0}");
+
+                if( funcName == OrmDef.Func_DBTable_QryS )
+                {
+                    if( m_LambdaCode != null)
+                    {
+                        var arg0 = _getQueryTag(argument0);
+                        var topQuery = GetTopSubquery();
+                        if( topQuery != null)
+                        {
+                            if(topQuery.VariableStorageName != arg0) 
+                                Log_Error(context.Start, $"Calling method ${OrmDef.Func_DBTable_QryS}() should be done only like this: var NameVar, _ = context.Table.QryS(\"NameVar\", q).Where(..)...; {topQuery.VariableStorageName} is not identically with \"{arg0}\" ");
+                            this.Lambda_callQryMethod( context, argument0, m_LambdaCode.Tag + ".");
+                        }
+                        else
+                            Log_Error(context.Start, $"Calling method ${OrmDef.Func_DBTable_QryS}() should be done only like this: var NameVar, _ = context.Table.QryS(\"NameVar\", q).Where(..)...; ");
+                    }
+                    else
+                        Log_Error(context.Start, $"Calling method ${OrmDef.Func_DBTable_QryS}() should be done only inside lit func of Where() or Select() ");
+                }
+                else
+                    this.Lambda_callQryMethod( context, argument0, "");
             }else
             {
                 var subTagName= OrmDef.GetSubTabByFuncName( funcName );
@@ -230,12 +286,12 @@ namespace goscanner.ConvSql
                 {
                     this.Lambda_callWhereMethod(context, subTagName );
                 }else
-                if( funcName == OrmDef.Func_Select )
+                if( funcName == OrmDef.Func_Select || funcName == OrmDef.Func_SelectSubQ )
                 {
                     var packageTgtName = getPackageNameOfFunction( functionName );
                     if( packageTgtName == Options.ConvertSql.OrmDir_Atomicsql_Git ) 
                     {
-                        this.Lambda_callSelectMethod( context );
+                        this.Lambda_callSelectMethod( context, subTagName );
                     }
                 }
             }

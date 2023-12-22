@@ -4,10 +4,13 @@ import (
 	"database/sql"
 	base64 "encoding/base64"
 	"fmt"
+	ioutil "io/ioutil"
 	log "log"
 	reflect "reflect"
+	Str "strings"
 	"time"
 )
+
 
 type VESqlDialect string
 type TESqlDialect struct {
@@ -103,7 +106,10 @@ type TSubQueryArg struct{
 	SqlCode 		string		// u1.UserRoleID
 	ArgName 		string 		// userRoleID
 	} 
-type TSubQuery = func(_ctx *DBContextBase, argNames []any, tagQuery string) string
+//type TSubQuery = func(_ctx *DBContextBase, argNames []any, tagQuery string) string
+type TSubQuery struct { 
+	VariableName string	//variable name: ids := ctx.table.QryS().Where()...
+}
 
 
 type TCompiledSqlQuery struct {
@@ -118,6 +124,7 @@ type TCompiledSqlQuery struct {
 	StartOff int
 	EndOff   int
 	Hash     string // for checking the integrity
+	IsQryS 	bool
 	SubQueries []TSubQuery
 
 }
@@ -481,14 +488,144 @@ func DBContext_MarkSaveReflVal(reflVal reflect.Value,  _this *DBContextBase  ) b
 	return false;
 }
 
-//used for subqueries replacement
-func SQ_int(token string) 		int{return 0;}
-func SQ_int32(token string) 	int32{return 0;}
-func SQ_int64(token string) 	int64{return 0;}
-func SQ_int16(token string) 	int16{return 0;}
-func SQ_int8(token string)  	int8{return 0;}
-func SQ_float32(token string) 	float32{return 0;}
-func SQ_float64(token string) 	float64{return 0;}
-func SQ_bool(token string) 		bool{return false;}
-func SQ_string(token string) 	string{return "";}
-func SQ_time(token string) 		time.Time{return time.Now();}
+type TInterval struct {
+	i0 int
+	i1 int
+};
+
+func isInIntervals( intervals *[]TInterval, offset int) bool {
+
+	for i:= 0; i < len(*intervals);i ++{
+
+		if( (*intervals)[i].i0 <= offset &&
+		    (*intervals)[i].i1 >= offset ){
+				return true
+			}			
+	}
+	return false
+}
+
+func checkComments(txt1 string, idx int, length int) []TInterval{
+
+	var intervals = []TInterval{}
+
+	var txt = txt1[idx:]
+	var idx2 = length;
+
+	for i := 0; i+1 < len(txt) && i+1 < idx2; i++{
+
+		var ch0 = txt[i];
+		var ch1 = txt[i+1];
+		var ttt = string([]byte{ch0, ch1});
+		if( ttt == "aa"){
+
+		}
+
+		if( ch0 == '/' && ch1 == '/' ){
+
+			var iStart = i;
+			for ; i+1 < len(txt) && i+1 < idx2; i++{
+
+				var _ch0 = txt[i];
+				if( _ch0 == '\r' || _ch0 == '\n'){
+
+					Arr_Append(&intervals, TInterval{ i0:iStart+idx, i1:idx+i} );
+					break;
+				}
+			}			
+		}else
+		if( ch0 == '/' && ch1 == '*' ){
+
+			var iStart = i;
+			for ; i+1 < len(txt) && i+1 < idx2; i++{
+
+				var _ch0 = txt[i];
+				var _ch1 = txt[i+1];
+				if( _ch0 == '*' && _ch1 == '/' ){
+
+					Arr_Append(&intervals, TInterval{ i0:iStart+idx, i1:idx+i} );
+					break;
+				}
+			}			
+		}
+	}
+	return intervals;
+}
+
+func (_this *DBContextBase)checkLambdaIntegrity(rootDir string, keyLamda string, lambda TCompiledSqlQuery) string{
+
+	var filePath = rootDir + lambda.File;
+	var content, err = ioutil.ReadFile(filePath)
+	if err != nil {
+		//fmt.Printf("Eroare la citirea fișierului: %v\n", err)
+		return "file-not-found";
+	}
+
+	var idx = 0;
+	var txt = string(content);
+	if( lambda.IsQryS ){
+
+		var parts = Str.Split( lambda.Tag, ".");
+		var TagParent = parts[0];
+		var TagQryS   = parts[1];
+
+		idx = Str_Index( txt, ".Qry(\"" + TagParent +"\"", 0);
+		if( idx < 0 ){
+			idx = Str_Index( txt, ".Qry( \"" + TagParent +"\"", 0);
+		}
+		if( idx >= 0){
+			var intervals = checkComments( txt, idx, lambda.EndOff+200);
+
+			var idxStart = idx;
+			for iLoop := 0; iLoop<10; iLoop++ {
+				var idx1 = Str_Index( txt, ".QryS(\"" + TagQryS +"\"", idxStart);
+				if( idx1 < 0 ){
+					idx1 = Str_Index( txt, ".QryS( \"" + TagQryS +"\"", idxStart);
+				}
+				if( idx1 >= 0){
+
+					if( !isInIntervals( &intervals, idx1) ){
+						
+						idx = idx1;
+						break;
+					}
+					idxStart = idx1 +5;
+				}
+			}
+		}
+	}else{
+		idx = Str_Index( txt, ".Qry(\"" + lambda.Tag +"\"", 0);
+		if( idx < 0 ){
+			idx = Str_Index( txt, ".Qry( \"" + lambda.Tag +"\"", 0);
+		}
+	}
+
+	if( idx >= 0 ){
+		var contentLambdaFunc = Str_SubString( txt, idx +lambda.StartOff, lambda.EndOff - lambda.StartOff );
+		
+		var encodedString = base64.StdEncoding.EncodeToString([]byte(contentLambdaFunc))
+		if( encodedString != lambda.Hash){
+			return keyLamda;
+		}
+	}
+
+	return "";
+}
+
+func (_this *DBContextBase)CheckIntegrity(rootDir string) string{
+	
+	for  key, value := range( _this.CompiledSqlQueries){
+				
+		//var = _this.CompiledSqlQueries[ itLambda ];
+		var ret = _this.checkLambdaIntegrity( rootDir, key, value );
+		if( ret == "file-not-found"){
+			continue;
+		}
+		if( ret != "" ){
+			fmt.Printf("A lambda expression (%s) is modified. Recompile the project!", key)
+			fmt.Println("");
+			return ret;
+		}
+	}
+	return "";
+}

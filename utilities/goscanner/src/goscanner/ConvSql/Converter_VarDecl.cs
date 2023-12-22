@@ -130,7 +130,9 @@ public partial class SqlConvert
         // varSpec
         //     : identifierList ( type ( '=' expressionList ) ? | '=' expressionList )
 
-        PopSubquery( context);
+        var firstVar       = context.identifierList()?.IDENTIFIER(0);
+        if( firstVar!= null)
+            PopSubquery( context, firstVar.GetText() );
 
         if (m_varIdentifierCount == 0 && m_varMultipleDeclaration)
             m_targetOutputFile.Append(RemoveFirstLineFeed(CheckForCommentsLeft(context)));
