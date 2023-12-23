@@ -272,7 +272,7 @@ namespace src_tool
         public TemplateItem( string name, string text) 
         { 
             Name = name;
-            Text = text;
+            Text = text.Replace("\r\n", "\n");
         }
 
         public string ConvertTemplate( Dictionary<string, string>dict)

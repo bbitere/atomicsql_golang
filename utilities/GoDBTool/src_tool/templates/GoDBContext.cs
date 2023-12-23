@@ -241,9 +241,8 @@ public class GoDBContext:GoModelTemplate
 		}
 
 		var schemaDef = String.Join("", listSchemaDefItem.ToArray());
+		var sqlName   = dialect.getSql();
 
-
-		
 		
         var text = $@"
 
@@ -293,6 +292,13 @@ public class GoDBContext:GoModelTemplate
 			
 			return ret, err
 		}}
+		func (_this *DBContext) Close(){{
+			
+			_this.DBContextBase.Db.Close()
+		}}
+		func (_this *DBContext) GetSqlName(){{
+			return ""{sqlName}"";
+		}}
 
         ";
 
@@ -312,6 +318,7 @@ public class GoDBContext:GoModelTemplate
 					//{ "Template_Def", Template_Def},
 					{ "schemaDef", schemaDef},	
 					{ "txtForeignKeys", txtForeignKeys},
+					{ "sqlName", sqlName},
 				}
 			);
 		return text;

@@ -2,6 +2,8 @@ package test1_where
 
 import (
 	"database/sql"
+	"fmt"
+	Str "strings"
 
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 	atmsql_func "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
@@ -30,7 +32,6 @@ func Test1_GetConnectionString() atmsql.TConnectionString{
 }
 */
 
-
 func Test1_init() (*orm.DBContext, error, string) {
 
 	var connString = Test1_GetConnectionString()
@@ -42,6 +43,9 @@ func Test1_init() (*orm.DBContext, error, string) {
 	ctx, err := orm.New_DBContext(*ctxBase)
 	if err != nil {
 		return nil, err, "initTest1"
+	}
+	if ctx.GetSqlName() != Str.ToLower(string(connString.SqlLang)) {
+		return nil, fmt.Errorf("context DB is not exported as %s", connString.SqlLang), "initTest1"
 	}
 
 	Test_cleanUp(ctx)
@@ -60,7 +64,6 @@ func Test_cleanUp(ctx *orm.DBContext) {
 func Test1_00(step int, bCheckName bool) (int, error, string) {
 
 	var nameTest = "ORM: CheckIntegrity()"
-	
 
 	ctx, err, _ := Test1_init() // (orm.DBContextBase, error, string){
 	if ctx != nil {
@@ -69,12 +72,14 @@ func Test1_00(step int, bCheckName bool) (int, error, string) {
 	if err != nil {
 		return 0, err, nameTest
 	}
-	var bResult = ctx.DBContextBase.CheckIntegrity("..\\..\\");
-	if( bResult != ""){
+
+	var bResult = ctx.DBContextBase.CheckIntegrity("..\\..\\")
+	if bResult != "" {
 		return 0, err, nameTest
 	}
 	return 1, err, nameTest
 }
+
 //---------------------------------------------------------
 
 func Test1_01(step int, bCheckName bool) (int, error, string) {

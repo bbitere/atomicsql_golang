@@ -39,6 +39,11 @@ namespace src_tool
     {
         public MySqlConnection connection;
 
+        public override string getSql()
+        { 
+            return "mysql";
+        }
+    
         public override string SqlSeparator()
         { 
             return ";";

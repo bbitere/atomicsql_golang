@@ -72,8 +72,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"evcy59-S2": 
 		{
-			//CompiledQuery: {#@ID@#} AS "ID", {#@userName@#} AS "UserName", {#@UUID@#} AS "UUID", {#@user_psw@#} AS "UserPsw", {#@userRole_ID@#} AS "UserRole_ID", {#@time1@#} AS "Time1", {#@money@#} AS "Money", {#@userRole_ID.roleName@#} AS "UserRole",
-			CompiledQuery:`eyNASURAI30gQVMgIklEIiwgeyNAdXNlck5hbWVAI30gQVMgIlVzZXJOYW1lIiwgeyNAVVVJREAjfSBBUyAiVVVJRCIsIHsjQHVzZXJfcHN3QCN9IEFTICJVc2VyUHN3IiwgeyNAdXNlclJvbGVfSURAI30gQVMgIlVzZXJSb2xlX0lEIiwgeyNAdGltZTFAI30gQVMgIlRpbWUxIiwgeyNAbW9uZXlAI30gQVMgIk1vbmV5IiwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlIg==`,			
+			//CompiledQuery: {#@ID@#} AS `ID`, {#@userName@#} AS `UserName`, {#@UUID@#} AS `UUID`, {#@user_psw@#} AS `UserPsw`, {#@userRole_ID@#} AS `UserRole_ID`, {#@time1@#} AS `Time1`, {#@money@#} AS `Money`, {#@userRole_ID.roleName@#} AS `UserRole`,
+			CompiledQuery:`eyNASURAI30gQVMgYElEYCwgeyNAdXNlck5hbWVAI30gQVMgYFVzZXJOYW1lYCwgeyNAVVVJREAjfSBBUyBgVVVJRGAsIHsjQHVzZXJfcHN3QCN9IEFTIGBVc2VyUHN3YCwgeyNAdXNlclJvbGVfSURAI30gQVMgYFVzZXJSb2xlX0lEYCwgeyNAdGltZTFAI30gQVMgYFRpbWUxYCwgeyNAbW9uZXlAI30gQVMgYE1vbmV5YCwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlYA==`,			
 			SelectSqlFields: map[string]string{
              "ID":"{#@ID@#}",
              "UserName":"{#@userName@#}",
@@ -127,8 +127,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"evcy58-S2": 
 		{
-			//CompiledQuery: {#@userRole_ID.roleName@#} AS "UserRoleName", MIN( {#@time1@#} ) AS "MinTime1", SUM( {#@money@#} ) AS "SumMoney",
-			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlTmFtZSIsIE1JTiggeyNAdGltZTFAI30gKSBBUyAiTWluVGltZTEiLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgIlN1bU1vbmV5Ig==`,			
+			//CompiledQuery: {#@userRole_ID.roleName@#} AS `UserRoleName`, MIN( {#@time1@#} ) AS `MinTime1`, SUM( {#@money@#} ) AS `SumMoney`,
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlTmFtZWAsIE1JTiggeyNAdGltZTFAI30gKSBBUyBgTWluVGltZTFgLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgYFN1bU1vbmV5YA==`,			
 			SelectSqlFields: map[string]string{
              "UserRoleName":"{#@userRole_ID.roleName@#}",
              "MinTime1":"MIN( {#@time1@#} )",
@@ -232,8 +232,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"tst1_066-S2": 
 		{
-			//CompiledQuery: {#@userRole_ID.roleName@#} AS "UserRoleName", MIN( {#@time1@#} ) AS "MinTime1", SUM( {#@money@#} ) AS "SumMoney",
-			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlTmFtZSIsIE1JTiggeyNAdGltZTFAI30gKSBBUyAiTWluVGltZTEiLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgIlN1bU1vbmV5Ig==`,			
+			//CompiledQuery: {#@userRole_ID.roleName@#} AS `UserRoleName`, MIN( {#@time1@#} ) AS `MinTime1`, SUM( {#@money@#} ) AS `SumMoney`,
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgYFVzZXJSb2xlTmFtZWAsIE1JTiggeyNAdGltZTFAI30gKSBBUyBgTWluVGltZTFgLCBTVU0oIHsjQG1vbmV5QCN9ICkgQVMgYFN1bU1vbmV5YA==`,			
 			SelectSqlFields: map[string]string{
              "UserRoleName":"{#@userRole_ID.roleName@#}",
              "MinTime1":"MIN( {#@time1@#} )",
@@ -297,12 +297,15 @@ func (_this *DBContext) LoadCompiledQuery(){
 			SubQueries: 	nil,			
 		},"tsql082-Q1": 
 		{
-			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND {#@userRole_ID@#} IN ( {@$ids$@} ) AND {@@bActive@@},
-			CompiledQuery:`eyNAbW9uZXlAI30+PXtAQFVzZXJNb25leUBAfSBBTkQgeyNAdXNlclJvbGVfSURAI30gSU4gKCB7QCRpZHMkQH0gKSBBTkQge0BAYkFjdGl2ZUBAfQ==`,			
+			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND {#@userRole_ID@#} IN ( {@$ids$@} ) AND {#@userRole_ID.role_status_ID.ID@#} > 0 AND {@@bActive@@},
+			CompiledQuery:`eyNAbW9uZXlAI30+PXtAQFVzZXJNb25leUBAfSBBTkQgeyNAdXNlclJvbGVfSURAI30gSU4gKCB7QCRpZHMkQH0gKSBBTkQgeyNAdXNlclJvbGVfSUQucm9sZV9zdGF0dXNfSUQuSURAI30gPiAwIEFORCB7QEBiQWN0aXZlQEB9`,			
 			SelectSqlFields: nil,			
 			Fields:			map[string]string{
-             "UserRole_ID":"{#@userRole_ID@#}",
+             "UserRoleID.RoleStatusID":"{#@userRole_ID@#}",
+             "RoleStatusID":"{#@{#$userRole_ID$#}.role_status_ID@#}",
+             "ID":"{#@userRole_ID.role_status_ID.ID@#}",
              "Money":"{#@money@#}",
+             "RoleStatusID.ID":"{#@userRole_ID.role_status_ID@#}",
             },
 			ExternVar:			[]orm.TExternVar{
 								{VarName:"ctx", VarType:"DBContext"},
@@ -311,9 +314,9 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tsql082",
 			File: 			"src\\test_subquery\\test1.go",
-			StartOff: 		27,
-			EndOff:  		385,
-			Hash:  			"ZnVuYyh4ICptLlVzZXIsIHEgYXRtc3FsLklEQlF1ZXJ5KSBib29sIHsNCg0KCQlpZHMsIF8gOj0gY3R4LlVzZXJSb2xlLlFyeVMoImlkcyIsIHEpLldoZXJlKGZ1bmMoeSAqbS5Vc2VyUm9sZSkgYm9vbCB7DQoJCQlyZXR1cm4geS5Sb2xlTmFtZSA9PSBSb2xlTmFtZURlZmF1bHQgJiYgeS5JRCA9PSB4LlVzZXJSb2xlX0lELkludDMyDQoJCX0pLkdldFJvd3NBc0ZpZWxkSW50KGN0eC5Vc2VyUm9sZV8uSUQpOw0KDQoJCXJldHVybiB4Lk1vbmV5ID49IFVzZXJNb25leSAmJiANCgkJICAgICAgIGF0bWYuU3FsX0FycmF5Q29udGFpbiggaWRzLCBpbnQ2NCh4LlVzZXJSb2xlX0lELkludDMyKSApICYmIA0KCQkJICAgYkFjdGl2ZQ0KCQ==",
+			StartOff: 		26,
+			EndOff:  		437,
+			Hash:  			"ZnVuYyh4ICptLlVzZXIsIHEgYXRtc3FsLklEQlF1ZXJ5KSBib29sIHsNCg0KCQlpZHMsIF8gOj0gY3R4LlVzZXJSb2xlLlFyeVMoImlkcyIsIHEpLldoZXJlKGZ1bmMoeSAqbS5Vc2VyUm9sZSkgYm9vbCB7DQoJCQlyZXR1cm4geS5Sb2xlTmFtZSA9PSBSb2xlTmFtZURlZmF1bHQgJiYgeS5Sb2xlX3N0YXR1c19JRC5JbnQzMiA9PSB4LlVzZXJSb2xlSUQuUm9sZVN0YXR1c0lELklEDQoJCX0pLkdldFJvd3NBc0ZpZWxkSW50KGN0eC5Vc2VyUm9sZV8uSUQpDQoNCgkJcmV0dXJuIHguTW9uZXkgPj0gVXNlck1vbmV5ICYmDQoJCQlhdG1mLlNxbF9BcnJheUNvbnRhaW4oaWRzLCBpbnQ2NCh4LlVzZXJSb2xlX0lELkludDMyKSkgJiYNCgkJCXguVXNlclJvbGVJRC5Sb2xlU3RhdHVzSUQuSUQgPiAwICYmDQoJCQliQWN0aXZlDQoJ",
 			IsQryS:			false,
 			SubQueries: 	[]orm.TSubQuery{
 								{ 
@@ -324,12 +327,12 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"tsql082.ids-W1": 
 		{
-			//CompiledQuery: {#@roleName@#}={@@RoleNameDefault@@} AND {#@ID@#}={#$userRole_ID$#},
-			CompiledQuery:`eyNAcm9sZU5hbWVAI309e0BAUm9sZU5hbWVEZWZhdWx0QEB9IEFORCB7I0BJREAjfT17IyR1c2VyUm9sZV9JRCQjfQ==`,			
+			//CompiledQuery: {#@roleName@#}={@@RoleNameDefault@@} AND {#@role_status_ID@#}={#${#${#$userRole_ID$#}.role_status_ID$#}.ID$#},
+			CompiledQuery:`eyNAcm9sZU5hbWVAI309e0BAUm9sZU5hbWVEZWZhdWx0QEB9IEFORCB7I0Byb2xlX3N0YXR1c19JREAjfT17IyR7IyR7IyR1c2VyUm9sZV9JRCQjfS5yb2xlX3N0YXR1c19JRCQjfS5JRCQjfQ==`,			
 			SelectSqlFields: nil,			
 			Fields:			map[string]string{
              "RoleName":"{#@roleName@#}",
-             "ID":"{#@ID@#}",
+             "Role_status_ID":"{#@role_status_ID@#}",
             },
 			ExternVar:			[]orm.TExternVar{
 								{VarName:"RoleNameDefault", VarType:"string"}, 
@@ -337,8 +340,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Tag: 			"tsql082.ids",
 			File: 			"src\\test_subquery\\test1.go",
 			StartOff: 		22,
-			EndOff:  		124,
-			Hash:  			"ZnVuYyh5ICptLlVzZXJSb2xlKSBib29sIHsNCgkJCXJldHVybiB5LlJvbGVOYW1lID09IFJvbGVOYW1lRGVmYXVsdCAmJiB5LklEID09IHguVXNlclJvbGVfSUQuSW50MzINCgkJ",
+			EndOff:  		151,
+			Hash:  			"ZnVuYyh5ICptLlVzZXJSb2xlKSBib29sIHsNCgkJCXJldHVybiB5LlJvbGVOYW1lID09IFJvbGVOYW1lRGVmYXVsdCAmJiB5LlJvbGVfc3RhdHVzX0lELkludDMyID09IHguVXNlclJvbGVJRC5Sb2xlU3RhdHVzSUQuSUQNCgkJ",
 			IsQryS:			true,
 			SubQueries: 	nil,			
 		},
@@ -359,8 +362,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Tag: 			"tsql147",
 			File: 			"src\\test_subquery\\test1.go",
 			StartOff: 		26,
-			EndOff:  		374,
-			Hash:  			"ZnVuYyh4ICptLlVzZXIsIHEgYXRtc3FsLklEQlF1ZXJ5KSBib29sIHsNCg0KCQkvL3ZhciBjbnQsIF8gPSBjdHguVXNlclJvbGUuUXJ5UygiY250IiwgcSkuV2hlcmVFcSggY3R4LlVzZXJSb2xlXy5JRCwgeC5Vc2VyUm9sZV9JRC5JbnQzMiApLkdldENvdW50KCkNCgkJdmFyIGNudCwgXyA9IGN0eC5Vc2VyUm9sZS5RcnlTKCJjbnQiLCBxKS4NCgkJCQkJCVdoZXJlKCBmdW5jKHkgKm0uVXNlclJvbGUpYm9vbHsgcmV0dXJuIHkuSUQgPT0geC5Vc2VyUm9sZV9JRC5JbnQzMg0KCQkJCQkJCX0pLkdldENvdW50KCk7DQoJCXJldHVybiB4Lk1vbmV5ID49IFVzZXJNb25leSAmJiBjbnQgPiAwICYmIGJBY3RpdmU7DQoJ",
+			EndOff:  		371,
+			Hash:  			"ZnVuYyh4ICptLlVzZXIsIHEgYXRtc3FsLklEQlF1ZXJ5KSBib29sIHsNCg0KCQkvL3ZhciBjbnQsIF8gPSBjdHguVXNlclJvbGUuUXJ5UygiY250IiwgcSkuV2hlcmVFcSggY3R4LlVzZXJSb2xlXy5JRCwgeC5Vc2VyUm9sZV9JRC5JbnQzMiApLkdldENvdW50KCkNCgkJdmFyIGNudCwgXyA9IGN0eC5Vc2VyUm9sZS5RcnlTKCJjbnQiLCBxKS4NCgkJCVdoZXJlKGZ1bmMoeSAqbS5Vc2VyUm9sZSkgYm9vbCB7DQoJCQkJcmV0dXJuIHkuSUQgPT0geC5Vc2VyUm9sZV9JRC5JbnQzMg0KCQkJfSkuR2V0Q291bnQoKQ0KCQlyZXR1cm4geC5Nb25leSA+PSBVc2VyTW9uZXkgJiYgY250ID4gMCAmJiBiQWN0aXZlDQoJ",
 			IsQryS:			false,
 			SubQueries: 	[]orm.TSubQuery{
 								{ 
@@ -382,9 +385,9 @@ func (_this *DBContext) LoadCompiledQuery(){
 								},
 			Tag: 			"tsql147.cnt",
 			File: 			"src\\test_subquery\\test1.go",
-			StartOff: 		31,
-			EndOff:  		99,
-			Hash:  			"ZnVuYyh5ICptLlVzZXJSb2xlKWJvb2x7IHJldHVybiB5LklEID09IHguVXNlclJvbGVfSUQuSW50MzINCgkJCQkJCQk=",
+			StartOff: 		27,
+			EndOff:  		98,
+			Hash:  			"ZnVuYyh5ICptLlVzZXJSb2xlKSBib29sIHsNCgkJCQlyZXR1cm4geS5JRCA9PSB4LlVzZXJSb2xlX0lELkludDMyDQoJCQk=",
 			IsQryS:			true,
 			SubQueries: 	nil,			
 		},
@@ -393,6 +396,6 @@ func (_this *DBContext) LoadCompiledQuery(){
 	_this.DBContextBase.ProcessCompiledQuery( &_this.DBContextBase.CompiledSqlQueries, false );
 }
 
-func (_this *DBContext) CompiledQueries_GetDialectName() string { return "postgres"; }
+func (_this *DBContext) CompiledQueries_GetDialectName() string { return "mysql"; }
 
 

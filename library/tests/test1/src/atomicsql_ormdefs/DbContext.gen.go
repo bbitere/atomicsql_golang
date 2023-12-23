@@ -1,22 +1,17 @@
 /* this class is generated automatically by DB_Tool.exe exporter*/
 
-package atomicsql_sqldefs
+		package atomicsql_sqldefs
 
-import (
-	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
-
-	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-)
-
+		import (
+		
+			
+			m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
+			orm	  "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+		)
 //------------------------------------------------------
 
-
-
 		type DBContext struct {
-
 			orm.DBContextBase
-
-
 
 			
 			Bar                 *orm.DBTable[m.Bar]
@@ -55,26 +50,16 @@ import (
 			UserRole            *orm.DBTable[m.UserRole]
 			UserRole_             m.T_UserRole
 		
-
-		}
-
-		
-
+		}		
 		func (_this *DBContext) Constr(dbBase orm.DBContextBase)  (*DBContext,error) {
-
 		
-
 			_this.DBContextBase = dbBase;
-
 			_this.DBContextBase.AllTables = make( map[string]*orm.DBTable[orm.IGeneric_MODEL])
-
 			
-
 			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
-
 				
 	"Bar": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "bar",
 			PrimaryColumnLangName: "Id",
 			PrimaryColumnSqlName:  "Id",
@@ -82,8 +67,8 @@ import (
 								{
 					LangName:   "Id",
 					SqlName:    "Id",
-					SqlType:    "integer",
-					LangType:   "int32",
+					SqlType:    "bigint",
+					LangType:   "int64",
 					Flags:      "",
 					IsPrimary:  true,
 					IsNullable: false,
@@ -102,7 +87,7 @@ import (
 				{
 					LangName:   "UniqueInt",
 					SqlName:    "unique_int",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "sql.NullInt32",
 					Flags:      "",
 					IsPrimary:  false,
@@ -112,7 +97,7 @@ import (
 				{
 					LangName:   "NonuniqueInt",
 					SqlName:    "nonunique_int",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "sql.NullInt32",
 					Flags:      "",
 					IsPrimary:  false,
@@ -124,7 +109,7 @@ import (
 		},
 
 	"Bar1": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "bar1",
 			PrimaryColumnLangName: "Id",
 			PrimaryColumnSqlName:  "Id",
@@ -132,8 +117,8 @@ import (
 								{
 					LangName:   "Id",
 					SqlName:    "Id",
-					SqlType:    "integer",
-					LangType:   "int32",
+					SqlType:    "bigint",
+					LangType:   "int64",
 					Flags:      "",
 					IsPrimary:  true,
 					IsNullable: false,
@@ -152,7 +137,7 @@ import (
 				{
 					LangName:   "UniqueInt",
 					SqlName:    "unique_int",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "sql.NullInt32",
 					Flags:      "",
 					IsPrimary:  false,
@@ -162,7 +147,7 @@ import (
 				{
 					LangName:   "NonuniqueInt",
 					SqlName:    "nonunique_int",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "sql.NullInt32",
 					Flags:      "",
 					IsPrimary:  false,
@@ -174,7 +159,7 @@ import (
 		},
 
 	"Bar2": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "bar2",
 			PrimaryColumnLangName: "Id",
 			PrimaryColumnSqlName:  "Id",
@@ -182,8 +167,8 @@ import (
 								{
 					LangName:   "Id",
 					SqlName:    "Id",
-					SqlType:    "integer",
-					LangType:   "int32",
+					SqlType:    "bigint",
+					LangType:   "int64",
 					Flags:      "",
 					IsPrimary:  true,
 					IsNullable: false,
@@ -202,7 +187,7 @@ import (
 				{
 					LangName:   "UniqueInt",
 					SqlName:    "unique_int",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "sql.NullInt32",
 					Flags:      "",
 					IsPrimary:  false,
@@ -212,7 +197,7 @@ import (
 				{
 					LangName:   "NonuniqueInt",
 					SqlName:    "nonunique_int",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "sql.NullInt32",
 					Flags:      "",
 					IsPrimary:  false,
@@ -224,7 +209,7 @@ import (
 		},
 
 	"Dbparams": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "dbparams",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -232,7 +217,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -242,7 +227,7 @@ import (
 				{
 					LangName:   "ParamName",
 					SqlName:    "ParamName",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -252,7 +237,7 @@ import (
 				{
 					LangName:   "ParamValue",
 					SqlName:    "ParamValue",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -264,7 +249,7 @@ import (
 		},
 
 	"Department": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "departm",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -272,7 +257,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -282,8 +267,8 @@ import (
 				{
 					LangName:   "IsActive",
 					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "int16",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -292,7 +277,7 @@ import (
 				{
 					LangName:   "NameDep",
 					SqlName:    "name_dep",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -304,7 +289,7 @@ import (
 		},
 
 	"Employee1": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "employee1",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -312,7 +297,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -322,8 +307,8 @@ import (
 				{
 					LangName:   "IsActive",
 					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "int16",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -332,7 +317,7 @@ import (
 				{
 					LangName:   "User_ID",
 					SqlName:    "user_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*User",
 					Flags:      "",
 					IsPrimary:  false,
@@ -342,7 +327,7 @@ import (
 				{
 					LangName:   "Departm_ID",
 					SqlName:    "departm_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*Department",
 					Flags:      "",
 					IsPrimary:  false,
@@ -350,21 +335,21 @@ import (
 					ForeignKeyLangName:[]string{ "DepartmID", "Department" },
 				},
 				{
-					LangName:   "Departm2_ID",
+					LangName:   "Departm2ID",
 					SqlName:    "departm2_ID",
-					SqlType:    "integer",
-					LangType:   "*Department",
+					SqlType:    "int",
+					LangType:   "sql.NullInt32",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: true,
-					ForeignKeyLangName:[]string{ "Departm2ID", "Department" },
+					ForeignKeyLangName:nil,
 				},
 
 			},
 		},
 
 	"Employee2": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "employee2",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -372,7 +357,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -384,7 +369,7 @@ import (
 		},
 
 	"Project": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "project",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -392,7 +377,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -402,7 +387,7 @@ import (
 				{
 					LangName:   "Name",
 					SqlName:    "name",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -414,7 +399,7 @@ import (
 		},
 
 	"ProjectStatus": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "projstatus",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -422,7 +407,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -432,7 +417,7 @@ import (
 				{
 					LangName:   "Name",
 					SqlName:    "name",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -444,15 +429,15 @@ import (
 		},
 
 	"Statusrole": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "statusRole",
+			SchemaTable:           "test1",
+			SqlTableName:          "statusrole",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
 			Columns: []orm.TSqlColumnDef{
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -462,7 +447,7 @@ import (
 				{
 					LangName:   "StatusName",
 					SqlName:    "status_name",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "sql.NullString",
 					Flags:      "",
 					IsPrimary:  false,
@@ -474,7 +459,7 @@ import (
 		},
 
 	"User": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "user",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -482,7 +467,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -492,7 +477,7 @@ import (
 				{
 					LangName:   "UserName",
 					SqlName:    "userName",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -502,7 +487,7 @@ import (
 				{
 					LangName:   "UUID",
 					SqlName:    "UUID",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -512,7 +497,7 @@ import (
 				{
 					LangName:   "UserPsw",
 					SqlName:    "user_psw",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -522,7 +507,7 @@ import (
 				{
 					LangName:   "UserRole_ID",
 					SqlName:    "userRole_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*UserRole",
 					Flags:      "",
 					IsPrimary:  false,
@@ -532,7 +517,7 @@ import (
 				{
 					LangName:   "Time1",
 					SqlName:    "time1",
-					SqlType:    "timestamp without time zone",
+					SqlType:    "timestamp",
 					LangType:   "sql.NullTime",
 					Flags:      "",
 					IsPrimary:  false,
@@ -542,7 +527,7 @@ import (
 				{
 					LangName:   "Money",
 					SqlName:    "money",
-					SqlType:    "double precision",
+					SqlType:    "double",
 					LangType:   "float64",
 					Flags:      "",
 					IsPrimary:  false,
@@ -554,7 +539,7 @@ import (
 		},
 
 	"UserRole": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "test1",
 			SqlTableName:          "user_role",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -562,7 +547,7 @@ import (
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -572,8 +557,8 @@ import (
 				{
 					LangName:   "IsActive",
 					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "int16",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -582,7 +567,7 @@ import (
 				{
 					LangName:   "RoleName",
 					SqlName:    "roleName",
-					SqlType:    "character varying",
+					SqlType:    "varchar",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -592,7 +577,7 @@ import (
 				{
 					LangName:   "Role_status_ID",
 					SqlName:    "role_status_ID",
-					SqlType:    "integer",
+					SqlType:    "int",
 					LangType:   "*Statusrole",
 					Flags:      "",
 					IsPrimary:  false,
@@ -602,8 +587,8 @@ import (
 				{
 					LangName:   "MyActive",
 					SqlName:    "my_active",
-					SqlType:    "boolean",
-					LangType:   "bool",
+					SqlType:    "tinyint",
+					LangType:   "int16",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -613,9 +598,7 @@ import (
 			},
 		},
 
-
 			}
-
 			
 			_this.Bar_ = m.T_Bar {
 	        Id:                  "Id",
@@ -685,12 +668,7 @@ import (
                         IsActive:            "departm_ID.isActive",
                         NameDep:             "departm_ID.name_dep", 
                         },
-            Departm2_ID:         "departm2_ID",
-            Departm2ID:          m.T_Department {
-                        ID:                  "departm2_ID.ID",
-                        IsActive:            "departm2_ID.isActive",
-                        NameDep:             "departm2_ID.name_dep", 
-                        },
+            Departm2ID:          "departm2_ID",
 			}
 
 		
@@ -752,11 +730,8 @@ import (
 			}
 
 		
-
 			
-
 			_this.DBContextBase.FOREIGN_KEYS = map[string]orm.TForeignKey{
-
 								
 				"employee1.user_ID":
 				{  
@@ -786,7 +761,7 @@ import (
 				
 				"user_role.role_status_ID":
 				{  
-					TgtTable_sqlName:"statusRole", 
+					TgtTable_sqlName:"statusrole", 
 					TgtFldID_sqlName:"ID", 
 					
 					RootFldFk_sqlName:"role_status_ID", 
@@ -809,47 +784,19 @@ import (
 					RootFldFk_lang2Name:"Departm_ID", 
 				},
 				
-				
-				"employee1.departm2_ID":
-				{  
-					TgtTable_sqlName:"departm", 
-					TgtFldID_sqlName:"ID", 
-					
-					RootFldFk_sqlName:"departm2_ID", 
-					RootTable_sqlName:"employee1", 
-					
-					RootFldFk_langName:"Departm2ID", 
-					RootFldFk_lang2Name:"Departm2_ID", 
-				},
-				
-
 
 			}
-
 			
-
 			_, err := _this.DBContextBase.Constr( dbBase.Dialect, sqlSchemaDef, _this)
-
 			
-
 			_this.LoadCompiledQuery();
-
 			
-
 			return _this, err
-
 		}
-
-
-
 		func New_DBContext(dbBase orm.DBContextBase) (*DBContext, error) {
-
 			
-
 			ret, err := (new(DBContext)).Constr(dbBase)
-
 			
-
 						
 			ret.Bar =                     (new(orm.DBTable[m.Bar])).Constr("bar", "Bar", &ret.DBContextBase)			
 			ret.Bar1 =                    (new(orm.DBTable[m.Bar1])).Constr("bar1", "Bar1", &ret.DBContextBase)			
@@ -860,27 +807,17 @@ import (
 			ret.Employee2 =               (new(orm.DBTable[m.Employee2])).Constr("employee2", "Employee2", &ret.DBContextBase)			
 			ret.Project =                 (new(orm.DBTable[m.Project])).Constr("project", "Project", &ret.DBContextBase)			
 			ret.ProjectStatus =           (new(orm.DBTable[m.ProjectStatus])).Constr("projstatus", "ProjectStatus", &ret.DBContextBase)			
-			ret.Statusrole =              (new(orm.DBTable[m.Statusrole])).Constr("statusRole", "Statusrole", &ret.DBContextBase)			
+			ret.Statusrole =              (new(orm.DBTable[m.Statusrole])).Constr("statusrole", "Statusrole", &ret.DBContextBase)			
 			ret.User =                    (new(orm.DBTable[m.User])).Constr("user", "User", &ret.DBContextBase)			
 			ret.UserRole =                (new(orm.DBTable[m.UserRole])).Constr("user_role", "UserRole", &ret.DBContextBase)
-
 			
-
 			return ret, err
-
-		}
-
-
-
-		
-
+		}		
 		func (_this *DBContext) Close(){
-
 			
-
 			_this.DBContextBase.Db.Close()
-
 		}
-
-
+		func (_this *DBContext) GetSqlName() string{
+			return "mysql";
+		}
 

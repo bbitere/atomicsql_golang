@@ -18,6 +18,7 @@ namespace src_tool
         public TProcessData fnProcessData;
 
         
+        public abstract string getSql();
         public abstract string SqlSeparator();
         public abstract string dropColumn(DbTable table,DbColumn column);
         public abstract string addColumn(DbTable table,DbColumn column);

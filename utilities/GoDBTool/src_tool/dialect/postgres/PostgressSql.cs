@@ -17,6 +17,10 @@ namespace src_tool
     {
         public NpgsqlConnection connection;
 
+        public override string getSql()
+        { 
+            return "postgres";
+        }
         public override string SqlSeparator()
         { 
             return ";";
