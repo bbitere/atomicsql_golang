@@ -36,6 +36,12 @@
             
             ValueDef: reflect.ValueOf( *_this),
 			SqlTable:	"dbparams",
-            FnNewInst:	func()any{ return new (Dbparams) },
+            FnNewInst:	func(bFull bool)any{ 
+				var model = new (Dbparams);
+				if( bFull ){
+					
+				}
+				return model;
+			},
         }
     }

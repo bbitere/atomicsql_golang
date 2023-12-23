@@ -43,7 +43,7 @@ type IDBQuery interface {
 	_generateSelectSql(selectFields string, ITEM string, bLimit bool, select_sqlFields []string) string
 	GetTagID() string
 	IsRTM() bool
-	SetSubQueryString( key string, sqlQuery string);
+	SetSubQueryString(key string, sqlQuery string)
 }
 
 // DBQuery is the struct that will do the magic in atomicsql.
@@ -85,7 +85,7 @@ type DBQuery[T IGeneric_MODEL] struct {
 	tableNameOrig        string //langName
 	tableNameOrig_nonTmp string
 
-	fnNewInstance func() any // create a new model
+	fnNewInstance func(bFull bool) any // create a new model
 
 	whereTxt       string
 	limit          string
@@ -96,10 +96,9 @@ type DBQuery[T IGeneric_MODEL] struct {
 	subTag         string
 	pRTM           *RuntimeQuery[T]
 
-
-	dictSubQueryStrs  		map[string]string;
-	parentContainerQuery	IDBQuery
-	currentSubQueryID 		string
+	dictSubQueryStrs     map[string]string
+	parentContainerQuery IDBQuery
+	currentSubQueryID    string
 
 	/*#PHPARG=[ DBSqlQuery ];*/
 	m_queryAND *DBSqlQuery[T]
@@ -136,14 +135,14 @@ func (_this *DBQuery[T]) Constr(tableInst *DBTable[T]) *DBQuery[T] {
 	return _this
 }
 
-func (_this *DBQuery[T]) SetSubQueryString( key string, sqlQuery string) {
+func (_this *DBQuery[T]) SetSubQueryString(key string, sqlQuery string) {
 
-	_this.dictSubQueryStrs[ key ] = sqlQuery;
+	_this.dictSubQueryStrs[key] = sqlQuery
 }
 
 func (_this *DBQuery[T]) GetTagID() string {
 
-	return _this.myTag;
+	return _this.myTag
 }
 func (_this *DBQuery[T]) IsRTM() bool {
 
@@ -285,7 +284,6 @@ func Select[T IGeneric_MODEL, V IGeneric_MODEL](
 		return _Select_query(sequence, fnSelect)
 	}
 }
-
 
 // Select() - Projects each element of a sequence  into a new form.
 //
@@ -1054,35 +1052,37 @@ func (_this *DBQuery[T]) Where(fnWhere func(x *T) bool) *DBQuery[T] {
 //
 // Ex:
 // import (
+//
 //	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 //	atmfunc "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
-// )
-//	context.Table.Qry("label1").WhereSubQ( func(x *Table, q atmsql.IDBQuery)bool{
 //
-//	    var ids, _ = context.Table2.QryS("ids",q).WhereEq( context.Table2_.Field1, "val2").GetRowsAsFieldInt( context.Table2_.ID );
-//	    return atmfunc.Sql_ArrayContain( ids, context.Table.ForeignKey_ID);
-//	}
-//  you observe that in this example inside we are using 
-//  QryS("ids",q), where the label is the name of variable ids.
-// 
+// )
+//
+//		context.Table.Qry("label1").WhereSubQ( func(x *Table, q atmsql.IDBQuery)bool{
+//
+//		    var ids, _ = context.Table2.QryS("ids",q).WhereEq( context.Table2_.Field1, "val2").GetRowsAsFieldInt( context.Table2_.ID );
+//		    return atmfunc.Sql_ArrayContain( ids, context.Table.ForeignKey_ID);
+//		}
+//	 you observe that in this example inside we are using
+//	 QryS("ids",q), where the label is the name of variable ids.
+//
 // Let see the SQL code:
 //
-//	    WHERE User.RelationID IN ( SELECT ID FROM Table2 WHERE Field1 = 'val2' )
-//
-func (_this *DBQuery[T]) WhereSubQ(fnWhereS func( x *T, q IDBQuery) bool) *DBQuery[T] {
+//	WHERE User.RelationID IN ( SELECT ID FROM Table2 WHERE Field1 = 'val2' )
+func (_this *DBQuery[T]) WhereSubQ(fnWhereS func(x *T, q IDBQuery) bool) *DBQuery[T] {
 
 	if _this.pRTM == nil {
 		//collect subquery strings
-		_this.dictSubQueryStrs = make( map[string]string);
-		var model = _this.generateModel();
-		fnWhereS( model, _this);
+		_this.dictSubQueryStrs = make(map[string]string)
+		var model = _this.generateFullModel()
+		fnWhereS(model, _this)
 	}
 
 	return _this._whereSubQuery(fnWhereS, nil)
 }
 
 func (_this *DBQuery[T]) _whereSubQuery(
-	fnWhereS func( x *T, q IDBQuery) bool,
+	fnWhereS func(x *T, q IDBQuery) bool,
 	fnWhere func(x *T) bool) *DBQuery[T] {
 
 	if _this.pRTM != nil {
@@ -1091,7 +1091,7 @@ func (_this *DBQuery[T]) _whereSubQuery(
 		for _, itm := range _this.pRTM.models {
 
 			if fnWhereS != nil {
-				if fnWhereS( itm, _this) {
+				if fnWhereS(itm, _this) {
 					Arr_Append(&arr, itm)
 				}
 			} else {
@@ -1106,7 +1106,7 @@ func (_this *DBQuery[T]) _whereSubQuery(
 
 		if fnWhereS != nil {
 			_this.subTag = tag_WhereSubQ + _this.tableInst.m_ctx.getSubTag()
-		}else {
+		} else {
 			_this.subTag = tag_Where + _this.tableInst.m_ctx.getSubTag()
 		}
 		var querySql *DBSqlQuery[T] = nil
@@ -1161,7 +1161,7 @@ func (_this *DBQuery[T]) GetRecords(fields []string) ([]*T, error) {
 	}
 	sqlQuery := _this._getRows(false, fields, false, false)
 
-	if( _this.finishSubQuery(sqlQuery)){
+	if _this.finishSubQuery(sqlQuery) {
 		return nil, nil
 	}
 
@@ -1200,7 +1200,7 @@ func (_this *DBQuery[T]) GetFirstModel() (*T, error) {
 	_this.setLimit(0, 1)
 
 	sqlQuery := _this._getRows(false, nil, false, false)
-	if( _this.finishSubQuery(sqlQuery)){
+	if _this.finishSubQuery(sqlQuery) {
 		return nil, nil
 	}
 
@@ -1246,7 +1246,7 @@ func (_this *DBQuery[T]) GetFirstRecord(fields []string) (*T, error) {
 	_this.setLimit(0, 1)
 
 	sqlQuery := _this._getRows(false, fields, false, false)
-	if( _this.finishSubQuery(sqlQuery)){
+	if _this.finishSubQuery(sqlQuery) {
 		return nil, nil
 	}
 
@@ -1316,7 +1316,7 @@ func (_this *DBQuery[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 	}
 
 	sqlQuery := _this._getRows(true, fields, false, false)
-	if( _this.finishSubQuery(sqlQuery)){
+	if _this.finishSubQuery(sqlQuery) {
 		return nil, nil
 	}
 
@@ -1451,8 +1451,8 @@ func (_this *DBQuery[T]) GetSingleDataString(fieldName string) (string, error) {
 	}
 
 	var sqlQuery = _this._getRows(false, []string{fieldName}, false, false)
-	if( _this.finishSubQuery(sqlQuery) ){
-		return "",nil
+	if _this.finishSubQuery(sqlQuery) {
+		return "", nil
 	}
 
 	var ctx = _this.tableInst.m_ctx
@@ -1502,8 +1502,8 @@ func (_this *DBQuery[T]) GetSingleDataInt(sqlResult *sql.Rows, fieldName string)
 	}
 
 	var sqlQuery = _this._getRows(false, []string{fieldName}, false, false)
-	if( _this.finishSubQuery(sqlQuery) ){
-		return 0,nil
+	if _this.finishSubQuery(sqlQuery) {
+		return 0, nil
 	}
 
 	var ctx = _this.tableInst.m_ctx
@@ -1553,7 +1553,7 @@ func (_this *DBQuery[T]) GetRowsAsFieldString(fieldName string) ([]string, error
 		return arr, nil
 	}
 	sqlQuery := _this._getRows(false, []string{fieldName}, false, false)
-	if( _this.finishSubQuery(sqlQuery)){
+	if _this.finishSubQuery(sqlQuery) {
 		return nil, nil
 	}
 
@@ -1606,7 +1606,7 @@ func (_this *DBQuery[T]) GetRowsAsFieldInt(fieldName string) ([]int64, error) {
 		return arr, nil
 	}
 	sqlQuery := _this._getRows(false, []string{fieldName}, false, false)
-	if( _this.finishSubQuery(sqlQuery)){
+	if _this.finishSubQuery(sqlQuery) {
 		return nil, nil
 	}
 
@@ -2065,8 +2065,8 @@ func (_this *DBQuery[T]) GetCount() (int64, error) {
 	}
 
 	var sqlQuery = _this._getCount(COUNT_NAME)
-	if( _this.finishSubQuery(sqlQuery) ){
-		return 0,nil
+	if _this.finishSubQuery(sqlQuery) {
+		return 0, nil
 	}
 
 	var ctx = _this.tableInst.m_ctx
@@ -2121,8 +2121,8 @@ func (_this *DBQuery[T]) GetDistinctCount(fields []string) (int64, error) {
 		return 0, fmt.Errorf("arg fields is empty")
 	}
 	var sqlQuery = _this._getDistinctCount(COUNT_NAME, fields)
-	if( _this.finishSubQuery(sqlQuery) ){
-		return 0,nil
+	if _this.finishSubQuery(sqlQuery) {
+		return 0, nil
 	}
 
 	var ctx = _this.tableInst.m_ctx

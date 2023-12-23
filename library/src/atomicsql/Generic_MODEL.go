@@ -66,12 +66,12 @@ type Generic_Def struct {
 }
 
 type TDefIncludeRelation struct {
-	ValueDef  reflect.Value //reflect value of this include Rel model
-	FnNewInst func() any    //create the new instance of model
-	PathFK    string        //full path of include
-	RankFK    int           //rank: how many relations are in this include
-	KeyFK     string        // last 2 items, defining the key in dict of ForeinKeys
-	SqlTable  string        //sql table
+	ValueDef  reflect.Value        //reflect value of this include Rel model
+	FnNewInst func(bFull bool) any //create the new instance of model
+	PathFK    string               //full path of include
+	RankFK    int                  //rank: how many relations are in this include
+	KeyFK     string               // last 2 items, defining the key in dict of ForeinKeys
+	SqlTable  string               //sql table
 	//FOREIGN_KEY string
 }
 

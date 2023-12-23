@@ -82,12 +82,15 @@ func Test1_01(step int, bCheckName bool) (int, error, string) {
 	usersCnt, err := ctx.User.Qry("tsql082").WhereSubQ(func(x *m.User, q atmsql.IDBQuery) bool {
 
 		ids, _ := ctx.UserRole.QryS("ids", q).Where(func(y *m.UserRole) bool {
-			return y.RoleName == RoleNameDefault && y.Role_status_ID.Int32 == x.UserRoleID.RoleStatusID.ID
+			return y.RoleName == RoleNameDefault &&
+				((!y.Role_status_ID.Valid) ||
+					y.Role_status_ID.Int32 == x.UserRoleID.RoleStatusID.ID)
 		}).GetRowsAsFieldInt(ctx.UserRole_.ID)
 
-		return x.Money >= UserMoney &&
+		return ((x.UserRoleID.RoleStatusID == nil) || x.UserRoleID.RoleStatusID.ID > 0) &&
+			x.Money >= UserMoney &&
 			atmf.Sql_ArrayContain(ids, int64(x.UserRole_ID.Int32)) &&
-			x.UserRoleID.RoleStatusID.ID > 0 &&
+
 			bActive
 	}).GetCount()
 

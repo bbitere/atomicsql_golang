@@ -145,8 +145,8 @@ namespace src_tool
                         { 
                             if( dictCol.ContainsKey( col.sqlName))
                             {
-                                //col.langName  = dictCol[col.sqlName].langName; 
-                                //col.langName2 = dictCol[col.sqlName].langName2; 
+                                col.langName  = dictCol[col.sqlName].langName; 
+                                col.langName2 = dictCol[col.sqlName].langName2; 
                             }
                         }
                     }else
@@ -324,6 +324,28 @@ namespace src_tool
             }
             return TDefModel;
         }
+        private List<string> Golang_getModelInitilized(DbTable table)
+        {
+            var TDefModel = new List<string>();
+            foreach( var column in table.columns )
+            {
+                if( column.ForeignKey != null )
+                {
+                    //var defUserRole = T_UserRole{}
+				    //model.UserRoleID = (defUserRole.Def().FnNewInst(bFull)).(*UserRole)
+
+                    var Table = column.ForeignKey.LangTableNameModel;
+                    var FK_ID = column.langName;
+                    var def =$@"
+                        var def{Table} = {GoModelTemplate.PREF_DEF}{Table}{{}}
+				        model.{FK_ID} = (def{Table}.Def().FnNewInst(bFull)).(*{Table})";
+
+                    TDefModel.Add(def);
+                }
+            }
+            return TDefModel;
+        }
+        
 
         private bool Golang_writeModelsDefs(
                 GenericDialect dialect,
@@ -351,6 +373,7 @@ namespace src_tool
                 var listRecursiveStack = new List< DbTable>();
                 var TDefModel   = Golang_getModelCol_Def(table);
                 var varDefModel = Golang_getModelCol_DefVar(table, "", listRecursiveStack);
+                var ModelInitialize_Def = Golang_getModelInitilized(table);
                 
                 
                 if( table.PrimaryColumn == null )
@@ -371,7 +394,8 @@ namespace src_tool
                         table.PrimaryColumn.langType, 
                         Utils.getListFromDict( packageImports ).ToArray(), 
                         defsModel.ToArray(),
-                        TDefModel.ToArray()
+                        TDefModel.ToArray(),
+                        ModelInitialize_Def.ToArray()
                         //varDefModel.ToArray()
                         
                         );

@@ -36,6 +36,12 @@
             
             ValueDef: reflect.ValueOf( *_this),
 			SqlTable:	"statusrole",
-            FnNewInst:	func()any{ return new (Statusrole) },
+            FnNewInst:	func(bFull bool)any{ 
+				var model = new (Statusrole);
+				if( bFull ){
+					
+				}
+				return model;
+			},
         }
     }

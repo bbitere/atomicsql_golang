@@ -147,6 +147,15 @@ public class GoDBContext:GoModelTemplate
 		var listSchemaDefItem = new List<string>();
 		var unusedPackageImports = new Dictionary<string, string>();
 
+		var txtIncludeRelation = "";
+		foreach( var it in tables)
+		{
+			var sqlTable = it.SqlTableNameModel;
+			var langTable = it.LangTableNameModel;
+			txtIncludeRelation += $@"""{sqlTable}"": _this.{langTable}{PREF_VAR}.Def(),
+					";
+		}
+
 		var txtForeignKeys = "";
 		foreach( var it in ForeignKeys)
 		{
@@ -278,6 +287,9 @@ public class GoDBContext:GoModelTemplate
 			_this.FOREIGN_KEYS = map[string]{pkgOrm}.TForeignKey{{
 				{txtForeignKeys}
 			}} 
+			_this.DBContextBase.DictTablesIncludeRelDefs	= map[string]*orm.TDefIncludeRelation{{
+				{txtIncludeRelation}
+			}}
 			
 			_, err := _this.DBContextBase.Constr(dbBase.Dialect, sqlSchemaDef)
 			return _this, err
@@ -318,6 +330,8 @@ public class GoDBContext:GoModelTemplate
 					//{ "Template_Def", Template_Def},
 					{ "schemaDef", schemaDef},	
 					{ "txtForeignKeys", txtForeignKeys},
+					{ "txtIncludeRelation", txtIncludeRelation},
+					
 					{ "sqlName", sqlName},
 				}
 			);

@@ -325,17 +325,17 @@
 					ForeignKeyLangName:[]string{ "UserID", "User" },
 				},
 				{
-					LangName:   "Departm_ID",
+					LangName:   "Department_ID",
 					SqlName:    "departm_ID",
 					SqlType:    "int",
 					LangType:   "*Department",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: true,
-					ForeignKeyLangName:[]string{ "DepartmID", "Department" },
+					ForeignKeyLangName:[]string{ "DepartmentID", "Department" },
 				},
 				{
-					LangName:   "Departm2ID",
+					LangName:   "Department2ID",
 					SqlName:    "departm2_ID",
 					SqlType:    "int",
 					LangType:   "sql.NullInt32",
@@ -662,13 +662,13 @@
                         Time1:               "user_ID.time1",
                         Money:               "user_ID.money", 
                         },
-            Departm_ID:          "departm_ID",
-            DepartmID:           m.T_Department {
+            Department_ID:       "departm_ID",
+            DepartmentID:        m.T_Department {
                         ID:                  "departm_ID.ID",
                         IsActive:            "departm_ID.isActive",
                         NameDep:             "departm_ID.name_dep", 
                         },
-            Departm2ID:          "departm2_ID",
+            Department2ID:       "departm2_ID",
 			}
 
 		
@@ -780,11 +780,27 @@
 					RootFldFk_sqlName:"departm_ID", 
 					RootTable_sqlName:"employee1", 
 					
-					RootFldFk_langName:"DepartmID", 
-					RootFldFk_lang2Name:"Departm_ID", 
+					RootFldFk_langName:"DepartmentID", 
+					RootFldFk_lang2Name:"Department_ID", 
 				},
 				
 
+			}
+			
+			_this.DBContextBase.DictTablesIncludeRelDefs	= map[string]*orm.TDefIncludeRelation{
+				"bar": _this.Bar_.Def(),
+					"bar1": _this.Bar1_.Def(),
+					"bar2": _this.Bar2_.Def(),
+					"dbparams": _this.Dbparams_.Def(),
+					"departm": _this.Department_.Def(),
+					"employee1": _this.Employee1_.Def(),
+					"employee2": _this.Employee2_.Def(),
+					"project": _this.Project_.Def(),
+					"projstatus": _this.ProjectStatus_.Def(),
+					"statusrole": _this.Statusrole_.Def(),
+					"user": _this.User_.Def(),
+					"user_role": _this.UserRole_.Def(),
+					
 			}
 			
 			_, err := _this.DBContextBase.Constr( dbBase.Dialect, sqlSchemaDef, _this)
@@ -820,4 +836,9 @@
 		func (_this *DBContext) GetSqlName() string{
 			return "mysql";
 		}
+		
+		
+
+			
+		
 

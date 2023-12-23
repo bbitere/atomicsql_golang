@@ -297,15 +297,14 @@ func (_this *DBContext) LoadCompiledQuery(){
 			SubQueries: 	nil,			
 		},"tsql082-Q1": 
 		{
-			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND {#@userRole_ID@#} IN ( {@$ids$@} ) AND {#@userRole_ID.role_status_ID.ID@#} > 0 AND {@@bActive@@},
-			CompiledQuery:`eyNAbW9uZXlAI30+PXtAQFVzZXJNb25leUBAfSBBTkQgeyNAdXNlclJvbGVfSURAI30gSU4gKCB7QCRpZHMkQH0gKSBBTkQgeyNAdXNlclJvbGVfSUQucm9sZV9zdGF0dXNfSUQuSURAI30gPiAwIEFORCB7QEBiQWN0aXZlQEB9`,			
+			//CompiledQuery: (({#@userRole_ID.role_status_ID@#} IS NULL) OR {#@userRole_ID.role_status_ID.ID@#} > 0) AND {#@money@#}>={@@UserMoney@@} AND {#@userRole_ID@#} IN ( {@$ids$@} ) AND {@@bActive@@},
+			CompiledQuery:`KCh7I0B1c2VyUm9sZV9JRC5yb2xlX3N0YXR1c19JREAjfSBJUyBOVUxMKSBPUiB7I0B1c2VyUm9sZV9JRC5yb2xlX3N0YXR1c19JRC5JREAjfSA+IDApIEFORCB7I0Btb25leUAjfT49e0BAVXNlck1vbmV5QEB9IEFORCB7I0B1c2VyUm9sZV9JREAjfSBJTiAoIHtAJGlkcyRAfSApIEFORCB7QEBiQWN0aXZlQEB9`,			
 			SelectSqlFields: nil,			
 			Fields:			map[string]string{
-             "UserRoleID.RoleStatusID":"{#@userRole_ID@#}",
-             "RoleStatusID":"{#@{#$userRole_ID$#}.role_status_ID@#}",
+             "UserRole_ID":"{#@userRole_ID@#}",
+             "RoleStatusID.ID":"{#@userRole_ID.role_status_ID@#}",
              "ID":"{#@userRole_ID.role_status_ID.ID@#}",
              "Money":"{#@money@#}",
-             "RoleStatusID.ID":"{#@userRole_ID.role_status_ID@#}",
             },
 			ExternVar:			[]orm.TExternVar{
 								{VarName:"ctx", VarType:"DBContext"},
@@ -315,8 +314,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Tag: 			"tsql082",
 			File: 			"src\\test_subquery\\test1.go",
 			StartOff: 		26,
-			EndOff:  		437,
-			Hash:  			"ZnVuYyh4ICptLlVzZXIsIHEgYXRtc3FsLklEQlF1ZXJ5KSBib29sIHsNCg0KCQlpZHMsIF8gOj0gY3R4LlVzZXJSb2xlLlFyeVMoImlkcyIsIHEpLldoZXJlKGZ1bmMoeSAqbS5Vc2VyUm9sZSkgYm9vbCB7DQoJCQlyZXR1cm4geS5Sb2xlTmFtZSA9PSBSb2xlTmFtZURlZmF1bHQgJiYgeS5Sb2xlX3N0YXR1c19JRC5JbnQzMiA9PSB4LlVzZXJSb2xlSUQuUm9sZVN0YXR1c0lELklEDQoJCX0pLkdldFJvd3NBc0ZpZWxkSW50KGN0eC5Vc2VyUm9sZV8uSUQpDQoNCgkJcmV0dXJuIHguTW9uZXkgPj0gVXNlck1vbmV5ICYmDQoJCQlhdG1mLlNxbF9BcnJheUNvbnRhaW4oaWRzLCBpbnQ2NCh4LlVzZXJSb2xlX0lELkludDMyKSkgJiYNCgkJCXguVXNlclJvbGVJRC5Sb2xlU3RhdHVzSUQuSUQgPiAwICYmDQoJCQliQWN0aXZlDQoJ",
+			EndOff:  		521,
+			Hash:  			"ZnVuYyh4ICptLlVzZXIsIHEgYXRtc3FsLklEQlF1ZXJ5KSBib29sIHsNCg0KCQlpZHMsIF8gOj0gY3R4LlVzZXJSb2xlLlFyeVMoImlkcyIsIHEpLldoZXJlKGZ1bmMoeSAqbS5Vc2VyUm9sZSkgYm9vbCB7DQoJCQlyZXR1cm4geS5Sb2xlTmFtZSA9PSBSb2xlTmFtZURlZmF1bHQgJiYNCgkJCQkoKCF5LlJvbGVfc3RhdHVzX0lELlZhbGlkKSB8fA0KCQkJCQl5LlJvbGVfc3RhdHVzX0lELkludDMyID09IHguVXNlclJvbGVJRC5Sb2xlU3RhdHVzSUQuSUQpDQoJCX0pLkdldFJvd3NBc0ZpZWxkSW50KGN0eC5Vc2VyUm9sZV8uSUQpDQoNCgkJcmV0dXJuICgoeC5Vc2VyUm9sZUlELlJvbGVTdGF0dXNJRCA9PSBuaWwpIHx8IHguVXNlclJvbGVJRC5Sb2xlU3RhdHVzSUQuSUQgPiAwKSAmJg0KCQkJeC5Nb25leSA+PSBVc2VyTW9uZXkgJiYNCgkJCWF0bWYuU3FsX0FycmF5Q29udGFpbihpZHMsIGludDY0KHguVXNlclJvbGVfSUQuSW50MzIpKSAmJg0KDQoJCQliQWN0aXZlDQoJ",
 			IsQryS:			false,
 			SubQueries: 	[]orm.TSubQuery{
 								{ 
@@ -327,8 +326,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"tsql082.ids-W1": 
 		{
-			//CompiledQuery: {#@roleName@#}={@@RoleNameDefault@@} AND {#@role_status_ID@#}={#${#${#$userRole_ID$#}.role_status_ID$#}.ID$#},
-			CompiledQuery:`eyNAcm9sZU5hbWVAI309e0BAUm9sZU5hbWVEZWZhdWx0QEB9IEFORCB7I0Byb2xlX3N0YXR1c19JREAjfT17IyR7IyR7IyR1c2VyUm9sZV9JRCQjfS5yb2xlX3N0YXR1c19JRCQjfS5JRCQjfQ==`,			
+			//CompiledQuery: {#@roleName@#}={@@RoleNameDefault@@} AND ((NOT (({#@role_status_ID@#} IS NOT NULL))) OR {#@role_status_ID@#}={#$userRole_ID.role_status_ID.ID$#}),
+			CompiledQuery:`eyNAcm9sZU5hbWVAI309e0BAUm9sZU5hbWVEZWZhdWx0QEB9IEFORCAoKE5PVCAoKHsjQHJvbGVfc3RhdHVzX0lEQCN9IElTIE5PVCBOVUxMKSkpIE9SIHsjQHJvbGVfc3RhdHVzX0lEQCN9PXsjJHVzZXJSb2xlX0lELnJvbGVfc3RhdHVzX0lELklEJCN9KQ==`,			
 			SelectSqlFields: nil,			
 			Fields:			map[string]string{
              "RoleName":"{#@roleName@#}",
@@ -340,8 +339,8 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Tag: 			"tsql082.ids",
 			File: 			"src\\test_subquery\\test1.go",
 			StartOff: 		22,
-			EndOff:  		151,
-			Hash:  			"ZnVuYyh5ICptLlVzZXJSb2xlKSBib29sIHsNCgkJCXJldHVybiB5LlJvbGVOYW1lID09IFJvbGVOYW1lRGVmYXVsdCAmJiB5LlJvbGVfc3RhdHVzX0lELkludDMyID09IHguVXNlclJvbGVJRC5Sb2xlU3RhdHVzSUQuSUQNCgkJ",
+			EndOff:  		193,
+			Hash:  			"ZnVuYyh5ICptLlVzZXJSb2xlKSBib29sIHsNCgkJCXJldHVybiB5LlJvbGVOYW1lID09IFJvbGVOYW1lRGVmYXVsdCAmJg0KCQkJCSgoIXkuUm9sZV9zdGF0dXNfSUQuVmFsaWQpIHx8DQoJCQkJCXkuUm9sZV9zdGF0dXNfSUQuSW50MzIgPT0geC5Vc2VyUm9sZUlELlJvbGVTdGF0dXNJRC5JRCkNCgkJ",
 			IsQryS:			true,
 			SubQueries: 	nil,			
 		},

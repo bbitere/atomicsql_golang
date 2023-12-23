@@ -17,9 +17,9 @@
             IsActive            int16                         `json:"isActive"`
             UserID              *User                         `json:"-"`
             User_ID                                           `json:"user_ID"`
-            DepartmID           *Department                   `json:"-"`
-            Departm_ID                                        `json:"departm_ID"`
-            Departm2ID          sql.NullInt32                 `json:"departm2_ID"`
+            DepartmentID        *Department                   `json:"-"`
+            Department_ID                                     `json:"departm_ID"`
+            Department2ID       sql.NullInt32                 `json:"departm2_ID"`
     }
 	*/
     func (model  Employee1) GetID() int64 {
@@ -36,9 +36,9 @@
             IsActive            string
             UserID              T_User
             User_ID             string
-            DepartmID           T_Department
-            Departm_ID          string
-            Departm2ID          string
+            DepartmentID        T_Department
+            Department_ID       string
+            Department2ID       string
     }
 	
 	func (_this *T_Employee1) Def() *orm.TDefIncludeRelation{
@@ -46,6 +46,17 @@
             
             ValueDef: reflect.ValueOf( *_this),
 			SqlTable:	"employee1",
-            FnNewInst:	func()any{ return new (Employee1) },
+            FnNewInst:	func(bFull bool)any{ 
+				var model = new (Employee1);
+				if( bFull ){
+					
+                        var defUser = T_User{}
+				        model.UserID = (defUser.Def().FnNewInst(bFull)).(*User)
+            
+                        var defDepartment = T_Department{}
+				        model.DepartmentID = (defDepartment.Def().FnNewInst(bFull)).(*Department)
+				}
+				return model;
+			},
         }
     }

@@ -36,7 +36,8 @@ public class GoModelTemplate
         string nameModel, string tableSqlName, string primaryKey, string primaryKeyType,
         string[] packageImport,
         string[] fieldsModel,
-        string[] Model_Def
+        string[] Model_Def,
+        string[] ModelInitialize_Def
         //string[] Model_DefVar
         )
     {
@@ -64,6 +65,10 @@ public class GoModelTemplate
         @"
             ",Model_Def );
 
+
+        var txtInitializeModel_FK = String.Join(
+       @"
+            ",ModelInitialize_Def );
 
         //var txtDefVarModel = "";
         //var txtDefVarModel = String.Join( 
@@ -105,7 +110,14 @@ public class GoModelTemplate
             
                 ValueDef: reflect.ValueOf( *_this),
                 SqlTable:	""{tableSqlName}"",
-                FnNewInst:	func()any{{ return new ({nameModel}) }},
+                //FnNewInst:	func()any{{ return new ({nameModel}) }},
+                FnNewInst:	func(bFull bool)any{{ 
+				    var model = new ({nameModel});
+				    if( bFull ){{
+					    {txtInitializeModel_FK}
+				    }}
+				    return model;
+			    }},
             }}
         }}
 
@@ -126,8 +138,7 @@ public class GoModelTemplate
                             { "primaryKey", primaryKey},
                             { "primaryKeyType", primaryKeyType},
                             { "txtDefModel", txtDefModel},
-                            
-                            
+                            { "txtInitializeModel_FK", txtInitializeModel_FK},
 				        }
                 );
             return ret;
