@@ -288,6 +288,11 @@ public partial class SqlConvert
         sqlIdentif = sqlIdentif.Replace( PREFIX_FIELD, "" );
         sqlIdentif = sqlIdentif.Replace( POSTFIX_FIELD, "" );
 
+        sqlIdentif = sqlIdentif.Replace( SUBQ_PREFIX_FIELD, "" );
+        sqlIdentif = sqlIdentif.Replace( SUBQ_POSTFIX_FIELD, "" );
+
+        
+
         if( type.Name == "var")
         {
             return getTextSQLError( $"internal error 187. not found {identifExpr}", ctx);
