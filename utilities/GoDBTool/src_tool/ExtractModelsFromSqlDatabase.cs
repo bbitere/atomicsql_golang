@@ -17,11 +17,9 @@ namespace src_tool
     {
         //public const string GO_EXTENSION = ".gen.go";
         public const string CONCAT_DOT = ".";
-        
 
         public Dictionary<string, FKRootTgt> dictForeignKeys = new Dictionary<string, FKRootTgt>();
         //public Dictionary<string, DbTable> tables = new Dictionary<string,DbTable>();
-
         
         public class DialectArg: GenericDialectArg
         {

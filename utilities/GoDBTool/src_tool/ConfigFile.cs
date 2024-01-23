@@ -221,8 +221,6 @@ namespace src_tool
 
             return "";
         }
-
-
         private static string getToken( ref string line)
         {
             var i = 0;
@@ -296,8 +294,5 @@ namespace src_tool
             }
             return text;
         }
-
-        
-
     }
 }
