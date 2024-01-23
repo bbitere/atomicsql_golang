@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	utils "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/utils"
 )
 
 
@@ -79,12 +81,12 @@ func (c *ConfigFile) getPropertyValue(val string) string {
 	retValue := ""
 	prevIdx := 0
 	for idx := 0; idx < len(val); {
-		idx = strings_Index(val, "%", idx)
+		idx = utils.Strings_Index(val, "%", idx)
 		if idx >= 0 {
 			retValue += val[prevIdx:idx]
 
 			idx = idx + 1
-			idx2 := strings_Index(val, "%", idx)
+			idx2 := utils.Strings_Index(val, "%", idx)
 			strProp := val[idx:idx2]
 
 			v := os.Getenv(strProp)
@@ -278,7 +280,7 @@ func (t *TemplateItem) ConvertTemplate(dict map[string]string) string {
 
 	idx := strings.Index(text, "@@{")
 	if idx >= 0 {
-		idx2 := strings_Index( text, "}", idx);
+		idx2 := utils.Strings_Index( text, "}", idx);
 		item := text[idx : idx2+1-idx]
 
 		fmt.Printf("Error: tag %s is still present in %s\n", item, templateName)

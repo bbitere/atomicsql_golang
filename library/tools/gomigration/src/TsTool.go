@@ -9,6 +9,8 @@ import (
 
 	"strings"
 	"time"
+
+	utils "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/utils"
 )
 
 const (
@@ -90,7 +92,9 @@ func GoTool_parseArguments(args []string, argNames []string, descArgs []string) 
 }
 
 func GoTool_printUsage(argNames []string, descArgs []string, cmd string, argWithError string) {
-	fmt.Println("\n\n")
+
+	fmt.Println("")
+	fmt.Println("")
 
 	if argWithError != "" {
 		fmt.Printf("argument '%s' is with error \n", argWithError)
@@ -116,6 +120,6 @@ func GoTool_printUsage(argNames []string, descArgs []string, cmd string, argWith
 }
 
 func normalizePath(path string) string {
-	return Utils_NormalizePath(path)
+	return utils.Utils_NormalizePath(path)
 }
 

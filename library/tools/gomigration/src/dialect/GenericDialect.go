@@ -5,62 +5,87 @@ import (
 	"strings"
 )
 
-type TProcessData func(dialect *GenericDialect, arg1 *GenericDialectArg)
+type TProcessData func(dialect GenericDialect, arg1 IGenericDialectArg)
 
 type TGenericDialect struct {
 	currentFile string
 	dictError   map[string]string
-	fnProcessData TProcessData
+	FnProcessData TProcessData
 }
+
+type GenericDialectArg struct {
+	Connection_String string
+}
+
+
+type IGenericDialectArg interface{
+
+    GetGenericDialectArg() *GenericDialectArg;
+}
+
+
+
 
 type GenericDialect interface{
 
- getSql() string;
+GetGenericDialect() *TGenericDialect;
+GetSql() string;
 
-SqlSeparator();
+SqlSeparator() string;
 
-dropColumn(table *DbTable, column *DbColumn) string;
+DropColumn(table *DbTable, column *DbColumn) string;
 
-addColumn(table *DbTable, column *DbColumn) string;
+AddColumn(table *DbTable, column *DbColumn) string;
 
-updateColumn(table *DbTable, column, columnPrev *DbColumn) ;
+UpdateColumn(table *DbTable, column, columnPrev *DbColumn) string;
 
-dropTable(table *DbTable) string;
+DropTable(table *DbTable) string;
 
-addTable(table *DbTable) string;
+AddTable(table *DbTable) string;
 
-updateTable(table, tablePrev *DbTable) string;
+UpdateTable(table, tablePrev *DbTable) string;
 
-dropFKConstrictor(table *DbTable, column *DbColumn) string ;
+DropFKConstrictor(table *DbTable, column *DbColumn) string ;
 
-addFKConstrictor(table *DbTable, column *DbColumn) string;
+AddFKConstrictor(table *DbTable, column *DbColumn) string;
 
-getSqlType(langType string, bIsNullable *bool, nameOfColumn string) string;
+GetSqlType(langType string, bIsNullable *bool, nameOfColumn string) string;
 
- startConnection(arg *GenericDialectArg) bool;
+StartConnection(arg IGenericDialectArg) bool;
 
- getProperty(name, tableName, colName, colValue string) string;
+GetProperty(name, tableName, colName, colValue string) string;
 
-insertProperty(propName, value, tableName, colName, colValue string);
+InsertProperty(propName, value, tableName, colName, colValue string);
 
- updateProperty(propName, value, tableName, colName, colValue string);
+UpdateProperty(propName, value, tableName, colName, colValue string);
 
- execScript(scriptTxt string);
+ExecScript(scriptTxt string);
 
-readConstraintors(tables map[string]*DbTable) bool;
+ReadConstraintors(tables map[string]*DbTable) error;
 
-readTables(SqlLang string) map[string]*DbTable;
 
-getGoLangTypeIntFk(column *DbColumn, packageImports *map[string]string) string;
+ReadTables(SqlLang string) (map[string] *DbTable, error);
 
-getGoLangType(column *DbColumn, importPackage *map[string]string) string;
+GetGoLangTypeIntFk(column *DbColumn, packageImports *map[string]string) string;
+
+GetGoLangType(column *DbColumn, importPackage *map[string]string) string;
+
+PrintError(err string) string ;
+SetCurrentFile(file string);
+
+CleanNameGoStruct(name string) string;
 }
 
-func (gd TGenericDialect) setCurrentFile(file string) {
+//-------------------------------------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------------------------------------
+
+func (gd *TGenericDialect) SetCurrentFile(file string) {
 	gd.currentFile = file
 }
 
-func (gd *TGenericDialect) printError(err string) string {
+func (gd *TGenericDialect) PrintError(err string) string {
 	if _, ok := gd.dictError[err]; !ok {
 		gd.dictError[err] = err
 		fmt.Println(err)
@@ -74,7 +99,7 @@ func (gd *TGenericDialect) printError(err string) string {
 	return ""
 }
 
-func (gd *TGenericDialect) cleanNameGoStruct(name string) string {
+func (gd *TGenericDialect) CleanNameGoStruct(name string) string {
 	return TGenericDialect_CleanNameGoStruct(name)
 }
 
@@ -86,21 +111,20 @@ func TGenericDialect_CleanNameGoStruct(name string) string {
 	return name
 }
 
-func TGenericDialect_GetDialectByName(SqlLang string) *GenericDialect {
-	if SqlLang == ELangSql.PostgresSql {
-		return &PostgressDialect{}
-	} else if SqlLang == ELangSql.MySql {
-		return nil;//&MySqlDialect{}
-	} else {
-		fmt.Printf("Error: sql dialect '%s' not implemented\n", SqlLang)
-		return nil
-	}
-}
 
-func (gd *TGenericDialect) isLongType(sqlColumnName string) bool {
+
+func (gd *TGenericDialect) IsLongType1(sqlColumnName string) bool {
 	if sqlColumnName != "" && strings.HasPrefix(sqlColumnName, "_") {
 		return true
 	}
 	return false
+}
+func (gd *TGenericDialect) IsLongType(sqlColumnName string, type1 string, type2 string) string {
+	var b = gd.IsLongType1(sqlColumnName)
+    if( b ){
+        return type1;
+    }else{
+        return type2;
+    }	
 }
 

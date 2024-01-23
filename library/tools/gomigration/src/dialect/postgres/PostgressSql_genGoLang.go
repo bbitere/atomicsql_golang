@@ -3,10 +3,12 @@
 import (
 	"fmt"
 	"strings"
+
+	dialect "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/dialect"
 )
 
 
-func (pd *PostgressDialect) GetGoLangTypeIntFk(column DbColumn, packageImports *map[string]string) string {
+func (pd *PostgressDialect) GetGoLangTypeIntFk(column *dialect.DbColumn, packageImports *map[string]string) string {
 	nameSqlType := column.SqlType
 
 	if column.IsNullable {
@@ -49,7 +51,7 @@ func (pd *PostgressDialect) GetGoLangTypeIntFk(column DbColumn, packageImports *
 	}
 }
 
-func (pd *PostgressDialect) GetGoLangType(column DbColumn, importPackage *map[string]string) string {
+func (pd *PostgressDialect) GetGoLangType(column *dialect.DbColumn, importPackage *map[string]string) string {
 	nameSqlType := column.SqlType
 
 	if strings.Contains(nameSqlType, "[]") {

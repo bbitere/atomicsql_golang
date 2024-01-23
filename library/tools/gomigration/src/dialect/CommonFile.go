@@ -68,7 +68,7 @@ type DbTable struct {
 	Schema              string
 	LangTableNameModel string
 	SqlTableNameModel   string
-	Columns             []DbColumn
+	Columns             []*DbColumn
 	PrimaryColumn       *DbColumn
 	Json                string
 }

@@ -6,10 +6,14 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 
 	//"sort"
 	"strings"
 	//"time"
+	dialect "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/dialect"
+	dialect_general "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/dialect/general"
+	utils "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/utils"
 )
 
 const (
@@ -22,10 +26,15 @@ const (
 )
 
 type DialectArg struct {
+	Base dialect.GenericDialectArg
 	inputDir     string
 	outDir       string
-	typeOutFile  string
-	GenericDialectArg
+	typeOutFile  string	
+}
+
+func (m *DialectArg) GetGenericDialectArg() *dialect.GenericDialectArg{
+
+	return &m.Base;
 }
 
 type MigrationDB struct
@@ -34,36 +43,44 @@ type MigrationDB struct
 }
 
 func (m *MigrationDB) DoMigration(sqlLang, connectionString, inputDir, outDir, typeOutFile string) bool {
+
 	arg := &DialectArg{
 		inputDir:    inputDir,
 		outDir:      outDir,
 		typeOutFile: typeOutFile,
-		GenericDialectArg: GenericDialectArg{
-			strConnection: connectionString,
+		Base: dialect.GenericDialectArg{
+			Connection_String: connectionString,
 		},
 	}
 
-	dialect := GetDialectByName(sqlLang)
-	if dialect == nil {
+	var dialectInst = dialect_general.GetDialectByName(sqlLang)
+	if dialectInst == nil {
 		return false
 	}
+	var genericDialect = dialectInst.GetGenericDialect();
 
-	dialect.fnProcessData = m.ProcessData
-	return dialect.startConnection(arg)
+	genericDialect.FnProcessData = m.ProcessData
+	return dialectInst.StartConnection( arg );
 }
 
-func (m *MigrationDB) ProcessData(dialect GenericDialect, arg1 GenericDialectArg) {
+func (m *MigrationDB) ProcessData(dialect dialect.GenericDialect, arg1 dialect.IGenericDialectArg) {
 	arg := arg1.(*DialectArg)
-	history := dialect.getProperty(PROP_HISTORY, TABLE_MIGRATION, ParamName, ParamValue)
-	if history == nil {
+	history := dialect.GetProperty(PROP_HISTORY, TABLE_MIGRATION, ParamName, ParamValue)
+	if history == "" {
 		m.setupMigration(dialect)
 	}
 
 	files := m.scanFiles(arg.inputDir)
-	sortedFiles := files.sortedFiles()
+	//sortedFiles := m.sortedFilesByName( &files );
+	var sortedFiles = sort.StringSlice(files);
+	
 	m.applyImports(dialect, sortedFiles)
 
 	fmt.Println("End Transaction")
+}
+
+func (m *MigrationDB) sortedFilesByName(files *[]string){
+
 }
 
 func (m *MigrationDB) scanFiles(dir string) []string {
@@ -76,7 +93,7 @@ func (m *MigrationDB) scanFiles(dir string) []string {
 		if fileInfo.IsDir() {
 			subdirFiles := m.scanFiles(file)
 			listFiles = append(listFiles, subdirFiles...)
-		} else if Utils_GetFileInfoExt(file) == ".sql" && regex.MatchString(fileInfo.Name()) {
+		} else if utils.Utils_GetFileInfoExt(file) == ".sql" && regex.MatchString(fileInfo.Name()) {
 			listFiles = append(listFiles, file)
 		}
 	}
@@ -84,25 +101,25 @@ func (m *MigrationDB) scanFiles(dir string) []string {
 	return listFiles
 }
 
-func (m *MigrationDB) applyImports(dialect GenericDialect, files []string) {
+func (m *MigrationDB) applyImports(dialect dialect.GenericDialect, files []string) {
 	for _, file := range files {
 		content, _ := ioutil.ReadFile(file)
 		m.ApplyImport(dialect, file, string(content))
 	}
 }
 
-func (m *MigrationDB) ApplyImport(dialect GenericDialect, file string, content string) {
+func (m *MigrationDB) ApplyImport(dialect dialect.GenericDialect, file string, content string) {
 	//fileInfo, _ := os.Stat(file)
-	property := strings.TrimSuffix( Utils_GetFileInfoName(file), Utils_GetFileInfoExt(file))
+	property := strings.TrimSuffix( utils.Utils_GetFileInfoName(file), utils.Utils_GetFileInfoExt(file))
 
-	fileApplied := dialect.getProperty(property, TABLE_MIGRATION, ParamName, ParamValue)
-	if fileApplied == nil {
+	fileApplied := dialect.GetProperty(property, TABLE_MIGRATION, ParamName, ParamValue)
+	if fileApplied == "" {
 		fmt.Printf("Start script: %s\n", property)
-		dialect.execScript(content)
-		dialect.insertProperty(property, SQL_FILE_APPLIED, TABLE_MIGRATION, ParamName, ParamValue)
+		dialect.ExecScript(content)
+		dialect.InsertProperty(property, SQL_FILE_APPLIED, TABLE_MIGRATION, ParamName, ParamValue)
 
 		historyPropValue := m.getHistoryName(property)
-		dialect.updateProperty(PROP_HISTORY, historyPropValue, TABLE_MIGRATION, ParamName, ParamValue)
+		dialect.UpdateProperty(PROP_HISTORY, historyPropValue, TABLE_MIGRATION, ParamName, ParamValue)
 
 		fmt.Printf("End   script: %s\n", property)
 	}
@@ -114,23 +131,26 @@ func (m *MigrationDB) getHistoryName(property string) string {
 	return strings.Join(parts, ".")
 }
 
-func (m *MigrationDB) setupMigration(dialect GenericDialect) {
-	tableMigration := createMigrationTable(dialect)
-	scriptTable := dialect.addTable(tableMigration)
-	dialect.execScript(scriptTable)
+func (m *MigrationDB) setupMigration(dialectInst dialect.GenericDialect) {
+	tableMigration := createMigrationTable(dialectInst)
+	scriptTable := dialectInst.AddTable(tableMigration)
+	dialectInst.ExecScript(scriptTable)
 
-	dialect.insertProperty(PROP_HISTORY, "0000.00.00", TABLE_MIGRATION, ParamName, ParamValue)
+	dialectInst.InsertProperty(PROP_HISTORY, "0000.00.00", TABLE_MIGRATION, ParamName, ParamValue)
 }
 
+func newDbColumn() *dialect.DbColumn{
+	return new (dialect.DbColumn);
+}
 
-func createMigrationTable(dialect GenericDialect) DbTable {
+func createMigrationTable(dialectInst dialect.GenericDialect) *dialect.DbTable {
 	isNullable := false
-	tableMigration := DbTable{}
-	tableMigration.columns = append(tableMigration.columns, DbColumn{}.initSqlPrimary("ID"))
-	tableMigration.columns = append(tableMigration.columns, DbColumn{}.initSql(ParamName, dialect.getSqlType("string", &isNullable, ""), isNullable))
-	tableMigration.columns = append(tableMigration.columns, DbColumn{}.initSql(ParamValue, dialect.getSqlType("string", &isNullable, ""), isNullable))
+	tableMigration := &dialect.DbTable{}
+	tableMigration.Columns = append(tableMigration.Columns, newDbColumn().InitSqlPrimary("ID"))
+	tableMigration.Columns = append(tableMigration.Columns, newDbColumn().InitSql(ParamName, dialectInst.GetSqlType("string", &isNullable, ""), isNullable))
+	tableMigration.Columns = append(tableMigration.Columns, newDbColumn().InitSql(ParamValue, dialectInst.GetSqlType("string", &isNullable, ""), isNullable))
 
-	tableMigration.initSql(TABLE_MIGRATION, tableMigration.columns[0])
+	tableMigration.InitSql(TABLE_MIGRATION, tableMigration.Columns[0])
 	return tableMigration
 }
 

@@ -4,15 +4,21 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
-	//dialect "github.com/bbitere/atomicsql_golang.git/tools/gomigration_dialect"
+
+	dialect "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/dialect"
 )
 
 type PostgressDialect struct {
-	connection *sql.DB
-    base1 TGenericDialect;
+	Connection *sql.DB
+    Base1 dialect.TGenericDialect;
 }
 
-func (pd *PostgressDialect) getSql() string {
+func (pd *PostgressDialect) GetGenericDialect() *dialect.TGenericDialect{
+
+    return &pd.Base1;
+}
+
+func (pd *PostgressDialect) GetSql() string {
 	return "postgres"
 }
 
@@ -20,32 +26,32 @@ func (pd *PostgressDialect) SqlSeparator() string {
 	return ";"
 }
 
-func (pd *PostgressDialect) tokenizIdentif(identif string) string {
+func (pd *PostgressDialect) TokenizIdentif(identif string) string {
 	return "\"" + identif + "\""
 }
 
-func (pd *PostgressDialect) tokenizTable(table *DbTable) string {
-	return "public." + pd.tokenizIdentif(table.SqlTableNameModel)
+func (pd *PostgressDialect) TokenizTable(table *dialect.DbTable) string {
+	return "public." + pd.TokenizIdentif(table.SqlTableNameModel)
 }
 
-func (pd *PostgressDialect) tokenizTableName(tableName string) string {
-	return "public." + pd.tokenizIdentif(tableName)
+func (pd *PostgressDialect) TokenizTableName(tableName string) string {
+	return "public." + pd.TokenizIdentif(tableName)
 }
 
-func (pd *PostgressDialect) dropTable(table *DbTable) string {
-	s := fmt.Sprintf("DROP TABLE %s", pd.tokenizTable(table))
+func (pd *PostgressDialect) DropTable(table *dialect.DbTable) string {
+	s := fmt.Sprintf("DROP TABLE %s", pd.TokenizTable(table))
 	return s
 }
 
-func (pd *PostgressDialect) addTable(table *DbTable) string {
+func (pd *PostgressDialect) AddTable(table *dialect.DbTable) string {
 	NL := "\n"
-	sqlTableName := table.SqlTableNameModel
+	//sqlTableName := table.SqlTableNameModel
 	var columnsArr []string
-	for _, col := range table.columns {
+	for _, col := range table.Columns {
 		columnsArr = append(columnsArr, pd._addColumn(col))
 	}
 	columnsDefs := strings.Join(columnsArr, ","+NL)
-	colIDName := table.PrimaryColumn.sqlName
+	//colIDName := table.PrimaryColumn.SqlName
 
 	tableAdd := fmt.Sprintf(`
 	-------------------------------------------------------------------	
@@ -54,87 +60,87 @@ func (pd *PostgressDialect) addTable(table *DbTable) string {
 		%s
 	)
 	TABLESPACE pg_default;`,
-		pd.tokenizTable(table), columnsDefs)
+		pd.TokenizTable(table), columnsDefs)
 
 	return tableAdd
 }
 
-func (pd *PostgressDialect) dropColumn(table *DbTable, column *DbColumn) string {
+func (pd *PostgressDialect) DropColumn(table *dialect.DbTable, column *dialect.DbColumn) string {
 	s := fmt.Sprintf(`
 	ALTER TABLE %s
-	DROP COLUMN %s`, pd.tokenizTable(table), pd.tokenizIdentif(column.sqlName))
+	DROP COLUMN %s`, pd.TokenizTable(table), pd.TokenizIdentif(column.SqlName))
 	return s
 }
 
-func (pd *PostgressDialect) addColumn(table *DbTable, column *DbColumn) string {
+func (pd *PostgressDialect) AddColumn(table *dialect.DbTable, column *dialect.DbColumn) string {
 	colData := pd._addColumn(column)
 	s := fmt.Sprintf(`
 	ALTER TABLE %s
-	ADD COLUMN %s`, pd.tokenizTable(table), colData)
+	ADD COLUMN %s`, pd.TokenizTable(table), colData)
 	return s
 }
 
-func (pd *PostgressDialect) _addColumn(column *DbColumn) string {
-	colName := column.sqlName
-	if column.bIsIdentity {
-		if column.langType == "int64" {
-			return fmt.Sprintf("%s bigserial NOT NULL AUTO_INCREMENT", pd.tokenizIdentif(colName))
+func (pd *PostgressDialect) _addColumn(column *dialect.DbColumn) string {
+	colName := column.SqlName
+	if column.IsIdentity {
+		if column.LangType == "int64" {
+			return fmt.Sprintf("%s bigserial NOT NULL AUTO_INCREMENT", pd.TokenizIdentif(colName))
 		}
-		return fmt.Sprintf("%s serial PRIMARY KEY NOT NULL", pd.tokenizIdentif(colName))
+		return fmt.Sprintf("%s serial PRIMARY KEY NOT NULL", pd.TokenizIdentif(colName))
 	} else {
-		sqlType := column.sqlType
+		sqlType := column.SqlType
 		if column.ForeignKey != nil {
-			targetTableID := column.ForeignKey.PrimaryColumn.sqlName
-			fkFkName := pd.tokenizIdentif(fmt.Sprintf("fk_%s", column.sqlName))
-			fkName := pd.tokenizIdentif(colName)
-			return fmt.Sprintf("%s integer NULL CONSTRAINT %s REFERENCES %s (%s)", fkName, fkFkName, pd.tokenizTable(column.ForeignKey), targetTableID)
+			targetTableID := column.ForeignKey.PrimaryColumn.SqlName
+			fkFkName := pd.TokenizIdentif(fmt.Sprintf("fk_%s", column.SqlName))
+			fkName := pd.TokenizIdentif(colName)
+			return fmt.Sprintf("%s integer NULL CONSTRAINT %s REFERENCES %s (%s)", fkName, fkFkName, pd.TokenizTable(column.ForeignKey), targetTableID)
 		} else {
-			if column.bIsNullable {
-				return fmt.Sprintf("%s %s NULL", pd.tokenizIdentif(colName), sqlType)
+			if column.IsNullable {
+				return fmt.Sprintf("%s %s NULL", pd.TokenizIdentif(colName), sqlType)
 			}
-			return fmt.Sprintf("%s %s NOT NULL", pd.tokenizIdentif(colName), sqlType)
+			return fmt.Sprintf("%s %s NOT NULL", pd.TokenizIdentif(colName), sqlType)
 		}
 	}
 }
 
-func (pd *PostgressDialect) updateTable(table *DbTable, tablePrev *DbTable) string {
+func (pd *PostgressDialect) UpdateTable(table *dialect.DbTable, tablePrev *dialect.DbTable) string {
 	if table.SqlTableNameModel != tablePrev.SqlTableNameModel {
 		s := fmt.Sprintf(`
 	ALTER TABLE public.%s
-	RENAME TO %s`, pd.tokenizIdentif(tablePrev.SqlTableNameModel), pd.tokenizIdentif(table.SqlTableNameModel))
+	RENAME TO %s`, pd.TokenizIdentif(tablePrev.SqlTableNameModel), pd.TokenizIdentif(table.SqlTableNameModel))
 		return s
 	}
 	return ""
 }
 
-func (pd *PostgressDialect) updateColumn(table *DbTable, column *DbColumn, columnPrev *DbColumn) string {
-	if columnPrev.langName != column.langName {
-		return pd.printError("internal error")
+func (pd *PostgressDialect) UpdateColumn(table *dialect.DbTable, column *dialect.DbColumn, columnPrev *dialect.DbColumn) string {
+	if columnPrev.LangName != column.LangName {
+		return pd.Base1.PrintError("internal error")
 	}
 
-	if column.sqlType != columnPrev.sqlType {
+	if column.SqlType != columnPrev.SqlType {
 		r := fmt.Sprintf(`
 	ALTER TABLE %s 
-	ALTER COLUMN %s TYPE %s`, pd.tokenizTable(table), pd.tokenizIdentif(column.sqlName), column.sqlType)
+	ALTER COLUMN %s TYPE %s`, pd.TokenizTable(table), pd.TokenizIdentif(column.SqlName), column.SqlType)
 		return r
 	}
 
-	if column.sqlName != columnPrev.sqlName {
+	if column.SqlName != columnPrev.SqlName {
 		s := fmt.Sprintf(`
 	ALTER TABLE %s
-	RENAME COLUMN %s TO %s`, pd.tokenizTable(table), pd.tokenizIdentif(columnPrev.sqlName), pd.tokenizIdentif(column.sqlName))
+	RENAME COLUMN %s TO %s`, pd.TokenizTable(table), pd.TokenizIdentif(columnPrev.SqlName), pd.TokenizIdentif(column.SqlName))
 		return s
 	}
 
 	return ""
 }
 
-func (pd *PostgressDialect) addFKConstrictor(table *DbTable, column *DbColumn) string {
-	tablename := pd.tokenizTable(column.ForeignKey)
-	tableID := pd.tokenizIdentif(column.ForeignKey.PrimaryColumn.sqlName)
-	myTableName := pd.tokenizTable(table)
-	fkName := pd.tokenizIdentif(column.sqlName)
-	fkFkName := pd.tokenizIdentif(fmt.Sprintf("fk_%s", column.sqlName))
+func (pd *PostgressDialect) AddFKConstrictor(table *dialect.DbTable, column *dialect.DbColumn) string {
+	tablename := pd.TokenizTable(column.ForeignKey)
+	tableID := pd.TokenizIdentif(column.ForeignKey.PrimaryColumn.SqlName)
+	myTableName := pd.TokenizTable(table)
+	fkName := pd.TokenizIdentif(column.SqlName)
+	fkFkName := pd.TokenizIdentif(fmt.Sprintf("fk_%s", column.SqlName))
 	s := fmt.Sprintf(`
 	ALTER TABLE %s
 	ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s);`,
@@ -142,25 +148,26 @@ func (pd *PostgressDialect) addFKConstrictor(table *DbTable, column *DbColumn) s
 	return s
 }
 
-func (pd *PostgressDialect) dropFKConstrictor(table *DbTable, column *DbColumn) string {
-	myTableName := pd.tokenizTable(table)
-	fkFkName := pd.tokenizIdentif(fmt.Sprintf("fk_%s", column.sqlName))
+func (pd *PostgressDialect) DropFKConstrictor(table *dialect.DbTable, column *dialect.DbColumn) string {
+	myTableName := pd.TokenizTable(table)
+	fkFkName := pd.TokenizIdentif(fmt.Sprintf("fk_%s", column.SqlName))
 	s := fmt.Sprintf(`
 	ALTER TABLE %s
 	DROP CONSTRAINT %s;`, myTableName, fkFkName)
 	return s
 }
 
-func (pd *PostgressDialect) getSqlType(langType string, bIsNullable *bool, nameOfColumn string) string {
-	langType = pd.cleanNameGoStruct(langType)
+func (pd *PostgressDialect) GetSqlType(langType string, bIsNullable *bool, nameOfColumn string) string {
+
+	langType = pd.Base1.CleanNameGoStruct(langType)
 	if strings.HasPrefix(langType, "[]") {
-		return pd.printError(fmt.Sprintf("type %s not supported!", langType))
+		return pd.Base1.PrintError(fmt.Sprintf("type %s not supported!", langType))
 	}
 
 	switch langType {
 	case "NullString":
 		*bIsNullable = true
-		return pd.isLongType(nameOfColumn, "TEXT", "VARCHAR")
+		return pd.Base1.IsLongType(nameOfColumn, "TEXT", "VARCHAR")
 	case "NullBool":
 		*bIsNullable = true
 		return "BOOLEAN"
@@ -180,7 +187,7 @@ func (pd *PostgressDialect) getSqlType(langType string, bIsNullable *bool, nameO
 		*bIsNullable = true
 		return "TIMESTAMP"
 	case "string":
-		return pd.isLongType(nameOfColumn, "TEXT", "VARCHAR")
+		return pd.IsLongType(nameOfColumn, "TEXT", "VARCHAR")
 	case "char":
 		return "CHAR"
 	case "bool":
@@ -200,16 +207,16 @@ func (pd *PostgressDialect) getSqlType(langType string, bIsNullable *bool, nameO
 	case "float64":
 		return "double precision"
 	default:
-		return pd.printError(fmt.Sprintf("not supported type %s", langType))
+		return pd.PrintError(fmt.Sprintf("not supported type %s", langType))
 	}
 }
 
-func (pd *PostgressDialect) getProperty(propName, tableName, colName, colValue string) string {
+func (pd *PostgressDialect) GetProperty(propName, tableName, colName, colValue string) string {
 	requestText := fmt.Sprintf(`
 	SELECT %s FROM %s
-	WHERE %s = '%s'`, pd.tokenizIdentif(colValue), pd.tokenizTableName(tableName), pd.tokenizIdentif(colName), propName)
+	WHERE %s = '%s'`, pd.TokenizIdentif(colValue), pd.TokenizTableName(tableName), pd.TokenizIdentif(colName), propName)
 
-	row := pd.connection.QueryRow(requestText)
+	row := pd.Connection.QueryRow(requestText)
 	var obj interface{}
 	if err := row.Scan(&obj); err != nil {
 		return ""
@@ -217,28 +224,28 @@ func (pd *PostgressDialect) getProperty(propName, tableName, colName, colValue s
 	return fmt.Sprintf("%v", obj)
 }
 
-func (pd *PostgressDialect) updateProperty(propName, value, tableName, colName, colValue string) {
+func (pd *PostgressDialect) UpdateProperty(propName, value, tableName, colName, colValue string) {
 	requestText := fmt.Sprintf(`
 	UPDATE %s
 	SET %s = '%s'
-	WHERE %s = '%s'`, pd.tokenizIdentif(tableName), pd.tokenizIdentif(colValue), value, pd.tokenizIdentif(colName), propName)
+	WHERE %s = '%s'`, pd.TokenizIdentif(tableName), pd.TokenizIdentif(colValue), value, pd.TokenizIdentif(colName), propName)
 
-	pd.connection.Exec(requestText)
+	pd.Connection.Exec(requestText)
 }
 
-func (pd *PostgressDialect) insertProperty(propName, value, tableName, colName, colValue string) {
+func (pd *PostgressDialect) InsertProperty(propName, value, tableName, colName, colValue string) {
 	requestText := fmt.Sprintf(`
-	INSERT INTO %s (%s, %s, %s) VALUES (default, '%s', '%s')`, pd.tokenizTableName(tableName), pd.tokenizIdentif("ID"), pd.tokenizIdentif(colName), pd.tokenizIdentif(colValue), propName, value)
+	INSERT INTO %s (%s, %s, %s) VALUES (default, '%s', '%s')`, pd.TokenizTableName(tableName), pd.TokenizIdentif("ID"), pd.TokenizIdentif(colName), pd.TokenizIdentif(colValue), propName, value)
 
-	pd.connection.Exec(requestText)
+	pd.Connection.Exec(requestText)
 }
 
-func (pd *PostgressDialect) execScript(scriptTxt string) {
+func (pd *PostgressDialect) ExecScript(scriptTxt string) {
 	parts := strings.Split(scriptTxt, ";")
 	for i, part := range parts {
 		script1 := strings.TrimSpace(part)
 		if len(script1) > 0 {
-			_, err := pd.connection.Exec(script1)
+			_, err := pd.Connection.Exec(script1)
 			if err != nil {
 				msg := err.Error()
 				fmt.Printf("Error exec script part %d: %s\n", i, msg)
@@ -248,8 +255,10 @@ func (pd *PostgressDialect) execScript(scriptTxt string) {
 	}
 }
 
-func (pd *PostgressDialect) startConnection(arg *GenericDialectArg) bool {
-	connectionString := arg.connection_string
+
+func (pd *PostgressDialect) StartConnection(arg dialect.IGenericDialectArg) bool {
+
+	connectionString := arg.GetGenericDialectArg().Connection_String
 	conn, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -263,10 +272,10 @@ func (pd *PostgressDialect) startConnection(arg *GenericDialectArg) bool {
 		return false
 	}
 
-	pd.connection = conn
+	pd.Connection = conn
 
 	if true {
-		pd.fnProcessData(pd, arg)
+		pd.Base1.FnProcessData(pd, arg)
 		return true
 	}
 
@@ -283,7 +292,7 @@ func (pd *PostgressDialect) startConnection(arg *GenericDialectArg) bool {
 		}
 	}()
 
-	pd.fnProcessData(pd, arg)
+	pd.Base1.FnProcessData(pd, arg)
 
 	err = tx.Commit()
 	if err != nil {
@@ -296,3 +305,26 @@ func (pd *PostgressDialect) startConnection(arg *GenericDialectArg) bool {
 	return true
 }
 
+func (pd *PostgressDialect) IsYes(s string) bool {
+	return s != "" && s == "YES"
+}
+
+
+func (pd *PostgressDialect) IsLongType(sqlColumnName string, type1 string, type2 string) string {
+
+    return pd.Base1.IsLongType(sqlColumnName, type1, type2);
+}
+
+func (pd *PostgressDialect) PrintError(err string) string {
+
+    return pd.Base1.PrintError(err)
+}
+func (pd *PostgressDialect) SetCurrentFile(file string)  {
+    
+    pd.Base1.SetCurrentFile(file)
+}
+
+func (pd *PostgressDialect) CleanNameGoStruct(name string) string {
+
+    return pd.Base1.CleanNameGoStruct(name )
+}

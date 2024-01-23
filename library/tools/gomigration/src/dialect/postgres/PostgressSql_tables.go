@@ -3,12 +3,15 @@
 import (
 	"database/sql"
 	"fmt"
+
+	dialect "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/dialect"
+	utils "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/utils"
 )
 
-func (pd *PostgressDialect) readTables(SqlLang string) (map[string]*DbTable, error) {
+func (pd *PostgressDialect) ReadTables(SqlLang string) (map[string]*dialect.DbTable, error) {
 
-	tables := make(map[string]*DbTable)
-	cnn := pd.connection
+	tables := make(map[string]*dialect.DbTable)
+	cnn := pd.Connection
 	packageImports := make(map[string]string)
 
 	requestText := `
@@ -52,7 +55,7 @@ func (pd *PostgressDialect) readTables(SqlLang string) (map[string]*DbTable, err
 	}
 	defer rows.Close()
 
-	var table *DbTable
+	var table *dialect.DbTable
 	for rows.Next() {
 		var tableName, tableSchema string
 		var columnName, colType, colType2, colIsNullable, colIsIdentity string
@@ -62,29 +65,30 @@ func (pd *PostgressDialect) readTables(SqlLang string) (map[string]*DbTable, err
 
 		table = tables[tableName]
 		if table == nil {
-			table = &DbTable{
-				LangTableNameModel: ConvertToIdentGoLang(tableName),
+			table = &dialect.DbTable{
+				LangTableNameModel: utils.Utils_ConvertToIdentGoLang(tableName, false),
 				Schema:             tableSchema,
 				SqlTableNameModel:  tableName,
 				PrimaryColumn:      nil,
-				Columns:            make([]*DbColumn, 0),
+				Columns:            make([]*dialect.DbColumn, 0),
 			}
 			tables[tableName] = table
 		}
 
-		column := &DbColumn{
-			LangName:      ConvertToIdentGoLang(columnName, true),
-			LangName2:     ConvertToIdentGoLang(columnName, false),
+		column := &dialect.DbColumn{
+			LangName:      utils.Utils_ConvertToIdentGoLang(columnName, true),
+			LangName2:     utils.Utils_ConvertToIdentGoLang(columnName, false),
 			SqlName:       columnName,
 			SqlType:       colType,
-			LangType:      pd.getGoLangType(column, &packageImports),
-			BIsIdentity:   pd.isYes(colIsIdentity),
-			BIsNullable:   pd.isYes(colIsNullable),
+			LangType:      "",//pd.GetGoLangType(column, &packageImports),
+			IsIdentity:   pd.IsYes(colIsIdentity),
+			IsNullable:   pd.IsYes(colIsNullable),
 		}
+        column.LangType = pd.GetGoLangType(column, &packageImports);
 
 		table.Columns = append(table.Columns, column)
 
-		if column.BIsIdentity {
+		if column.IsIdentity {
 			if table.PrimaryColumn != nil {
 				return nil, fmt.Errorf("%s has already a primary key", table.SqlTableNameModel)
 			}
@@ -102,8 +106,8 @@ func (pd *PostgressDialect) readTables(SqlLang string) (map[string]*DbTable, err
 	return tables, nil
 }
 
-func (pd *PostgressDialect) readConstraintors(tables map[string]*DbTable) error {
-	cnn := pd.connection
+func (pd *PostgressDialect) ReadConstraintors(tables map[string]*dialect.DbTable) error {
+	cnn := pd.Connection
 	requestText := `
 		SELECT * FROM (
 			SELECT
@@ -170,7 +174,7 @@ func (pd *PostgressDialect) readConstraintors(tables map[string]*DbTable) error 
 
 		if colRefTable != "" && colRefColumn != "" {
 			if table, ok := tables[tableName]; ok {
-				if column := findColumn(table, columnName); column != nil {
+				if column := pd.findColumn(table, columnName); column != nil {
 					if refTable, ok := tables[colRefTable]; ok {
 						if primary := refTable.PrimaryColumn; primary != nil && primary.LangName == colRefColumn {
 							column.ForeignKey = refTable
@@ -189,6 +193,19 @@ func (pd *PostgressDialect) readConstraintors(tables map[string]*DbTable) error 
 
 	return nil
 }
+
+func (pd *PostgressDialect) findColumn(table *dialect.DbTable, sqlColumnName string) *dialect.DbColumn{
+
+    for i := 0; i < len( table.Columns); i++{
+
+        if( table.Columns[i].SqlName == sqlColumnName){
+            return table.Columns[i];
+        }
+    }
+    return nil;
+}
+
+
 
 func (pd *PostgressDialect) getString(reader *sql.Rows, index int) string {
 	var result sql.NullString
