@@ -203,8 +203,6 @@ func orderByCounter(tables *[]*TDbTable)  {
 
 
 
-
-
 type GenSqlScriptsFromJsonModels struct {
 	dictForeignKeys map[string]*dialect.FKRootTgt
 	tables          map[string]*dialect.DbTable
