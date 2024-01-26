@@ -2,10 +2,10 @@
 
 import (
 	"encoding/json"
-	"filepath"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -96,6 +96,114 @@ type PreGenerateScript struct {
 	listDropTables []*TDbTable
 	listUpdTables  []*TUpdColumn
 }
+
+
+
+// GenerateScript generates the script based on the provided GenericdialectInst
+func (pgs *PreGenerateScript) GenerateScript(dialectInst dialect.GenericDialect) string {
+	separator := dialectInst.SqlSeparator()
+	var arr []string
+
+	for _, table := range pgs.listDropTables {
+		arr = append(arr, table.script)
+	}
+
+	if len(pgs.listAddTables) > 0 {
+		//listOrder := make([]TDbTable, len(pgs.listAddTables))
+		stack := make([]*dialect.DbTable, 0)
+		dictAllTDbtables := make(map[string]*TDbTable)
+
+		for _, it := range pgs.listAddTables {
+			if it.tableInst != nil {
+				dictAllTDbtables[it.tableInst.LangTableNameModel] = it
+			} else {
+				it.counterOrder = 10000
+			}
+		}
+
+		for i := 0; i < 10; i++ {
+			for _, it := range pgs.listAddTables {
+				if it.tableInst != nil {
+					if !orderByDependency(it, &dictAllTDbtables, &stack, 0) {
+						return "-- errors. please fix the errors."
+					}
+				}
+			}
+		}
+
+		//pgs.listAddTables = 
+		orderByCounter( & pgs.listAddTables)
+
+		for _, table := range pgs.listAddTables {
+			arr = append(arr, table.script)
+		}
+	}
+
+	for _, table := range pgs.listUpdTables {
+		arr = append(arr, table.script)
+	}
+
+	return strings.Join(arr, separator)
+}
+
+// orderByDependency simulates the orderByDependency method
+func orderByDependency(table *TDbTable, dictAllTDbtables *map[string]*TDbTable, stack *[]*dialect.DbTable, counter int) bool {
+	if contains(*stack, table.tableInst) {
+		fmt.Println("cyclic dependency for table", table.tableInst.LangTableNameModel)
+		return false
+	}
+
+	idxStack := len(*stack)
+	*stack = append(*stack, table.tableInst)
+	table.counterOrder = max(table.counterOrder, counter+1)
+
+	for _, col := range table.tableInst.Columns {
+		if col.ForeignKey != nil {
+			if _, exists := (*dictAllTDbtables)[col.ForeignKey.LangTableNameModel]; !exists {
+				fmt.Println("Not found table", col.ForeignKey.LangTableNameModel)
+				return false
+			}
+
+			var tDbTable = (*dictAllTDbtables)[col.ForeignKey.LangTableNameModel]
+
+			if !orderByDependency(tDbTable, dictAllTDbtables, stack, max(table.counterOrder, counter+1)) {
+				return false
+			}
+		}
+	}
+
+	*stack = (*stack)[:idxStack]
+	return true
+}
+
+// max returns the maximum of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// contains checks if a table is present in the stack
+func contains(stack []*dialect.DbTable, table *dialect.DbTable) bool {
+	for _, t := range stack {
+		if t == table {
+			return true
+		}
+	}
+	return false
+}
+
+// orderByCounter sorts tables based on their counter order
+func orderByCounter(tables *[]*TDbTable)  {
+	sort.SliceStable(*tables, func(i, j int) bool {
+		return (*tables)[i].counterOrder > (*tables)[j].counterOrder
+	})
+}
+
+
+
+
 
 type GenSqlScriptsFromJsonModels struct {
 	dictForeignKeys map[string]*dialect.FKRootTgt
@@ -281,25 +389,25 @@ func (d *GenSqlScriptsFromJsonModels) generateScript(prevFile, file, delimeter s
 
 	var preGenerate *PreGenerateScript
 	if dbTables0 != nil {
-		preGenerate = d.generatePartialSQL(dbTables1, dbTables0, dialectInst, tagFile)
+		preGenerate = d.generatePartialSql(dbTables1, dbTables0, dialectInst, tagFile)
 	} else {
-		preGenerate = d.generateNewSQLScript(dbTables1, dialectInst, tagFile)
+		preGenerate = d.generateNewSqlScript(dbTables1, dialectInst, tagFile)
 	}
 
-	return preGenerate.generateScript(dialectInst)
+	return preGenerate.GenerateScript(dialectInst)
 }
 
 
 func (d *GenSqlScriptsFromJsonModels) generateNewSqlScript(
 	dbTables []*dialect.DbTable, 
 	dialectInst dialect.GenericDialect, 
-	tagFile *string) PreGenerateScript {
+	tagFile *string) *PreGenerateScript {
 
 
-	ret := PreGenerateScript{}
-	tableMigration := MigrationDB.CreateMigrationTable(dialectInst)
+	ret := new (PreGenerateScript)
+	tableMigration := CreateMigrationTable(dialectInst)
 	scriptTable := dialectInst.AddTable(tableMigration)
-	ret.listAddTables = append(ret.listAddTables, (new (TDbTable)).Constructor2( MigrationDB.TABLE_MIGRATION, scriptTable) )
+	ret.listAddTables = append(ret.listAddTables, (new (TDbTable)).Constructor1( TABLE_MIGRATION, scriptTable) )
 
 	for _, table := range dbTables {
 		txt := dialectInst.AddTable(table)
@@ -315,10 +423,10 @@ func (d *GenSqlScriptsFromJsonModels)  generatePartialSql(
 	dbTables1 []*dialect.DbTable,
 	 dbTables0 []*dialect.DbTable, 
 	dialectInst dialect.GenericDialect, 
-	tagFile *string) PreGenerateScript {
+	tagFile *string) *PreGenerateScript {
 
 
-	ret := PreGenerateScript{}
+	ret := new (PreGenerateScript);
 	s := ""
 	dict1 := utils.Utils_GetDictFromList(dbTables1, func(x *dialect.DbTable) string { return x.LangTableNameModel })
 	dict0 := utils.Utils_GetDictFromList(dbTables0, func(x *dialect.DbTable) string { return x.LangTableNameModel })
@@ -344,7 +452,13 @@ func (d *GenSqlScriptsFromJsonModels)  generatePartialSql(
 			_tagFile2 += table.LangTableNameModel
 		}
 	}
-	s1 := strings.Join(ret.listDropTables, dialectInst.SqlSeparator())
+
+	var _listDropTables = []string{}
+	for i := 0; i < len(ret.listDropTables); i++{
+
+		_listDropTables = append( _listDropTables, ret.listDropTables[i].script );
+	}
+	s1 := strings.Join( _listDropTables, dialectInst.SqlSeparator())
 	s += s1
 	if _tagFile2 != "" {
 		*tagFile = "renTable" + _tagFile2

@@ -132,7 +132,7 @@ func (m *MigrationDB) getHistoryName(property string) string {
 }
 
 func (m *MigrationDB) setupMigration(dialectInst dialect.GenericDialect) {
-	tableMigration := createMigrationTable(dialectInst)
+	tableMigration := CreateMigrationTable(dialectInst)
 	scriptTable := dialectInst.AddTable(tableMigration)
 	dialectInst.ExecScript(scriptTable)
 
@@ -143,7 +143,7 @@ func newDbColumn() *dialect.DbColumn{
 	return new (dialect.DbColumn);
 }
 
-func createMigrationTable(dialectInst dialect.GenericDialect) *dialect.DbTable {
+func CreateMigrationTable(dialectInst dialect.GenericDialect) *dialect.DbTable {
 	isNullable := false
 	tableMigration := &dialect.DbTable{}
 	tableMigration.Columns = append(tableMigration.Columns, newDbColumn().InitSqlPrimary("ID"))
