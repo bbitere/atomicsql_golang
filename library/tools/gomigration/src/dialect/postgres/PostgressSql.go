@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"strings"
 
+	_ "github.com/lib/pq"
+
 	dialect "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/dialect"
+	utils "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/utils"
 )
 
 type PostgressDialect struct {
@@ -259,7 +262,19 @@ func (pd *PostgressDialect) ExecScript(scriptTxt string) {
 func (pd *PostgressDialect) StartConnection(arg dialect.IGenericDialectArg) bool {
 
 	connectionString := arg.GetGenericDialectArg().Connection_String
-	conn, err := sql.Open("postgres", connectionString)
+    var connStr = utils.Utils_parseConnectionString( connectionString );
+    
+	var dataSource = "";
+    if( connStr.Port == ""){
+
+        dataSource = fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+			connStr.Host, connStr.User, connStr.Password, connStr.DbName)
+    }else{
+        dataSource = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			connStr.Host, connStr.Port, connStr.User, connStr.Password, connStr.DbName)
+    }
+
+	conn, err := sql.Open("postgres", dataSource)
 	if err != nil {
 		fmt.Println(err.Error())
 		return false

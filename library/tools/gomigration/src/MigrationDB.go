@@ -71,6 +71,10 @@ func (m *MigrationDB) ProcessData(dialect dialect.GenericDialect, arg1 dialect.I
 	}
 
 	files := m.scanFiles(arg.inputDir)
+	if( files == nil){
+		return;
+	}
+	
 	//sortedFiles := m.sortedFilesByName( &files );
 	var sortedFiles = sort.StringSlice(files);
 	
@@ -87,7 +91,19 @@ func (m *MigrationDB) scanFiles(dir string) []string {
 	var listFiles []string
 	regex := regexp.MustCompile(RECOGNIZE_FILE_PATTERN)
 
-	allFiles, _ := filepath.Glob(filepath.Join(dir, "*"))
+	var pathDir, err = filepath.Abs( dir )
+	if( err != nil){
+		return nil;
+	}
+
+	allFiles, err := filepath.Glob( pathDir + "/*.*" )
+	if( err != nil){
+
+		fmt.Printf("%v", err);
+		fmt.Println();
+		return nil
+	}
+
 	for _, file := range allFiles {
 		fileInfo, _ := os.Stat(file)
 		if fileInfo.IsDir() {

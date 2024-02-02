@@ -74,14 +74,14 @@ Description
 <br/>
 <br/> and struct vUser1 is defined as:
 <br/>&emsp;type vUser1 struct {
-<br/>&emsp;&emsp;		m.User   \`atomicsql:"copy-model"\`
-<br/>&emsp;&emsp;		UserRole string
-<br/>&emsp;	}
+<br/>&emsp;&emsp;&emsp;&emsp;m.User   \`atomicsql:"copy-model"\`
+<br/>&emsp;&emsp;&emsp;&emsp;UserRole string
+<br/>&emsp;&emsp;}
 <br/>
 <br/> The engine translate this instruction in a sql query, using precompile lambda instructions placed inside WHERE() + Select() as following: 
-<br/> &emsp; SELECT usr.\*, role.RoleName AS User FROM users usr 
-<br/> &emsp;&emsp;  WHERE role.IsActive = 1 
-<br/> &emsp;&emsp;  LEFT JOIN user_role role on role.ID = usr.UserRole_ID
+<br/>&emsp; SELECT usr.\*, role.RoleName AS User FROM users usr 
+<br/>&emsp;&emsp;  WHERE role.IsActive = 1 
+<br/>&emsp;&emsp;  LEFT JOIN user_role role on role.ID = usr.UserRole_ID
 <br/>
 <br/>this code does: return a list with users, but having also the UserRole as the name of RoleName from FK relation of UserRoleID. Here is no need to use GetModelsRel() method as in previous example, to obtain the FK relation.
 
@@ -109,7 +109,7 @@ Description
 <br/>&emsp;    the sql scripts reflect the incremental updates for Database using the diferences of json files from json file to json file.
 <br/>
 <br/>- 3. apply all sql scripts to update Database, using **DBTool.exe** with flag: -migration_db. The directory is located at:
-<br/>&emsp;	.\library\tests\test1\_db_migration
+<br/>&emsp;&emsp;.\library\tests\test1\_db_migration
 <br/>
 <br/>- 4. extract directly from DataBase all tables and generate golang models using **DBTool.exe** with flag: -export_db
 <br/>
@@ -118,4 +118,63 @@ Description
 <br/>
 <br/>Both these utilities are used in batch files in a example. Its location is in directory:
 <br/>&emsp;    .\library\tests\test1\build\win32
+<br/>
+
+------------------------------------------
+
+<br/> **How to rename a table or a column** .  
+<br/> 
+<br/>
+<br/>
+<br/>this is a tipical declaration in golang of a struct that notify atmsql that this is table
+<br/>Ex:
+<br/>type User struct /*atomicsql-table:"user"*/ {
+<br/>
+<br/>&emsp;orm.Generic_MODEL
+<br/>
+<br/>&emsp;ID                  int32                         `json:"ID,omitempty"`
+<br/>&emsp;UserName            string                        `json:"userName"`
+<br/>}
+<br/>
+<br/>How to do the renaming? For example to rename UserName in SimpleName
+<br/>This supose 2 steps:
+<br/>
+<br/>first rename the sql name of the column doing:
+<br/>
+<br/>UserName            string                        `json:"simpleName"`
+<br/>
+<br/>and execute the tools from cmd file: 1.updateDb_ModelFirst.cmd
+<br/>this will generate a mark that you want to rename the sql table and will update all sql queries from Where() and Select()
+<br/>
+<br/>second, do the refactor in all code of the field name: 
+<br/>
+<br/>SimpleName            string                        `json:"simpleName"`
+<br/>and execute the tools from cmd file: 1.updateDb_ModelFirst.cmd 
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+------------------------------------------
+
+<br/> **Things that need to be done in next versions** .  
+<br/> - logical expressions and negation operator need paranthesis. Ex !a.Valid && a.Value == 0 => need to be rewrite as (!a.Valid) && a.Value == 0 
 <br/>

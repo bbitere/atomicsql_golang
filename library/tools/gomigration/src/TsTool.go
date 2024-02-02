@@ -18,16 +18,16 @@ const (
 )
 
 
-
-
 func main() {
 
     var args = os.Args;
+
+	utils.Arr_RemoveAt( &args, 0);
+	
     GoTool_Main(args);
 }
 
 func GoTool_Main(args []string ){
-
     
 	if len(args) < 2 {
 		fmt.Println("No arguments: AppType Path flags")
@@ -40,8 +40,75 @@ func GoTool_Main(args []string ){
 		args = args[1:]
 	}
 
+	if args[0] == "-asql_migration" {
+
+		dictArgs := GoTool_parseArguments(args, []string{
+			"sql_lang",
+			"json_dir",
+			"sql_dir",
+			"connection_string",
+			"delimeter",
+			"execute_scripts",
+		}, []string{
+			"sql_lang; the name of sql dialect:postgres, mysql",
+			"json Directory;the directory where all json defs are stored",
+			"sql_dir Directory;the directory where all sql scritps definitions for migration are stored",
+			"connection string; connection string of db",
+			"delimeter; string that separates the defs of table in json file",
+			"execute the scripts; if execute_scripts=y,n => execute scripts, else generate the files",
+		})
+		if dictArgs == nil {
+			return
+		}
+	
+		inst := &GenSqlScriptsFromJsonModels{}
+		inst.GenerateScripts(
+			dictArgs["sql_lang"],
+			normalizePath(dictArgs["json_dir"]),
+			normalizePath(dictArgs["sql_dir"]),
+			dictArgs["connection_string"],
+			dictArgs["delimeter"],
+			dictArgs["execute_scripts"] == "y",
+		)
+	}else
 	if args[0] == "-migration_db" {
-		// ...
+
+		// -migration_db -input_dir="C:\Work\SlotMonitor\SlotMonitor\GoServer\Database\scripts" -out_models="" -type_out_file=go -connectionString=Host=localhost;Username=dev_original;Password=XCZ12345678;Database=newton_original
+		dictArgs := GoTool_parseArguments(args, []string{
+			"sql_lang",
+			"connectionString",
+			"input_dir",
+			"out_dir",
+			"type_out_file",
+		}, []string{
+			"sql_lang; the name of sql dialect:postgres, mysql",
+			"connection string; connection string of db",
+			"sql scripts directory;input directory of sql scripts",
+			"output directory;the output dir for generate same definitions of migration",
+			"type of out file; type_of_file = go | ts",
+		})
+		if dictArgs == nil {
+			return
+		}
+
+		inputDir := dictArgs["input_dir"]
+
+		fmt.Println("")
+		fmt.Printf("Do migration for directory %s\n", inputDir)
+
+		migration := &MigrationDB{}
+
+		if migration.DoMigration(
+			dictArgs["sql_lang"],
+			normalizePath(dictArgs["connectionString"]),
+			normalizePath(dictArgs["input_dir"]),
+			normalizePath(dictArgs["out_dir"]),
+			dictArgs["type_out_file"],
+		) {
+			fmt.Printf("Completed migration for directory %s\n", inputDir)
+		}
+
+
 	} else {
 		fmt.Println("Not Implemented parameter")
 	}

@@ -6,6 +6,9 @@ import (
 	"strings"
 
 	dialect "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/dialect"
+	utils "github.com/bbitere/atomicsql_golang.git/tools/gomigration/src/utils"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type MySqlDialect struct {
@@ -283,7 +286,21 @@ func (m *MySqlDialect) ExecScript(scriptTxt string) {
 // StartConnection initiates a connection to the MySQL database
 func (m *MySqlDialect) StartConnection(arg dialect.IGenericDialectArg) bool {
 	var err error
-	m.connection, err = sql.Open("mysql", arg.GetGenericDialectArg().Connection_String)
+
+    var connString = arg.GetGenericDialectArg().Connection_String;
+
+    var connStr = utils.Utils_parseConnectionString(connString);
+	var	dataSource = fmt.Sprintf(
+			"Data Source=%s;"+
+				"Initial Catalog=%s;"+
+				"User id=%s;"+
+				"password=%s;",
+			connStr.Host,
+			connStr.DbName,
+			connStr.User,
+			connStr.Password)
+
+	m.connection, err = sql.Open("mysql", dataSource )
 	if err != nil {
 		fmt.Println("Error opening database connection:", err)
 		return false

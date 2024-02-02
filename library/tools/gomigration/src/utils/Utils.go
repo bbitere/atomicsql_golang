@@ -15,7 +15,8 @@ func Utils_Utils_Nop() {}
 // GetFileInfoName function
 func Utils_GetFileInfoName(filePath string) string {
 
-    var fileName = path.Base(filePath);
+	var filePath1 = strings.ReplaceAll( filePath, "\\", "/");
+    var _, fileName = path.Split(filePath1);	
     var ext = path.Ext(filePath)
 
 	if ext == "" {
@@ -164,3 +165,46 @@ func Utils_ConvertToIdentGoLang(ident string, removeUnderscore bool) string {
 	}
 	return ident1
 }
+
+
+
+type TConnString struct {
+	Host string
+	Port string
+	User string
+	Password string
+	DbName string
+}
+func Utils_parseConnectionString( connectionString string) TConnString{
+
+	var ret = TConnString{}
+	var parts = strings.Split( connectionString, ";")
+
+	for i:= 0; i < len(parts); i++{
+
+		var prop = strings.Split( parts[i], "=")
+		var propName = prop[0];
+		Arr_RemoveAt( &prop, 0);
+
+		var propValue = strings.Join(prop, "=")
+
+		if( propName == "Host"){
+			ret.Host = propValue;
+		}else
+		if( propName == "Username"){
+			ret.User = propValue;
+		}else
+		if( propName == "Password"){
+			ret.Password = propValue;
+		}else
+		if( propName == "Database"){
+			ret.DbName = propValue;
+		}else
+		if( propName == "Port"){
+			ret.Port = propValue;
+		}
+
+	}
+	return ret;
+}
+	

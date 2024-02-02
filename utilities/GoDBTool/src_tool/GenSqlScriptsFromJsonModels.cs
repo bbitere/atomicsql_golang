@@ -330,7 +330,7 @@ namespace src_tool
                         //the name in golang changed
                     }
                 }
-                var s1 = string.Join( dialect.SqlSeparator(), ret.listDropTables );
+                var s1 = string.Join( dialect.SqlSeparator(), ret.listDropTables.Select(x=>x.script).ToArray() );
                 s += s1;
                 if( _tagFile2 != "" )
                     tagFile = $"renTable{_tagFile2}";
