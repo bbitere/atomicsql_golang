@@ -11,7 +11,7 @@ import (
 	//test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/test_where"
 )
 
-func Test1Rtm_10( step int, bCheckName bool) ( int, error, string) {
+func Test1Rtm_10( step int, bCheckName bool) ( int, string, error) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
 	var nameTest = "ORM: Select( Aggregate( Where() ) "
@@ -23,24 +23,24 @@ func Test1Rtm_10( step int, bCheckName bool) ( int, error, string) {
 	var UserName2	string =  "b";
 	var UserName3	string =  "c";
 
-	ctx, err, _ := Test1_init();// (orm.DBContextBase, error, string){	
+	ctx, _, err := Test1_init();// (orm.DBContextBase, error, string){	
 	if( ctx != nil ){
 		defer ctx.Close()
 	}
-	if( err != nil ){return 0, err, nameTest;}
+	if( err != nil ){return 0, nameTest, err;}
 
 	var user = m.User{UserName: UserName1, Money: UserMoney,
 			UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: false},};
-	_, err = ctx.User.Qry("").InsertModel(&user);
+	ctx.User.Qry("").InsertModel(&user);
 
 	var user1 = m.User{UserName: UserName2, Money: 2*UserMoney,
 	UserRoleID: &m.UserRole{ RoleName: RoleNameDefault, IsActive: true},};
-	_, err = ctx.User.Qry("").InsertModel(&user1);
+	ctx.User.Qry("").InsertModel(&user1);
 
 	//second has different user role
 	var user2 = m.User{UserName: UserName3, Money: UserMoney,
 		UserRoleID: &m.UserRole{ RoleName: RoleNameAdmin, IsActive: true},};
-	_, err = ctx.User.Qry("").InsertModel(&user2);
+	ctx.User.Qry("").InsertModel(&user2);
 
 	//---------------------------
 	type TUserAggr struct {
@@ -64,7 +64,7 @@ func Test1Rtm_10( step int, bCheckName bool) ( int, error, string) {
 					atmsql.Aggregate[ m.User, TUserAggr ]( 
 						ctx.User.Qry("tst1_066").ToRTM(true, ctx.User_.UserRoleID.Def() ).
 						Where(func(x *m.User) bool {
-							return x.UserRoleID.IsActive == true
+							return x.UserRoleID.IsActive
 						}),
 					),
 					func (x *TUserAggr ) *TUserView {
@@ -77,16 +77,16 @@ func Test1Rtm_10( step int, bCheckName bool) ( int, error, string) {
 					}).OrderAsc( "UserRoleName" ).GetModels();
 
 	if( err != nil){
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 	if(len(usrs4) != 2){
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 	if( usrs4[0].SumMoney != UserMoney){
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 	if( usrs4[1].SumMoney != 2*UserMoney){
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
-	return 1, nil, nameTest;
+	return 1, nameTest, nil;
 }

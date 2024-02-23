@@ -39,20 +39,36 @@ namespace goscanner.Metadata
         {
             if( UID == 148)
                 UID = UID;
-                
-
+        }
+        public LocalVariableInfo(TypeInfo Type, bool IsParameter)
+        {
+            if( UID == 148)
+                UID = UID;
+            this.Type = Type;
+            this.IsParameter = IsParameter;
         }
     }
     [Serializable]
     public class VariableInfo: Identif
     {
         public TypeInfo Type;
+        public bool IsConst;
         
         public bool HeapAllocated;
         public bool Redeclared;
 
         public String[] InitExprFld;
         public String[] InitExprVal;
+
+        public ExpressionInfo ConstExpr;
+
+        public VariableInfo(){ }
+        public VariableInfo(string name, TypeInfo type, bool bIsConst=false)
+        {
+            this.Name = name;
+            this.Type = type;
+            this.IsConst = bIsConst;
+        }
 
         private Dictionary<string,string> initExpr;
         public Dictionary<string,string> getInitExpr()
@@ -67,7 +83,7 @@ namespace goscanner.Metadata
             }
             return initExpr;
         }
-        public void setInitExpr(Dictionary<string,string> dict)
+        public void setInitStructExpr(Dictionary<string,string> dict)
         { 
             initExpr = dict;
             var _InitExprFld = new List<string>();
@@ -79,6 +95,14 @@ namespace goscanner.Metadata
             }
             this.InitExprFld = _InitExprFld.ToArray();
             this.InitExprVal = _InitExprVal.ToArray();
+        }
+        public void setConstExpr( ExpressionInfo expr)
+        { 
+            this.ConstExpr = expr;
+        }
+        public ExpressionInfo getConstantLiteralExpr()
+        { 
+            return this.ConstExpr;
         }
 
     }

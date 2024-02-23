@@ -1,24 +1,25 @@
 /* this class is generated automatically by DB_Tool.exe exporter*/
 
-    package mymodels
-	import (
-        "reflect"
-        orm	  "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-    )
-	
-	
-        /*import (
+package mymodels
+
+import (
+	"reflect"
+
+	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+)
+
+/*import (
 	    sql "database/sql"
         )*/
-	/*
+/*
     type Bar2 struct /*atomicsql-table:"bar2"* / {
 	        orm.Generic_MODEL
-	        Id                  int64                         `json:"Id,omitempty"`
+	        Id                  int32                         `json:"Id,omitempty"`
             FooId               sql.NullInt64                 `json:"foo_id"`
             UniqueInt           sql.NullInt32                 `json:"unique_int"`
             NonuniqueInt        sql.NullInt32                 `json:"nonunique_int"`
     }
-	*/
+*/
     func (model  Bar2) GetID() int64 {
 	    return int64( model.Id )
     }

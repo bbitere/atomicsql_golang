@@ -1,27 +1,29 @@
 /* this class is generated automatically by DB_Tool.exe exporter*/
 
-    package mymodels
-	import (
-        "reflect"
-        orm	  "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-    )
-	
-	
-        /*import (
+package mymodels
+
+import (
+	"reflect"
+
+	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+)
+
+/*import (
 	    sql "database/sql"
         )*/
-	/*
+/*
     type Employee1 struct /*atomicsql-table:"employee1"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
-            IsActive            int16                         `json:"isActive"`
+            IsActive            bool                          `json:"isActive"`
             UserID              *User                         `json:"-"`
-            User_ID                                           `json:"user_ID"`
+            User_ID             sql.NullInt32                 `json:"user_ID"`
             DepartmentID        *Department                   `json:"-"`
-            Department_ID                                     `json:"departm_ID"`
-            Department2ID       sql.NullInt32                 `json:"departm2_ID"`
+            Department_ID       sql.NullInt32                 `json:"departm_ID"`
+            Department2ID       *Department                   `json:"-"`
+            Department2_ID      sql.NullInt32                 `json:"departm2_ID"`
     }
-	*/
+*/
     func (model  Employee1) GetID() int64 {
 	    return int64( model.ID )
     }
@@ -38,7 +40,8 @@
             User_ID             string
             DepartmentID        T_Department
             Department_ID       string
-            Department2ID       string
+            Department2ID       T_Department
+            Department2_ID      string
     }
 	
 	func (_this *T_Employee1) Def() *orm.TDefIncludeRelation{
@@ -55,6 +58,9 @@
             
                         var defDepartment = T_Department{}
 				        model.DepartmentID = (defDepartment.Def().FnNewInst(bFull)).(*Department)
+            
+                        var defDepartment2 = T_Department{}
+				        model.Department2ID = (defDepartment2.Def().FnNewInst(bFull)).(*Department)
 				}
 				return model;
 			},

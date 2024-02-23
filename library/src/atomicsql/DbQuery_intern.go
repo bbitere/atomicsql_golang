@@ -182,12 +182,8 @@ func (_this *DBQuery[T]) _generateSelectSql(
 	//sqlQuery += fmt.Sprintf(`SELECT %s FROM %s %s`, selectFields, table, ITEM)
 
 	var joinTxt = ""
-	if _this.getJoins() != nil {
-		joins1 := _this.getJoins()._joins
-		for _, element := range joins1 {
-
-			joinTxt += element.getSqlTxt(ITEM)
-		}
+	if _this.getJoins() != nil {		
+		joinTxt = _this.getJoins().getJoinsSqlQuery(ITEM); 
 	}
 	//sqlQuery += joinTxt
 
@@ -550,11 +546,7 @@ func (_this *DBQuery[T]) _getRows(
 	}
 
 	if _this.getJoins() != nil {
-		joins1 := _this.getJoins()._joins
-		for _, join := range joins1 {
-
-			joinTxt += join.getSqlTxt(ITEM)
-		}
+		joinTxt = _this.getJoins().getJoinsSqlQuery(ITEM)
 	}
 
 	if fields != nil {
@@ -971,11 +963,15 @@ func (_this *DBSqlJoinCollection) addJoin(
 
 	var joinItem, hasJoin = _this._joins[FK_id+":"+itemFK]
 	if hasJoin {
+		//found and return
 		return joinItem.nameItem, nil
 	}
 
-	j := new(DBSqlJoin)
-	_this._joins[FK_id+":"+itemFK] = j
+	var joinInst = (new( DBSqlJoin )).Constr()
+	var joinKey  = FK_id+":"+itemFK;
+
+	_this._joins[ joinKey ] = joinInst
+	Arr_Append( &_this._joins_ordered, joinKey );
 
 	/*if( pivotTableName && pivotTableName == table )
 	{   //pt ca pivot va deveni ITEM
@@ -985,9 +981,9 @@ func (_this *DBSqlJoinCollection) addJoin(
 	}else*/
 	{
 		nameItem := fmt.Sprintf("%s%d", SQL_ITEM_DEF, len(_this._joins))
-		j.nameItem = nameItem
-		j.sql = fmt.Sprintf(" LEFT JOIN %s %s ON %s.%s = %s.%s ",
-			thisQuery._quoteTable(table), nameItem, nameItem, thisQuery._quoteField(ID), itemFK, thisQuery._quoteField(tableFK))
+		joinInst.nameItem = nameItem
+		joinInst.sql = fmt.Sprintf(" LEFT JOIN %s %s ON %s.%s = %s.%s ",
+						thisQuery._quoteTable(table), nameItem, nameItem, thisQuery._quoteField(ID), itemFK, thisQuery._quoteField(tableFK))
 		return nameItem, nil
 	}
 }
@@ -1231,7 +1227,7 @@ func (_this *DBQuery[T]) _insertRecord(langTableName string, modelValue reflect.
 	}
 
 	sqlQuery := ""
-	if ctx.Dialect == ESqlDialect.Postgress {
+	if ctx.Dialect == ESqlDialect.Postgres {
 
 		sqlQuery = fmt.Sprintf(`INSERT INTO %s
 				 (%s) VALUES( %s ) 
@@ -1631,7 +1627,7 @@ func (_this *DBQuery[T]) _deleteRecords() string {
 	if ctx.Dialect == ESqlDialect.MySql {
 
 		sqlQuery = fmt.Sprintf(" DELETE %s FROM %s ", modelTableName, modelTableName)
-	} else if ctx.Dialect == ESqlDialect.Postgress {
+	} else if ctx.Dialect == ESqlDialect.Postgres {
 
 		if bHasJoins {
 
@@ -1659,11 +1655,9 @@ func (_this *DBQuery[T]) _deleteRecords() string {
 			_this._quoteField(modelTableName))
 	}
 
-	if _this.getJoins() != nil && _this.getJoins()._joins != nil {
+	if _this.getJoins() != nil {
 
-		for _, join := range _this.getJoins()._joins {
-			sqlQuery += join.getSqlTxt("")
-		}
+		sqlQuery += _this.getJoins().getJoinsSqlQuery("");//doesnt support joins
 	}
 
 	if _this.whereTxt != "" {
@@ -1706,11 +1700,8 @@ func (_this *DBQuery[T]) _getDistinctCount(fldTName string, fields []string) str
 			fldTName, table, ITEM)
 	}
 
-	if _this.getJoins() != nil && _this.getJoins()._joins != nil {
-
-		for _, join := range _this.getJoins()._joins {
-			sqlQuery += join.getSqlTxt(ITEM)
-		}
+	if _this.getJoins() != nil {
+		sqlQuery += _this.getJoins().getJoinsSqlQuery(ITEM);		
 	}
 	if _this.whereTxt != "" {
 		sqlQuery += " WHERE " + _this.whereTxt
@@ -2444,8 +2435,10 @@ func (_this *DBQuery[T]) _whereEq(field string, operand any, field2 string, bNot
 func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_fnWhere unsafe.Pointer, excludedLangFields []string) (string, []string) {
 
 	var statics = _this._extractStaticVarFromFunc(ptr_fnWhere, compiledQry.ExternVar)
-	var fields = compiledQry.Fields
-	var sql = compiledQry.CompiledQuery
+
+	var orderedFields 	= compiledQry.OrderedFields;
+	var fields 			= compiledQry.Fields
+	var sql 			= compiledQry.CompiledQuery
 
 	if compiledQry.SubQueries != nil {
 		//add subquery content
@@ -2491,20 +2484,23 @@ func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_f
 
 	var selectAggregatedFields = map[string]string{} // = arrays.CloneMapString( &compiledQry.SelectSqlFields);
 
-	for _, fieldSql_ := range fields {
+	
+	for _, orderdFieldSql := range orderedFields {
 		//do again this because range() get different order, and
-		var fieldSql = fieldSql_
+		var fieldSql = fields[orderdFieldSql];//fields[ orderdFieldSql_ ]
 		var len_field = len(fieldSql)
 		var fldTClean = substr(fieldSql, PREFIX_FIELDS_len, len_field-POSTFIX_FIELDS_len)
-		_ = _this._quoteTableField(fldTClean, false, _this.getJoins())
+		_this._quoteTableField(fldTClean, false, _this.getJoins())
 	}
 
-	for fldTLangName, fieldSql_ := range fields {
+	for _, orderdFieldSql_ := range orderedFields {
+	//for fldTLangName, fieldSql_ := range fields {
 
-		var fieldSql = fieldSql_
+		var fldTLangName = orderdFieldSql_
+		var fieldSql  = fields[ orderdFieldSql_ ]
 		var len_field = len(fieldSql)
 		var fldTClean = substr(fieldSql, PREFIX_FIELDS_len, len_field-POSTFIX_FIELDS_len)
-		var itm = _this._quoteTableField(fldTClean, false, _this.getJoins())
+		var itm       = _this._quoteTableField(fldTClean, false, _this.getJoins())
 
 		if compiledQry.SelectSqlFields != nil {
 			//for Select() and Select(Aggregate() )

@@ -39,7 +39,7 @@ namespace goscanner.ConvSql
                 Utils1.Nop();
 
             UID= s_UID++;
-            if( UID == 47 || UID == 48)
+            if( UID == 8 )
                 Utils1.Nop();
 
             SqlName = sqlName;
@@ -51,9 +51,11 @@ namespace goscanner.ConvSql
         {
             this.IsFK = bFK;    
         }
-        public void addLangName(string langName )
+        public string addLangName(string langName )
         {
-            this.LangName = this.LangName + "." + langName;
+            //this.LangName = this.LangName + "." + langName;
+            //return this.LangName;
+            return this.LangName + "." + langName;
         }
             
     }

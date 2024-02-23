@@ -1,19 +1,17 @@
         
-            #-------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS `projstatus`
+            -------------------------------------------------------------------	
+            CREATE TABLE IF NOT EXISTS public."projstatus"
             (
-                `ID` INT NOT NULL AUTO_INCREMENT,
-                `name` VARCHAR(255) NOT NULL
-
-                ,PRIMARY KEY (`ID`)
-                
-            ) ENGINE=InnoDB;        
-            #-------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS `project`
+                "ID" serial PRIMARY KEY NOT NULL,
+                "name" VARCHAR NOT NULL
+            )
+            TABLESPACE pg_default;
+                ;        
+            -------------------------------------------------------------------	
+            CREATE TABLE IF NOT EXISTS public."project"
             (
-                `ID` INT NOT NULL AUTO_INCREMENT,
-                `name` VARCHAR(255) NOT NULL
-
-                ,PRIMARY KEY (`ID`)
+                "ID" serial PRIMARY KEY NOT NULL,
+                "name" VARCHAR NOT NULL
+            )
+            TABLESPACE pg_default;
                 
-            ) ENGINE=InnoDB

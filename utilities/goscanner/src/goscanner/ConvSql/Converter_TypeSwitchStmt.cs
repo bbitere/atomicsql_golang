@@ -153,7 +153,7 @@ public partial class SqlConvert
                                 caseTypeExpressions.Append($"{caseExpression}{typeName} {identifier}:");
 
                             // Also add native int for C# literal matching
-                            if (typeName.Equals("nint", StringComparison.Ordinal))
+                            if (typeName.Equals("nint", StringComparison.Ordinal) || typeName.Equals("int", StringComparison.Ordinal))
                                 caseTypeExpressions.Append($"{Environment.NewLine}{caseBlock}{Environment.NewLine}{Spacing()}case int32 {identifier}: /* Matches int literals */");
                         }
                         else

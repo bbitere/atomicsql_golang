@@ -270,6 +270,12 @@ public partial class SqlConvert
         if( m_LambdaCode == null )
             return null;
 
+        if( m_LambdaCode.Tag == "tsql082a")
+            Utils.Nop();
+        if( identifExpr == "x.UserRoleID.RoleStatusID.ID")
+            Utils.Nop();
+
+
         var subQuery = this.GetTopSubquery();
         if( m_LambdaCode.ParentLambda == null)
         {
@@ -370,27 +376,30 @@ public partial class SqlConvert
                 // ids, _ := ctx.Table2.QryS("ids",q).Where( func(y Table2) { reutrn y.ID == x.FK_ID })
                 // })
 
+                var langName = fldName;
                 if( !parentLambda.Fields.ContainsKey(sqlIdentif))
                 {
                     parentLambda.Fields[sqlIdentif] = new TField(sqlField, fldName, genType.Name );
                 }else
                 {
                     parentLambda.Fields[sqlIdentif].setFK(true);
-                    parentLambda.Fields[sqlIdentif].addLangName(fldName);
+                    langName = parentLambda.Fields[sqlIdentif].addLangName(fldName);
                 }
-                parentLambda.Fields[$"{sqlIdentif}.{sqlField}"] = new TField(sqlField, fldName, genType.Name );
+                parentLambda.Fields[$"{sqlIdentif}.{sqlField}"] = new TField(sqlField, langName, genType.Name );
                 return $"{SUBQ_PREFIX_FIELD}{sqlIdentif}.{sqlField}{SUBQ_POSTFIX_FIELD}";
             }else
             {
+                var langName = fldName;
                 if( !m_LambdaCode.Fields.ContainsKey(sqlIdentif))
                 {
                     m_LambdaCode.Fields[sqlIdentif] = new TField(sqlField, fldName, genType.Name );
                 }else
                 {
                     m_LambdaCode.Fields[sqlIdentif].setFK(true);
-                    m_LambdaCode.Fields[sqlIdentif].addLangName(fldName);
+                    langName = m_LambdaCode.Fields[sqlIdentif].addLangName(fldName);
+
                 }
-                m_LambdaCode.Fields[$"{sqlIdentif}.{sqlField}"] = new TField(sqlField, fldName, genType.Name );
+                m_LambdaCode.Fields[$"{sqlIdentif}.{sqlField}"] = new TField(sqlField, langName, genType.Name );
                 return $"{PREFIX_FIELD}{sqlIdentif}.{sqlField}{POSTFIX_FIELD}";
             }
         }

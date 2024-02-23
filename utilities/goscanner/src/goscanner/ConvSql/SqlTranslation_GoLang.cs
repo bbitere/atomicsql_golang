@@ -161,7 +161,7 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
     var queryVars = "";
     //var queryFields = "";
 
-    if( lambda.Tag == "tsql082")
+    if( lambda.Tag == "tsql082a")
         Utils.Nop();
     
 
@@ -172,9 +172,16 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
         //if( lambda.SqlCode.Contains(fldSignature) ) am comentat pt ca in semnatura unui subquery poate sa apara un cammp, dar el nu apare in semnatura princiapla
         {
             //queryFields += $@" ""{fldName}"",";
+            //var identifKey = field.Key;
+            
             var identifKey = field.Value.LangName;
             if( identifKey == "")
                 identifKey = field.Value.SqlName;
+
+            if( identifKey == "UserRoleID.ID"
+             || identifKey == "UserRoleID.IsActive")
+                Utils.Nop();
+            
             exportedDictFields[ identifKey ] = fldSignature;
         }
     }
@@ -241,6 +248,8 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
         querySubQueries = querySubQueries.Trim();
     }
 
+    var orderedFields = String.Join( ", ", exportedDictFields.Keys.Select(x=> $"\"{x}\"").ToArray() );
+
     var text = $@"
     ""{queryTag}"": 
 	{{
@@ -249,6 +258,7 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
         
         SelectSqlFields: {querySelectSqlFields},
 		
+        OrderedFields:	[]string{{ {orderedFields} }},
 		Fields:			{queryFields},
 		ExternVar:		[]TExternVar{{
 								{queryVars.Trim()} 
@@ -273,6 +283,7 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
                 { "querySqlBase64", querySqlBase64},
                 { "querySelectSqlFields", querySelectSqlFields},
                 
+                { "orderedFields", orderedFields},
                 { "queryFields", queryFields},
                 { "queryVars", queryVars.Trim()},
                 { "queryFile", queryFile},

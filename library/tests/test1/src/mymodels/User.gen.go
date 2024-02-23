@@ -18,7 +18,7 @@
             UUID                string                        `json:"UUID"`
             UserPsw             string                        `json:"user_psw"`
             UserRoleID          *UserRole                     `json:"-"`
-            UserRole_ID                                       `json:"userRole_ID"`
+            UserRole_ID         sql.NullInt32                 `json:"userRole_ID"`
             Time1               sql.NullTime                  `json:"time1"`
             Money               float64                       `json:"money"`
     }

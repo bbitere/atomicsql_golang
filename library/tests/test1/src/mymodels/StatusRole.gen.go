@@ -11,7 +11,7 @@
 	    sql "database/sql"
         )*/
 	/*
-    type Statusrole struct /*atomicsql-table:"statusrole"* / {
+    type Statusrole struct /*atomicsql-table:"statusRole"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
             StatusName          sql.NullString                `json:"status_name"`
@@ -35,7 +35,7 @@
         return &orm.TDefIncludeRelation{ 
             
             ValueDef: reflect.ValueOf( *_this),
-			SqlTable:	"statusrole",
+			SqlTable:	"statusRole",
             FnNewInst:	func(bFull bool)any{ 
 				var model = new (Statusrole);
 				if( bFull ){

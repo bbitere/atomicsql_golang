@@ -10,45 +10,45 @@ import (
 	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 )
 
-func Example_init() (*orm.DBContext, error, string) {
+func Example_init() (*orm.DBContext, string, error) {
 
 	var connString = test1_where.Test1_GetConnectionString()
 	ctxBase, err := atmsql.OpenDB(connString, 10, 10)
 	if ctxBase == nil {
-		return nil, err, "initTest"
+		return nil, "initTest", err
 	}
 
 	ctx, err := orm.New_DBContext(*ctxBase)
 	if err != nil {
-		return nil, err, "initTest1"
+		return nil, "initTest1", err
 	}
 
 	ctx.User.Qry("").DeleteModels()
 	ctx.UserRole.Qry("").DeleteModels()
 	ctx.Statusrole.Qry("").DeleteModels()
 
-	return ctx, err, "initTest1"
+	return ctx, "initTest1", err
 }
 
 // ---------------------------------------------------------
-func Tst_Example_CreateUser(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_CreateUser(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_CreateUser"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var user, err = Example_CreateUser(ctx, "aa", "24234-5252315-25234")
 	if user == nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
-	return atmsql.IFF(err == nil, 1, 0), err, nameTest
+	return atmsql.IFF(err == nil, 1, 0), nameTest, err
 
 }
 func Example_CreateUser(ctx *orm.DBContext, name string, uuid string) (*m.User, error) {
@@ -66,24 +66,24 @@ func Example_CreateUser(ctx *orm.DBContext, name string, uuid string) (*m.User, 
 	return &user, nil
 }
 
-func Tst_Example_Create2Users(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_Create2Users(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_Create2Users"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var users, err = Example_Create2Users(ctx, "aa", "24234-5252315-25234", "bb", "24234-5252315-2523124")
 	if len(users) != 2 {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
-	return atmsql.IFF(err == nil, 1, 0), err, nameTest
+	return atmsql.IFF(err == nil, 1, 0), nameTest, err
 }
 func Example_Create2Users(ctx *orm.DBContext,
 	name string, uuid string,
@@ -103,34 +103,34 @@ func Example_Create2Users(ctx *orm.DBContext,
 	return users, nil
 }
 
-func Tst_Example_RetrieveUser(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_RetrieveUser(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_RetrieveUser"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var uuid = "24234-5252315-25234"
 	var user1, err1 = Example_CreateUser(ctx, "aa", uuid)
 	if err1 != nil || user1 == nil {
-		return 0, err1, nameTest
+		return 0, nameTest, err1
 	}
 
 	var user2, err2 = Example_RetrieveUser(ctx, uuid)
 	if err2 != nil || user2 == nil {
-		return 0, err2, nameTest
+		return 0, nameTest, err2
 	}
 
 	if user1.ID != user2.ID {
-		return 0, err2, nameTest
+		return 0, nameTest, err2
 	}
 
-	return 1, nil, nameTest
+	return 1, nameTest, nil
 }
 func Example_RetrieveUser(ctx *orm.DBContext, uuid string) (*m.User, error) {
 
@@ -152,34 +152,34 @@ func Example_RetrieveUserByName(ctx *orm.DBContext, name string) (*m.User, error
 	return model, nil
 }
 
-func Tst_Example_RetrieveUsers(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_RetrieveUsers(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_RetrieveUsers"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var uuid = "24234-5252315-25234"
 	var users1, err1 = Example_Create2Users(ctx, "aa", uuid, "bb", uuid)
 	if err1 != nil || len(users1) == 0 {
-		return 0, err1, nameTest
+		return 0, nameTest, err1
 	}
 
 	var users2, err2 = Example_RetrieveUsers(ctx, uuid)
 	if err2 != nil || len(users2) == 0 {
-		return 0, err2, nameTest
+		return 0, nameTest, err2
 	}
 
 	if len(users1) != len(users2) {
-		return 0, err2, nameTest
+		return 0, nameTest, err2
 	}
 
-	return 1, nil, nameTest
+	return 1, nameTest, nil
 }
 func Example_RetrieveUsers(ctx *orm.DBContext, uuid string) ([]*m.User, error) {
 
@@ -192,38 +192,38 @@ func Example_RetrieveUsers(ctx *orm.DBContext, uuid string) ([]*m.User, error) {
 }
 
 // -----------------------------------------------------------------------
-func Tst_Example_DeleteUser(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_DeleteUser(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_DeleteUser"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var uuid = "24234-5252315-25234"
 	var users, err = Example_Create2Users(ctx, "aa", uuid, "bb", uuid)
 	if len(users) != 2 {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var err2 = Example_DeleteUser(ctx, uuid)
 	if err2 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var users2, err3 = Example_RetrieveUsers(ctx, uuid)
 	if err3 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 	if len(users2) != 1 {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
-	return 1, nil, nameTest
+	return 1, nameTest, nil
 }
 func Example_DeleteUser(ctx *orm.DBContext, uuid string) error {
 
@@ -241,38 +241,38 @@ func Example_DeleteUser(ctx *orm.DBContext, uuid string) error {
 }
 
 // -----------------------------------------------------------------------
-func Tst_Example_DeleteUsers(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_DeleteUsers(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_DeleteUsers"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var uuid = "24234-5252315-25234"
 	var users, err = Example_Create2Users(ctx, "aa", uuid, "bb", uuid)
 	if len(users) != 2 {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var err2 = Example_DeleteUsers(ctx, uuid)
 	if err2 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var user2, err3 = Example_RetrieveUser(ctx, uuid)
 	if err3 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 	if user2 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
-	return 1, nil, nameTest
+	return 1, nameTest, nil
 }
 
 func Example_DeleteUsers(ctx *orm.DBContext, uuid string) error {
@@ -286,39 +286,39 @@ func Example_DeleteUsers(ctx *orm.DBContext, uuid string) error {
 }
 
 // -----------------------------------------------------------------------
-func Tst_Example_UpdateUser(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_UpdateUser(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_UpdateUser"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var userName = "cc"
 	var uuid = "24234-5252315-25234"
 	var users, err = Example_Create2Users(ctx, "aa", uuid, "bb", uuid)
 	if len(users) != 2 {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var err3 = Example_UpdateUser(ctx, uuid, userName)
 	if err3 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var user2, err4 = Example_RetrieveUserByName(ctx, userName)
 	if err4 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 	if user2 == nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
-	return 1, nil, nameTest
+	return 1, nameTest, nil
 }
 
 func Example_UpdateUser(ctx *orm.DBContext, uuid string, newName string) error {
@@ -340,39 +340,39 @@ func Example_UpdateUser(ctx *orm.DBContext, uuid string, newName string) error {
 }
 
 // -----------------------------------------------------------------------
-func Tst_Example_UpdateUsers(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_UpdateUsers(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_UpdateUsers"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var userName = "cc"
 	var uuid = "24234-5252315-25234"
 	var users, err = Example_Create2Users(ctx, "aa", uuid, "bb", uuid)
 	if len(users) != 2 {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var err3 = Example_UpdateUsers(ctx, uuid, userName)
 	if err3 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
 	var users2, err4 = Example_RetrieveUsers(ctx, uuid)
 	if err4 != nil {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 	if len(users2) != 2 {
-		return 0, err, nameTest
+		return 0, nameTest, err
 	}
 
-	return 1, nil, nameTest
+	return 1, nameTest, nil
 }
 func Example_UpdateUsers(ctx *orm.DBContext, uuid string, newName string) error {
 
@@ -397,16 +397,16 @@ func Example_UpdateUsers(ctx *orm.DBContext, uuid string, newName string) error 
 //---------------------------------------------------------
 
 // -----------------------------------------------------------------------
-func Tst_Example_CreateUserRelation(step int, bCheckName bool) (int, error, string) {
+func Tst_Example_CreateUserRelation(step int, bCheckName bool) (int, string, error) {
 
 	var nameTest = "ORM: Example_CreateUserRelation"
 
-	ctx, errCtx, _ := Example_init() // (orm.DBContextBase, error, string){
+	ctx, _, errCtx := Example_init() // (orm.DBContextBase, string, error){
 	if ctx != nil {
 		defer ctx.Close()
 	}
 	if errCtx != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var uuid = "24234-5252315-25234"
@@ -414,26 +414,26 @@ func Tst_Example_CreateUserRelation(step int, bCheckName bool) (int, error, stri
 
 	var err = Example_CreateUserRelation(ctx, "aa", uuid, RoleAdmin)
 	if err != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	var user, err2 = Example_RetrieveUserRelation1(ctx, uuid)
 	if user == nil || err2 != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 	if !(user != nil && user.UserRoleID != nil && user.UserRoleID.RoleName == RoleAdmin) {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
 	user, err2 = Example_RetrieveUserRelation2(ctx, uuid)
 	if user == nil || err2 != nil {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 	if !(user != nil && user.UserRoleID != nil && user.UserRoleID.RoleName == RoleAdmin) {
-		return 0, errCtx, nameTest
+		return 0, nameTest, errCtx
 	}
 
-	return 1, nil, nameTest
+	return 1, nameTest, nil
 }
 func Example_CreateUserRelation(ctx *orm.DBContext, nameUser string, uuid string, userRole string) error {
 

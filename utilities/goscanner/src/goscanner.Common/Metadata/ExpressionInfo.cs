@@ -95,10 +95,10 @@ namespace goscanner.Metadata
                 || UID == 1624
                 */
                 
-                || UID == 2924
-                || UID == 2923
-                || UID == 2922
-                
+                || UID == 5609
+                || UID == 5608
+                || UID == 5607
+                || UID == 5606
                 )
             {
                 UID = UID;

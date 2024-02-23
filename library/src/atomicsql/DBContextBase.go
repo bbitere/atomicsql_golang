@@ -13,13 +13,13 @@ import (
 
 type VESqlDialect string
 type TESqlDialect struct {
-	Postgress VESqlDialect
+	Postgres VESqlDialect
 	MySql     VESqlDialect
 	MsSql     VESqlDialect
 }
 
 var ESqlDialect TESqlDialect = TESqlDialect{
-	Postgress: "Postgress",
+	Postgres: "Postgres",
 	MySql:     "MySql",
 }
 
@@ -115,6 +115,7 @@ type TCompiledSqlQuery struct {
 	CompiledQuery   string
 	SelectSqlFields map[string]string
 	//joins				[]string
+	OrderedFields	[]string
 	Fields    map[string]string
 	ExternVar []TExternVar
 
@@ -281,7 +282,7 @@ func (_this *DBContextBase) Constr(dialect VESqlDialect, schemaSql TSchemaDef, c
 
 	_this.SCHEMA_SQL_Columns, err = _this.convertSchemaLangColumns(schemaSql)
 
-	if dialect == ESqlDialect.Postgress {
+	if dialect == ESqlDialect.Postgres {
 
 		_this.LangDB = TLangDataBase{
 			Type_BOOL:          "boolean",
@@ -409,7 +410,7 @@ func (_this *DBContextBase) ProcessCompiledQuery(compiledSqlQueries *map[string]
 
 func (_this *DBContextBase) isDialectSupportMultipleStatementsAtOnce() bool {
 
-	if _this.Dialect == ESqlDialect.Postgress ||
+	if _this.Dialect == ESqlDialect.Postgres ||
 		_this.Dialect == ESqlDialect.MsSql {
 		return true
 	}

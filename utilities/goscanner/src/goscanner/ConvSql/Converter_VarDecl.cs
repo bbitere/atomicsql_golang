@@ -42,7 +42,7 @@ public partial class SqlConvert
 
     private void addVariable( string variableName, TypeInfo typeInfo, bool bIsParameter)
     {
-        if( variableName == "valueName")
+        if( variableName == "EConstEID1")
             Utils.Nop();
         m_variableTypes[ variableName ]  = new LocalVariableInfo{ Type = typeInfo, IsParameter = bIsParameter };
     }
@@ -179,22 +179,18 @@ public partial class SqlConvert
                 _typeInfo = expressions[i].Type; 
             }
 
-            string variableName = null;
+            string variableName = firstVar != null? firstVar.GetText() : null;
             bool isInitialDeclaration = true;
             VariableInfo variable = null;
             bool heapAllocated = false;
             bool defaultInit = false;
 
-            m_targetOutputFile.Append($"{Spacing()}");
-
-            if (!InFunction)
-                m_targetOutputFile.Append($"{(char.IsUpper(identifier[0]) ? "public" : "private")} static ");
-
+            
             // Determine if this is the initial declaration
             if (InFunction && m_variableIdentifiers.TryGetValue(identifierList.IDENTIFIER(i), out variableName))
                 isInitialDeclaration = !variableName.Contains("@@");
 
-            if (isInitialDeclaration && !string.IsNullOrWhiteSpace(variableName))
+            if (CurrentFunction != null && isInitialDeclaration && !string.IsNullOrWhiteSpace(variableName))
             {
                 CurrentFunction.Variables.TryGetValue(variableName, out variable);
                 if( typeInfo == null && variable != null )
@@ -202,17 +198,15 @@ public partial class SqlConvert
 
                 if( typeInfo == null)
                     Debugger.Break();
-
+            }
+            if (isInitialDeclaration && _typeInfo!= null)
+            {
                 addVariable( variableName, _typeInfo, false);
                 if( !this.InFunction )
                 {
-                    VariableInfo varInfo = new VariableInfo
-                    { 
-                        Name = variableName, 
-                        Type = _typeInfo, 
-                        //InitExpr = LastDictElement
-                    };
-                    varInfo.setInitExpr(LastDictElement);
+                    var varInfo = new VariableInfo( variableName, _typeInfo);
+                    if( LastDictElement != null)
+                        varInfo.setInitStructExpr(LastDictElement);
                     
                     m_globalVariables.Add(variableName, varInfo);
                 }

@@ -640,9 +640,9 @@ public partial class SqlConvert
 
                     typeInfo = new TypeInfo
                     {
-                        Name = "nint",
-                        TypeName = "nint",
-                        FullTypeName = "nint",
+                        Name = "int",
+                        TypeName = "int",
+                        FullTypeName = "int",
                         TypeClass = TypeClass.Simple,
                         IsConst = true
                     };
@@ -819,9 +819,9 @@ public partial class SqlConvert
                         Text = arrayLength,
                         Type = new TypeInfo
                         {
-                            Name = "nint",
-                            TypeName = "nint",
-                            FullTypeName = "nint",
+                            Name = "int",
+                            TypeName = "int",
+                            FullTypeName = "int",
                             TypeClass = TypeClass.Simple,
                             IsConst = true
                         }
@@ -1088,6 +1088,22 @@ public partial class SqlConvert
                     
                 }else
                 {
+                    if( m_globalVariables.TryGetValue( identifParts[0], out VariableInfo varGlobal))
+                    {
+                        var constExpr = varGlobal.getConstantLiteralExpr();
+                        if( constExpr != null)
+                        {
+                            Operands[operandContext] = new ExpressionInfo
+                            {
+                                Text = context.GetText(),
+                                Type = typeVar.Type,
+                                SQLText = constExpr.SQLText, 
+                                OperandKind = EOperandKind.Simple,
+                            };
+                            return;
+                        }
+                    }
+
                     Operands[operandContext] = new ExpressionInfo
                     {
                         Text = context.GetText(),

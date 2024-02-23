@@ -1,9 +1,8 @@
         
-            #-------------------------------------------------------------------	
-            CREATE TABLE IF NOT EXISTS `employee2`
+            -------------------------------------------------------------------	
+            CREATE TABLE IF NOT EXISTS public."employee2"
             (
-                `ID` INT NOT NULL AUTO_INCREMENT
-
-                ,PRIMARY KEY (`ID`)
+                "ID" serial PRIMARY KEY NOT NULL
+            )
+            TABLESPACE pg_default;
                 
-            ) ENGINE=InnoDB

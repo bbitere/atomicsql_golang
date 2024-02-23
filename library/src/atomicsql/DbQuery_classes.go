@@ -13,17 +13,40 @@ type DBSqlJoin struct {
 func (_this *DBSqlJoin) getSqlTxt(itm string) string {
 	return _this.sql
 }
+func (_this *DBSqlJoin) Constr() *DBSqlJoin {
+	_this.nameItem = ""
+	_this.sql = ""
+	return _this
+}
 
 // internal use
 type DBSqlJoinCollection struct {
 
 	/*#PHPARG=[ Array< DBSqlJoin >];*/
-	_joins map[string]*DBSqlJoin
+	_joins 			map[string]*DBSqlJoin
+	_joins_ordered 	[]string
 }
 
 func (_this *DBSqlJoinCollection) Constr() *DBSqlJoinCollection {
 	_this._joins = nil //make(map[string]*DBSqlJoin)
 	return _this
+}
+
+func (_this *DBSqlJoinCollection) getJoinsSqlQuery(ITEM string) string {
+
+	if( _this._joins == nil ){
+		return "";
+	}
+	var sqlQuery = "";	
+	//for _, join := range _this._joins {
+	for _, joinKey := range _this._joins_ordered {
+		
+		var join = _this._joins[ joinKey ]
+
+		sqlQuery += join.getSqlTxt(ITEM)
+	}
+
+	return sqlQuery;
 }
 
 type DBSqlQuery[T IGeneric_MODEL] struct {

@@ -12,7 +12,8 @@ import (
 	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 	test1_crud "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_crud"
 	test1_subquery "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_subquery"
-	test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
+
+	//test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 
 	log "log"
@@ -34,18 +35,20 @@ func main() {
 	test1M()
 	var counter = 0
 
-	Exec_test(test1.Test1_00, &counter)
-	Exec_test(test1.Test1_01, &counter)
-	Exec_test(test1.Test1_02N, &counter)
-	Exec_test(test1.Test1_02, &counter)
-	Exec_test(test1.Test1_03, &counter)
+	defer logPanic();
+
+	Exec_test(test1_where.Test1_00, &counter)
+	Exec_test(test1_where.Test1_01, &counter)
+	Exec_test(test1_where.Test1_02N, &counter)
+	Exec_test(test1_where.Test1_02, &counter)
+	Exec_test(test1_where.Test1_03, &counter)
 	//Exec_test( test1.Test1_0, &counter );
-	Exec_test(test1.Test1_05, &counter)
+	Exec_test(test1_where.Test1_05, &counter)
 	//orm.Arr_Append( &arrTests, test1.Test1_06 );
 	//orm.Arr_Append( &arrTests, test1.Test1_07 );
-	Exec_test(test1.Test1_08, &counter)
-	Exec_test(test1.Test1_09, &counter)
-	Exec_test(test1.Test1_10, &counter)
+	Exec_test(test1_where.Test1_08, &counter)
+	Exec_test(test1_where.Test1_09, &counter)
+	Exec_test(test1_where.Test1_10, &counter)
 
 	Exec_test(test1_crud.Tst_Example_CreateUser, &counter)
 	Exec_test(test1_crud.Tst_Example_Create2Users, &counter)
@@ -72,13 +75,13 @@ func main() {
 	
 }
 
-func Exec_test(fnTest test1.TestFunc, pIndex *int) {
+func Exec_test(fnTest test1_where.TestFunc, pIndex *int) {
 
 	(*pIndex)++
 	var ret = 0
 	var err error
 	var msg = ""
-	ret, err, msg = fnTest(*pIndex, false)
+	ret, msg, err = fnTest(*pIndex, false)
 
 	printTest(ret, msg, err, *pIndex)
 }
@@ -104,12 +107,12 @@ func printTest(codeSucceded int, testName string, err error, idx int) {
 
 	if codeSucceded == -1 {
 		testsResult.Crashed++
-		fmt.Println(string(colorCyan), fmt.Errorf("Test %d crash -> %s", idx, testName))
+		fmt.Println(string(colorCyan), fmt.Errorf("test %d crash -> %s", idx, testName))
 		fmt.Println("")
 	} else if codeSucceded == 0 {
 
 		testsResult.Failed++
-		fmt.Println(string(colorPurple), fmt.Errorf("Test %d failed -> %s", idx, testName))
+		fmt.Println(string(colorPurple), fmt.Errorf("test %d failed -> %s", idx, testName))
 		fmt.Println("")
 	} else {
 		testsResult.Succeded++

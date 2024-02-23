@@ -25,6 +25,7 @@ using Antlr4.Runtime.Misc;
 using goscanner.Metadata;
 using System;
 using System.Collections.Generic;
+
 namespace goscanner;
 
 public partial class PreScanner
@@ -203,14 +204,11 @@ public partial class PreScanner
                 {
                     var variableName = listIdentif[0].Symbol.Text;
         
-                    var varInfo = new VariableInfo{ 
-                            Name =  variableName,
-                            Type = TypeInfo.VarType,
-                            //InitExpr = LastDictElement,
-                        };
+                    var varInfo = new VariableInfo( variableName, TypeInfo.VarType);
+                    
                     if( LastDictElement != null )
                     {
-                        varInfo.setInitExpr(LastDictElement);
+                        varInfo.setInitStructExpr(LastDictElement);
                     }else
                     {
                         var literal = exprCtx[0].primaryExpr()?.operand()?.literal()?.compositeLit()?.literalValue();
@@ -246,7 +244,7 @@ public partial class PreScanner
             // TODO: This is not enough to detect redeclaraion use cases where say only two for loops use the same variable
             bool redeclared = uniqueIdentifer.Contains("@@");
 
-            m_variables.Add(uniqueIdentifer, new VariableInfo
+            m_variables.Add(uniqueIdentifer, new VariableInfo()
             {
                 Name = identifier,
                 Type = typeInfo,

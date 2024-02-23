@@ -17,7 +17,7 @@ func StaticOpenDB(connStr TConnectionString, maxIdle int, maxOpen int) (*sql.DB,
 
 	var dataSource = ""
 	var sqlLang = ""
-	if connStr.SqlLang == ESqlDialect.Postgress {
+	if connStr.SqlLang == ESqlDialect.Postgres {
 
 		sqlLang = "postgres"
 		dataSource = fmt.Sprintf("host=%s port=%d user=%s "+

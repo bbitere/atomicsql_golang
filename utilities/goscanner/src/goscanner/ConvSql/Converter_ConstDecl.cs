@@ -21,8 +21,13 @@
 //
 //******************************************************************************************************
 
+using Antlr4.Runtime.Misc;
 using goscanner.Metadata;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using static goscanner.Common;
 
 namespace goscanner.ConvSql;
 
@@ -67,6 +72,10 @@ public partial class SqlConvert
 
         if (EMITTING_CODE)
         {
+	        var firstVar       = context.identifierList()?.IDENTIFIER(0);
+
+	        var identifierList = context.identifierList();
+		
             if (m_constIdentifierCount == 0 && m_constMultipleDeclaration)
                 m_targetOutputFile.Append(RemoveFirstLineFeed(CheckForCommentsLeft(context)));
 
@@ -84,6 +93,11 @@ public partial class SqlConvert
                 return;
             }
 
+			for (int i = 0; i < identifiers.Length; i++)
+	        {
+	            if (expressions is null || expressions.Length > i)
+	                m_variableIdentifiers.Add(identifierList.IDENTIFIER(i), GetUniqueIdentifier(m_variableIdentifiers, identifiers[i]));
+	        }
             Types.TryGetValue(context.type_(), out TypeInfo typeInfo);
 
             string type = typeInfo?.TypeName;
@@ -92,25 +106,62 @@ public partial class SqlConvert
             for (int i = 0; i < identifiers.Length; i++)
             {
                 string identifier = identifiers[i];
-                string expression = expressions?[i].Text ?? $"{m_iota++}";
-                string typeName = type ?? expressions?[i].Type.TypeName ?? "var";
-                string castAs = string.Empty;
+                //string expression = expressions?[i].Text ?? $"{m_iota++}";
+                //string typeName = type ?? expressions?[i].Type.TypeName ?? "var";
+                //string castAs = string.Empty;
+				
+	            var _typeInfo = typeInfo;
+	            if( context.type_() == null && context.expressionList() != null )
+	            {
+	                _typeInfo = expressions[i].Type; 
+	            }
 
-                // TODO: Check if constant needs cast
-                //if (!typeName.Equals("var") && !(type?.Equals(expressions?[i].Type.TypeName) ?? false))
-                //    castAs = $"({typeName})";
+	            string variableName = firstVar != null? firstVar.GetText() : null;
+	            bool isInitialDeclaration = true;
+	            VariableInfo variable = null;
+	            //bool heapAllocated = false;
+	            //bool defaultInit = false;
 
-                if (InFunction)
-                    m_targetOutputFile.Append($"{Spacing()}const {typeName} {identifier} = {castAs}{expression};");
-                else
-                    m_targetOutputFile.Append($"{Spacing()}{(char.IsUpper(identifier[0]) ? "public" : "private")} static readonly {typeName} {identifier} = {castAs}{expression};");
+	            m_targetOutputFile.Append($"{Spacing()}");
+
+	            if (!InFunction)
+	                m_targetOutputFile.Append($"{(char.IsUpper(identifier[0]) ? "public" : "private")} static ");
+
+	            // Determine if this is the initial declaration
+	            if (InFunction && m_variableIdentifiers.TryGetValue(identifierList.IDENTIFIER(i), out variableName))
+	                isInitialDeclaration = !variableName.Contains("@@");
+
+	            if (CurrentFunction != null && isInitialDeclaration && !string.IsNullOrWhiteSpace(variableName))
+	            {
+	                CurrentFunction.Variables.TryGetValue(variableName, out variable);
+	                if( typeInfo == null && variable != null )
+	                    typeInfo = variable.Type;
+
+	                if( typeInfo == null)
+	                    Debugger.Break();
+	            }
+	            if (isInitialDeclaration && _typeInfo!= null)
+	            {
+	                addVariable( variableName, _typeInfo, false);
+	                if( !this.InFunction )
+	                {
+	                    var varInfo = new VariableInfo( variableName, _typeInfo);
+                        if( LastDictElement != null)
+	                        varInfo.setInitStructExpr(LastDictElement);
+                        else
+                            varInfo.setConstExpr( expressions[i] );
+                    
+	                    m_globalVariables.Add(variableName, varInfo);
+	                }
+	            }
 
                 // Since multiple specifications can be on one line, only check for comments after last specification
-                if (i < length - 1)
-                    m_targetOutputFile.AppendLine();
-                else
-                    m_targetOutputFile.Append(CheckForCommentsRight(context));
+                //if (i < length - 1)
+                 //   m_targetOutputFile.AppendLine();
+                //else
+                //    m_targetOutputFile.Append(CheckForCommentsRight(context));
             }
+	        m_varIdentifierCount++;
         }
 
         m_constIdentifierCount++;

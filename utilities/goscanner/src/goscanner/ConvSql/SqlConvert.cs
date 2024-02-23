@@ -45,7 +45,7 @@ namespace goscanner.ConvSql;
 /// </summary>
 /// 
 
-class ESqlOutputType
+public class ESqlOutputType
 {
     public const string Postgres = "postgres";
     public const string Mysql = "mysql";
@@ -291,8 +291,12 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         }
         return "";
     }
-
     protected string convertGolangStringToSqlString( string str)
+    {
+        return ConvertGolangStringToSqlString( str, this.Options.ConvertSql.SqlLang);
+    }
+
+    protected static string ConvertGolangStringToSqlString( string str, string SqlLang)
     {
         var prefix = false;
         var s = "";
@@ -313,31 +317,36 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                 {
                     s += "\\";
                     s2 += "\\";
+                    i++;
                 }else
                 if( ch == '\\' && ch1 == '"')
                 {
                     s += "\"";
                     s2 += "\"";
+                    i++;
                 }else
                 if( ch == '\\' && ch1 == 'r')
                 {
                     prefix = true;
                     s += "\\r";
                     s2 += "'+CHAR(0x0A)+'";
+                    i++;
                 }else
                 if( ch == '\\' && ch1 == 'n')
                 {
                     prefix = true;
                     s += "\\n";
                     s2 += "'+CHAR(0x0D)+'";
+                    i++;
                 }else
                 {
                     s += ch;
                     s2 += ch;
                     if( ch == '\'' )
                     {
-                        s += "''";
-                        s2 += "''";
+                        //duplicate
+                        s += "'";
+                        s2 += "'";
                     }
                 }
             }else
@@ -346,27 +355,47 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                 s2 += ch;
                 if( ch == '\'' )
                 {
-                    s += "''";
-                    s2 += "''";
+                    //duplicate
+                    s += "'";
+                    s2 += "'";
                 }
             }
         }
         
         if( prefix )
         {
-            if( this.Options.ConvertSql.SqlLang == ESqlOutputType.Postgres ) 
+            if( SqlLang == ESqlOutputType.Postgres ) 
                 return $"E'{s}'";
 
-            if( this.Options.ConvertSql.SqlLang == ESqlOutputType.Mssql 
-             || this.Options.ConvertSql.SqlLang == ESqlOutputType.Mysql ) 
+            if( SqlLang == ESqlOutputType.Mysql ) 
+                return $"'{s}'";
+
+            if( SqlLang == ESqlOutputType.Mssql )
                 return $"'{s2}'";
             else
-                return $"'{s2}'";
+                return $"'{s}'";
         }
         else
         {
             return $"'{s}'";
         }
+    }
+    bool unused = SqlConvert.test_convertGolangStringToSqlString();
+    static bool test_convertGolangStringToSqlString()
+    {
+        var s = SqlConvert.ConvertGolangStringToSqlString("a'\"\\n mm", ESqlOutputType.Postgres);
+        if( s != "E'a''\"\\n mm'")
+        {
+            Debugger.Break();
+            return false;
+        }
+        var s1 = SqlConvert.ConvertGolangStringToSqlString("a'\"\\n mm", ESqlOutputType.Mysql);
+        if( s1 != "'a''\"\\n mm'")
+        {
+            Debugger.Break();
+            return false;
+        }
+        return true;
     }
 
     public class TTypeConv
@@ -788,6 +817,12 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
 
     protected bool variableTypesTryGetValue( string nameVar, out LocalVariableInfo typeVar)
     {
+        if( m_globalVariables.TryGetValue( nameVar, out VariableInfo varGlobal))
+        {
+            typeVar = new LocalVariableInfo( varGlobal.Type, false);
+            return true;
+        }
+
         if( m_variableTypes.TryGetValue( nameVar, out typeVar))
         {
             return true;

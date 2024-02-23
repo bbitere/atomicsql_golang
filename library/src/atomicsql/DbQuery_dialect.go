@@ -92,7 +92,7 @@ func (_this *DBQuery[T]) _quote1( /*#String*/ data string) string {
 /*#PHPARG=[ String ];*/
 func (_this *DBQuery[T]) clean__quoteTable( /*#String*/ tableName string) string {
 
-	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgress {
+	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgres {
 		tableName = str_replace(`"`, "", tableName)
 	} else if _this.tableInst.m_ctx.Dialect == ESqlDialect.MsSql {
 
@@ -117,7 +117,7 @@ func (_this *DBQuery[T]) _quoteTable( /*#String*/ tableName string) string {
 
 	var ctx = _this.tableInst.m_ctx
 
-	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgress {
+	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgres {
 
 		var table, has = ctx.SCHEMA_SQL_BySqlName[tableName]
 		if has {
@@ -173,7 +173,7 @@ func (_this *DBQuery[T]) _quoteField( /*#String*/ data string) string {
 	if data == "" {
 		return data
 	}
-	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgress {
+	if _this.tableInst.m_ctx.Dialect == ESqlDialect.Postgres {
 		data = str_replace(`"`, "", data)
 		return fmt.Sprintf(`"%s"`, data)
 
