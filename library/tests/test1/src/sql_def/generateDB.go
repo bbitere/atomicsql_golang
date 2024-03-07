@@ -66,6 +66,7 @@ func main() {
 	Exec_test(test1_where.Test1Rtm_10, &counter)
 	Exec_test(test1_where.Test1_11, &counter)
 	Exec_test(test1_where.Test1_12, &counter)
+	Exec_test(test1_where.Test1_13, &counter)
 
 	//printResults();
 	Exec_test( test1_subquery.Test1_01, &counter );

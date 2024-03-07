@@ -13,7 +13,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND ({#@userRole_ID.roleName@#}={@@RoleNameDefault@@} OR {#@userRole_ID@#} IS NULL),
 			CompiledQuery:`eyNAbW9uZXlAI30+PXtAQFVzZXJNb25leUBAfSBBTkQgKHsjQHVzZXJSb2xlX0lELnJvbGVOYW1lQCN9PXtAQFJvbGVOYW1lRGVmYXVsdEBAfSBPUiB7I0B1c2VyUm9sZV9JREAjfSBJUyBOVUxMKQ==`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "Money", "UserRoleID", "UserRoleID.RoleName" },
 			Fields:			map[string]string{
              "Money":"{#@money@#}",
@@ -36,7 +36,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@userName@#}={@@UserName@@},
 			CompiledQuery:`eyNAdXNlck5hbWVAI309e0BAVXNlck5hbWVAQH0=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserName" },
 			Fields:			map[string]string{
              "UserName":"{#@userName@#}",
@@ -56,7 +56,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#},
 			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.IsActive" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -86,7 +86,7 @@ func (_this *DBContext) LoadCompiledQuery(){
              "Time1":"{#@time1@#}",
              "Money":"{#@money@#}",
              "UserRole":"{#@userRole_ID.roleName@#}",
-            },
+            },			
 			OrderedFields:	[]string{ "UserRole_ID", "UserRoleID.RoleName", "ID", "UserName", "UUID", "UserPsw", "Time1", "Money" },
 			Fields:			map[string]string{
              "UserRole_ID":"{#@userRole_ID@#}",
@@ -113,7 +113,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#},
 			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.IsActive" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -138,7 +138,7 @@ func (_this *DBContext) LoadCompiledQuery(){
              "UserRoleName":"{#@userRole_ID.roleName@#}",
              "MinTime1":"MIN( {#@time1@#} )",
              "SumMoney":"SUM( {#@money@#} )",
-            },
+            },			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.RoleName", "Time1", "Money" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -161,7 +161,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@userRole_ID.roleName@#},
 			CompiledQuery:`eyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.RoleName" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -182,7 +182,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#},
 			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.IsActive" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -203,7 +203,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@userRole_ID.ID@#},
 			CompiledQuery:`eyNAdXNlclJvbGVfSUQuSURAI30=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.ID" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -219,11 +219,32 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Hash:  			"ZnVuYyh4ICptLlVzZXIpIGludDY0IHsNCgkJCXJldHVybiBpbnQ2NCh4LlVzZXJSb2xlSUQuSUQpDQoJCQ==",
 			IsQryS:			false,
 			SubQueries: 	nil,			
+		},
+		"tst665-W1": 
+		{
+			//CompiledQuery: {#@userRole_ID.isActive@#},
+			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30=`,			
+			SelectSqlFields: nil,			
+			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.IsActive" },
+			Fields:			map[string]string{
+             "UserRoleID":"{#@userRole_ID@#}",
+             "UserRoleID.IsActive":"{#@userRole_ID.isActive@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								 
+								},
+			Tag: 			"tst665",
+			File: 			"src\\test_where\\test1.go",
+			StartOff: 		25,
+			EndOff:  		84,
+			Hash:  			"ZnVuYyh4ICptLlVzZXIpIGJvb2wgew0KCQkJcmV0dXJuIHguVXNlclJvbGVJRC5Jc0FjdGl2ZQ0KCQk=",
+			IsQryS:			false,
+			SubQueries: 	nil,			
 		},"tst1_066-W1": 
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#},
 			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.IsActive" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -248,7 +269,7 @@ func (_this *DBContext) LoadCompiledQuery(){
              "UserRoleName":"{#@userRole_ID.roleName@#}",
              "MinTime1":"MIN( {#@time1@#} )",
              "SumMoney":"SUM( {#@money@#} )",
-            },
+            },			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.RoleName", "Time1", "Money" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -270,7 +291,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: (CASE WHEN ({#@userRole_ID@#} IS NOT NULL) THEN {#@userRole_ID.isActive@#} ELSE false END),
 			CompiledQuery:`KENBU0UgV0hFTiAoeyNAdXNlclJvbGVfSURAI30gSVMgTk9UIE5VTEwpIFRIRU4geyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI30gRUxTRSBmYWxzZSBFTkQp`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.IsActive" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -290,7 +311,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@userRole_ID.isActive@#}=true AND {#@userRole_ID.roleName@#}='admin' AND {#@UUID@#}={@@uuid@@},
 			CompiledQuery:`eyNAdXNlclJvbGVfSUQuaXNBY3RpdmVAI309dHJ1ZSBBTkQgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI309J2FkbWluJyBBTkQgeyNAVVVJREAjfT17QEB1dWlkQEB9`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.IsActive", "UserRoleID.RoleName", "UUID" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -312,7 +333,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: (({#@userRole_ID.role_status_ID@#} IS NULL) OR {#@userRole_ID.role_status_ID.ID@#} > 0) AND {#@money@#}>={@@UserMoney@@} AND {#@ID@#}<>123 AND {#@userName@#}<>E'a''"\n mm',
 			CompiledQuery:`KCh7I0B1c2VyUm9sZV9JRC5yb2xlX3N0YXR1c19JREAjfSBJUyBOVUxMKSBPUiB7I0B1c2VyUm9sZV9JRC5yb2xlX3N0YXR1c19JRC5JREAjfSA+IDApIEFORCB7I0Btb25leUAjfT49e0BAVXNlck1vbmV5QEB9IEFORCB7I0BJREAjfTw+MTIzIEFORCB7I0B1c2VyTmFtZUAjfTw+RSdhJyciXG4gbW0n`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRoleID", "UserRoleID.RoleStatusID", "UserRoleID.RoleStatusID.ID", "Money", "ID", "UserName" },
 			Fields:			map[string]string{
              "UserRoleID":"{#@userRole_ID@#}",
@@ -337,7 +358,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: (({#@userRole_ID.role_status_ID@#} IS NULL) OR {#@userRole_ID.role_status_ID.ID@#} > 0) AND {#@money@#}>={@@UserMoney@@} AND {#@userRole_ID@#} IN ( {@$ids$@} ) AND {@@bActive@@},
 			CompiledQuery:`KCh7I0B1c2VyUm9sZV9JRC5yb2xlX3N0YXR1c19JREAjfSBJUyBOVUxMKSBPUiB7I0B1c2VyUm9sZV9JRC5yb2xlX3N0YXR1c19JRC5JREAjfSA+IDApIEFORCB7I0Btb25leUAjfT49e0BAVXNlck1vbmV5QEB9IEFORCB7I0B1c2VyUm9sZV9JREAjfSBJTiAoIHtAJGlkcyRAfSApIEFORCB7QEBiQWN0aXZlQEB9`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRole_ID", "UserRoleID.RoleStatusID", "UserRoleID.RoleStatusID.ID", "Money" },
 			Fields:			map[string]string{
              "UserRole_ID":"{#@userRole_ID@#}",
@@ -367,7 +388,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@roleName@#}={@@RoleNameDefault@@} AND ((NOT (({#@role_status_ID@#} IS NOT NULL))) OR {#@role_status_ID@#}={#$userRole_ID.role_status_ID.ID$#}),
 			CompiledQuery:`eyNAcm9sZU5hbWVAI309e0BAUm9sZU5hbWVEZWZhdWx0QEB9IEFORCAoKE5PVCAoKHsjQHJvbGVfc3RhdHVzX0lEQCN9IElTIE5PVCBOVUxMKSkpIE9SIHsjQHJvbGVfc3RhdHVzX0lEQCN9PXsjJHVzZXJSb2xlX0lELnJvbGVfc3RhdHVzX0lELklEJCN9KQ==`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "RoleName", "Role_status_ID" },
 			Fields:			map[string]string{
              "RoleName":"{#@roleName@#}",
@@ -388,7 +409,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND {@$cnt$@} > 0 AND {@@bActive@@},
 			CompiledQuery:`eyNAbW9uZXlAI30+PXtAQFVzZXJNb25leUBAfSBBTkQge0AkY250JEB9ID4gMCBBTkQge0BAYkFjdGl2ZUBAfQ==`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "UserRole_ID", "Money" },
 			Fields:			map[string]string{
              "UserRole_ID":"{#@userRole_ID@#}",
@@ -416,7 +437,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 		{
 			//CompiledQuery: {#@ID@#}={#$userRole_ID$#},
 			CompiledQuery:`eyNASURAI309eyMkdXNlclJvbGVfSUQkI30=`,			
-			SelectSqlFields: nil,
+			SelectSqlFields: nil,			
 			OrderedFields:	[]string{ "ID" },
 			Fields:			map[string]string{
              "ID":"{#@ID@#}",

@@ -87,6 +87,7 @@ type DBQuery[T IGeneric_MODEL] struct {
 
 	fnNewInstance func(bFull bool) any // create a new model
 
+	clone_sqlText  string
 	whereTxt       string
 	limit          string
 	orderBy        string
@@ -149,6 +150,33 @@ func (_this *DBQuery[T]) IsRTM() bool {
 	return _this.pRTM != nil
 }
 
+func (_this *DBQuery[T]) cloneQuery_Empty() *DBQuery[T] {
+
+	newQuery := (new(DBQuery[T])).Constr(_this.tableInst) //_this.tableInst.m_DBSqlProvider );
+
+	newQuery.tableNameOrig = _this.tableInst.m_sqlName
+	newQuery.tableNameOrig_nonTmp = ""
+	newQuery.tableInst = _this.tableInst
+
+	newQuery.tableName = _this.tableName
+	//newQuery.getJoins()._joins = _this.getJoins()._joins
+
+	newQuery.clone_sqlText = _this.clone_sqlText
+	//newQuery.m_queryAND = _this.m_queryAND
+	//newQuery.whereTxt = _this.whereTxt
+	//newQuery.limit = _this.limit
+	//newQuery.orderBy = _this.orderBy
+	//newQuery.withForeignKeys = _this.withForeignKeys
+
+	newQuery.parentQuery = _this.parentQuery // ???
+	//newQuery.querySelectNewRecord_Text = _this.querySelectNewRecord_Text
+	//newQuery.querySelectNewRecord_isAgregator = _this.querySelectNewRecord_isAgregator
+
+	//newQuery.lamdaSelectNewRecord = _this.lamdaSelectNewRecord;
+
+	return newQuery
+}
+
 func (_this *DBQuery[T]) cloneQuery() *DBQuery[T] {
 
 	newQuery := (new(DBQuery[T])).Constr(_this.tableInst) //_this.tableInst.m_DBSqlProvider );
@@ -160,6 +188,7 @@ func (_this *DBQuery[T]) cloneQuery() *DBQuery[T] {
 	newQuery.tableName = _this.tableName
 	newQuery.getJoins()._joins = _this.getJoins()._joins
 
+	newQuery.clone_sqlText = _this.clone_sqlText
 	newQuery.m_queryAND = _this.m_queryAND
 	newQuery.whereTxt = _this.whereTxt
 	newQuery.limit = _this.limit
@@ -190,6 +219,8 @@ func (_this *DBQuery[T]) cloneQuery_GenModel() *DBQuery[IGeneric_MODEL] {
 	if _this.m_queryAND != nil {
 		newQuery.m_queryAND = _this.m_queryAND.cloneSqlQuery_GenModel()
 	}
+
+	newQuery.clone_sqlText = _this.clone_sqlText
 	newQuery.whereTxt = _this.whereTxt
 	newQuery.limit = _this.limit
 	newQuery.orderBy = _this.orderBy
@@ -2191,4 +2222,39 @@ func (_this *DBQuery[T]) ToRTM(bRuntime bool, structDefs ...*TDefIncludeRelation
 		_this.pRTM = (new(RuntimeQuery[T])).Constr(models, structDefs, nil)
 	}
 	return _this
+}
+
+
+// SetLimit() - set the pagination of query
+//
+// Example:
+//
+//	qry1, err := ctx.User.Qry("tag1").Where(...).OrderAsc(ctx._User.UserName).SetLimit( 100, 10).GetModels();
+//
+// This query will take the rows from offset = 100 and with pagination = 10
+// ...
+func (_this *DBQuery[T]) SetLimit( queryOffset int, querySize int) *DBQuery[T] {
+
+	_this.setLimit( queryOffset, querySize);
+	return _this
+}
+
+// CloneQry() - Clone the current query
+// Why we add this?
+// 
+// Example:
+//
+//	qry1, err := ctx.User.Qry("tag1").Where(...).CloneQry();
+//  var cnt,err1 = qry1.Count();
+//  var rows,err2 = qry1.OrderAsc(ctx._User.UserName).SetLimit( 0, 10).GetModels();
+//
+// ...
+func (_this *DBQuery[T]) CloneQry() (*DBQuery[T], error) {
+
+	var newQry = _this.cloneQuery_Empty();
+
+	var sqlQuery = _this._generateSelectSql( "", SQL_ITEM_DEF, true, nil)
+	newQry.clone_sqlText = sqlQuery;
+
+	return newQry, nil
 }

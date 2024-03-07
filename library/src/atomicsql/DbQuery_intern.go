@@ -154,6 +154,10 @@ func (_this *DBQuery[T]) _generateSqlSourceOfData() string {
 	//if( _this.querySelectNewRecord_Text != "" && _this.querySelectNewRecord_isSubQuery ){
 	//	return fmt.Sprintf( "(%s)", _this.querySelectNewRecord_Text);
 	//}else
+
+	if( _this.clone_sqlText != ""){
+		return fmt.Sprintf(`( %s )`, _this.clone_sqlText );
+	}
 	if _this.parentQuery != nil {
 		//_this.querySelectNewRecord_Text != "" &&
 		//_this.lamdaSelectNewRecord != "" {

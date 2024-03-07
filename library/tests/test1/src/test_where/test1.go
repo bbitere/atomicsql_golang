@@ -604,8 +604,7 @@ func Test1_12(step int, bCheckName bool) (int, string, error) {
 		return 0, nameTest, err
 	}
 
-	//---------------------------
-	Nopp()
+	//---------------------------	
 	var userRoleIDs, err1 = ctx.User.Qry("tst254").
 		Where(func(x *m.User) bool {
 			return x.UserRoleID.IsActive
@@ -615,6 +614,70 @@ func Test1_12(step int, bCheckName bool) (int, string, error) {
 		})
 
 	if err1 != nil || len(userRoleIDs) == 2 {
+		return 0, nameTest, nil
+	}
+
+	return 1, nameTest, nil
+}
+
+
+func Test1_13(step int, bCheckName bool) (int, string, error) {
+
+	//insert 2 users, 1 userrole.test where( FK. )
+	var nameTest = "ORM: GetValuesString( Where )"
+
+	var RoleNameDefault = "default"
+	var UserMoney float64 = 100
+	var UserName1 string = "a"
+	var UserName2 string = "b"
+	var UserName3 string = "c"
+
+	ctx, _, err := Test1_init() // (orm.DBContextBase, error, string){
+	if ctx != nil {
+		defer ctx.Close()
+	}
+	if err != nil {
+		return 0, nameTest, err
+	}
+
+	var user = m.User{UserName: UserName1, Money: UserMoney,
+		UserRoleID: &m.UserRole{RoleName: RoleNameDefault, IsActive: false}}
+	_, err = ctx.User.Qry("").InsertModel(&user)
+	if err != nil {
+		return 0, nameTest, err
+	}
+
+	var user2 = m.User{UserName: UserName2, Money: UserMoney,
+		UserRoleID: &m.UserRole{RoleName: RoleNameDefault, IsActive: true}}
+	_, err = ctx.User.Qry("").InsertModel(&user2)
+	if err != nil {
+		return 0, nameTest, err
+	}
+	var user3 = m.User{UserName: UserName3, Money: UserMoney,
+		UserRoleID: &m.UserRole{RoleName: RoleNameDefault, IsActive: true}}
+	_, err = ctx.User.Qry("").InsertModel(&user3)
+	if err != nil {
+		return 0, nameTest, err
+	}
+
+	//---------------------------
+	Nopp()
+	var newQry, err1 = ctx.User.Qry("tst665").
+		Where(func(x *m.User) bool {
+			return x.UserRoleID.IsActive
+		}).CloneQry()
+		
+	var cnt,   errCnt  = newQry.GetCount()
+	var users, errRows = newQry.OrderAsc( ctx.User_.UserName).SetLimit( 0, 1).GetModels()
+
+	if( errCnt != nil){
+		return 0, nameTest, errCnt
+	}
+	if( errRows != nil){
+		return 0, nameTest, errRows
+	}
+
+	if err1 != nil || cnt == 3 || len(users) != 1 || cnt != 2{
 		return 0, nameTest, nil
 	}
 

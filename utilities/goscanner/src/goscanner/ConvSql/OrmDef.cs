@@ -74,6 +74,7 @@ namespace goscanner.ConvSql
             "DeleteModels", "DeleteModel",
             "GetValueString", "GetValueInt", "GetValueFloat","GetValueBool", "GetValueTime",
             "GetValuesString", "GetValuesInt", "GetValuesFloat","GetValuesBool", "GetValuesTime",
+            "CloneQry",
             /*"ToRTM"*///asta nu trebuie 
             "InsertModel",  "InsertOrUpdateModel",  "InsertOrUpdateModels",  "UpdateModels", "UpdateModel",
             "InsertRecord", "InsertOrUpdateRecord", "InsertOrUpdateRecords", "UpdateRecords", "UpdateRecord",
