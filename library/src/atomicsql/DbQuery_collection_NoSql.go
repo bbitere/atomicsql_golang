@@ -22,7 +22,7 @@ import (
 
 
 
-func (_this *DBQuery[T]) _RtmWhereEq( model *T, fieldName string, operands []any, field2 string, bNot bool) bool {
+func (_this *DBQueryNoSql[T]) _RtmWhereEq( model *T, fieldName string, operands []any, field2 string, bNot bool) bool {
 
 	var valFld, _ = _this.getModel_FieldValueS( model, model, fieldName, false);
 
@@ -47,7 +47,7 @@ func (_this *DBQuery[T]) _RtmWhereEq( model *T, fieldName string, operands []any
 	}
 }
 
-func (_this *DBQuery[T])  _getDistinctRTM( fields []string, models []*T) []*T{
+func (_this *DBQueryNoSql[T])  _getDistinctRTM( fields []string, models []*T) []*T{
 
 	var dict = make( map[string] *T);
 
@@ -69,7 +69,7 @@ func (_this *DBQuery[T])  _getDistinctRTM( fields []string, models []*T) []*T{
 	return arr;
 }
 
-func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T], models []*T )  ([]*V, error) {
+func _Aggregate_doRuntime_NSql[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQueryNoSql[T], models []*T )  ([]*V, error) {
 
 	type TAggrElem struct{
 		modelsT []*T;
@@ -177,7 +177,7 @@ func _Aggregate_doRuntime[T IGeneric_MODEL, V IGeneric_MODEL]( _this *DBQuery[T]
 	}		
 }
 
-func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName string, bDoSet bool) (string, bool){
+func (_this *DBQueryNoSql[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName string, bDoSet bool) (string, bool){
 
 	var reflectValT = reflect.ValueOf( modelT ).Elem()
 	var reflectValV = reflect.ValueOf( modelV ).Elem()
@@ -309,7 +309,7 @@ func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName 
 }
 
 /*
-func (_this *DBQuery[T]) getModel_FieldValueAsArr( reflValueArrayModelsT reflect.Value, modelV any, fieldName string) bool{
+func (_this *DBQueryNoSql[T]) getModel_FieldValueAsArr( reflValueArrayModelsT reflect.Value, modelV any, fieldName string) bool{
 	
 	//var reflectValT = reflect.ValueOf( modelsT )
 	var reflectValV = reflect.ValueOf( modelV ).Elem() //V
@@ -402,7 +402,7 @@ func (_this *DBQuery[T]) getModel_FieldValueAsArr( reflValueArrayModelsT reflect
 }
 */
 
-func (_this *DBQuery[T]) getValueI( modelV any, fieldName string ) (int64, error){
+func (_this *DBQueryNoSql[T]) getValueI( modelV any, fieldName string ) (int64, error){
 
 	var ret, err = _this.getValueS(modelV, fieldName);
 	if( err != nil ){
@@ -411,7 +411,7 @@ func (_this *DBQuery[T]) getValueI( modelV any, fieldName string ) (int64, error
 	var i, err2 = strconv.Atoi( ret );
 	return int64(i), err2
 }
-func (_this *DBQuery[T]) getValueS( modelV any, fieldName string ) (string, error){
+func (_this *DBQueryNoSql[T]) getValueS( modelV any, fieldName string ) (string, error){
 
 	var reflectValV = reflect.ValueOf( modelV ).Elem()
 
@@ -467,7 +467,7 @@ func (_this *DBQuery[T]) getValueS( modelV any, fieldName string ) (string, erro
 }
 
 
-func (_this *DBQuery[T]) rtm_getModelsAsDicts( models *[]*T, fields []string ) []*TModel[T] {
+func (_this *DBQueryNoSql[T]) rtm_getModelsAsDicts( models *[]*T, fields []string ) []*TModel[T] {
 
 	var arr = []*TModel[T]{}
 
@@ -491,7 +491,7 @@ func (_this *DBQuery[T]) rtm_getModelsAsDicts( models *[]*T, fields []string ) [
 	return arr;
 }
 
-func (_this *DBQuery[T]) rtm_updateModelsFromDicts( models1 *[]*TModel[T] ) []*T {
+func (_this *DBQueryNoSql[T]) rtm_updateModelsFromDicts( models1 *[]*TModel[T] ) []*T {
 
 	var arr = []*T{}
 

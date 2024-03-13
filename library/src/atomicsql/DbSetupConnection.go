@@ -45,7 +45,33 @@ func StaticOpenDB(connStr TConnectionString, maxIdle int, maxOpen int) (*sql.DB,
 			connStr.Host,
 			connStr.DbName,
 			connStr.User,
-			connStr.Password)
+			connStr.Password)	 
+	} else if connStr.SqlLang == ESqlDialect.MongoDB {
+
+		var port = connStr.Port;
+		if( port == 0){
+			port = 27017;
+		}
+		sqlLang = "mongo";
+		if( connStr.User != ""){
+			
+			dataSource = fmt.Sprintf(			
+				"mongodb://%s:%s@%s:%d/?authSource=%s",
+				connStr.User,
+				connStr.Password,
+				connStr.Host,
+				port,
+				connStr.DbName,			
+				)
+		}else{
+			dataSource = fmt.Sprintf(			
+				"mongodb://%s:%d/?authSource=%s",				
+				connStr.Host,
+				port,
+				connStr.DbName,			
+				)
+		}
+		
 	} else {
 		dataSource = ""
 	}

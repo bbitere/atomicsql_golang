@@ -2068,19 +2068,6 @@ func (_this *DBQuery[T]) DeleteModel(model *T) error {
 	return err
 }
 
-const COUNT_NAME = "Count1"
-
-type TGetCount struct {
-	Generic_MODEL
-	Count1 int32 // the same name as COUNT_NAME
-}
-
-const TGetValueModel_VALUE = "Value1"
-
-type TGetValueModel[V comparable] struct {
-	Generic_MODEL
-	Value1 V // the same name as TGetValueModel_VALUE
-}
 
 // return the number of elements in a sequence
 //
@@ -2258,3 +2245,6 @@ func (_this *DBQuery[T]) CloneQry() (*DBQuery[T], error) {
 
 	return newQry, nil
 }
+
+
+

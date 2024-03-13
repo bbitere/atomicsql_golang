@@ -1302,7 +1302,7 @@ func (_this *DBQuery[T]) _insertRecord_setFieldGeneral(
 		valSql = fmt.Sprintf("ARRAY[ %s ]::%s[]", valSql1, typeSqlElement)
 	} else {
 		{
-			fldTNullable = _this._getNullableField(fieldInfo)
+			fldTNullable = _getNullableField(fieldInfo)
 			if fldTNullable != nil {
 				{
 					var bIsNotNull = fldTNullable.Valid.Bool()
@@ -1353,12 +1353,12 @@ type _TNullableField struct {
 	Value reflect.Value
 }
 
-func (_this *DBQuery[T]) _getNullableField(
+func _getNullableField(
 	fieldInfo reflect.Value) *_TNullableField {
 
 	var fieldInfoTypeT = fieldInfo.Type()
 
-	if fieldInfoTypeT == reflect.TypeOf((*sql.NullBool)(nil)).Elem() ||
+	if  fieldInfoTypeT == reflect.TypeOf((*sql.NullBool)(nil)).Elem() ||
 		fieldInfoTypeT == reflect.TypeOf((*sql.NullTime)(nil)).Elem() ||
 		fieldInfoTypeT == reflect.TypeOf((*sql.NullString)(nil)).Elem() ||
 		fieldInfoTypeT == reflect.TypeOf((*sql.NullByte)(nil)).Elem() ||
@@ -2002,7 +2002,7 @@ func (_this *DBQuery[T]) _getFK_IDs(elem any, lang2TableRelation_ID string) int6
 		var fldT = reflectVal.FieldByName(lang2TableRelation_ID)
 		if fldT.IsValid() {
 
-			var fldTNullable = _this._getNullableField(fldT)
+			var fldTNullable = _getNullableField(fldT)
 			if fldTNullable != nil {
 				return fldTNullable.Value.Int()
 			}
@@ -2121,7 +2121,7 @@ func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) err
 					}
 				}
 				var fldT = reflectModel.FieldByName(columnDef.LangName)
-				var fldTNullable = _this._getNullableField(fldT)
+				var fldTNullable = _getNullableField(fldT)
 				if fldTNullable != nil && fldTNullable.Valid.Bool() {
 					fldT = fldTNullable.Value
 
@@ -2197,7 +2197,7 @@ func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string /*, colu
 
 		var fldT = reflectVal.FieldByName(fieldName)
 
-		var fldTNullable = _this._getNullableField(fldT)
+		var fldTNullable = _getNullableField(fldT)
 		if fldTNullable != nil && fldTNullable.Valid.Bool() {
 			fldT = fldTNullable.Value
 		}
