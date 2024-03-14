@@ -1873,14 +1873,14 @@ func (_this *DBQueryNoSql[T]) DeleteModel(model *T) error {
 const COUNT_NAME = "Count1"
 
 type TGetCount struct {
-	Generic_MODEL
+	atomicsql.Generic_MODEL
 	Count1 int32 // the same name as COUNT_NAME
 }
 
 const TGetValueModel_VALUE = "Value1"
 
 type TGetValueModel[V comparable] struct {
-	Generic_MODEL
+	atomicsql.Generic_MODEL
 	Value1 V // the same name as TGetValueModel_VALUE
 }
 
@@ -2072,7 +2072,7 @@ func (_this *DBQueryNoSql[T]) checkMySqlError1( err error) {
 	_this.clearCachedSyntax()
 }
 
-func _SelectValue_queryNSql[T IGeneric_MODEL, V comparable](
+func _SelectValue_queryNSql[T atomicsql.IGeneric_MODEL, V comparable](
 	_this *DBQueryNoSql[T], fnSelect func(x *T) V, refDbResult1 **mongo.Cursor) (*DBQueryNoSql[TGetValueModel[V]], error) {
 
 	return nil, nil

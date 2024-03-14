@@ -183,9 +183,9 @@ func (_this *DBContextBaseNoSql) GetTotalDeltaTime() float64 {
 }
 
 
-func (_this *DBContextBaseNoSql) convertSchema(schemaSql TSchemaDef) (TSchemaDef, error) {
+func (_this *DBContextBaseNoSql) convertSchema(schemaSql atomicsql.TSchemaDef) (atomicsql.TSchemaDef, error) {
 
-	var newSchema = make(TSchemaDef)
+	var newSchema = make(atomicsql.TSchemaDef)
 	for _, val := range schemaSql {
 
 		_, has := newSchema[val.SqlTableName]

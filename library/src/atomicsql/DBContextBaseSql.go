@@ -8,125 +8,6 @@ import (
 	"time"
 )
 
-type VESqlDialect string
-type TESqlDialect struct {
-	Postgres  VESqlDialect
-	MySql     VESqlDialect
-	MsSql     VESqlDialect
-	MongoDB   VESqlDialect
-}
-
-var ESqlDialect TESqlDialect = TESqlDialect{
-	Postgres: 	"Postgres",
-	MySql:     	"MySql",
-	MongoDB:	"mongo",
-}
-
-type TSqlColumnDef struct {
-	LangName           string
-	SqlName            string
-	SqlType            string
-	LangType           string
-	Flags              string
-	IsPrimary          bool
-	IsNullable         bool
-	ForeignKeyLangName []string
-}
-
-// language of database: mysql and postgressql
-type TLangDataBase struct {
-	Type_BOOL          string
-	Type_VARCHAR       string
-	Type_CHAR          string
-	Type_SMALLINT      string
-	Type_INTEGER       string
-	Type_SERIAL        string
-	Type_FLOAT         string
-	Type_DOUBLE        string
-	Type_DATATIME      string
-	Type_DATATIME_NULL string
-	VALUE_TRUE         string
-	VALUE_FALSE        string
-	VALUE_NULL         string
-	END_COMMAND        string
-	EMPTY_STRING       string
-}
-
-type TDefTable struct {
-	SchemaTable           string
-	SqlTableName          string
-	PrimaryColumnLangName string
-	PrimaryColumnSqlName  string
-	Columns               []TSqlColumnDef
-}
-
-func (_this *TDefTable) getDictColumnByLangName() *map[string](TSqlColumnDef) {
-	var dict = make(map[string](TSqlColumnDef))
-
-	for _, col := range _this.Columns {
-
-		dict[col.LangName] = col
-
-	}
-	return &dict
-}
-
-type TSchemaDef map[string]TDefTable
-
-type TForeignKey struct {
-	TgtTable_sqlName string
-	TgtFldID_sqlName string
-
-	RootTable_sqlName   string
-	RootFldFk_sqlName   string
-	RootFldFk_langName  string
-	RootFldFk_lang2Name string
-}
-
-type TConnectionString struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	DbName   string
-	SqlLang  VESqlDialect
-}
-
-type TExternVar struct {
-	VarName string
-	VarType string
-}
-
-// type TSubQuery = func(_ctx *DBContextBase, staticsVars *map[string]any, tagQuery string) (string,string)
-type TSubQueryArg struct {
-	Value       any    // the value for statics, for sql fields is : 34563456 or '34563456'
-	Orginal_val string // 34563456 or '34563456'
-	SqlCode     string // u1.UserRoleID
-	ArgName     string // userRoleID
-}
-
-// type TSubQuery = func(_ctx *DBContextBase, argNames []any, tagQuery string) string
-type TSubQuery struct {
-	VariableName string //variable name: ids := ctx.table.QryS().Where()...
-}
-
-type TCompiledSqlQuery struct {
-	CompiledQuery   string
-	SelectSqlFields map[string]string
-	//joins				[]string
-	OrderedFields	[]string
-	Fields    map[string]string
-	ExternVar []TExternVar
-
-	Tag        string
-	File       string
-	StartOff   int
-	EndOff     int
-	Hash       string // for checking the integrity
-	IsQryS     bool
-	SubQueries []TSubQuery
-}
-
 // this is the struct of ORM data context.
 // after the developer execute 1.update_db.cmd, this will generate 2 files
 // DbContext.gen.go, and DbContext_lambdaQueries.gen.go
@@ -163,8 +44,81 @@ type DBContextBase struct {
 }
 
 
-type IDBContext interface {
-	GetContext() IDBContext
+//---------------------------------------------------------------------------------------------
+// the constructor
+func (_this *DBContextBase) Constr(dialect VESqlDialect, schemaSql TSchemaDef, ctxGeneric any) (*DBContextBase, error) {
+
+	_this.SCHEMA_SQL = schemaSql
+	_this.GenericContext = ctxGeneric
+
+	var err error
+	_this.SCHEMA_SQL_BySqlName, err = _this.convertSchema(schemaSql)
+	if err != nil {
+		return nil, err
+	}
+
+	_this.SCHEMA_SQL_Columns, err = _this.convertSchemaLangColumns(schemaSql)
+
+	if dialect == ESqlDialect.Postgres {
+
+		_this.LangDB = TLangDataBase{
+			Type_BOOL:          "boolean",
+			Type_VARCHAR:       "VARCHAR",
+			Type_CHAR:          "CHAR",
+			Type_SMALLINT:      "SMALLINT",
+			Type_INTEGER:       "INTEGER",
+			Type_SERIAL:        "SERIAL",
+			Type_FLOAT:         "FLOAT",
+			Type_DOUBLE:        "REAL",
+			Type_DATATIME:      "DATETIME",
+			Type_DATATIME_NULL: "DATETIME NULL",
+			VALUE_TRUE:         "true",
+			VALUE_FALSE:        "false",
+			EMPTY_STRING:       "''",
+			VALUE_NULL:         "null",
+			END_COMMAND:        ";",
+		}
+	} else if dialect == ESqlDialect.MsSql {
+
+		_this.LangDB = TLangDataBase{
+			Type_BOOL:          "BIT",
+			Type_VARCHAR:       "VARCHAR",
+			Type_CHAR:          "CHAR",
+			Type_SMALLINT:      "SMALLINT",
+			Type_INTEGER:       "INTEGER",
+			Type_SERIAL:        "INTEGER",
+			Type_FLOAT:         "FLOAT",
+			Type_DOUBLE:        "REAL",
+			Type_DATATIME:      "DATETIME",
+			Type_DATATIME_NULL: "DATETIME NULL",
+			VALUE_TRUE:         "1",
+			VALUE_FALSE:        "0",
+			EMPTY_STRING:       "''",
+			VALUE_NULL:         "null",
+			END_COMMAND:        "GO",
+		}
+	} else if dialect == ESqlDialect.MySql {
+
+		_this.LangDB = TLangDataBase{
+			Type_BOOL:          "BIT",
+			Type_VARCHAR:       "VARCHAR",
+			Type_CHAR:          "CHAR",
+			Type_SMALLINT:      "SMALLINT",
+			Type_INTEGER:       "INTEGER",
+			Type_SERIAL:        "INTEGER",
+			Type_FLOAT:         "FLOAT",
+			Type_DOUBLE:        "REAL",
+			Type_DATATIME:      "DATETIME",
+			Type_DATATIME_NULL: "DATETIME NULL",
+			VALUE_TRUE:         "1",
+			VALUE_FALSE:        "0",
+			EMPTY_STRING:       "''",
+			VALUE_NULL:         "null",
+			END_COMMAND:        ";",
+		}
+	}
+
+	return _this, nil
 }
 
 // execute sql query
@@ -269,81 +223,7 @@ func (_this *DBContextBase) GetTotalDeltaTime() float64 {
 	//return float64(_this.accumulatorDTimeMicroSec2) / 1000.0
 }
 
-// the constructor
-func (_this *DBContextBase) Constr(dialect VESqlDialect, schemaSql TSchemaDef, ctxGeneric any) (*DBContextBase, error) {
 
-	_this.SCHEMA_SQL = schemaSql
-	_this.GenericContext = ctxGeneric
-
-	var err error
-	_this.SCHEMA_SQL_BySqlName, err = _this.convertSchema(schemaSql)
-	if err != nil {
-		return nil, err
-	}
-
-	_this.SCHEMA_SQL_Columns, err = _this.convertSchemaLangColumns(schemaSql)
-
-	if dialect == ESqlDialect.Postgres {
-
-		_this.LangDB = TLangDataBase{
-			Type_BOOL:          "boolean",
-			Type_VARCHAR:       "VARCHAR",
-			Type_CHAR:          "CHAR",
-			Type_SMALLINT:      "SMALLINT",
-			Type_INTEGER:       "INTEGER",
-			Type_SERIAL:        "SERIAL",
-			Type_FLOAT:         "FLOAT",
-			Type_DOUBLE:        "REAL",
-			Type_DATATIME:      "DATETIME",
-			Type_DATATIME_NULL: "DATETIME NULL",
-			VALUE_TRUE:         "true",
-			VALUE_FALSE:        "false",
-			EMPTY_STRING:       "''",
-			VALUE_NULL:         "null",
-			END_COMMAND:        ";",
-		}
-	} else if dialect == ESqlDialect.MsSql {
-
-		_this.LangDB = TLangDataBase{
-			Type_BOOL:          "BIT",
-			Type_VARCHAR:       "VARCHAR",
-			Type_CHAR:          "CHAR",
-			Type_SMALLINT:      "SMALLINT",
-			Type_INTEGER:       "INTEGER",
-			Type_SERIAL:        "INTEGER",
-			Type_FLOAT:         "FLOAT",
-			Type_DOUBLE:        "REAL",
-			Type_DATATIME:      "DATETIME",
-			Type_DATATIME_NULL: "DATETIME NULL",
-			VALUE_TRUE:         "1",
-			VALUE_FALSE:        "0",
-			EMPTY_STRING:       "''",
-			VALUE_NULL:         "null",
-			END_COMMAND:        "GO",
-		}
-	} else if dialect == ESqlDialect.MySql {
-
-		_this.LangDB = TLangDataBase{
-			Type_BOOL:          "BIT",
-			Type_VARCHAR:       "VARCHAR",
-			Type_CHAR:          "CHAR",
-			Type_SMALLINT:      "SMALLINT",
-			Type_INTEGER:       "INTEGER",
-			Type_SERIAL:        "INTEGER",
-			Type_FLOAT:         "FLOAT",
-			Type_DOUBLE:        "REAL",
-			Type_DATATIME:      "DATETIME",
-			Type_DATATIME_NULL: "DATETIME NULL",
-			VALUE_TRUE:         "1",
-			VALUE_FALSE:        "0",
-			EMPTY_STRING:       "''",
-			VALUE_NULL:         "null",
-			END_COMMAND:        ";",
-		}
-	}
-
-	return _this, nil
-}
 
 func (_this *DBContextBase) convertSchema(schemaSql TSchemaDef) (TSchemaDef, error) {
 

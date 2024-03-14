@@ -11,6 +11,131 @@ import (
 	Str "strings"
 	//"time"
 )
+	
+
+type VESqlDialect string
+type TESqlDialect struct {
+	Postgres  VESqlDialect
+	MySql     VESqlDialect
+	MsSql     VESqlDialect
+	MongoDB   VESqlDialect
+}
+
+var ESqlDialect TESqlDialect = TESqlDialect{
+	Postgres: 	"Postgres",
+	MySql:     	"MySql",
+	MongoDB:	"mongo",
+}
+
+type TSqlColumnDef struct {
+	LangName           string
+	SqlName            string
+	SqlType            string
+	LangType           string
+	Flags              string
+	IsPrimary          bool
+	IsNullable         bool
+	ForeignKeyLangName []string
+}
+
+// language of database: mysql and postgressql
+type TLangDataBase struct {
+	Type_BOOL          string
+	Type_VARCHAR       string
+	Type_CHAR          string
+	Type_SMALLINT      string
+	Type_INTEGER       string
+	Type_SERIAL        string
+	Type_FLOAT         string
+	Type_DOUBLE        string
+	Type_DATATIME      string
+	Type_DATATIME_NULL string
+	VALUE_TRUE         string
+	VALUE_FALSE        string
+	VALUE_NULL         string
+	END_COMMAND        string
+	EMPTY_STRING       string
+}
+
+type TDefTable struct {
+	SchemaTable           string
+	SqlTableName          string
+	PrimaryColumnLangName string
+	PrimaryColumnSqlName  string
+	Columns               []TSqlColumnDef
+}
+
+func (_this *TDefTable) getDictColumnByLangName() *map[string](TSqlColumnDef) {
+	var dict = make(map[string](TSqlColumnDef))
+
+	for _, col := range _this.Columns {
+
+		dict[col.LangName] = col
+
+	}
+	return &dict
+}
+
+type TSchemaDef map[string]TDefTable
+
+type TForeignKey struct {
+	TgtTable_sqlName string
+	TgtFldID_sqlName string
+
+	RootTable_sqlName   string
+	RootFldFk_sqlName   string
+	RootFldFk_langName  string
+	RootFldFk_lang2Name string
+}
+
+type TConnectionString struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DbName   string
+	SqlLang  VESqlDialect
+}
+
+type TExternVar struct {
+	VarName string
+	VarType string
+}
+
+// type TSubQuery = func(_ctx *DBContextBase, staticsVars *map[string]any, tagQuery string) (string,string)
+type TSubQueryArg struct {
+	Value       any    // the value for statics, for sql fields is : 34563456 or '34563456'
+	Orginal_val string // 34563456 or '34563456'
+	SqlCode     string // u1.UserRoleID
+	ArgName     string // userRoleID
+}
+
+// type TSubQuery = func(_ctx *DBContextBase, argNames []any, tagQuery string) string
+type TSubQuery struct {
+	VariableName string //variable name: ids := ctx.table.QryS().Where()...
+}
+
+type TCompiledSqlQuery struct {
+	CompiledQuery   string
+	SelectSqlFields map[string]string
+	//joins				[]string
+	OrderedFields	[]string
+	Fields    map[string]string
+	ExternVar []TExternVar
+
+	Tag        string
+	File       string
+	StartOff   int
+	EndOff     int
+	Hash       string // for checking the integrity
+	IsQryS     bool
+	SubQueries []TSubQuery
+}
+
+
+type IDBContext interface {
+	GetContext() IDBContext
+}
 
 func DBContext_cleanSaveFlags[T IGeneric_MODEL](model *T, _this *DBContextBase) {
 

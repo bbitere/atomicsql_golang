@@ -1,9 +1,12 @@
 package atomicsql
 
 import (
+	//"context"
 	sql "database/sql"
 	fmt "fmt"
 	log "log"
+
+	//time "time"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
@@ -98,6 +101,7 @@ func StaticOpenDB(connStr TConnectionString, maxIdle int, maxOpen int) (*sql.DB,
 	return db, err
 }
 
+
 func OpenDB(connStr TConnectionString, maxIdle int, maxOpen int) (*DBContextBase, error) {
 
 	var db, err = StaticOpenDB(connStr, maxIdle, maxOpen)
@@ -110,5 +114,6 @@ func OpenDB(connStr TConnectionString, maxIdle int, maxOpen int) (*DBContextBase
 	ctxBase.Dialect = connStr.SqlLang
 	ctxBase.Db = db
 
-	return ctxBase, nil
+	return ctxBase, nil	
 }
+

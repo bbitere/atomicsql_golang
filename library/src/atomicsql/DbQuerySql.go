@@ -24,6 +24,21 @@ const tag_WhereSubQ = "Q"
 const tag_SelectValue = "V"
 const tag_SelectValues = "X"
 
+
+const COUNT_NAME = "Count1"
+
+type TGetCount struct {
+	Generic_MODEL
+	Count1 int32 // the same name as COUNT_NAME
+}
+
+const TGetValueModel_VALUE = "Value1"
+
+type TGetValueModel[V comparable] struct {
+	Generic_MODEL
+	Value1 V // the same name as TGetValueModel_VALUE
+}
+
 type IQueryBase interface {
 
 	//return 'val' or val or null
@@ -45,6 +60,8 @@ type IDBQuery interface {
 	IsRTM() bool
 	SetSubQueryString(key string, sqlQuery string)
 }
+
+
 
 // DBQuery is the struct that will do the magic in atomicsql.
 //
