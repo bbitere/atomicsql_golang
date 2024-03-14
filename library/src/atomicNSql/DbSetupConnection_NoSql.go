@@ -80,7 +80,7 @@ func StaticOpenDB_NoSql( ctxBase *DBContextBaseNoSql, connStr *atomicsql.TConnec
 
 
 
-func OpenDB_NoSql(connStr *atomicsql.TConnectionString, maxIdle int, maxOpen int) (*DBContextBaseNoSql, error) {
+func OpenDB_NoSql(connStr atomicsql.TConnectionString, maxIdle int, maxOpen int) (*DBContextBaseNoSql, error) {
 
 	if( connStr.SqlLang == atomicsql.ESqlDialect.MongoDB){
 

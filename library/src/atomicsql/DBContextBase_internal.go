@@ -270,6 +270,11 @@ func checkComments(txt1 string, idx int, length int) []TInterval {
 
 func (_this *DBContextBase) checkLambdaIntegrity(rootDir string, keyLamda string, lambda TCompiledSqlQuery) string {
 
+	return CheckLambdaIntegrity(rootDir, keyLamda, lambda) 
+}
+
+func CheckLambdaIntegrity(rootDir string, keyLamda string, lambda TCompiledSqlQuery) string {
+
 	var filePath = rootDir + lambda.File
 	var content, err = ioutil.ReadFile(filePath)
 	if err != nil {

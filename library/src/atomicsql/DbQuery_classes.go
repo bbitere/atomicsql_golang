@@ -121,6 +121,15 @@ type RuntimeQuery[T IGeneric_MODEL] struct {
 	collection *IRuntimeCollection[T]
 }
 
+func (_this *RuntimeQuery[T]) GetStructDefs()[]*TDefIncludeRelation{
+	return _this.structDefs
+}
+
+func (_this *RuntimeQuery[T]) GetModels()[]*T{
+	return _this.models
+}
+	
+
 func (_this *RuntimeQuery[T]) Constr(models []*T, structDefs []*TDefIncludeRelation, collection *IRuntimeCollection[T]) *RuntimeQuery[T] {
 
 	_this.models = models

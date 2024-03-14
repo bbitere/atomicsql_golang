@@ -5,7 +5,7 @@ import (
 	"fmt"
 	Str "strings"
 
-	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicsqlNSql"
+	atmsql "github.com/bbitere/atomicsql_golang.git/src/atomicNSql"
 	//atmsql_func "github.com/bbitere/atomicsql_golang.git/src/atomicsql_func"
 	orm "github.com/bbitere/atomicsql_golang.git/tests/test1/src/atomicsql_ormdefs"
 	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
@@ -42,15 +42,15 @@ func Test1_GetConnectionString() atmsql.TConnectionString{
 }
 */
 
-func Test1_init() (*orm.DBContext, string, error) {
+func Test1_init() (*orm.DBContextNSql, string, error) {
 
 	var connString = Test1_GetConnectionString()
-	ctxBase, err := atmsql.OpenDB(connString, 10, 10)
+	ctxBase, err := atmsql.OpenDB_NoSql(connString, 0, 10)
 	if ctxBase == nil {
 		return nil, "initTest", err
 	}
 
-	ctx, err := orm.New_DBContext(*ctxBase)
+	ctx, err := orm.New_DBContextNSql(*ctxBase)
 	if err != nil {
 		return nil, "initTest1", err
 	}
@@ -62,7 +62,7 @@ func Test1_init() (*orm.DBContext, string, error) {
 	return ctx, "initTest1", err
 }
 
-func Test_cleanUp(ctx *orm.DBContext) {
+func Test_cleanUp(ctx *orm.DBContextNSql) {
 
 	ctx.User.Qry("").DeleteModels()
 	ctx.UserRole.Qry("").DeleteModels()
@@ -83,7 +83,7 @@ func Test1_00(step int, bCheckName bool) (int, string, error) {
 		return 0, nameTest, err
 	}
 
-	var bResult = ctx.DBContextBase.CheckIntegrity("..\\..\\")
+	var bResult = ctx.DBContextBaseNoSql.CheckIntegrity("..\\..\\")
 	if bResult != "" {
 		return 0, nameTest, err
 	}
@@ -420,7 +420,7 @@ func Test1_09(step int, bCheckName bool) (int, string, error) {
 
 	//Nopp();
 
-	usrs4, err := atmsql.Select(ctx.User.Qry("evcy59").
+	usrs4, err := atmsql.SelectN(ctx.User.Qry("evcy59").
 		Where(func(x *m.User) bool {
 			return x.UserRoleID.IsActive
 		}),

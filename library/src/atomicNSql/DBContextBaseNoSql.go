@@ -16,6 +16,10 @@ import (
 	atomicsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 )
 
+type TDefTable = atomicsql.TDefTable
+type TSqlColumnDef = atomicsql.TSqlColumnDef
+type TDefIncludeRelation = atomicsql.TDefIncludeRelation
+
 
 type DBContextBaseNoSql struct {
 	ConnectionString atomicsql.TConnectionString
@@ -198,7 +202,7 @@ func (_this *DBContextBaseNoSql) convertSchema(schemaSql atomicsql.TSchemaDef) (
 	return newSchema, nil
 }
 
-func (_this *DBContextBaseNoSql) convertSchemaLangColumns(schemaSql TSchemaDef) (map[string]map[string]string, error) {
+func (_this *DBContextBaseNoSql) convertSchemaLangColumns(schemaSql atomicsql.TSchemaDef) (map[string]map[string]string, error) {
 
 	var newSchema = make(map[string]map[string]string)
 
@@ -230,7 +234,7 @@ func (_this *DBContextBaseNoSql) Log_Print(formatstr string) {
 }
 
 // It must be called in DBcontext_lambdaQueries.gen.go file. internal use
-func (_this *DBContextBaseNoSql) ProcessCompiledQuery(compiledSqlQueries *map[string]TCompiledSqlQuery, bDoAllChecks bool) {
+func (_this *DBContextBaseNoSql) ProcessCompiledQuery(compiledSqlQueries *map[string]atomicsql.TCompiledSqlQuery, bDoAllChecks bool) {
 
 	for key, val := range *compiledSqlQueries {
 
@@ -248,12 +252,29 @@ func (_this *DBContextBaseNoSql) ProcessCompiledQuery(compiledSqlQueries *map[st
 }
 
 func (_this *DBContextBaseNoSql) isDialectSupportMultipleStatementsAtOnce() bool {
-
-	if _this.Dialect == ESqlDialect.Postgres ||
-		_this.Dialect == ESqlDialect.MsSql {
-		return true
-	}
+	
 	return false
 }
+
+
+func (_this *DBContextBaseNoSql) CheckIntegrity(rootDir string) string {
+
+	for key, value := range _this.CompiledSqlQueries {
+
+		//var = _this.CompiledSqlQueries[ itLambda ];
+		var ret = atomicsql.CheckLambdaIntegrity(rootDir, key, value)
+		if ret == "file-not-found" {
+			continue
+		}
+		if ret != "" {
+			fmt.Printf("A lambda expression (%s) is modified. Recompile the project!", key)
+			fmt.Println("")
+			return ret
+		}
+	}
+	return ""
+}
+
+
 
 

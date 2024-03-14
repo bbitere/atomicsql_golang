@@ -290,11 +290,11 @@ func SelectN[T atomicsql.IGeneric_MODEL, V atomicsql.IGeneric_MODEL](
 		var query = (new(DBQueryNoSql[V])).Constr(tbl1)
 
 		var arr = []*V{}
-		for _, itm := range _this.pRTM.models {
+		for _, itm := range _this.pRTM.GetModels() {
 
 			Arr_Append(&arr, fnSelect(itm))
 		}
-		query.pRTM = (new(atomicsql.RuntimeQuery[V])).Constr(arr, _this.pRTM.structDefs, nil)
+		query.pRTM = (new(atomicsql.RuntimeQuery[V])).Constr(arr, _this.pRTM.GetStructDefs(), nil)
 
 		return query
 	} else {
@@ -365,11 +365,11 @@ func SelectSubQN[T atomicsql.IGeneric_MODEL, V atomicsql.IGeneric_MODEL](
 		var query = (new(DBQueryNoSql[V])).Constr(tbl1)
 
 		var arr = []*V{}
-		for _, itm := range _this.pRTM.models {
+		for _, itm := range _this.pRTM.GetModels() {
 
 			Arr_Append(&arr, fnSelect(itm, _this))
 		}
-		query.pRTM = (new(atomicsql.RuntimeQuery[V])).Constr(arr, _this.pRTM.structDefs, nil)
+		query.pRTM = (new(atomicsql.RuntimeQuery[V])).Constr(arr, _this.pRTM.GetStructDefs(), nil)
 
 		return query
 	} else {
@@ -1085,7 +1085,7 @@ func (_this *DBQueryNoSql[T]) Where(fnWhere func(x *T) bool) *DBQueryNoSql[T] {
 // Let see the SQL code:
 //
 //	WHERE User.RelationID IN ( SELECT ID FROM Table2 WHERE Field1 = 'val2' )
-func (_this *DBQueryNoSql[T]) WhereSubQ(fnWhereS func(x *T, q IDBQuery) bool) *DBQueryNoSql[T] {
+func (_this *DBQueryNoSql[T]) WhereSubQ(fnWhereS func(x *T, q atomicsql.IDBQuery) bool) *DBQueryNoSql[T] {
 
 	if _this.pRTM == nil {
 		//collect subquery strings
@@ -1098,7 +1098,7 @@ func (_this *DBQueryNoSql[T]) WhereSubQ(fnWhereS func(x *T, q IDBQuery) bool) *D
 }
 
 func (_this *DBQueryNoSql[T]) _whereSubQuery(
-	fnWhereS func(x *T, q IDBQuery) bool,
+	fnWhereS func(x *T, q atomicsql.IDBQuery) bool,
 	fnWhere func(x *T) bool) *DBQueryNoSql[T] {
 
 	if _this.pRTM != nil {
@@ -1521,7 +1521,7 @@ func (_this *DBQueryNoSql[T]) Sqlquery_GetRowsAsFieldInt(fieldName string) strin
 //	 var rows = ctx.Table.Qry("").OrderByFields( &orderFields ).GetModels();
 //
 // the rows are ordered by Table.Field1 Asc and after Table.Field2 Desc
-func (_this *DBQueryNoSql[T]) OrderByFields(orderFields *DataOrderByFields) *DBQueryNoSql[T] {
+func (_this *DBQueryNoSql[T]) OrderByFields(orderFields *atomicsql.DataOrderByFields) *DBQueryNoSql[T] {
 
 	if _this.pRTM != nil {
 
@@ -1980,12 +1980,12 @@ func (_this *DBQueryNoSql[T]) GetDistinctCount(fields []string) (int64, error) {
 // After the ORM team will fix the crash of scanner compiler tool,
 //
 // you can switch back RunAsRTM = false, and the execution of the query will be done on DB server.
-func (_this *DBQueryNoSql[T]) ToRTM(bRuntime bool, structDefs ...*TDefIncludeRelation) *DBQueryNoSql[T] {
+func (_this *DBQueryNoSql[T]) ToRTM(bRuntime bool, structDefs ...*atomicsql.TDefIncludeRelation) *DBQueryNoSql[T] {
 
 	if bRuntime {
 
 		var models, _ = _this._getModelsRel(structDefs)
-		_this.pRTM = (new(RuntimeQuery[T])).Constr(models, structDefs, nil)
+		_this.pRTM = (new(atomicsql.RuntimeQuery[T])).Constr(models, structDefs, nil)
 	}
 	return _this
 }
@@ -2223,7 +2223,7 @@ func (_this *DBQueryNoSql[T]) _InsertRecordByReflectValue(
 		return 0, nil
 }
 
-func _Aggregate_generateSql_NoSql[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQueryNoSql[T]) (string, []string) {
+func _Aggregate_generateSql_NoSql[T atomicsql.IGeneric_MODEL, V atomicsql.IGeneric_MODEL](_this *DBQueryNoSql[T]) (string, []string) {
 
 	return "", nil
 }
