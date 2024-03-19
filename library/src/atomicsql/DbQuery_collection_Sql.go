@@ -24,6 +24,7 @@ import (
 
 func (_this *DBQuery[T]) _RtmWhereEq( model *T, fieldName string, operands []any, field2 string, bNot bool) bool {
 
+	if( field2 == field2){}
 	var valFld, _ = _this.getModel_FieldValueS( model, model, fieldName, false);
 
 	for i := 0; i < len(operands); i ++{
@@ -188,13 +189,13 @@ func (_this *DBQuery[T]) getModel_FieldValueS( modelT *T, modelV any, fieldName 
 		var fldV = reflectValV.FieldByName( fieldName );
 
 		
-		var fldTNullable = _getNullableField( fldT );
+		var fldTNullable = GetNullableField( fldT );
 		if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
 			fldT = fldTNullable.Value
 		}
 
 		if( bDoSet){
-			var fldVNullable = _getNullableField( fldV );
+			var fldVNullable = GetNullableField( fldV );
 			if( fldVNullable != nil /*&& fldVNullable.Valid.Bool()*/ ){
 				fldV = fldVNullable.Value
 
@@ -419,7 +420,7 @@ func (_this *DBQuery[T]) getValueS( modelV any, fieldName string ) (string, erro
 
 		var fldV = reflectValV.FieldByName( fieldName );
 
-		var fldVNullable = _getNullableField( fldV );
+		var fldVNullable = GetNullableField( fldV );
 		if( fldVNullable != nil && fldVNullable.Valid.Bool() ){
 			fldV = fldVNullable.Value
 		}
@@ -483,8 +484,8 @@ func (_this *DBQuery[T]) rtm_getModelsAsDicts( models *[]*T, fields []string ) [
 			dict[ fieldName ] = valS;
 		}
 		var elem = new (TModel[T]);
-		elem.model =  model;
-		elem.dict  = dict;
+		elem.Model =  model;
+		elem.Dict  = dict;
 		Arr_Append( &arr, elem);
 	}
 	
@@ -497,7 +498,7 @@ func (_this *DBQuery[T]) rtm_updateModelsFromDicts( models1 *[]*TModel[T] ) []*T
 
 	for iElem := 0; iElem < len(*models1); iElem++ {
 
-		Arr_Append( &arr, (*models1)[iElem].model );
+		Arr_Append( &arr, (*models1)[iElem].Model );
 	}
 	return arr;
 }

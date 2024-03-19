@@ -11,6 +11,9 @@ type DBSqlJoin struct {
 
 /*#PHPARG=[ String ];*/
 func (_this *DBSqlJoin) getSqlTxt(itm string) string {
+
+	if( itm == itm ){}
+	
 	return _this.sql
 }
 func (_this *DBSqlJoin) Constr() *DBSqlJoin {
@@ -109,8 +112,8 @@ type IRuntimeCollection[T IGeneric_MODEL] interface {
 }
 
 type TModel[T IGeneric_MODEL] struct {
-	model *T
-	dict  map[string]string
+	Model *T
+	Dict  map[string]string
 }
 
 type RuntimeQuery[T IGeneric_MODEL] struct {
@@ -125,8 +128,15 @@ func (_this *RuntimeQuery[T]) GetStructDefs()[]*TDefIncludeRelation{
 	return _this.structDefs
 }
 
-func (_this *RuntimeQuery[T]) GetModels()[]*T{
-	return _this.models
+func (_this *RuntimeQuery[T]) GetModels()*[]*T{
+	return &_this.models
+}
+func (_this *RuntimeQuery[T]) SetModels(m *[]*T){
+	_this.models = *m
+}
+
+func (_this *RuntimeQuery[T]) GetCollection() *IRuntimeCollection[T] {
+	return _this.collection
 }
 	
 

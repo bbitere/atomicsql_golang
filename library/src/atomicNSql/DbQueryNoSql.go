@@ -14,10 +14,24 @@ import (
 	atomicsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 
 	bson "go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongo "go.mongodb.org/mongo-driver/mongo"
 	options "go.mongodb.org/mongo-driver/mongo/options"
 	//primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+const FLD_UID = "UID"
+const NULL_FK_ID = 0
+
+const tag_Select = "S"
+const tag_SelectSubQ = "C"
+const tag_Where = "W"
+const tag_WhereSubQ = "Q"
+
+const tag_SelectValue = "V"
+const tag_SelectValues = "X"
+
+const PREFIX_KEY = "_id.";
 
 // --------------------------------------------------------------------------------------------------------
 
@@ -64,6 +78,8 @@ type DBQueryNoSql[T atomicsql.IGeneric_MODEL] struct {
 
 	fnNewInstance func(bFull bool) any // create a new model
 
+	filterCriteriaMap  bson.M
+	filterCriteriaArr  bson.D
 	//clone_sqlText  string
 	whereTxt       string
 	//limit          string
@@ -290,7 +306,7 @@ func SelectN[T atomicsql.IGeneric_MODEL, V atomicsql.IGeneric_MODEL](
 		var query = (new(DBQueryNoSql[V])).Constr(tbl1)
 
 		var arr = []*V{}
-		for _, itm := range _this.pRTM.GetModels() {
+		for _, itm := range *_this.pRTM.GetModels() {
 
 			Arr_Append(&arr, fnSelect(itm))
 		}
@@ -365,7 +381,7 @@ func SelectSubQN[T atomicsql.IGeneric_MODEL, V atomicsql.IGeneric_MODEL](
 		var query = (new(DBQueryNoSql[V])).Constr(tbl1)
 
 		var arr = []*V{}
-		for _, itm := range _this.pRTM.GetModels() {
+		for _, itm := range *_this.pRTM.GetModels() {
 
 			Arr_Append(&arr, fnSelect(itm, _this))
 		}
@@ -474,12 +490,12 @@ func AggregateNSql[T atomicsql.IGeneric_MODEL, V atomicsql.IGeneric_MODEL](
 
 		var query = (new(DBQueryNoSql[V])).Constr(tbl1)
 
-		var arr, err2 = _Aggregate_doRuntime_NSql[T, V](_this, _this.pRTM.models)
+		var arr, err2 = _Aggregate_doRuntime_NSql[T, V](_this, *_this.pRTM.GetModels())
 		if err2 != nil {
 			_this.checkMySqlError("Error in _Aggregate_doRuntime. Structs are not compatible", err2)
 		}
 
-		query.pRTM = (new(RuntimeQuery[V])).Constr(arr, _this.pRTM.structDefs, nil)
+		query.pRTM = (new(atomicsql.RuntimeQuery[V])).Constr(arr, _this.pRTM.GetStructDefs(), nil)
 		return query
 	} else {
 
@@ -591,9 +607,10 @@ func (_this *DBQueryNoSql[T]) GetValueString(fnSelect func(x *T) string) (string
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
-			return fnSelect(_this.pRTM.models[0]), nil
+			return fnSelect(models[0]), nil
 		}
 		return "", nil
 	} else {
@@ -639,9 +656,10 @@ func (_this *DBQueryNoSql[T]) GetValueInt(fnSelect func(x *T) int64) (int64, err
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
-			return fnSelect(_this.pRTM.models[0]), nil
+			return fnSelect(models[0]), nil
 		}
 		return 0, nil
 	} else {
@@ -689,9 +707,10 @@ func (_this *DBQueryNoSql[T]) GetValueFloat(fnSelect func(x *T) float64) (float6
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
-			return fnSelect(_this.pRTM.models[0]), nil
+			return fnSelect(models[0]), nil
 		}
 		return 0, nil
 	} else {
@@ -737,9 +756,10 @@ func (_this *DBQueryNoSql[T]) GetValueBool(fnSelect func(x *T) bool) (bool, erro
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
-			return fnSelect(_this.pRTM.models[0]), nil
+			return fnSelect(models[0]), nil
 		}
 		return false, nil
 	} else {
@@ -785,12 +805,13 @@ func (_this *DBQueryNoSql[T]) GetValuesString(fnSelect func(x *T) string) ([]str
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
 			var arr = []string{}
 
 			for i := 0; i < len(arr); i++ {
-				Arr_Append(&arr, fnSelect(_this.pRTM.models[i]))
+				Arr_Append(&arr, fnSelect(models[i]))
 			}
 			return arr, nil
 		}
@@ -835,12 +856,13 @@ func (_this *DBQueryNoSql[T]) GetValuesInt(fnSelect func(x *T) int64) ([]int64, 
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
 			var arr = []int64{}
 
 			for i := 0; i < len(arr); i++ {
-				Arr_Append(&arr, fnSelect(_this.pRTM.models[i]))
+				Arr_Append(&arr, fnSelect(models[i]))
 			}
 			return arr, nil
 		}
@@ -885,12 +907,13 @@ func (_this *DBQueryNoSql[T]) GetValuesFloat(fnSelect func(x *T) float64) ([]flo
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
 			var arr = []float64{}
 
 			for i := 0; i < len(arr); i++ {
-				Arr_Append(&arr, fnSelect(_this.pRTM.models[i]))
+				Arr_Append(&arr, fnSelect(models[i]))
 			}
 			return arr, nil
 		}
@@ -935,12 +958,13 @@ func (_this *DBQueryNoSql[T]) GetValuesBool(fnSelect func(x *T) bool) ([]bool, e
 	if sequence.pRTM != nil {
 
 		var _this = sequence
-		if len(_this.pRTM.models) > 0 {
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
 
 			var arr = []bool{}
 
 			for i := 0; i < len(arr); i++ {
-				Arr_Append(&arr, fnSelect(_this.pRTM.models[i]))
+				Arr_Append(&arr, fnSelect(models[i]))
 			}
 			return arr, nil
 		}
@@ -970,6 +994,18 @@ func (_this *DBQueryNoSql[T]) GetValuesBool(fnSelect func(x *T) bool) ([]bool, e
 // in this example the whereEq add a condition: User_.Name == userName
 func (_this *DBQueryNoSql[T]) WhereEq(field string, operand any) *DBQueryNoSql[T] {
 
+	//var field1 = PREFIX_KEY + field;
+	var field1 = field;
+	if( _this.filterCriteriaMap == nil){
+
+		_this.filterCriteriaMap = bson.M{ field1: operand };
+		_this.filterCriteriaArr = []bson.E{  { Key:field1, Value: bson.E{Key:"$eq", Value:operand}} };
+	}else{
+
+		_this.filterCriteriaMap[ field1 ] = operand;
+		_this.filterCriteriaArr = append( _this.filterCriteriaArr, bson.E{ Key:field1, Value: bson.E{Key:"$eq", Value:operand}} );
+	}
+	
 	//TODO
 	return _this;
 }
@@ -1029,6 +1065,8 @@ func (_this *DBQueryNoSql[T]) WhereIn(field string, operandsIn []any) *DBQueryNo
 /**  @return DBSqlProvider  */
 func (_this *DBQueryNoSql[T]) whereNotIn(field string, operandsIn []any) *DBQueryNoSql[T] {
 
+	if( field == field){}
+	if( &operandsIn == nil ){}
 	//TODO
 	return _this
 }
@@ -1104,7 +1142,7 @@ func (_this *DBQueryNoSql[T]) _whereSubQuery(
 	if _this.pRTM != nil {
 
 		var arr = []*T{}
-		for _, itm := range _this.pRTM.models {
+		for _, itm := range *_this.pRTM.GetModels() {
 
 			if fnWhereS != nil {
 				if fnWhereS(itm, _this) {
@@ -1116,7 +1154,7 @@ func (_this *DBQueryNoSql[T]) _whereSubQuery(
 				}
 			}
 		}
-		_this.pRTM.models = arr
+		_this.pRTM.SetModels( &arr)
 
 	} else {
 
@@ -1153,10 +1191,13 @@ func (_this *DBQueryNoSql[T]) GetModels() ([]*T, error) {
 func (_this *DBQueryNoSql[T]) GetRecords(fields []string) ([]*T, error) {
 
 	if _this.pRTM != nil {
-		return _this.pRTM.models, _this.errorRet
+		return *_this.pRTM.GetModels(), _this.errorRet
 	}
 	
-	var err error = nil
+	var rows, err = _this.getRows(false);
+	if( err == nil){
+		return rows, err
+	}
 
 	_this.checkMySqlError1( err)
 	return nil, err
@@ -1170,14 +1211,24 @@ func (_this *DBQueryNoSql[T]) GetRecords(fields []string) ([]*T, error) {
 func (_this *DBQueryNoSql[T]) GetFirstModel() (*T, error) {
 
 	if _this.pRTM != nil {
-		if len(_this.pRTM.models) > 0 {
-			return _this.pRTM.models[0], _this.errorRet
+
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
+			return models[0], _this.errorRet
 		} else {
 			return nil, nil
 		}
 	}
 
-	var err error = nil
+	var rows, err = _this.getRows(true);
+	if( err == nil){
+
+		if( len(rows) > 0 ){
+			return rows[0], err
+		}else{
+			return nil, err
+		}
+	}
 
 	_this.checkMySqlError1( err)
 	return nil, err
@@ -1201,14 +1252,24 @@ func (_this *DBQueryNoSql[T]) GetFirstModel() (*T, error) {
 func (_this *DBQueryNoSql[T]) GetFirstRecord(fields []string) (*T, error) {
 
 	if _this.pRTM != nil {
-		if len(_this.pRTM.models) > 0 {
-			return _this.pRTM.models[0], _this.errorRet
+
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
+			return models[0], _this.errorRet
 		} else {
 			return nil, nil
 		}
 	}
 
-	var err error = nil
+	var rows, err = _this.getRows(true);
+	if( err == nil){
+
+		if( len(rows) > 0 ){
+			return rows[0], err
+		}else{
+			return nil, err
+		}
+	}
 
 	_this.checkMySqlError1( err)
 	return nil, err
@@ -1262,7 +1323,8 @@ func (_this *DBQueryNoSql[T]) GetDistinctModels( fields []string ) ([]*T, error)
 func (_this *DBQueryNoSql[T]) GetDistinctRecords(fields []string) ([]*T, error) {
 
 	if _this.pRTM != nil {
-		return _this._getDistinctRTM(fields, _this.pRTM.models), _this.errorRet
+
+		return _this._getDistinctRTM(fields, *_this.pRTM.GetModels()), _this.errorRet
 	}
 
 	var err error = nil
@@ -1295,17 +1357,62 @@ func (_this *DBQueryNoSql[T]) GetDistinctRecords(fields []string) ([]*T, error) 
 func (_this *DBQueryNoSql[T]) GetFirstModelRel(structDefs ...*TDefIncludeRelation) (*T, error) {
 
 	if _this.pRTM != nil {
-		if len(_this.pRTM.models) > 0 {
-			return _this.pRTM.models[0], _this.errorRet
+
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
+			return models[0], _this.errorRet
 		} else {
 			return nil, nil
 		}
 	}
 
-	var err error = nil
+	var rows, err = _this.getRows(true);
+	if( err == nil){
+
+		if( len(rows) > 0 ){
+			return rows[0], nil
+		}else{
+			return nil, nil
+		}
+	}
 
 	_this.checkMySqlError1( err)
 	return nil, err
+}
+
+func (_this *DBQueryNoSql[T]) getRows( bOnlyFirst bool) ([]*T, error) {
+
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)		
+	//var filter     = bson.M{"userName": "a"};//.getWhereFilter()
+	var filter     = _this.getWhereFilter()
+
+	if( bOnlyFirst ){
+		_this.findOptions.SetLimit(1);
+	}
+
+	cursor, err := collection.Find(context.Background(), filter, _this.findOptions )
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+	var rows = []*T{}
+
+	
+	for cursor.Next(context.Background()) {
+		//var document bson.M
+		var elem *T = new (T);
+		if err := cursor.Decode(elem); err != nil {
+			return nil, err
+		}
+		Arr_Append( &rows, elem);
+	}
+
+	// Verificați dacă cursorul a întâlnit o eroare în timpul iterării
+	if err := cursor.Err(); err != nil {
+		// Tratați eroarea
+		return nil, err
+	}
+	return rows, nil
 }
 
 // Return a slice of models from sequence.
@@ -1330,16 +1437,21 @@ func (_this *DBQueryNoSql[T]) GetFirstModelRel(structDefs ...*TDefIncludeRelatio
 func (_this *DBQueryNoSql[T]) GetModelsRel(structDefs ...*TDefIncludeRelation) ([]*T, error) {
 
 	if _this.pRTM != nil {
-		return _this.pRTM.models, _this.errorRet
+		return *_this.pRTM.GetModels(), _this.errorRet
 	}
 
-	//TODO
+	var rows, err = _this.getRows(true);
+	if( err == nil){
+		return rows, err
+	}
 
 	return nil, nil
 }
 func (_this *DBQueryNoSql[T]) _getModelsRel(structDefs []*TDefIncludeRelation) ([]*T, error) {
 
 	//TODO
+	
+	if( &structDefs == nil ){}
 
 	return nil, nil
 }
@@ -1370,8 +1482,9 @@ func (_this *DBQueryNoSql[T]) GetSingleDataString(fieldName string) (string, err
 		if _this.errorRet != nil {
 			return "", _this.errorRet
 		}
-		if len(_this.pRTM.models) > 0 {
-			return _this.getValueS(_this.pRTM.models[0], fieldName)
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
+			return _this.getValueS(models[0], fieldName)
 		} else {
 			return "", nil
 		}
@@ -1409,8 +1522,9 @@ func (_this *DBQueryNoSql[T]) GetSingleDataInt(sqlResult *mongo.Cursor, fieldNam
 		if _this.errorRet != nil {
 			return 0, _this.errorRet
 		}
-		if len(_this.pRTM.models) > 0 {
-			return _this.getValueI(_this.pRTM.models[0], fieldName)
+		var models = *_this.pRTM.GetModels();
+		if len(models) > 0 {
+			return _this.getValueI(models[0], fieldName)
 		} else {
 			return 0, nil
 		}
@@ -1445,8 +1559,10 @@ func (_this *DBQueryNoSql[T]) GetRowsAsFieldString(fieldName string) ([]string, 
 			return nil, _this.errorRet
 		}
 		var arr = []string{}
-		for i := 0; i < len(_this.pRTM.models); i++ {
-			var val, err = _this.getValueS(_this.pRTM.models[i], fieldName)
+
+		var models = *_this.pRTM.GetModels();
+		for i := 0; i < len(models); i++ {
+			var val, err = _this.getValueS(models[i], fieldName)
 			if err == nil {
 				Arr_Append(&arr, val)
 			} else {
@@ -1484,8 +1600,10 @@ func (_this *DBQueryNoSql[T]) GetRowsAsFieldInt(fieldName string) ([]int64, erro
 			return nil, _this.errorRet
 		}
 		var arr = []int64{}
-		for i := 0; i < len(_this.pRTM.models); i++ {
-			var val, err = _this.getValueI(_this.pRTM.models[i], fieldName)
+
+		var models = *_this.pRTM.GetModels();
+		for i := 0; i < len(models); i++ {
+			var val, err = _this.getValueI(models[i], fieldName)
 			if err == nil {
 				Arr_Append(&arr, val)
 			} else {
@@ -1525,8 +1643,8 @@ func (_this *DBQueryNoSql[T]) OrderByFields(orderFields *atomicsql.DataOrderByFi
 
 	if _this.pRTM != nil {
 
-		var fields = Util_FromMapKeysToArray(&orderFields.data)
-		var models = _this.rtm_getModelsAsDicts(&_this.pRTM.models, fields)
+		var fields = Util_FromMapKeysToArray(&orderFields.Data)
+		var models = _this.rtm_getModelsAsDicts(_this.pRTM.GetModels(), fields)
 
 		sort.Slice(models,
 			func(i int, j int) bool {
@@ -1534,16 +1652,16 @@ func (_this *DBQueryNoSql[T]) OrderByFields(orderFields *atomicsql.DataOrderByFi
 				for itm := 0; itm < len(fields); itm++ {
 
 					var fieldName = fields[itm]
-					var order1 = orderFields.data[fieldName]
+					var order1 = orderFields.Data[fieldName]
 
-					var v1 = models[i].dict[fieldName]
-					var v2 = models[j].dict[fieldName]
-					if order1 == ESortField.Desc {
+					var v1 = models[i].Dict[fieldName]
+					var v2 = models[j].Dict[fieldName]
+					if order1 == atomicsql.ESortField.Desc {
 
 						if v1 > v2 {
 							return true
 						}
-					} else if order1 == ESortField.Asc {
+					} else if order1 == atomicsql.ESortField.Asc {
 
 						if v1 < v2 {
 							return true
@@ -1552,11 +1670,11 @@ func (_this *DBQueryNoSql[T]) OrderByFields(orderFields *atomicsql.DataOrderByFi
 				}
 				return false
 			})
-		_this.pRTM.models = _this.rtm_updateModelsFromDicts(&models)
+		_this.pRTM.SetModels( _this.rtm_updateModelsFromDicts( &models) )
 		return _this
 	} else {
 
-		if orderFields == nil || orderFields.data == nil {
+		if orderFields == nil || orderFields.Data == nil {
 			return _this
 		}
 
@@ -1577,18 +1695,18 @@ func (_this *DBQueryNoSql[T]) OrderAsc(field string) *DBQueryNoSql[T] {
 
 	if _this.pRTM != nil {
 
-		var models = _this.rtm_getModelsAsDicts(&_this.pRTM.models, []string{field})
+		var models = _this.rtm_getModelsAsDicts(_this.pRTM.GetModels(), []string{field})
 		sort.Slice(models,
 			func(i int, j int) bool {
-				var v1 = models[i].dict[field]
-				var v2 = models[j].dict[field]
+				var v1 = models[i].Dict[field]
+				var v2 = models[j].Dict[field]
 				return v1 < v2
 			})
-		_this.pRTM.models = _this.rtm_updateModelsFromDicts(&models)
+		_this.pRTM.SetModels( _this.rtm_updateModelsFromDicts(&models) )
 		return _this
 	} else {
 		
-		_this.sortCriteria[field] = 1
+		_this.sortCriteria[PREFIX_KEY+field] = 1
 		_this.findOptions.SetSort( _this.sortCriteria )
 	
 		return _this
@@ -1605,14 +1723,14 @@ func (_this *DBQueryNoSql[T]) OrderDesc(field string) *DBQueryNoSql[T] {
 
 	if _this.pRTM != nil {
 
-		var models = _this.rtm_getModelsAsDicts(&_this.pRTM.models, []string{field})
+		var models = _this.rtm_getModelsAsDicts( _this.pRTM.GetModels(), []string{field})
 		sort.Slice(models,
 			func(i int, j int) bool {
-				var v1 = models[i].dict[field]
-				var v2 = models[j].dict[field]
+				var v1 = models[i].Dict[field]
+				var v2 = models[j].Dict[field]
 				return v1 > v2
 			})
-		_this.pRTM.models = _this.rtm_updateModelsFromDicts(&models)
+		_this.pRTM.SetModels( _this.rtm_updateModelsFromDicts(&models) )
 		return _this
 	} else {
 
@@ -1627,7 +1745,7 @@ func (_this *DBQueryNoSql[T]) OrderDesc(field string) *DBQueryNoSql[T] {
 //	ex:
 //
 //	context.Table.Qry("").InsertRecord( model)
-func (_this *DBQueryNoSql[T]) InsertModel(model *T) (int64, error) {
+func (_this *DBQueryNoSql[T]) InsertModel(model *T) (interface{}, error) {
 
 	return _this.InsertRecord(model, false, nil)
 }
@@ -1637,7 +1755,7 @@ func (_this *DBQueryNoSql[T]) InsertModel(model *T) (int64, error) {
 //	ex:
 //
 //	context.Table.Qry("").InsertOrUpdateModel( record)
-func (_this *DBQueryNoSql[T]) InsertOrUpdateModel(data *T) (int64, error) {
+func (_this *DBQueryNoSql[T]) InsertOrUpdateModel(data *T) (interface{}, error) {
 
 	return _this.InsertOrUpdateRecord(data, false, nil)
 }
@@ -1649,13 +1767,15 @@ func (_this *DBQueryNoSql[T]) InsertOrUpdateModel(data *T) (int64, error) {
 //	context.Table.Qry("").UpdateModels( records)
 //
 // you can use fields to select only same fields for update. For insertion, this arg is ingnored
-func (_this *DBQueryNoSql[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *[]string) (int64, error) {
+func (_this *DBQueryNoSql[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fields *[]string) (interface{}, error) {
 
 	if _this.pRTM != nil {
-		if _this.pRTM.collection != nil {
+
+		var collection = _this.pRTM.GetCollection()
+		if collection != nil {
 
 			var models = []*T{model}
-			(*_this.pRTM.collection).InsertOrUpdateModels(models)
+			(*collection).InsertOrUpdateModels(models)
 			return 1, nil
 		}
 		return 1, nil
@@ -1665,10 +1785,11 @@ func (_this *DBQueryNoSql[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fie
 		return 0, nil
 	}
 
-	if (*model).GetID() == 0 {
+	if (*model).GetUID() == "" || (*model).GetUID() == "0" {
 
 		reflectData := reflect.ValueOf(model).Elem()
-		return _this._InsertRecordByReflectValue(_this.tableNameOrig, reflectData, bInsertID, fields)
+		var id, err = _this._InsertRecordByReflectValue(_this.tableNameOrig, reflectData, bInsertID, fields)		
+		return id, err
 	} else {
 
 		//var arr = []*T{}
@@ -1687,13 +1808,15 @@ func (_this *DBQueryNoSql[T]) InsertOrUpdateRecord(model *T, bInsertID bool, fie
 //	context.Table.Qry("").InsertRecord( record)
 //
 // you can use fields to select only same fields for update. For insertsion, this arg is ingnored
-func (_this *DBQueryNoSql[T]) InsertRecord(data *T, bInsertID bool, fields *[]string) (int64, error) {
+func (_this *DBQueryNoSql[T]) InsertRecord(data *T, bInsertID bool, fields *[]string) (interface{}, error) {
 
 	if _this.pRTM != nil {
-		if _this.pRTM.collection != nil {
+
+		var collection = _this.pRTM.GetCollection()
+		if collection != nil {
 
 			var models = []*T{data}
-			(*_this.pRTM.collection).InsertModels(models)
+			(*collection).InsertModels(models)
 			return 1, nil
 		}
 		return 1, nil
@@ -1702,13 +1825,39 @@ func (_this *DBQueryNoSql[T]) InsertRecord(data *T, bInsertID bool, fields *[]st
 	if data == nil {
 		return 0, nil
 	}
+
+	/*
 	var _, id, reflectData = _this._getNameAndID(data)
 	if id != 0 {
 		return id, fmt.Errorf("the model is already inserted. Detache it first")
 	}
 	//fldID.SetInt( 1 )
-
 	return _this._InsertRecordByReflectValue(_this.tableNameOrig, reflectData, bInsertID, fields)
+	*/
+	return _this._insertRecordByValue( data )
+}
+
+func (_this *DBQueryNoSql[T]) _insertRecordByValue(
+	 value *T ) (string, error) {
+
+	//if( &langTableName == nil ){}
+
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)	
+	
+	var insertResult, err = collection.InsertOne(context.Background(), value )
+	if( err != nil){
+		return "", err
+	}
+	var ID1 = insertResult.InsertedID;
+	
+	if( ID1 != nil ){
+		var UID  = ID1.(primitive.ObjectID).String();
+
+		//_this.setUIDRef( reflValue, UID );
+		return UID, nil	
+	}
+	//return 0insertResult.InsertedID, nil	
+	return "", nil	
 }
 
 // Insert models or Update all data in models list arg 'models'
@@ -1729,7 +1878,7 @@ func (_this *DBQueryNoSql[T]) InsertOrUpdateModels(models []*T) error {
 func (_this *DBQueryNoSql[T]) InsertOrUpdateRecords(models []*T, fields []string) error {
 
 	if _this.pRTM != nil {
-		Arr_AddRange(&_this.pRTM.models, &models)
+		Arr_AddRange( _this.pRTM.GetModels(), &models)
 		return nil
 	}
 
@@ -1805,9 +1954,10 @@ func (_this *DBQueryNoSql[T]) DeleteModels() error {
 
 	if _this.pRTM != nil {
 
-		if _this.pRTM.collection != nil {
+		var collection = _this.pRTM.GetCollection()
+		if collection != nil {
 
-			var ret = (*_this.pRTM.collection).DeleteModels(_this.pRTM.models)
+			var ret = (*collection).DeleteModels( *_this.pRTM.GetModels() )
 			if !ret {
 				return fmt.Errorf("elem not inserted")
 			}
@@ -1816,7 +1966,7 @@ func (_this *DBQueryNoSql[T]) DeleteModels() error {
 
 			var nameID = ""
 			var arrIDs = []any{}
-			for _, model := range _this.pRTM.models {
+			for _, model := range *_this.pRTM.GetModels() {
 
 				var name_ID, id, _ = _this._getNameAndID(model)
 				nameID = name_ID
@@ -1830,10 +1980,25 @@ func (_this *DBQueryNoSql[T]) DeleteModels() error {
 	}
 }
 
+func (_this *DBQueryNoSql[T]) getWhereFilter() bson.M {
+
+	return _this.filterCriteriaMap
+}
+func (_this *DBQueryNoSql[T]) getWhereFilterArr() bson.D {
+
+	return _this.filterCriteriaArr;
+}
+
+
 func (_this *DBQueryNoSql[T]) _deleteModels() error {
 
-	//TODO
-	var err error = nil
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)		
+	var filter     = _this.getWhereFilter()
+
+	var _, err = collection.DeleteMany( context.Background(), filter );
+	if( err == nil){
+		return nil
+	}
 
 	_this.checkMySqlError1( err)
 	return  err
@@ -1848,18 +2013,26 @@ func (_this *DBQueryNoSql[T]) DeleteModel(model *T) error {
 
 	if _this.pRTM != nil {
 
-		if _this.pRTM.collection != nil {
+		var collection = _this.pRTM.GetCollection()
+		if collection != nil {
 
-			var ret = (*_this.pRTM.collection).DeleteModels(_this.pRTM.models)
+			var ret = (*collection).DeleteModels( *_this.pRTM.GetModels())
 			if !ret {
 				return fmt.Errorf("elem not inserted")
 			}
 			return nil
 		} else {
 
-			//TODO
-			///var name_ID, id, _ = _this._getNameAndID(model)
-			///return _this.WhereEq(name_ID, id)._deleteModels()
+			var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)	
+			
+			//var filter = _this.getWhereFilter()
+			var filter1 = bson.M{"_id" : (*model).GetUID() }
+		
+			var _, err = collection.DeleteOne( context.Background(), filter1  );
+			if( err == nil){
+				return nil
+			}
+		
 		}
 	}
 
@@ -1894,12 +2067,19 @@ type TGetValueModel[V comparable] struct {
 func (_this *DBQueryNoSql[T]) GetCount() (int64, error) {
 
 	if _this.pRTM != nil {
-		return int64(len(_this.pRTM.models)), nil
+		return int64(len(*_this.pRTM.GetModels())), nil
 	}
 
 	
 	//TODO
-	var err error = nil
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)	
+			
+	//var filter   = _this.getWhereFilter()
+	var filter     = _this.getWhereFilter()
+	var counts, err = collection.CountDocuments( context.Background(), filter  );
+	if( err == nil){
+		return counts, nil
+	}
 
 	_this.checkMySqlError1( err)
 	return 0, err
@@ -1929,14 +2109,74 @@ func (_this *DBQueryNoSql[T]) GetDistinct1Count(field string) (int64, error) {
 func (_this *DBQueryNoSql[T]) GetDistinctCount(fields []string) (int64, error) {
 
 	if _this.pRTM != nil {
-		return int64(len(_this._getDistinctRTM(fields, _this.pRTM.models))), nil
+		return int64(len(_this._getDistinctRTM(fields, *_this.pRTM.GetModels() ))), nil
 	}
 
 	if fields == nil || len(fields) == 0 {
 		return 0, fmt.Errorf("arg fields is empty")
 	}
 
-	var err error = nil
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)	
+	var filter     = _this.getWhereFilterArr();
+
+	var aggregateMap  = bson.D{}
+	
+	for i:= 0; i < len(fields); i++{
+
+		aggregateMap = append(aggregateMap,  bson.E{ Key:fields[i], Value: "$"+fields[i] } )
+		//Arr_Append[bson.E]( &aggregateMap, bson.E{ Key:fields[i], Value: "$"+fields[i] } );
+	}
+	
+	var aggregateData = bson.D{ {Key:"_id", Value:aggregateMap}, {Key:"count", Value:bson.D{{Key:"$sum", Value:1}}  }}
+
+	var pipeline = bson.A{}
+	if( len(filter) > 0 ){
+
+		pipeline = bson.A{
+			bson.D{{Key:"$match", Value:filter }},
+			bson.D{{Key:"$group", Value: aggregateData}},
+		}
+	}else{
+		pipeline = bson.A{			
+			bson.D{{Key:"$group", Value: aggregateData}},
+		}
+	}
+	
+	cursor, err := collection.Aggregate(context.Background(), pipeline)
+	if err != nil {
+		// Tratează eroarea dacă apare
+		log.Fatal(err)
+	}
+	defer cursor.Close(context.Background())
+	
+	// Parcurge rezultatele agregării
+	//var result struct {
+	//	Count int `bson:"count"`
+	//}
+
+	var numOfDistinct int64 = 0;
+	for cursor.Next(context.Background()) {
+
+		numOfDistinct++;
+		/*
+		if err := cursor.Decode(&result); err != nil {
+			// Tratează eroarea dacă apare
+			log.Fatal(err)
+		}*/
+		// Afiseaza numarul total de documente agregate
+		//fmt.Println("Numărul total de documente agregate:", result.Count)
+	}
+	var bWasError = false;
+	if err := cursor.Err(); err != nil {
+		// Tratează eroarea dacă apare
+		//log.Fatal(err)
+		bWasError = true;
+		_this.checkMySqlError1( err)
+	}
+	if(!bWasError){
+		return numOfDistinct, nil
+	}
+
 	_this.checkMySqlError1( err)
 	return 0, err
 }
@@ -2045,7 +2285,8 @@ func (_this *DBQueryNoSql[T]) clearCachedSyntax() {
 	_this.tableInst.m_ctx.clearCachedSyntax()
 }
 
-func (_this *DBQueryNoSql[T]) _generateSelectSql(
+
+func (_this *DBQueryNoSql[T]) GenerateSelectSql(
 	selectFields string, ITEM string /*#BOOL*/, bLimit bool, select_sqlFields []string) string {
 		return "";
 }
@@ -2072,17 +2313,39 @@ func (_this *DBQueryNoSql[T]) checkMySqlError1( err error) {
 	_this.clearCachedSyntax()
 }
 
+//lint:ignore U1000 Ignoring unused parameter for demonstration purposes.
 func _SelectValue_queryNSql[T atomicsql.IGeneric_MODEL, V comparable](
 	_this *DBQueryNoSql[T], fnSelect func(x *T) V, refDbResult1 **mongo.Cursor) (*DBQueryNoSql[TGetValueModel[V]], error) {
 
+	
+	if( &_this == nil ){}
+	if( &fnSelect == nil ){}
+	if( &refDbResult1 == nil ){}
+	
+
 	return nil, nil
 }
+
+
+func readRecordSqlResult_ReadfieldValue[T atomicsql.IGeneric_MODEL](cursor *mongo.Cursor, model *T, fieldName string) (reflect.Value, error) {
+
+	s := reflect.ValueOf(model).Elem()
+	//numCols := s.NumField()
+	columns := make([]interface{}, 1)
+
+	field := s.FieldByName(fieldName)
+	columns[0] = field.Addr().Interface()
+
+	err := cursor.Decode( columns )
+	return field, err
+}
+
 
 func (_this *DBQueryNoSql[T]) singleDataS(dbResult *mongo.Cursor, fieldName string) (string, error) {
 
 	_this.clearCachedSyntax()
 	var model = new(T)
-	for dbResult.Next() {
+	for dbResult.Next(context.Background() ) {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
 		return value.String(), err
@@ -2103,7 +2366,7 @@ func (_this *DBQueryNoSql[T]) singleDataInt(dbResult *mongo.Cursor, fieldName st
 
 	_this.clearCachedSyntax()
 	var model = new(T)
-	for dbResult.Next() {
+	for dbResult.Next( context.Background() )  {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
 		return value.Int(), err
@@ -2115,7 +2378,7 @@ func (_this *DBQueryNoSql[T]) singleDataFloat(dbResult *mongo.Cursor, fieldName 
 
 	_this.clearCachedSyntax()
 	var model = new(T)
-	for dbResult.Next() {
+	for dbResult.Next( context.Background() )  {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
 		return value.Float(), err
@@ -2126,7 +2389,7 @@ func (_this *DBQueryNoSql[T]) singleDataBool(dbResult *mongo.Cursor, fieldName s
 
 	_this.clearCachedSyntax()
 	var model = new(T)
-	for dbResult.Next() {
+	for dbResult.Next( context.Background() )  {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(dbResult, model, fieldName)
 		return value.Bool(), err
@@ -2140,7 +2403,7 @@ func (_this *DBQueryNoSql[T]) _arrayOfSingleFieldString(sqlResult *mongo.Cursor,
 	_this.clearCachedSyntax()
 	var retList = []string{}
 	var model = new(T)
-	for sqlResult.Next() {
+	for sqlResult.Next( context.Background() ) {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
 		if err != nil {
@@ -2157,7 +2420,7 @@ func (_this *DBQueryNoSql[T]) _arrayOfSingleFieldInt(sqlResult *mongo.Cursor, fi
 	_this.clearCachedSyntax()
 	var retList = []int64{}
 	var model = new(T)
-	for sqlResult.Next() {
+	for sqlResult.Next( context.Background() ) {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
 		if err != nil {
@@ -2174,7 +2437,7 @@ func (_this *DBQueryNoSql[T]) _arrayOfSingleFieldFloat(sqlResult *mongo.Cursor, 
 	_this.clearCachedSyntax()
 	var retList = []float64{}
 	var model = new(T)
-	for sqlResult.Next() {
+	for sqlResult.Next( context.Background() ) {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
 		if err != nil {
@@ -2191,7 +2454,7 @@ func (_this *DBQueryNoSql[T]) _arrayOfSingleFieldBool(sqlResult *mongo.Cursor, f
 	_this.clearCachedSyntax()
 	var retList = []bool{}
 	var model = new(T)
-	for sqlResult.Next() {
+	for sqlResult.Next( context.Background() ) {
 
 		var value, err = readRecordSqlResult_ReadfieldValue(sqlResult, model, fieldName)
 		if err != nil {
@@ -2218,12 +2481,129 @@ func (_this *DBQueryNoSql[T]) generateFullModel() *T {
 // ---------------------------------------------------------------------------------------
 func (_this *DBQueryNoSql[T]) _InsertRecordByReflectValue(
 	langTableName string, reflValue reflect.Value,
-	bInsertID bool, fields *[]string) (int64, error) {
+	bInsertID bool, fields *[]string) (string, error) {
 
-		return 0, nil
+	if( &langTableName == nil ){}
+	if( &reflValue == nil ){}
+	if( &bInsertID == nil ){}
+	if( &fields == nil ){}
+
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)	
+
+	var elemDictionary = _this.getElemDictionary( &reflValue );
+	var insertResult, err = collection.InsertOne(context.Background(), elemDictionary )
+	if( err != nil){
+		return "", err
+	}
+	var ID1 = insertResult.InsertedID;
+	
+	if( ID1 != nil ){
+		var UID  = ID1.(primitive.ObjectID).String();
+
+		_this.setUIDRef( reflValue, UID );
+		return UID, nil	
+	}
+	//return 0insertResult.InsertedID, nil	
+	return "", nil	
 }
+
+func (_this *DBQueryNoSql[T]) setUIDRef( reflValue reflect.Value, uid string ){
+
+	fldT := reflValue.FieldByName(FLD_UID)	
+	fldT.SetString(uid)			
+}
+
+func (_this* DBQueryNoSql[T]) getElemDictionary( modelValue*reflect.Value) map[string]interface{} {
+
+	var elemData = make(map[string]interface{})
+
+	// Iterarea peste câmpurile structurii și adăugarea lor în map
+	for i := 0; i < modelValue.NumField(); i++ {
+
+		field := modelValue.Type().Field(i)
+		value := modelValue.Field(i).Interface()
+		elemData[field.Name] = value
+	}
+	return elemData
+}
+
+/*
+	for i := 0; i < reflValue.NumField(); i++ {
+
+		var fldVal = reflValue.Field(i)
+		var fldTT  = fldVal.Elem().Type()
+
+		var typeTName = fldTT.Name()
+
+		if typeTName == atomicsql.Generic_MODEL_Name ||
+			fldTT.Kind() == reflect.Pointer { //the foreignKey pointer should be excluded
+			continue
+		}
+		elem[ typeTName ] = fld;
+		
+	}
+	return retFields
+
+	_this.checkMySqlError(sqlQuery, err)
+	return 0, nil
+}
+
+func (_this* DBQueryNoSql[T]) insertModel_setField( modelValue*reflect.Value, fldName string, elem *bson.E) {
+
+	var reflctModel = modelValue                                  //reflect.ValueOf(*modelData)
+	var fieldInfo = reflctModel.FieldByName( fldName ) //isset()
+
+	
+	valSql := ""
+	fieldInfoTypeT := fieldInfo.Type()
+
+	if fieldInfoTypeT == reflect.TypeOf((*int16)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*int32)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*int64)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*int)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*int8)(nil)).Elem() {
+
+		(*elem)[fldName] = fieldInfo.Int()
+		
+	} else if fieldInfoTypeT == reflect.TypeOf((*bool)(nil)).Elem() {
+
+		var value = fieldInfo.Bool()
+		
+	} else if fieldInfoTypeT == reflect.TypeOf((*float32)(nil)).Elem() ||
+		fieldInfoTypeT == reflect.TypeOf((*float64)(nil)).Elem() {
+
+		valSql = fmt.Sprintf("%f", fieldInfo.Float())
+	} else if fieldInfoTypeT == reflect.TypeOf((*string)(nil)).Elem() {
+
+		valSql = _this._quote(fieldInfo.String(), columnTable)
+	} else if fieldInfoTypeT == reflect.TypeOf((*time.Time)(nil)).Elem() {
+
+		valSql = _this._quote(fieldInfo.Interface().(time.Time).Format(time.RFC3339Nano), columnTable)
+		if valSql == "'0001-01-01T00:00:00Z'" {
+			valSql = "CURRENT_TIMESTAMP"
+		}
+		//valSql = _this._quote(fieldInfo.String(), columnTable)
+	} else if fieldInfoTypeT == reflect.TypeOf((*uuid.UUID)(nil)).Elem() {
+
+		valSql = ""
+		//valSql = _this._quote( fieldInfo.Interface().(uuid.UUID).UUIDValue(), columnTable)
+		//valSql = _this._quote(fieldInfo.String(), columnTable)
+	} else if fieldInfoTypeT == reflect.TypeOf((*[]uint8)(nil)).Elem() {
+
+		var slice = fieldInfo.Bytes()
+		valSql = _this._quote(slice, columnTable)
+	} else {
+		//ceva nu e in ordine, ori e fk
+		valSql = ""
+
+	}
+}
+*/
 
 func _Aggregate_generateSql_NoSql[T atomicsql.IGeneric_MODEL, V atomicsql.IGeneric_MODEL](_this *DBQueryNoSql[T]) (string, []string) {
 
+	if( &_this == nil ){}
+
 	return "", nil
 }
+

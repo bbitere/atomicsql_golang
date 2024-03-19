@@ -55,7 +55,7 @@ type Vvalue IGeneric_MODEL
 // internal use
 
 type IDBQuery interface {
-	_generateSelectSql(selectFields string, ITEM string, bLimit bool, select_sqlFields []string) string
+	GenerateSelectSql(selectFields string, ITEM string, bLimit bool, select_sqlFields []string) string
 	GetTagID() string
 	IsRTM() bool
 	SetSubQueryString(key string, sqlQuery string)
@@ -530,7 +530,7 @@ func Aggregate[T IGeneric_MODEL, V IGeneric_MODEL](
 		query.m_SQL_ITEM_DEF = ctx.newSQL_ITEM(SQL_ITEM_DEF_Aggr)
 		//query.lamdaSelectNewRecord 	= _this.m_SQL_ITEM_DEF;
 
-		var sql, excludeFromGroupBy = _Aggregate_generateSql[T, V](_this, _this.m_SQL_ITEM_DEF)
+		var sql, excludeFromGroupBy = _Aggregate_generateSql[T, V](_this)
 		query.querySelectNewRecord_Text = sql
 		query.excludeLangFieldsFromGroupBy = excludeFromGroupBy
 		//query.tablePhpModelName    = tablePhpModelName;
@@ -1698,7 +1698,7 @@ func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[
 
 	if _this.pRTM != nil {
 
-		var fields = Util_FromMapKeysToArray(&orderFields.data)
+		var fields = Util_FromMapKeysToArray(&orderFields.Data)
 		var models = _this.rtm_getModelsAsDicts(&_this.pRTM.models, fields)
 
 		sort.Slice(models,
@@ -1707,10 +1707,10 @@ func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[
 				for itm := 0; itm < len(fields); itm++ {
 
 					var fieldName = fields[itm]
-					var order1 = orderFields.data[fieldName]
+					var order1 = orderFields.Data[fieldName]
 
-					var v1 = models[i].dict[fieldName]
-					var v2 = models[j].dict[fieldName]
+					var v1 = models[i].Dict[fieldName]
+					var v2 = models[j].Dict[fieldName]
 					if order1 == ESortField.Desc {
 
 						if v1 > v2 {
@@ -1729,13 +1729,13 @@ func (_this *DBQuery[T]) OrderByFields(orderFields *DataOrderByFields) *DBQuery[
 		return _this
 	} else {
 
-		if orderFields == nil || orderFields.data == nil {
+		if orderFields == nil || orderFields.Data == nil {
 			return _this
 		}
 
 		orderBy := ""
 
-		fields := orderFields.data
+		fields := orderFields.Data
 		for nameField, val := range fields {
 
 			if orderBy != "" {
@@ -1771,8 +1771,8 @@ func (_this *DBQuery[T]) OrderAsc(field string) *DBQuery[T] {
 		var models = _this.rtm_getModelsAsDicts(&_this.pRTM.models, []string{field})
 		sort.Slice(models,
 			func(i int, j int) bool {
-				var v1 = models[i].dict[field]
-				var v2 = models[j].dict[field]
+				var v1 = models[i].Dict[field]
+				var v2 = models[j].Dict[field]
 				return v1 < v2
 			})
 		_this.pRTM.models = _this.rtm_updateModelsFromDicts(&models)
@@ -1800,8 +1800,8 @@ func (_this *DBQuery[T]) OrderDesc(field string) *DBQuery[T] {
 		var models = _this.rtm_getModelsAsDicts(&_this.pRTM.models, []string{field})
 		sort.Slice(models,
 			func(i int, j int) bool {
-				var v1 = models[i].dict[field]
-				var v2 = models[j].dict[field]
+				var v1 = models[i].Dict[field]
+				var v2 = models[j].Dict[field]
 				return v1 > v2
 			})
 		_this.pRTM.models = _this.rtm_updateModelsFromDicts(&models)
@@ -2257,7 +2257,7 @@ func (_this *DBQuery[T]) CloneQry() (*DBQuery[T], error) {
 
 	var newQry = _this.cloneQuery_Empty();
 
-	var sqlQuery = _this._generateSelectSql( "", SQL_ITEM_DEF, true, nil)
+	var sqlQuery = _this.GenerateSelectSql( "", SQL_ITEM_DEF, true, nil)
 	newQry.clone_sqlText = sqlQuery;
 
 	return newQry, nil

@@ -59,7 +59,7 @@ func Test1_init() (*orm.DBContextNSql, string, error) {
 	}
 
 	Test_cleanUp(ctx)
-	return ctx, "initTest1", err
+	return ctx, "initTest1", nil
 }
 
 func Test_cleanUp(ctx *orm.DBContextNSql) {
@@ -247,6 +247,49 @@ func Test1_03(step int, bCheckName bool) (int, string, error) {
 
 	return 1, nameTest, nil
 }
+
+func Test1_04(step int, bCheckName bool) (int, string, error) {
+
+	var nameTest = "ORM: UpdateModel() and test the new UserRole inserted"
+
+	var newname = "Vasile"
+	//var RoleNameDefault = "default"
+	var UserMoney float64 = 100
+	var UserName string = "a"
+	//var UserName2	string =  "b";
+
+	ctx, _, err := Test1_init() // (orm.DBContextBase, error, string){
+	if ctx != nil {
+		defer ctx.Close()
+	}
+	if err != nil {
+		return 0, nameTest, err
+	}
+
+	var user = m.User{
+		UserName: UserName,
+		Money:    UserMoney,
+		UserRoleID: nil,
+	}
+	_, err = ctx.User.Qry("").InsertModel(&user)
+	if err != nil {
+		return 0, nameTest, err
+	}
+
+	var usrT *m.User
+	usrT, err = ctx.User.Qry("").WhereEq( ctx.User_.UserName, UserName ).
+								GetFirstModelRel(ctx.User_.UserRoleID.Def())
+	if usrT == nil || err != nil {
+		return 0, nameTest, err
+	}
+
+	if usrT.UserName != newname {
+		//field is not updated
+		return 0, nameTest, err
+	}
+	return 1, nameTest, nil
+}
+
 
 func Test1_05(step int, bCheckName bool) (int, string, error) {
 

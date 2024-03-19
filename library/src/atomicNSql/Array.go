@@ -112,6 +112,17 @@ func Util_FromMapToArray[T any](dict *map[string]T) []T {
 	return ret
 }
 
+func Utils_getMapCounter( dictMap map[string]interface{}) int {
+
+	var num = 0;
+	for _, elem := range(dictMap) {
+
+		num++;
+		if( &elem != nil ){}
+	}
+	return num;
+}
+
 // utility method: convert from map to array. (keys only)
 func Util_FromMapKeysToArray[T any](dict *map[string]T) []string {
 

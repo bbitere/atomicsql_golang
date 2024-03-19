@@ -20,14 +20,15 @@ import (
 	"reflect"
 
 	atomicsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-
-	atomicsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 )
 
 
 
 func (_this *DBQueryNoSql[T]) _RtmWhereEq( model *T, fieldName string, operands []any, field2 string, bNot bool) bool {
 
+	if( field2 == field2){}
+
+	
 	var valFld, _ = _this.getModel_FieldValueS( model, model, fieldName, false);
 
 	for i := 0; i < len(operands); i ++{
@@ -192,13 +193,13 @@ func (_this *DBQueryNoSql[T]) getModel_FieldValueS( modelT *T, modelV any, field
 		var fldV = reflectValV.FieldByName( fieldName );
 
 		
-		var fldTNullable = atomicsql._getNullableField( fldT );
+		var fldTNullable = atomicsql.GetNullableField( fldT );
 		if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
 			fldT = fldTNullable.Value
 		}
 
 		if( bDoSet){
-			var fldVNullable = atomicsql._getNullableField( fldV );
+			var fldVNullable = atomicsql.GetNullableField( fldV );
 			if( fldVNullable != nil /*&& fldVNullable.Valid.Bool()*/ ){
 				fldV = fldVNullable.Value
 
@@ -330,7 +331,7 @@ func (_this *DBQueryNoSql[T]) getModel_FieldValueAsArr( reflValueArrayModelsT re
 		//because modelT is *[]*T
 		//fldT = fldT.Elem().Elem();
 		
-		//var fldTNullable = _this._getNullableField( fldT );
+		//var fldTNullable = _this.GetNullableField( fldT );
 		//if( fldTNullable != nil && fldTNullable.Valid.Bool() ){
 		//	fldT = fldTNullable.Value
 		//}
@@ -423,7 +424,7 @@ func (_this *DBQueryNoSql[T]) getValueS( modelV any, fieldName string ) (string,
 
 		var fldV = reflectValV.FieldByName( fieldName );
 
-		var fldVNullable = _getNullableField( fldV );
+		var fldVNullable = atomicsql.GetNullableField( fldV );
 		if( fldVNullable != nil && fldVNullable.Valid.Bool() ){
 			fldV = fldVNullable.Value
 		}
@@ -473,7 +474,7 @@ func (_this *DBQueryNoSql[T]) getValueS( modelV any, fieldName string ) (string,
 
 func (_this *DBQueryNoSql[T]) rtm_getModelsAsDicts( models *[]*T, fields []string ) []*atomicsql.TModel[T] {
 
-	var arr = []*TModel[T]{}
+	var arr = []*atomicsql.TModel[T]{}
 
 	for iElem := 0; iElem < len(*models); iElem++ {
 		
@@ -486,22 +487,22 @@ func (_this *DBQueryNoSql[T]) rtm_getModelsAsDicts( models *[]*T, fields []strin
 			var valS, _ = _this.getModel_FieldValueS( model, model, fieldName, false);
 			dict[ fieldName ] = valS;
 		}
-		var elem = new (TModel[T]);
-		elem.model =  model;
-		elem.dict  = dict;
+		var elem = new (atomicsql.TModel[T]);
+		elem.Model = model;
+		elem.Dict  = dict;
 		Arr_Append( &arr, elem);
 	}
 	
 	return arr;
 }
 
-func (_this *DBQueryNoSql[T]) rtm_updateModelsFromDicts( models1 *[]*TModel[T] ) []*T {
+func (_this *DBQueryNoSql[T]) rtm_updateModelsFromDicts( models1 *[]*atomicsql.TModel[T] ) *[]*T {
 
 	var arr = []*T{}
 
 	for iElem := 0; iElem < len(*models1); iElem++ {
 
-		Arr_Append( &arr, (*models1)[iElem].model );
+		Arr_Append( &arr, (*models1)[iElem].Model );
 	}
-	return arr;
+	return &arr;
 }

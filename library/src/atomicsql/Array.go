@@ -188,5 +188,23 @@ func Null_Time(s time.Time ) sql.NullTime{
 }
 
 
+func Utils_getMapCounter( dictMap *map[string]interface{}) int {
 
+	var num = 0;
+	for _, elem := range(*dictMap) {
 
+		num++;
+		if( &elem != nil ){}
+	}
+	return num;
+}
+
+func Utils_existInListString(list []string, item string) bool {
+
+	for j := 0; j < len(list); j++ {
+		if list[j] == item {
+			return true
+		}
+	}
+	return false
+}

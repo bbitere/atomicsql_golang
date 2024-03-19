@@ -16,6 +16,8 @@ import (
 	//test1 "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 	test1_where "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where"
 
+	test1_where_nosql "github.com/bbitere/atomicsql_golang.git/tests/test1/src/test_where_nosql"
+
 	log "log"
 	"runtime/debug"
 	"strings"
@@ -36,6 +38,15 @@ func main() {
 	var counter = 0
 
 	defer logPanic();
+
+	Exec_test(test1_where_nosql.Test1_00, &counter)
+	Exec_test(test1_where_nosql.Test1_01, &counter)
+	Exec_test(test1_where_nosql.Test1_02, &counter)
+	Exec_test(test1_where_nosql.Test1_04, &counter)	
+	Exec_test(test1_where_nosql.Test1_05, &counter)
+	Exec_test(test1_where_nosql.Test1_03, &counter)
+
+	//--------------------------------------------------
 
 	Exec_test(test1_where.Test1_00, &counter)
 	Exec_test(test1_where.Test1_01, &counter)

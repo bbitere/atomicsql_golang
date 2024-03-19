@@ -2,5 +2,11 @@
     "explorer.compactFolders": false,
     "explorer.fileNesting.expand": true,
     "explorer.fileNesting.enabled": true,
-    "outline.icons": true
+    "outline.icons": true,
+	"go.lintTool": "golangci-lint",
+	"go.lintOnSave": "off",
+    "go.lintFlags": ["-D staticcheck"],
+    "go.vetOnSave": "off",
+    
+
 }

@@ -10,8 +10,8 @@ func Test1_GetConnectionString() atmsql.TConnectionString{
 
 	var connString = atmsql.TConnectionString{
 		Host:     "localhost",		
-		User:     "",
-		Password: "",
+		User:     "test1usr",
+		Password: "123456",
 		DbName:   "test1",
 		SqlLang:  atmsql.ESqlDialect.MongoDB,
 	}

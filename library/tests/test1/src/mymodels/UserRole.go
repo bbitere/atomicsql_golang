@@ -10,12 +10,12 @@ import (
 type UserRole struct /*atomicsql-table:"user_role"*/ {
 	orm.Generic_MODEL
 
-	ID             int32         `json:"ID,omitempty"`
-	IsActive       bool          `json:"isActive"`
-	RoleName       string        `json:"roleName"`
-	RoleStatusID   *Statusrole   `json:"-"`
-	Role_status_ID sql.NullInt32 `json:"role_status_ID"`
-	MyActive       bool          `json:"my_active"`
+	ID             int32         `bson:"-"`
+	IsActive       bool          `bson:"isActive"`
+	RoleName       string        `bson:"roleName"`
+	RoleStatusID   *Statusrole   `bson:"Statusrole"`
+	Role_status_ID sql.NullInt32 `bson:"-"`
+	MyActive       bool          `bson:"my_active"`
 }
 
 type Department struct /*atomicsql-table:"departm"*/ {

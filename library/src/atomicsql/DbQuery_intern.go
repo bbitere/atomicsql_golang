@@ -130,23 +130,23 @@ var ESortField = TESortField{
 }
 
 type DataOrderByFields struct {
-	data map[string]VESortField
+	Data map[string]VESortField
 }
 
 func (_this *DataOrderByFields) SetDictionary(fields_vals ...string) {
 
-	_this.data = make(map[string]VESortField)
+	_this.Data = make(map[string]VESortField)
 	for i := 0; i < len(fields_vals); i += 2 {
 
 		var key = fields_vals[i+0]
 		var val = fields_vals[1+0]
-		_this.data[key] = VESortField(val)
+		_this.Data[key] = VESortField(val)
 	}
 }
 
 func (_this DataOrderByFields) Constr(data map[string]VESortField) {
 
-	_this.data = data
+	_this.Data = data
 }
 
 func (_this *DBQuery[T]) _generateSqlSourceOfData() string {
@@ -162,7 +162,7 @@ func (_this *DBQuery[T]) _generateSqlSourceOfData() string {
 		//_this.querySelectNewRecord_Text != "" &&
 		//_this.lamdaSelectNewRecord != "" {
 
-		var sql = _this.parentQuery._generateSelectSql(
+		var sql = _this.parentQuery.GenerateSelectSql(
 			//_this.querySelectNewRecord_Text,
 			//_this.lamdaSelectNewRecord,
 			"", "",
@@ -179,7 +179,7 @@ func (_this *DBQuery[T]) _generateSqlSourceOfData() string {
 	}
 }
 
-func (_this *DBQuery[T]) _generateSelectSql(
+func (_this *DBQuery[T]) GenerateSelectSql(
 	selectFields string, ITEM string /*#BOOL*/, bLimit bool, select_sqlFields []string) string {
 
 	var table = _this._generateSqlSourceOfData()
@@ -258,7 +258,7 @@ func (_this *DBQuery[T]) _Select_getSqlFields(
 }
 
 // is a test to exclude the sum and min max from aggregator
-func _Select_getSqlFields1[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T],
+func _Select_getSqlFields1[T IGeneric_MODEL, V IGeneric_MODEL](
 	selectSqlFields map[string]string,
 	excludedFields []string) []string {
 
@@ -281,10 +281,10 @@ func _Select_getSqlFields1[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T]
 		var fldT, has = selectSqlFields[fldTT.Name]
 		if has {
 
-			if _existInListString(excludedFields, fldT) {
+			if Utils_existInListString(excludedFields, fldT) {
 				continue
 			}
-			if _existInListString(excludedFields, fldT) {
+			if Utils_existInListString(excludedFields, fldT) {
 				continue
 			}
 			Arr_Append(&retFields, fldT)
@@ -292,17 +292,9 @@ func _Select_getSqlFields1[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T]
 	}
 	return retFields
 }
-func _existInListString(list []string, item string) bool {
 
-	for j := 0; j < len(list); j++ {
-		if list[j] == item {
-			return true
-		}
-	}
-	return false
-}
 
-func _Aggregate_generateSql[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T], ITEM string) (string, []string) {
+func _Aggregate_generateSql[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T]) (string, []string) {
 
 	var ctx = _this.tableInst.m_ctx
 	var varT T
@@ -948,6 +940,8 @@ func (_this *DBSqlJoinCollection) addJoin(
 	/*#String*/ FK_id string /*#String*/, FK string /*#String*/, itemFK string,
 	/*#String*/ out_tableDBName *string) (string, error) {
 
+	if( itemTxt == ""){}
+
 	var table = ""
 	var tableFK = ""
 	var ID = DEF_TABLE_COLUMN_ID
@@ -1302,7 +1296,7 @@ func (_this *DBQuery[T]) _insertRecord_setFieldGeneral(
 		valSql = fmt.Sprintf("ARRAY[ %s ]::%s[]", valSql1, typeSqlElement)
 	} else {
 		{
-			fldTNullable = _getNullableField(fieldInfo)
+			fldTNullable = GetNullableField(fieldInfo)
 			if fldTNullable != nil {
 				{
 					var bIsNotNull = fldTNullable.Valid.Bool()
@@ -1353,7 +1347,7 @@ type _TNullableField struct {
 	Value reflect.Value
 }
 
-func _getNullableField(
+func GetNullableField(
 	fieldInfo reflect.Value) *_TNullableField {
 
 	var fieldInfoTypeT = fieldInfo.Type()
@@ -1448,6 +1442,7 @@ func (_this *DBQuery[T]) _insertRecord_setField_ForeignKey(
 ) (string, error, int64) {
 
 	//var valSql = valFK_ID//fmt.Sprintf("%d", fieldInfo.Int())
+	if( &fieldInfo == nil){}
 
 	var valSql = ""
 	var retGetID = _this.getModel_ForeignKey_getID(ctx, columnTable, reflctModel)
@@ -1675,7 +1670,7 @@ func (_this *DBQuery[T]) _deleteRecords() string {
 
 func (_this *DBQuery[T]) _getCount( /*#String*/ fldTName string) string {
 
-	var sqlQuery = _this._generateSelectSql(fmt.Sprintf("COUNT(*) AS %s", fldTName), SQL_ITEM_DEF, true, nil)
+	var sqlQuery = _this.GenerateSelectSql(fmt.Sprintf("COUNT(*) AS %s", fldTName), SQL_ITEM_DEF, true, nil)
 
 	return sqlQuery
 }
@@ -2002,7 +1997,7 @@ func (_this *DBQuery[T]) _getFK_IDs(elem any, lang2TableRelation_ID string) int6
 		var fldT = reflectVal.FieldByName(lang2TableRelation_ID)
 		if fldT.IsValid() {
 
-			var fldTNullable = _getNullableField(fldT)
+			var fldTNullable = GetNullableField(fldT)
 			if fldTNullable != nil {
 				return fldTNullable.Value.Int()
 			}
@@ -2121,7 +2116,7 @@ func (_this *DBQuery[T]) _updateBulkRecords(records *[]*T, fields *[]string) err
 					}
 				}
 				var fldT = reflectModel.FieldByName(columnDef.LangName)
-				var fldTNullable = _getNullableField(fldT)
+				var fldTNullable = GetNullableField(fldT)
 				if fldTNullable != nil && fldTNullable.Valid.Bool() {
 					fldT = fldTNullable.Value
 
@@ -2197,7 +2192,7 @@ func (_this *DBQuery[T]) getModel_FieldValue(model *T, fieldName string /*, colu
 
 		var fldT = reflectVal.FieldByName(fieldName)
 
-		var fldTNullable = _getNullableField(fldT)
+		var fldTNullable = GetNullableField(fldT)
 		if fldTNullable != nil && fldTNullable.Valid.Bool() {
 			fldT = fldTNullable.Value
 		}
@@ -2517,7 +2512,7 @@ func (_this *DBQuery[T]) getSqlNativeMethod(compiledQry TCompiledSqlQuery, ptr_f
 				if fieldExpr1 != fieldSqlExpr {
 
 					//exclude columns groupby list
-					if !_existInListString(excludedLangFields, fldTLangName) {
+					if !Utils_existInListString(excludedLangFields, fldTLangName) {
 						selectAggregatedFields[fldTLangName] = fieldExpr1
 					}
 				}

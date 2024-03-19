@@ -151,6 +151,9 @@ func (_this *DBTable[T]) getLangName() string {
 
 /*#PHPARG=[ T ];*/
 func (_this *DBTable[T]) getModel2( /*#HashMap<Object>*/ args map[string]any) *T {
+
+	if( &args == nil){}
+	
 	return new(T) //new_CLASS1( $this->m_PhpMODEL, $args);
 }
 

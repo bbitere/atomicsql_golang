@@ -14,7 +14,7 @@ import (
 )
 
 
-func StaticOpenDB_NoSql( ctxBase *DBContextBaseNoSql, connStr *atomicsql.TConnectionString)  error {
+func StaticOpenDB_NoSql( ctxBase *DBContextBaseNoSql, connStr atomicsql.TConnectionString)  error {
 
 	var dataSource = ""
 	//var sqlLang = ""
@@ -70,7 +70,9 @@ func StaticOpenDB_NoSql( ctxBase *DBContextBaseNoSql, connStr *atomicsql.TConnec
 	}
 
 	ctxBase.ClientDB = client;
-	ctxBase.ConnectionString = *connStr
+	ctxBase.Database = client.Database( connStr.DbName );
+	
+	ctxBase.ConnectionString = connStr
 	ctxBase.Dialect = connStr.SqlLang
 	
 	return err

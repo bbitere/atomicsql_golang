@@ -53,6 +53,7 @@ type DBContextBaseNoSql struct {
 
 	//ConnString TConnectionString
 	ClientDB *mongo.Client;
+	Database *mongo.Database;
 }
 
 // the constructor

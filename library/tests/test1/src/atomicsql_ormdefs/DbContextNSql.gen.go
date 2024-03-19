@@ -853,7 +853,7 @@ import (
 			//_this.DBContextBase.Db.Close()
 		}
 		func (_this *DBContextNSql) GetSqlName() string{
-			return "postgres";
+			return "mongo";
 		}
 		
 		
