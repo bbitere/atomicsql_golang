@@ -5,17 +5,19 @@ import (
 	"database/sql"
 
 	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserRole struct /*atomicsql-table:"user_role"*/ {
-	orm.Generic_MODEL
+	orm.Generic_MODEL  `bson:"-"`
 
-	ID             int32         `bson:"-"`
-	IsActive       bool          `bson:"isActive"`
-	RoleName       string        `bson:"roleName"`
-	RoleStatusID   *Statusrole   `bson:"Statusrole"`
-	Role_status_ID sql.NullInt32 `bson:"-"`
-	MyActive       bool          `bson:"my_active"`
+	NoSqlID			primitive.ObjectID		`bson:"_id,omitempty"`
+	ID             	int32         `bson:"-"`
+	IsActive       	bool          `bson:"isActive"`
+	RoleName       	string        `bson:"roleName"`
+	RoleStatusID   	*Statusrole   `bson:"Statusrole"`
+	Role_status_ID 	sql.NullInt32 `bson:"-"`
+	MyActive       	bool          `bson:"my_active"`
 }
 
 type Department struct /*atomicsql-table:"departm"*/ {

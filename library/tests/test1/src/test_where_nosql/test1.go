@@ -11,6 +11,7 @@ import (
 	m "github.com/bbitere/atomicsql_golang.git/tests/test1/src/mymodels"
 )
 
+const NULL_ID string = "000000000000000000000000"
 /*
 type TConstr struct {
 	PathImg string
@@ -224,9 +225,9 @@ func Test1_03(step int, bCheckName bool) (int, string, error) {
 		UserRoleID: &m.UserRole{RoleName: RoleNameAdmin, IsActive: true,
 			RoleStatusID: &m.Statusrole{StatusName: atmsql.Null_String(StatusNameActive)}}}
 	_, err = ctx.User.Qry("").InsertModel(&user2)
-	if err != nil || user2.ID == 0 ||
-		user2.UserRoleID.ID == 0 ||
-		user2.UserRoleID.RoleStatusID.ID == 0 {
+	if err != nil || user2.UID == NULL_ID || user2.UID == ""||
+		user2.UserRoleID== nil ||
+		user2.UserRoleID.RoleStatusID == nil {
 		return 0, nameTest, err
 	}
 
@@ -267,6 +268,16 @@ func Test1_04(step int, bCheckName bool) (int, string, error) {
 	}
 
 	var user = m.User{
+		UserName: newname,
+		Money:    UserMoney,
+		UserRoleID: nil,
+	}
+	_, err = ctx.User.Qry("").InsertModel(&user)
+	if err != nil {
+		return 0, nameTest, err
+	}
+
+	user = m.User{
 		UserName: UserName,
 		Money:    UserMoney,
 		UserRoleID: nil,
@@ -283,7 +294,7 @@ func Test1_04(step int, bCheckName bool) (int, string, error) {
 		return 0, nameTest, err
 	}
 
-	if usrT.UserName != newname {
+	if usrT.UserName != UserName {
 		//field is not updated
 		return 0, nameTest, err
 	}
@@ -326,7 +337,7 @@ func Test1_05(step int, bCheckName bool) (int, string, error) {
 	if usrT == nil || err != nil {
 		return 0, nameTest, err
 	}
-
+	
 	usrT.UserName = newname
 	usrT.UserRoleID.ID = 0 // sa il inserez din nou in tablea
 
