@@ -208,3 +208,7 @@ func Utils_existInListString(list []string, item string) bool {
 	}
 	return false
 }
+
+func Util_Nop(){
+	
+}

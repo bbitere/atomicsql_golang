@@ -20,6 +20,8 @@ import (
 	//primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+const FLD_privateID = "NoSqlID" //all models of nosql should have this field
+const FLD_Generic_MODEL = "Generic_MODEL"//this is the base
 const FLD_UID = "UID"
 const NULL_FK_ID = 0
 
@@ -1404,6 +1406,9 @@ func (_this *DBQueryNoSql[T]) getRows( bOnlyFirst bool) ([]*T, error) {
 		if err := cursor.Decode(elem); err != nil {
 			return nil, err
 		}
+
+		_this.updateUIDRef( reflect.ValueOf( elem ) );
+		
 		Arr_Append( &rows, elem);
 	}
 
@@ -1851,9 +1856,9 @@ func (_this *DBQueryNoSql[T]) _insertRecordByValue(
 	var ID1 = insertResult.InsertedID;
 	
 	if( ID1 != nil ){
-		var UID  = ID1.(primitive.ObjectID).String();
+		var UID  = _this.getHexObjectID( ID1 )
 
-		//_this.setUIDRef( reflValue, UID );
+		_this.setUIDRef( reflect.ValueOf(value), UID );
 		return UID, nil	
 	}
 	//return 0insertResult.InsertedID, nil	
@@ -1920,7 +1925,19 @@ func (_this *DBQueryNoSql[T]) InsertOrUpdateRecords(models []*T, fields []string
 //	context.Table.Qry("").UpdateModels( records)
 func (_this *DBQueryNoSql[T]) UpdateModels(records *[]*T) error {
 
-	//TODO
+	
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)	
+
+	for _, model := range(*records) {
+
+		var updateData = bson.M{ "$set": model }
+
+		var id = (*model).GetUID();
+		var _, err = collection.UpdateByID( context.Background(), id, updateData );
+		if( err != nil){
+			return err;
+		}
+	}
 	return nil
 }
 
@@ -1934,9 +1951,19 @@ func (_this *DBQueryNoSql[T]) UpdateModel(model *T) error {
 	var arr = []*T{}
 	Arr_Append(&arr, model)
 
-	//return _this._updateBulkRecords(&arr, nil)
-	//TODO
-	return nil
+	//var updateData = bson.M{ "$set": bson.M{ "userName": "vasile"} }
+	var updateData = bson.M{ "$set": model }
+
+	var collection = _this.tableInst.m_ctx.Database.Collection(_this.tableName)	
+	var id = (*model).GetUID();
+
+	//var filters options.ArrayFilters = options.ArrayFilters{ Filters: []interface{} {"UserName"} };
+	var obj, err1 = primitive.ObjectIDFromHex(id);
+	if( err1 != nil){
+		
+	}
+	var _, err = collection.UpdateByID( context.Background(), obj, updateData, options.Update() );
+	return err;		
 }
 
 // Delete all models selected in curent sequence (using Where(), WhereEq(), WhereNotEq() ) from database or collection.
@@ -2498,7 +2525,7 @@ func (_this *DBQueryNoSql[T]) _InsertRecordByReflectValue(
 	var ID1 = insertResult.InsertedID;
 	
 	if( ID1 != nil ){
-		var UID  = ID1.(primitive.ObjectID).String();
+		var UID  =  _this.getHexObjectID( ID1 )
 
 		_this.setUIDRef( reflValue, UID );
 		return UID, nil	
@@ -2509,8 +2536,40 @@ func (_this *DBQueryNoSql[T]) _InsertRecordByReflectValue(
 
 func (_this *DBQueryNoSql[T]) setUIDRef( reflValue reflect.Value, uid string ){
 
-	fldT := reflValue.FieldByName(FLD_UID)	
-	fldT.SetString(uid)			
+	var fldBasePtr = reflValue.Elem();
+	//var fldBaseModel = fldBasePtr.FieldByName(FLD_Generic_MODEL)	
+
+ 	var fldT = fldBasePtr.FieldByName(FLD_UID)
+	if( fldT.IsValid() && fldT.CanSet() ){
+		fldT.SetString(uid)			
+	}
+}
+
+func (_this *DBQueryNoSql[T]) updateUIDRef( reflValue reflect.Value ){
+
+	var fldBasePtr = reflValue.Elem();
+	//fldBasePtr.FieldByName(FLD_Generic_MODEL)	
+
+	var fldT = fldBasePtr.FieldByName(FLD_UID)
+	if( fldT.IsValid() && fldT.CanSet() ){
+
+		var reflect_ID = fldBasePtr.FieldByName(FLD_privateID);
+		var uid = _this.getHexObjectID( reflect_ID.Interface() )
+		fldT.SetString(uid)			
+	}
+}
+
+func (_this *DBQueryNoSql[T]) getHexObjectID( object_id interface{} )string{
+
+	return object_id.(primitive.ObjectID).Hex()
+}
+func (_this *DBQueryNoSql[T]) toObjectID( hex_id string ) primitive.ObjectID{
+
+	var obj, err = primitive.ObjectIDFromHex(hex_id);
+	if( err != nil){
+		atomicsql.Util_Nop();
+	}
+	return obj;
 }
 
 func (_this* DBQueryNoSql[T]) getElemDictionary( modelValue*reflect.Value) map[string]interface{} {

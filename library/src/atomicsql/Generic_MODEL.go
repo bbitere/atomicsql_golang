@@ -3,8 +3,6 @@ package atomicsql
 import (
 	"reflect"
 	"strconv"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 /*
@@ -31,14 +29,17 @@ Field int `json:"-,"`
 type IGeneric_MODEL interface {
 	GetID() int64
 	GetUID() string
+	//GetObjectID() interface{}
 	//SetID(int64)
 
 	//ReadRowSqlResult(sqlResult sql.Rows)
 }
 
+//if change name: check also the constant FLD_Generic_MODEL
 type Generic_MODEL struct {
 	UID string					`bson:"-"`
-	_id primitive.ObjectID		`bson:"_id"`
+	//NoSqlID				primitive.ObjectID		`bson:"_id,omitempty"`  /*omitempty else wont update it at insertOne */
+	
 	flagIsSaved bool			`bson:"-"`
 }
 
@@ -56,6 +57,11 @@ func (_this Generic_MODEL) GetUID() string {
 	}
 	return strconv.Itoa(int(_this.GetID()))
 }
+/*
+func (_this Generic_MODEL) GetObjectID() interface{} {
+	
+		return _this.NoSqlID;
+}*/
 
 
 /*

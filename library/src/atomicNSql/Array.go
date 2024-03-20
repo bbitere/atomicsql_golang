@@ -211,3 +211,6 @@ func Util_cloneMap(originalMap map[string]interface{}) map[string]interface{}{
 	return originalMap;
 }
 
+func Util_Nop(){
+	
+}
