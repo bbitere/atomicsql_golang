@@ -14,17 +14,18 @@ import (
 type User struct /*atomicsql-table:"user"*/ {
 
 	orm.Generic_MODEL  `bson:"-"`
-	NoSqlID				primitive.ObjectID				`bson:"_id,omitempty"`
+	NoSqlID				primitive.ObjectID				`json:"-"             bson:"_id,omitempty"`
 	
-	ID                  int                           	`bson:"-"`
-	UserName            string                        	`bson:"userName"`
-	UUID                string                        	`bson:"UUID"`
-	UserPsw             string                        	`bson:"user_psw"`
-	UserRoleID          *UserRole                     	`bson:"userRole_ID"`
-	UserRole_ID         sql.NullInt32                 	`bson:"-"`
+
+	ID                  int                           	`json:"ID"            bson:"-"`
+	UserName            string                        	`json:"userName"      bson:"userName"`
+	UUID                string                        	`json:"UUID"          bson:"UUID"`
+	UserPsw             string                        	`json:"user_psw"      bson:"user_psw"`
+	UserRoleID          *UserRole                     	`json:"-"             bson:"userRole_ID"`
+	UserRole_ID         sql.NullInt32                 	`json:"userRole_ID"   bson:"-"`
 	/*Misc1               []uint8                       `json:"misc1"`*/
-	Time1               sql.NullTime                  	`bson:"time1"`
-	Money               float64                       	`bson:"money"`
+	Time1               sql.NullTime                  	`json:"time1"         bson:"time1"`
+	Money               float64                       	`json:"money"         bson:"money"`
 
 
 }

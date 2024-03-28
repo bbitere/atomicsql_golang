@@ -32,6 +32,44 @@ func (_this *DBContext) LoadCompiledQuery(){
 			IsQryS:			false,
 			SubQueries: 	nil,			
 		},
+		"ns-asdax-W1": 
+		{
+			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND ({#@userRole_ID.roleName@#}={@@RoleNameDefault@@} OR {#@userRole_ID@#} IS NULL),
+			CompiledQuery:`eyNAbW9uZXlAI30+PXtAQFVzZXJNb25leUBAfSBBTkQgKHsjQHVzZXJSb2xlX0lELnJvbGVOYW1lQCN9PXtAQFJvbGVOYW1lRGVmYXVsdEBAfSBPUiB7I0B1c2VyUm9sZV9JREAjfSBJUyBOVUxMKQ==`,			
+			SelectSqlFields: nil,			
+			OrderedFields:	[]string{ "Money", "UserRoleID", "UserRoleID.RoleName" },
+			Fields:			map[string]string{
+             "Money":"{#@money@#}",
+             "UserRoleID":"{#@userRole_ID@#}",
+             "UserRoleID.RoleName":"{#@userRole_ID.roleName@#}",
+            },
+			ExternVar:			[]orm.TExternVar{
+								{VarName:"UserMoney", VarType:"float64"},
+									{VarName:"RoleNameDefault", VarType:"string"}, 
+								},
+			Tag: 			"asdax",
+			File: 			"src\\test_where\\test1.go",
+			StartOff: 		20,
+			EndOff:  		149,
+			Hash:  			"ZnVuYyh4ICptLlVzZXIpIGJvb2wgew0KCQlyZXR1cm4geC5Nb25leSA+PSBVc2VyTW9uZXkgJiYNCgkJCSh4LlVzZXJSb2xlSUQuUm9sZU5hbWUgPT0gUm9sZU5hbWVEZWZhdWx0IHx8IHguVXNlclJvbGVJRCA9PSBuaWwpDQoJ",
+			IsQryS:			false,
+			SubQueries: 	nil,
+			NosqlQuery:		map[string]any{
+				
+				map[string]any{
+					">=", "@#Money#@", "@@UserMoney@@"
+				},
+				map[string]any{
+				"||"
+					map[string]any{
+						"==", "@#UserRoleID.RoleName#@", "@@RoleNameDefault@@"
+					},
+					map[string]any{
+						"==", "@#UserRoleID#@", nil
+					}
+				}
+			}	
+		},
 		"tst1074-W1": 
 		{
 			//CompiledQuery: {#@userName@#}={@@UserName@@},

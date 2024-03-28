@@ -3,9 +3,9 @@
     "explorer.fileNesting.expand": true,
     "explorer.fileNesting.enabled": true,
     "outline.icons": true,
-	"go.lintTool": "golangci-lint",
-	"go.lintOnSave": "off",
-    "go.lintFlags": ["-D staticcheck"],
+	"go.lintTool": "golint",
+    "go.lintFlags": ["-disable", "SA1004"],
+
     "go.vetOnSave": "off",
     
 

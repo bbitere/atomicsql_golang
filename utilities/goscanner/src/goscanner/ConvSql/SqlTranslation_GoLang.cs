@@ -213,6 +213,12 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
     var queryTag  = $"{queryTag1}-{lambda.SubTag}";
 
     var querySubQueries = "nil";
+    var queryNosqlQuery = "nil";
+    if( lambda.NoSqlCode != null )
+    {
+        queryNosqlQuery = lambda.NoSqlCode;
+    }
+
     if( lambda.SubQueries != null )
     {
         var queries = "";
@@ -270,7 +276,8 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
 		Hash:  			""{queryHash}"",
         IsQryS:	        ""{queryIsQryS}"",
 
-        SubQueries:    {querySubQueries},
+        SubQueries:     {querySubQueries},
+        NosqlQuery: 	{queryNosqlQuery},
 	}},
         ";
 
@@ -291,7 +298,8 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
                 { "queryFileEndOffset", ""+queryFileEndOffset},
                 { "queryHash", queryHash},
                 { "queryIsQryS", queryIsQryS?"true":"false"},                
-                { "querySubQueries", querySubQueries}
+                { "querySubQueries", querySubQueries},
+                { "queryNosqlQuery", queryNosqlQuery},                
                 
             }
             );
@@ -332,12 +340,12 @@ internal static string GoLang_ExportSqlFile( Options options, string allQueries)
 }
 
 public static string UseTemplate(string original, ConvCommon.TemplateItem template, Dictionary<string, string>dict)
-    { 
-        if( template == null) {
-            return original;
-        }
-        return template.ConvertTemplate( dict);
+{ 
+    if( template == null) {
+        return original;
     }
+    return template.ConvertTemplate( dict);
+}
 
 }
 

@@ -10,6 +10,8 @@ import (
 	log "log"
 	reflect "reflect"
 	"sort"
+	"time"
+	"unsafe"
 
 	atomicsql "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
 
@@ -83,7 +85,7 @@ type DBQueryNoSql[T atomicsql.IGeneric_MODEL] struct {
 	filterCriteriaMap  bson.M
 	filterCriteriaArr  bson.D
 	//clone_sqlText  string
-	whereTxt       string
+	//whereTxt       string
 	//limit          string
 	//orderBy        string
 	last_error     string //= "";
@@ -129,7 +131,7 @@ func (_this *DBQueryNoSql[T]) Constr(tableInst *DBTableNoSql[T]) *DBQueryNoSql[T
 
 	//_this.m_SQL_ITEM_DEF = SQL_ITEM_DEF
 	//_this.m_queryAND = nil
-	_this.whereTxt = ""
+	//_this.whereTxt = ""
 	//_this.limit = ""
 	//_this.orderBy = ""
 	//_this.withForeignKeys = nil
@@ -192,7 +194,7 @@ func (_this *DBQueryNoSql[T]) cloneQuery() *DBQueryNoSql[T] {
 
 	//newQuery.clone_sqlText = _this.clone_sqlText
 	//newQuery.m_queryAND = _this.m_queryAND
-	newQuery.whereTxt = _this.whereTxt
+	//newQuery.whereTxt = _this.whereTxt
 
 	newQuery.sortCriteria = Util_cloneMap( _this.sortCriteria );
 	newQuery.findOptions = options.MergeFindOptions( newQuery.findOptions );
@@ -226,7 +228,7 @@ func (_this *DBQueryNoSql[T]) cloneQuery_GenModel() *DBQueryNoSql[atomicsql.IGen
 	//}
 
 	//newQuery.clone_sqlText = _this.clone_sqlText
-	newQuery.whereTxt = _this.whereTxt
+	//newQuery.whereTxt = _this.whereTxt
 	newQuery.sortCriteria = Util_cloneMap( _this.sortCriteria );
 	newQuery.findOptions = options.MergeFindOptions( _this.findOptions );
 	
@@ -1160,11 +1162,245 @@ func (_this *DBQueryNoSql[T]) _whereSubQuery(
 
 	} else {
 
-		//TODO
-	}
+		if fnWhereS != nil {
+			//not suppoorted
+		} 
+		if fnWhere != nil {		
+			_this.subTag = tag_Where + _this.tableInst.m_ctx.getSubTag()
+		}
 
+		//var querySql *DBQueryNoSql[T] = nil
+		//if fnWhereS != nil {
+		//	querySql = _this._whereGenericS(fnWhereS) //"($opText1) AND ($opText2)" );
+		//} else
+		if fnWhere != nil {
+			_this._whereGeneric(fnWhere) //"($opText1) AND ($opText2)" );
+		}
+	}
 	return _this
 }
+
+func (_this *DBQueryNoSql[T]) _whereGeneric(fnWhere func(x *T) bool) {
+
+	var ctx = _this.tableInst.m_ctx
+	//foreach( SQL_WHERE_QUERIES as file =>sqlQueries )
+	var sqlQueries = ctx.CompiledSqlQueries
+
+	var fullTag = _this.myTag + "-" + _this.subTag
+	var query, hasQuery = sqlQueries[fullTag]
+	if hasQuery {
+
+		var filter = _this.getFilterFromNativeMethod(query, unsafe.Pointer(&fnWhere))
+		_this.filterCriteriaArr = filter;
+
+
+		//var ret = (new(DBSqlQuery[T])).Constr(sql) //"(opText1) AND (opText2)" );
+		//ret.fnWhere = fnWhere
+
+		//if _this.m_queryAND == nil {
+		//
+		//	_this.m_queryAND = (new(DBSqlQuery[T])).Constr("") //"(opText1) AND (opText2)" );
+		//	_this.m_queryAND.m_op = "AND"
+		//	_this.m_queryAND.m_listOperands = []*DBSqlQuery[T]{}
+		//}
+
+		//array_push(&_this.m_queryAND.m_listOperands, ret)
+
+		//return ret
+		return;
+	}
+	log.Printf("DBQuery::where() not found signature, tag: %s! Recompile the project, to regenerate schema", fullTag)	
+}
+
+func (_this *DBQueryNoSql[T]) getFilterFromNativeMethod(
+	compiledQry atomicsql.TCompiledSqlQuery, 
+	ptr_fnWhere unsafe.Pointer, 
+	) bson.D{
+
+	var statics = _this._extractStaticVarFromFunc(ptr_fnWhere, compiledQry.ExternVar)
+
+	//var orderedFields 	= compiledQry.OrderedFields;
+	//var fields 			= compiledQry.Fields
+	//var sql 			= compiledQry.CompiledQuery
+
+	
+	var dictStatics = make( map[string] any)
+	for staticKey, staticVal := range statics {
+
+		var keyWord = atomicsql.START_STATIC + staticKey + atomicsql.END_STATIC;
+		dictStatics[ keyWord ] = staticVal;		
+	}
+
+	return _this.createWhereFilter( dictStatics, compiledQry.NosqlQuery, compiledQry )
+}
+
+func (_this *DBQueryNoSql[T]) createWhereFilter( 
+	dictStatics  map[string]any, 
+	dictNoSqlDef []any,
+	compiledQry  atomicsql.TCompiledSqlQuery ) bson.D {
+
+	var filterCriteria bson.D
+
+	for i := 0; i < len(dictNoSqlDef); i++ {
+
+		if( len(dictNoSqlDef) == 3 ){
+			var Operator 	= dictNoSqlDef[0].(string);
+			var Key 		= dictNoSqlDef[1].(string);
+			var Val 		= dictNoSqlDef[2].(string);
+
+			var obj = _this._getElem(Operator, Val, dictStatics, compiledQry );
+			var filter1 = bson.E{Key:Key, Value:obj};
+			filterCriteria = append( filterCriteria, filter1 );
+		}
+	}
+
+	return filterCriteria;
+}
+func (_this *DBQueryNoSql[T]) _getElem(
+	operatorCmp string, Val any,	
+	dictStatics  map[string]any, 	
+	compiledQry  atomicsql.TCompiledSqlQuery ) bson.D{
+
+	if( Val == nil){
+
+		var filter1    = bson.D{ {Key: operatorCmp, Value: nil} }
+		return filter1;
+	}
+
+	switch  Val.(type) {
+
+		case []any:
+			var ret = _this.createWhereFilter( dictStatics, Val.([]any), compiledQry );
+			//filterCriteria[ Key ] = ret;
+
+			var filter1    = bson.D{ {Key: operatorCmp, Value:ret} }
+			return filter1;	
+		case string:{
+
+			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(string)} }
+			return filter1;	
+		}
+		case int:{
+			
+			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(int)} }
+			return filter1;	
+		}
+		case float64:{
+			
+			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(float64)} }
+			return filter1;	
+		}
+		case time.Time:{
+			
+			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(time.Time)} }
+			return filter1;	
+		}
+		default:{
+
+		}
+	}	
+	return nil;			
+}
+
+func (_this *DBQueryNoSql[T]) _extractStaticVarFromFunc( 
+	ptr_fnWhere unsafe.Pointer,
+	externalVarsSignature []atomicsql.TExternVar) map[string]any {
+
+	var dictVar = map[string]any{}
+
+	type TT1 struct {
+		f   *uintptr
+		i1  int
+		i2  int
+		i3  int
+		i4  int
+		i5  int
+		i6  int
+		i7  int
+		i8  int
+		i9  int
+		i10 int
+		i11 int
+		i12 int
+	}
+
+	type TT struct {
+		f *TT1
+	}
+	type TTP *TT
+
+	var ptr = TTP(ptr_fnWhere)
+	var off = 0
+
+	for i := 0; i < len(externalVarsSignature); i++ {
+
+		var varType = externalVarsSignature[i].VarType
+		var bValid = false
+		var idx = 0
+		var val any = nil
+
+		switch off {
+		case 0:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i1, varType)
+			}
+		case 1:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i2, varType)
+			}
+		case 2:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i3, varType)
+			}
+		case 3:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i4, varType)
+			}
+		case 4:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i5, varType)
+			}
+		case 5:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i6, varType)
+			}
+		case 6:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i7, varType)
+			}
+		case 7:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i8, varType)
+			}
+		case 8:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i9, varType)
+			}
+		case 9:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i10, varType)
+			}
+		case 10:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i11, varType)
+			}
+		case 11:
+			{
+				bValid, idx, val = atomicsql.Toany(&ptr.f.i12, varType)
+			}
+		}
+
+		off += idx
+		if bValid {
+
+			//arrays.Append( &arr, val )
+			dictVar[externalVarsSignature[i].VarName] = val
+		}
+	}
+
+	return dictVar
+}
+
 
 // Return a slice of models from sequence.
 //

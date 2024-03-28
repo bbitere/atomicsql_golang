@@ -46,6 +46,8 @@ func main() {
 	Exec_test(test1_where_nosql.Test1_05, &counter)
 	Exec_test(test1_where_nosql.Test1_03, &counter)
 
+	Exec_test(test1_where_nosql.Test1_08, &counter)
+
 	//--------------------------------------------------
 
 	Exec_test(test1_where.Test1_00, &counter)
@@ -107,6 +109,9 @@ func printResults() {
 
 func printTest(codeSucceded int, testName string, err error, idx int) {
 
+	if(err != nil){
+
+	}
 	testsResult.Totals++
 
 	//colorRed := "\033[31m"

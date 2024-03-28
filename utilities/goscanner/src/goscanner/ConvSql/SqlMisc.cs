@@ -104,6 +104,8 @@ namespace goscanner.ConvSql
             }
         public ParserRuleContext TagCtx;
         public string lambdaVariable;
+
+        public string NoSqlCode { get; set; } = null;
         public string SqlCode{ get; set; } = "";
         public Dictionary<string,string> Select_SqlFields = null;
 
