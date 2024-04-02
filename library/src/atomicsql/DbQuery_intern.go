@@ -2236,7 +2236,7 @@ type TFuncStatic struct {
 	varValue any
 }
 
-func toany(val *int, typeVar string) (bool, int, any) {
+func Toany(val *int, typeVar string) (bool, int, any) {
 
 	var sizeInt = unsafe.Sizeof(val)
 	var cellInt64 = 1 //consider 64 bits
@@ -2332,51 +2332,51 @@ func (_this *DBQuery[T]) _extractStaticVarFromFunc(
 		switch off {
 		case 0:
 			{
-				bValid, idx, val = toany(&ptr.f.i1, varType)
+				bValid, idx, val = Toany(&ptr.f.i1, varType)
 			}
 		case 1:
 			{
-				bValid, idx, val = toany(&ptr.f.i2, varType)
+				bValid, idx, val = Toany(&ptr.f.i2, varType)
 			}
 		case 2:
 			{
-				bValid, idx, val = toany(&ptr.f.i3, varType)
+				bValid, idx, val = Toany(&ptr.f.i3, varType)
 			}
 		case 3:
 			{
-				bValid, idx, val = toany(&ptr.f.i4, varType)
+				bValid, idx, val = Toany(&ptr.f.i4, varType)
 			}
 		case 4:
 			{
-				bValid, idx, val = toany(&ptr.f.i5, varType)
+				bValid, idx, val = Toany(&ptr.f.i5, varType)
 			}
 		case 5:
 			{
-				bValid, idx, val = toany(&ptr.f.i6, varType)
+				bValid, idx, val = Toany(&ptr.f.i6, varType)
 			}
 		case 6:
 			{
-				bValid, idx, val = toany(&ptr.f.i7, varType)
+				bValid, idx, val = Toany(&ptr.f.i7, varType)
 			}
 		case 7:
 			{
-				bValid, idx, val = toany(&ptr.f.i8, varType)
+				bValid, idx, val = Toany(&ptr.f.i8, varType)
 			}
 		case 8:
 			{
-				bValid, idx, val = toany(&ptr.f.i9, varType)
+				bValid, idx, val = Toany(&ptr.f.i9, varType)
 			}
 		case 9:
 			{
-				bValid, idx, val = toany(&ptr.f.i10, varType)
+				bValid, idx, val = Toany(&ptr.f.i10, varType)
 			}
 		case 10:
 			{
-				bValid, idx, val = toany(&ptr.f.i11, varType)
+				bValid, idx, val = Toany(&ptr.f.i11, varType)
 			}
 		case 11:
 			{
-				bValid, idx, val = toany(&ptr.f.i12, varType)
+				bValid, idx, val = Toany(&ptr.f.i12, varType)
 			}
 		}
 

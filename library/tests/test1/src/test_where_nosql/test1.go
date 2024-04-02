@@ -411,8 +411,11 @@ func Test1_08(step int, bCheckName bool) (int, string, error) {
 	if err != nil {
 		return 0, nameTest, err
 	}
+	if( len(users1) != 2 ){
+		return 0, nameTest, err
+	}
 
-	usersCount, err := ctx.User.Qry("tst1074").Where(func(x *m.User) bool {
+	usersCount, err := ctx.User.Qry("ns-tst1074").Where(func(x *m.User) bool {
 		return x.UserName == UserName
 	}).GetCount()
 	if err != nil {

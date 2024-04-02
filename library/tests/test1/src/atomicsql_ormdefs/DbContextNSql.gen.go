@@ -824,7 +824,7 @@ import (
 			
 			_, err := _this.DBContextBaseNoSql.Constr( dbBase.Dialect, sqlSchemaDef, _this)
 			
-			//_this.LoadCompiledQuery();
+			_this.LoadCompiledQuery();
 			
 			return _this, err
 		}

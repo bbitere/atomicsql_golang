@@ -10,6 +10,7 @@ import (
 	log "log"
 	reflect "reflect"
 	"sort"
+	"strings"
 	"time"
 	"unsafe"
 
@@ -36,6 +37,8 @@ const tag_SelectValue = "V"
 const tag_SelectValues = "X"
 
 const PREFIX_KEY = "_id.";
+
+const TAG_BSON = "bson";//all fields have prefix "bson:"
 
 // --------------------------------------------------------------------------------------------------------
 
@@ -82,8 +85,8 @@ type DBQueryNoSql[T atomicsql.IGeneric_MODEL] struct {
 
 	fnNewInstance func(bFull bool) any // create a new model
 
-	filterCriteriaMap  bson.M
-	filterCriteriaArr  bson.D
+	//filterCriteriaMap  bson.M
+	filterCriteriaArr  []bson.M
 	//clone_sqlText  string
 	//whereTxt       string
 	//limit          string
@@ -1000,14 +1003,15 @@ func (_this *DBQueryNoSql[T]) WhereEq(field string, operand any) *DBQueryNoSql[T
 
 	//var field1 = PREFIX_KEY + field;
 	var field1 = field;
-	if( _this.filterCriteriaMap == nil){
+	if( _this.filterCriteriaArr == nil){
 
-		_this.filterCriteriaMap = bson.M{ field1: operand };
-		_this.filterCriteriaArr = []bson.E{  { Key:field1, Value: bson.E{Key:"$eq", Value:operand}} };
+		//_this.filterCriteriaMap = bson.M{ field1: operand };
+		_this.filterCriteriaArr = []bson.M{  { field1: operand } };
+		//_this.filterCriteriaArr = []bson.M{  { field1: bson.E{Key:"$eq", Value:operand}} };
 	}else{
 
-		_this.filterCriteriaMap[ field1 ] = operand;
-		_this.filterCriteriaArr = append( _this.filterCriteriaArr, bson.E{ Key:field1, Value: bson.E{Key:"$eq", Value:operand}} );
+		//_this.filterCriteriaMap[ field1 ] = operand;
+		_this.filterCriteriaArr = append( _this.filterCriteriaArr, bson.M{ field1: operand } );
 	}
 	
 	//TODO
@@ -1215,7 +1219,7 @@ func (_this *DBQueryNoSql[T]) _whereGeneric(fnWhere func(x *T) bool) {
 func (_this *DBQueryNoSql[T]) getFilterFromNativeMethod(
 	compiledQry atomicsql.TCompiledSqlQuery, 
 	ptr_fnWhere unsafe.Pointer, 
-	) bson.D{
+	) []bson.M{
 
 	var statics = _this._extractStaticVarFromFunc(ptr_fnWhere, compiledQry.ExternVar)
 
@@ -1231,68 +1235,211 @@ func (_this *DBQueryNoSql[T]) getFilterFromNativeMethod(
 		dictStatics[ keyWord ] = staticVal;		
 	}
 
-	return _this.createWhereFilter( dictStatics, compiledQry.NosqlQuery, compiledQry )
+	return _this.createWhereFilter( compiledQry.NosqlQuery, dictStatics, compiledQry )
+}
+
+func (_this *DBQueryNoSql[T]) extractSqlNameFromTag(tag reflect.StructTag) string{
+
+	var bsonLabel = tag.Get(TAG_BSON);
+	return bsonLabel;
+}
+
+func (_this *DBQueryNoSql[T]) recurentFieldNameOfStructT( reflTypeT reflect.Type, index int, arrFieldName []string) string{
+
+	var field, has = reflTypeT.FieldByName( arrFieldName[index] );
+	if( has ){
+
+		var sqlFieldName = _this.extractSqlNameFromTag( field.Tag );
+
+		if( index + 1 < len(arrFieldName) ){
+
+			var fkType = field.Type.Elem();
+			var fldName = _this.recurentFieldNameOfStructT( fkType, index + 1, arrFieldName);
+			if( fldName == ""){
+				return "";
+			}
+			return sqlFieldName + "." + fldName;
+		}else{
+			return sqlFieldName;
+		}
+	}
+	return "";
+}
+func (_this *DBQueryNoSql[T]) getFieldNameOfStructT(fieldName string) string{
+
+	var key1, found = strings.CutPrefix( fieldName, "@#");
+	if( found ){
+		var fieldName, found2 = strings.CutSuffix( key1, "#@");
+		if( found2 ){
+
+			var structT = new (T);
+			var reflTypeT =  reflect.TypeOf( *structT );
+
+			var arrFieldName = strings.Split( fieldName, ".");
+			return _this.recurentFieldNameOfStructT( reflTypeT, 0, arrFieldName );
+		}
+	}
+	return fieldName;
+}
+
+func (_this *DBQueryNoSql[T]) elemWhereFilter( 
+	itemArr []any,
+	dictStatics  map[string]any, 	
+	compiledQry  atomicsql.TCompiledSqlQuery ) bson.M {
+		
+	if( len(itemArr) == 3 ){
+		var Operator 	= itemArr[0].(string);
+
+		var mongodbOperatorName = "--";
+		switch Operator {
+			case "||":{
+				
+				mongodbOperatorName = "$or";
+			}
+			case "&&":{
+				mongodbOperatorName = "$and";		
+			}
+			case "==":{
+				mongodbOperatorName = "";		
+			}
+			case "!=":{
+				mongodbOperatorName = "$ne";
+			}
+			case ">=":{
+				mongodbOperatorName = "$gte";		
+			}
+			case "<=":{
+				mongodbOperatorName = "$lte";		
+			}
+			case ">":{
+				mongodbOperatorName = "$gt";		
+			}
+			case "<":{
+				mongodbOperatorName = "$lt";		
+			}
+			case "in":{
+				mongodbOperatorName = "$in";		
+			}			
+		}
+		if( mongodbOperatorName == "--"){
+			return nil;
+		}
+
+		if( Operator == "||" || 
+		    Operator == "&&"){
+
+			var obj1     	= _this._getElem(mongodbOperatorName, itemArr[1], dictStatics, compiledQry );
+			var obj2     	= _this._getElem(mongodbOperatorName, itemArr[2], dictStatics, compiledQry );
+			var filterReturn 	= bson.M{ mongodbOperatorName: []bson.M{ obj1, obj2} };
+			return filterReturn;	
+		}else{
+		
+			var Key 		= itemArr[1].(string);
+			var Val 		= itemArr[2];
+
+			var fieldName 	= _this.getFieldNameOfStructT(Key);			
+
+			
+			if( mongodbOperatorName == ""){
+
+				var obj     	= _this._getElem(fieldName, Val, dictStatics, compiledQry );
+				return obj;
+			}else{		
+				var obj     	= _this._getElem(mongodbOperatorName, Val, dictStatics, compiledQry );	
+				var filterReturn 	= bson.M{ fieldName: obj};
+				return filterReturn;		
+			}
+		}
+	}
+	return nil;
 }
 
 func (_this *DBQueryNoSql[T]) createWhereFilter( 
-	dictStatics  map[string]any, 
-	dictNoSqlDef []any,
-	compiledQry  atomicsql.TCompiledSqlQuery ) bson.D {
+	queryNoSqlDef []any,
+	dictStatics  map[string]any, 	
+	compiledQry  atomicsql.TCompiledSqlQuery ) []bson.M {
 
-	var filterCriteria bson.D
+	var filterCriteria []bson.M
 
-	for i := 0; i < len(dictNoSqlDef); i++ {
+	for i := 0; i < len(queryNoSqlDef); i++ {
 
-		if( len(dictNoSqlDef) == 3 ){
-			var Operator 	= dictNoSqlDef[0].(string);
-			var Key 		= dictNoSqlDef[1].(string);
-			var Val 		= dictNoSqlDef[2].(string);
+		var item = queryNoSqlDef[i];
 
-			var obj = _this._getElem(Operator, Val, dictStatics, compiledQry );
-			var filter1 = bson.E{Key:Key, Value:obj};
-			filterCriteria = append( filterCriteria, filter1 );
+		switch  item.(type) {
+
+			case []any:	{
+
+				var itemArr = item.([]any); 
+				var filter1 = _this.elemWhereFilter( itemArr, dictStatics, compiledQry );
+				
+				filterCriteria = append( filterCriteria, filter1 );
+				
+				break;
+			}
+			default: {
+				//var filter1 = bson.M{Key: item};
+				//filterCriteria = append( filterCriteria, filter1 );
+
+				break;
+			}
 		}
 	}
 
 	return filterCriteria;
 }
 func (_this *DBQueryNoSql[T]) _getElem(
-	operatorCmp string, Val any,	
+	mongodbOperatorName string, Val any,	
 	dictStatics  map[string]any, 	
-	compiledQry  atomicsql.TCompiledSqlQuery ) bson.D{
+	compiledQry  atomicsql.TCompiledSqlQuery ) bson.M{
 
 	if( Val == nil){
 
-		var filter1    = bson.D{ {Key: operatorCmp, Value: nil} }
+		var filter1    = bson.M{  mongodbOperatorName: nil }
 		return filter1;
 	}
 
 	switch  Val.(type) {
 
 		case []any:
-			var ret = _this.createWhereFilter( dictStatics, Val.([]any), compiledQry );
-			//filterCriteria[ Key ] = ret;
+		{
+			var elem = _this.elemWhereFilter(  Val.([]any), dictStatics, compiledQry );
+			if( elem != nil){
+				
+				return elem;
+			}else{
 
-			var filter1    = bson.D{ {Key: operatorCmp, Value:ret} }
-			return filter1;	
+			
+				var ret = _this.createWhereFilter( Val.([]any), dictStatics, compiledQry );
+				var filter1    = bson.M{ mongodbOperatorName:ret};
+				return filter1;
+			}
+		}	
 		case string:{
 
-			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(string)} }
-			return filter1;	
+			var sVal = Val.(string);
+			dictElem, has := dictStatics[ "{"+sVal+"}" ];
+			if( has ){
+
+				var filter1    = bson.M{ mongodbOperatorName: dictElem }
+				return filter1;	
+			}else{
+				var filter1    = bson.M{ mongodbOperatorName: Val.(string) }
+				return filter1;	
+			}
 		}
 		case int:{
 			
-			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(int)} }
+			var filter1    = bson.M{ mongodbOperatorName: Val.(int) }
 			return filter1;	
 		}
 		case float64:{
 			
-			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(float64)} }
+			var filter1    = bson.M{ mongodbOperatorName: Val.(float64) }
 			return filter1;	
 		}
 		case time.Time:{
 			
-			var filter1    = bson.D{ {Key: operatorCmp, Value:Val.(time.Time)} }
+			var filter1    = bson.M{ mongodbOperatorName:Val.(time.Time) }
 			return filter1;	
 		}
 		default:{
@@ -1681,7 +1828,7 @@ func (_this *DBQueryNoSql[T]) GetModelsRel(structDefs ...*TDefIncludeRelation) (
 		return *_this.pRTM.GetModels(), _this.errorRet
 	}
 
-	var rows, err = _this.getRows(true);
+	var rows, err = _this.getRows(false);
 	if( err == nil){
 		return rows, err
 	}
@@ -2243,11 +2390,24 @@ func (_this *DBQueryNoSql[T]) DeleteModels() error {
 	}
 }
 
-func (_this *DBQueryNoSql[T]) getWhereFilter() bson.M {
+func (_this *DBQueryNoSql[T]) getWhereFilter() bson.M  {
 
-	return _this.filterCriteriaMap
+	if( _this.filterCriteriaArr == nil){
+		return nil;
+	}
+	var dict = bson.M{}
+
+	for i := 0; i < len(_this.filterCriteriaArr); i++{
+
+		var elem = _this.filterCriteriaArr[i];
+
+		for it, value := range(elem) {
+			dict[ it ] = value;
+		}
+	}
+	return dict;
 }
-func (_this *DBQueryNoSql[T]) getWhereFilterArr() bson.D {
+func (_this *DBQueryNoSql[T]) getWhereFilterArr() []bson.M {
 
 	return _this.filterCriteriaArr;
 }

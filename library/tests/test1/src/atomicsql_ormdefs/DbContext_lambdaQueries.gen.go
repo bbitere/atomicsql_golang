@@ -1,10 +1,10 @@
-
 /* this class is generated automatically by compiler AtomicSql goscanner.exe exporter*/
 
 package atomicsql_sqldefs
-	import (
-		orm	 "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-	)
+
+import (
+	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+)
 
 func (_this *DBContext) LoadCompiledQuery(){
 
@@ -31,7 +31,7 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Hash:  			"ZnVuYyh4ICptLlVzZXIpIGJvb2wgew0KCQlyZXR1cm4geC5Nb25leSA+PSBVc2VyTW9uZXkgJiYNCgkJCSh4LlVzZXJSb2xlSUQuUm9sZU5hbWUgPT0gUm9sZU5hbWVEZWZhdWx0IHx8IHguVXNlclJvbGVJRCA9PSBuaWwpDQoJ",
 			IsQryS:			false,
 			SubQueries: 	nil,			
-		},
+		},		 
 		"ns-asdax-W1": 
 		{
 			//CompiledQuery: {#@money@#}>={@@UserMoney@@} AND ({#@userRole_ID.roleName@#}={@@RoleNameDefault@@} OR {#@userRole_ID@#} IS NULL),
@@ -54,21 +54,21 @@ func (_this *DBContext) LoadCompiledQuery(){
 			Hash:  			"ZnVuYyh4ICptLlVzZXIpIGJvb2wgew0KCQlyZXR1cm4geC5Nb25leSA+PSBVc2VyTW9uZXkgJiYNCgkJCSh4LlVzZXJSb2xlSUQuUm9sZU5hbWUgPT0gUm9sZU5hbWVEZWZhdWx0IHx8IHguVXNlclJvbGVJRCA9PSBuaWwpDQoJ",
 			IsQryS:			false,
 			SubQueries: 	nil,
-			NosqlQuery:		map[string]any{
+			NosqlQuery:		[]any{
 				
-				map[string]any{
-					">=", "@#Money#@", "@@UserMoney@@"
+				[]any{
+					">=", "@#Money#@", "@@UserMoney@@",
 				},
-				map[string]any{
-				"||"
-					map[string]any{
-						"==", "@#UserRoleID.RoleName#@", "@@RoleNameDefault@@"
+				[]any{
+					"||",
+					[]any{
+						"==", "@#UserRoleID.RoleName#@", "@@RoleNameDefault@@",
 					},
-					map[string]any{
-						"==", "@#UserRoleID#@", nil
-					}
-				}
-			}	
+					[]any{
+						"==", "@#UserRoleID#@", nil,
+					},
+				},
+			},	
 		},
 		"tst1074-W1": 
 		{

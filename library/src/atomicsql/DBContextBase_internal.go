@@ -130,6 +130,7 @@ type TCompiledSqlQuery struct {
 	Hash       string // for checking the integrity
 	IsQryS     bool
 	SubQueries []TSubQuery
+	NosqlQuery [] any
 }
 
 
