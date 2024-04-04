@@ -191,7 +191,7 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
     }
 
     
-    var querySql = lambda.SqlCode;
+    var querySql = ( !lambda.IsNoSql )?lambda.SqlCode : "";
     var querySelectSqlFields = generateMap( lambda.Select_SqlFields);
     var queryFields = generateMap( exportedDictFields);
     var querySqlBase64 = Utils1.Base64Encode( querySql );
@@ -214,7 +214,7 @@ internal string GoLang_ExportQuery( TLambdaCode lambda, Sql_ConfigTranslation op
 
     var querySubQueries = "nil";
     var queryNosqlQuery = "nil";
-    if( lambda.NoSqlCode != null )
+    if( lambda.NoSqlCode != null && lambda.IsNoSql )
     {
         queryNosqlQuery = lambda.NoSqlCode;
     }

@@ -282,12 +282,26 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
     int errorNumb = 100;
     public string getTextSQLError(string errorMsg, ParserRuleContext ctx)
     {
-        if( m_LambdaCode != null )
+        if( m_LambdaCode != null && !m_LambdaCode.IsNoSql)
         {
             Log_Error( ctx.Start, errorMsg);
 
             errorNumb++;
             return $"<error {errorNumb}>";
+        }
+        return "";
+    }
+    public string getTextNoSQLError(string errorMsg, ParserRuleContext ctx)
+    {
+        if( m_LambdaCode != null && m_LambdaCode.IsNoSql)
+        {
+            //if( false)
+            {
+                Log_Error( ctx.Start, errorMsg);
+
+                errorNumb++;
+                return $"<error {errorNumb}>";
+            }
         }
         return "";
     }
@@ -657,24 +671,27 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         return this.Options.ConvertSql.SqlDialect.QuoteField(fieldName);;
     }
 
-    private ( bool, string) Select_generateItem( 
+    private ( bool, string, TNoSqlCode) Select_generateItem( 
         Dictionary<string,string> select_Fields,
         string selectFieldName,  
         ParserRuleContext expression, 
         ParserRuleContext context, TypeInfo selectType )
     {
         var sqlText = "";
+        TNoSqlCode noSQLText = null;
         TypeInfo typeExpr = null;
         var operandDOT = "";
         if( Expressions.TryGetValue( expression, out var exprElem) ) 
         {
             sqlText = exprElem.SQLText;
+            noSQLText = exprElem.NoSQLCode;
             operandDOT =  exprElem.Text;
             typeExpr = exprElem.Type;
         }else
         if( Operands.TryGetValue( expression, out var operand) ) 
         {
             sqlText = operand.SQLText;
+            noSQLText = exprElem.NoSQLCode;
             operandDOT =  operand.Text;
             typeExpr = operand.Type;
         }
@@ -682,6 +699,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         if( PrimaryExpressions.TryGetValue( expression, out var primaryExpr) ) 
         {
             sqlText = primaryExpr.SQLText;
+            noSQLText = exprElem.NoSQLCode;
             operandDOT =  primaryExpr.Text;
             typeExpr = primaryExpr.Type;
         } 
@@ -689,6 +707,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         if( UnaryExpressions.TryGetValue( expression, out var unaryExpr) ) 
         {
             sqlText = unaryExpr.SQLText;
+            noSQLText = exprElem.NoSQLCode;
             operandDOT =  unaryExpr.Text;
             typeExpr = unaryExpr.Type;
         }
@@ -710,6 +729,8 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                         if( fld.IsPromoted && fld.Description.Contains( OrmDef.Atomicsql_CopyModel1) )
                         {
                             var arr = new List<string>();   
+                            var arrNoSql = new List<TNoSqlCode>();   
+
                             foreach( var f1 in fldStructInfo.Fields) 
                             {
                                 if( f1.Name == OrmDef.Generic_MODEL)
@@ -725,30 +746,32 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                                 //arr.Add( $" {ITM}.{sqlField} as {f1.Name}" );
                                 select_Fields[f1.Name] = sqlFieldIdentif;
                                 arr.Add( $"{sqlFieldIdentif} AS {_quoteFld(f1.Name)}" );
+
+                                arrNoSql.Add( new TNoSqlSelectField( f1.Name, sqlFieldIdentif ) );
                             }
-                            return (true, String.Join(", ", arr ));
+                            return (true, String.Join(", ", arr ), new TNoSqlCode("select", arrNoSql.ToList() ) );
                         }else
                         {
-                            return (false, getTextSQLError($"copy entire struct not allowed {genType2.Name})", context));
+                            return (false, getTextSQLError($"copy entire struct not allowed {genType2.Name})", context), null);
                         }
                     }else
                     {
                         select_Fields[selectFieldName] = sqlText;
-                        return (true, $"{sqlText} AS {_quoteFld(selectFieldName)}");                        
+                        return (true, $"{sqlText} AS {_quoteFld(selectFieldName)}", noSQLText);
                     }
                 }else
                 {
-                    return (false, getTextSQLError($"internal error 1254 )", context));
+                    return (false, getTextSQLError($"internal error 1254 )", context), null );
                 }
             }else
             {
                 select_Fields[selectFieldName] = sqlText;
-                return (true, $" {sqlText} AS {_quoteFld(selectFieldName)}" );
+                return (true, $" {sqlText} AS {_quoteFld(selectFieldName)}", noSQLText );
                 //return (false, getTextSQLError($"internal error 347 (not found struct {genType.Name})", context));
             }
         }else
         {
-            return (false, getTextSQLError("internal error 345 (expressio not found)", context) );
+            return (false, getTextSQLError("internal error 345 (expressio not found)", context), null );
         }
     }
 

@@ -102,15 +102,22 @@ public partial class SqlConvert
             {
                 OperandKind = EOperandKind.Operator;
                 //"==", "!=", "<", "<=", ">=", "&&", "||"
+                TNoSqlCode nosqlCode = leftOperandExpression.NoSQLCode;
                 var sqlText =  leftOperandExpression.SQLText;
+
                 if( _binaryOP == "&&")
+                {
+                    nosqlCode = new TNoSqlCode("&&", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     sqlText =  $"{leftOperandExpression.SQLText} AND {rightOperandExpression.SQLText}";
-                else
+                } else
                 if( _binaryOP == "||")
+                {
+                    nosqlCode = new TNoSqlCode("||", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     sqlText =  $"{leftOperandExpression.SQLText} OR {rightOperandExpression.SQLText}";
-                else
+                } else
                 if( _binaryOP == "==")
                 {
+                    nosqlCode = new TNoSqlCode("==", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     if( leftOperandExpression.SQLText == sql_NULL &&  rightOperandExpression.SQLText == sql_NULL)
                     {
                         sqlText =  $"{sql_NULL} = {sql_NULL}";
@@ -130,6 +137,7 @@ public partial class SqlConvert
                 else
                 if( _binaryOP == "!=")
                 {
+                    nosqlCode = new TNoSqlCode("!=", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     if( leftOperandExpression.SQLText == sql_NULL &&  rightOperandExpression.SQLText == sql_NULL)
                     {
                         sqlText =  $"{sql_NULL} <> {sql_NULL}";
@@ -148,24 +156,36 @@ public partial class SqlConvert
                 }
                 else
                 if( _binaryOP == "<")
+                {
+                    nosqlCode = new TNoSqlCode("<", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     sqlText =  $"{leftOperandExpression.SQLText}<{rightOperandExpression.SQLText}";
-                else     
+                } else     
                 if( _binaryOP == "<=")
+                {
+                    nosqlCode = new TNoSqlCode("<=", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     sqlText =  $"{leftOperandExpression.SQLText}<={rightOperandExpression.SQLText}";
-                else   
+                } else   
                 if( _binaryOP == ">")
+                {
+                    nosqlCode = new TNoSqlCode(">", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     sqlText =  $"{leftOperandExpression.SQLText}>{rightOperandExpression.SQLText}";
-                else  
+                } else  
                 if( _binaryOP == ">=")
+                {
+                    nosqlCode = new TNoSqlCode(">=", leftOperandExpression.NoSQLCode, rightOperandExpression.NoSQLCode);
                     sqlText =  $"{leftOperandExpression.SQLText}>={rightOperandExpression.SQLText}";
+                }
                 else
+                {
                     sqlText = getTextSQLError($"operator {binaryOP} not supproted in sql translation ", context);
+                }
 
                 Expressions[context] = new ExpressionInfo
                 {
                     LastToken = "",
                     Text = expression,
                     SQLText = sqlText,
+                    NoSQLCode = nosqlCode,
                     OperandKind = OperandKind,
                     Type = new TypeInfo
                     {
@@ -182,6 +202,9 @@ public partial class SqlConvert
                 OperandKind = EOperandKind.Operator;
                 var sqlText =  leftOperandExpression.SQLText;
                 var binaryOperator = binaryOP.Trim();
+
+                getTextNoSQLError($"operator {binaryOperator} not supproted in nosql translation ", context);
+
                 if( binaryOperator == "+")
                     sqlText =  $"{leftOperandExpression.SQLText}+{rightOperandExpression.SQLText}";
                 else
@@ -332,6 +355,7 @@ public partial class SqlConvert
         { 
             string unaryOP = context.children[0].GetText();
             var sqlText =  "";
+            TNoSqlCode noSQLCode = null;
             ExpressionInfo expression = null;
             var OperandKind = EOperandKind.Simple;
 
@@ -343,9 +367,12 @@ public partial class SqlConvert
                     string unaryExpression = string.Empty;
                     TypeInfo expressionType = expression.Type;
 
-                    sqlText =  expression.SQLText;
+                    noSQLCode = expression.NoSQLCode;
+                    sqlText   = expression.SQLText;
                     if( unaryOP == "!")
                     {
+                        noSQLCode = new TNoSqlCode( "!", expression.NoSQLCode);
+
                         expression.SQLText = convertToBool( expression.SQLText, expression.OperandKind );
                         OperandKind = EOperandKind.Operator;
                         sqlText =  $"NOT ({expression.SQLText})";
@@ -353,33 +380,42 @@ public partial class SqlConvert
                     else
                     if( unaryOP == "-")
                     {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         sqlText =  $"-({expression.SQLText})";
                         OperandKind = EOperandKind.Operator;
                     }
                     else
                     if (unaryOP.Equals("&", StringComparison.Ordinal))
                     {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         sqlText = expression.SQLText;
                     }else
                     if (unaryOP.Equals("*", StringComparison.Ordinal))
                     {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         sqlText = expression.SQLText;
                     }else
+                    {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         sqlText = getTextSQLError($"operator {unaryOP} not supproted in sql translation ", context);
+                    }
 
 
                     if (unaryOP.Equals("^", StringComparison.Ordinal))
                     {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         unaryOP = "~";
                     }
                     else if (unaryOP.Equals("<-", StringComparison.Ordinal))
                     {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         // TODO: Handle channel value access (update when channel class is created):
                         unaryOP = null;
                         unaryExpression = $"{expression}.Receive()";
                     }
                     else if (unaryOP.Equals("&", StringComparison.Ordinal))
                     {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         unaryOP = null;
 
                         if (expression.Text.StartsWith("new ", StringComparison.Ordinal))
@@ -404,6 +440,7 @@ public partial class SqlConvert
                     }
                     else if (unaryOP.Equals("*", StringComparison.Ordinal))
                     {
+                        getTextNoSQLError( $"operand {unaryOP} not supported in nosql translation", context);
                         unaryOP = null;
 
                         if (!expression.Text.EndsWith(".val"))
@@ -420,6 +457,7 @@ public partial class SqlConvert
                         LastToken = expression.LastToken,
                         Text = unaryExpression,
                         SQLText = sqlText,
+                        NoSQLCode = noSQLCode,
                         OperandKind = OperandKind,
                         Type = expressionType
                     };
@@ -466,6 +504,7 @@ public partial class SqlConvert
                         LastToken = expression.LastToken,
                         Text = derefPointerExpression,
                         SQLText = sqlText,
+                        NoSQLCode = noSQLCode,
                         OperandKind = OperandKind,
                         Type = targetType
                     };
@@ -490,7 +529,8 @@ public partial class SqlConvert
                 LastToken = expression.LastToken,
                 Text = $"({expression})",
                 Type = expression.Type,
-                SQLText = $"({expression.SQLText})"
+                SQLText = $"({expression.SQLText})",
+                NoSQLCode = expression.NoSQLCode,
             };
             return;
         }
@@ -501,7 +541,8 @@ public partial class SqlConvert
                 LastToken = expression.LastToken,
                 Text = $"{expression}",
                 Type = expression.Type,
-                SQLText = $"{expression.SQLText}"
+                SQLText = $"{expression.SQLText}",
+                NoSQLCode = expression.NoSQLCode,
             };
             return;
         }
@@ -512,7 +553,8 @@ public partial class SqlConvert
                 LastToken = expression.LastToken,
                 Text = $"{expression}",
                 Type = expression.Type,
-                SQLText = $"{expression.SQLText}"
+                SQLText = $"{expression.SQLText}",
+                NoSQLCode = expression.NoSQLCode,
             };
             return;
         }
@@ -550,6 +592,8 @@ public partial class SqlConvert
         //     | STRING_LIT
 
         var SQLText = "";
+        TNoSqlCode NoSQLText = null;
+
         if (context.IMAGINARY_LIT() is not null)
         {
             SQLText = getTextSQLError("not supported in sql transaltion", context);
@@ -587,6 +631,7 @@ public partial class SqlConvert
         {
             basicLiteral = context.GetText();
             SQLText = basicLiteral;
+            NoSQLText = new TNoSqlNumber( basicLiteral );
 
             if (float.TryParse(basicLiteral, out _))
             {
@@ -617,6 +662,7 @@ public partial class SqlConvert
         }
         else if (context.integer() is not null)
         {
+            NoSQLText = new TNoSqlNumber( ReplaceOctalBytes(context.integer().GetText()) );
             basicLiteral = ReplaceOctalBytes(context.integer().GetText());
             SQLText = basicLiteral;
 
@@ -665,6 +711,7 @@ public partial class SqlConvert
         }
         else if (context.RUNE_LIT() is not null)
         {
+            getTextNoSQLError("not supported in sql transaltion", context);
             SQLText = getTextSQLError("not supported in sql transaltion", context);
             basicLiteral = ReplaceOctalBytes(context.RUNE_LIT().GetText());
 
@@ -681,6 +728,7 @@ public partial class SqlConvert
         {
             basicLiteral = $"{ToStringLiteral(ReplaceOctalBytes(context.string_().GetText()))}u8";
             SQLText = convertGolangStringToSqlString( context.string_().GetText() );
+            NoSQLText = new TNoSqlString( context.string_().GetText()  );
 
             typeInfo = new TypeInfo
             {
@@ -694,6 +742,7 @@ public partial class SqlConvert
         else if (context.NIL_LIT() is not null)
         {
             SQLText = sql_NULL;
+            NoSQLText = new TNoSqlIdentifier( null );
             basicLiteral = "null";
             typeInfo = TypeInfo.ObjectType;
         }
@@ -708,6 +757,7 @@ public partial class SqlConvert
             LastToken = basicLiteral,
             Text = basicLiteral,
             SQLText = SQLText,
+            NoSQLCode = NoSQLText,
             Type = typeInfo,
             OperandKind = EOperandKind.Simple
         };
@@ -737,6 +787,7 @@ public partial class SqlConvert
         bool hasKeyedElement = false;
 
         var textSqlSelect = "";
+        TNoSqlCode noSqlSelect = null;
 
         if (keyedElements is not null)
         {
@@ -761,7 +812,7 @@ public partial class SqlConvert
             
             if( bIsStructInit && m_LambdaCode != null )
             {
-                textSqlSelect = this.Lambda_SelectFields( context, keyedElements, typeInfo1);
+                (textSqlSelect, noSqlSelect) = this.Lambda_SelectFields( context, keyedElements, typeInfo1);
             }
         }
 
@@ -792,6 +843,7 @@ public partial class SqlConvert
 
             if (Types.TryGetValue(literalType.arrayType()?.elementType() ?? literalType.elementType(), out typeInfo))
             {
+                getTextNoSQLError("array index not supported in nosql translation", context);
                 if (typeInfo?.TypeClass == TypeClass.Interface)
                 {
                     for (int i = 0; i < elements.Count; i++)
@@ -837,9 +889,13 @@ public partial class SqlConvert
         }
         else if (literalType.sliceType() is not null)
         {
+            getTextNoSQLError("array index not supported in nosql translation", context);
             if( m_LambdaCode != null && m_LambdaCode.IsAllowArray )
             {
                 textSqlSelect = $"{string.Join(", ", elements.Select(kvp => kvp.element))}";
+
+                var listElems = elements.Select(kvp => (TNoSqlCode)(new TNoSqlSelectField( kvp.key, kvp.element )) ).ToList();
+                noSqlSelect  = new TNoSqlCode( "select", listElems );
             }else
             {
                 textSqlSelect = getTextSQLError( "array are not allowed in sql transalation", context);
@@ -878,6 +934,7 @@ public partial class SqlConvert
         }
         else if (literalType.mapType() is not null)
         {
+            getTextNoSQLError("maps are not allowed in nosql translation", context);
             textSqlSelect = getTextSQLError( "maps are not allowed in sql transalation", context);
             // TODO: Need to properly handle map literals, see "src\Examples\Manual Tour of Go Conversions\moretypes\map-literals-continued"
             if (Types.TryGetValue(literalType.mapType().type_(), out typeInfo) && Types.TryGetValue(literalType.mapType().elementType(), out TypeInfo elementTypeInfo))
@@ -902,6 +959,7 @@ public partial class SqlConvert
         }
         else if (literalType.typeName() is not null)
         {
+            getTextNoSQLError("types are not allowed in nosql translation", context);
             // TODO: Need to determine how to properly employ keyed elements here - guess is type aliases to array/slice/map would need to map back to original implementations
             expressionText = $"new {literalType.GetText()}({RemoveSurrounding(literalValue.GetText(), "{", "}")})";
                 
@@ -924,7 +982,7 @@ public partial class SqlConvert
             Text = expressionText,
             Type = typeInfo,
             SQLText = textSqlSelect,
-           
+            NoSQLCode = noSqlSelect,
         };
     }
 
@@ -1081,6 +1139,7 @@ public partial class SqlConvert
                             Text = context.GetText(),
                             Type = typeVar.Type,
                             SQLText = getTextSQLVarIdentif( identifier, typeVar.Type, context), 
+                            NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, TypeInfo.VarType, context ) ),
                             OperandKind = EOperandKind.Simple,
                         };
                         //SQLText = getTextSQLError( "internal error 143", context );
@@ -1098,6 +1157,7 @@ public partial class SqlConvert
                                 Text = context.GetText(),
                                 Type = typeVar.Type,
                                 SQLText = constExpr.SQLText, 
+                                NoSQLCode = constExpr.NoSQLCode,
                                 OperandKind = EOperandKind.Simple,
                             };
                             return;
@@ -1109,6 +1169,7 @@ public partial class SqlConvert
                         Text = context.GetText(),
                         Type = typeVar.Type,
                         SQLText = getTextSQLVarIdentif( identifier, typeVar.Type, context), 
+                        NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, TypeInfo.VarType, context ) ),
                         OperandKind = EOperandKind.Simple,
                     
                     };
@@ -1136,6 +1197,7 @@ public partial class SqlConvert
             Text = context.GetText(),
             Type = TypeInfo.VarType,
             SQLText = getTextSQLVarIdentif( identifier, TypeInfo.VarType, context ), 
+            NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, TypeInfo.VarType, context ) ),
             OperandKind = EOperandKind.Simple,
         };
     }

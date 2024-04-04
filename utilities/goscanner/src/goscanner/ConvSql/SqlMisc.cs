@@ -81,6 +81,7 @@ namespace goscanner.ConvSql
 
     public class TLambdaCode
     {        
+        public bool IsNoSql = false;//if the lambda of Where() is of DBContextNoSql
         public bool IsAllowArray = false;
 
         //ctx.Qry("tag name").Where()...
@@ -139,8 +140,10 @@ namespace goscanner.ConvSql
             //bool bIsQueuedSelect,
             ParserRuleContext ctxTag,             
             ParserRuleContext context,
-            string lambdaVariable ) 
+            string lambdaVariable,
+            bool bIsNoSql ) 
         {
+            this.IsNoSql = bIsNoSql;
             this.lambdaVariable = lambdaVariable;
             this.ctxTag = ctxTag;
             Tag    = lambdaQryTag.Tag;
@@ -150,8 +153,6 @@ namespace goscanner.ConvSql
 
             this.IsQueuedSelect = SubTag == OrmDef.Func_Select 
                                || SubTag == OrmDef.Func_SelectSubQ;
-
-            //var This = this;
             
             //lambdaSubTag.CurrentLambdaCode = this;
             if( SubTag.StartsWith( OrmDef.SubTag_SelectSubQ) 
@@ -167,13 +168,11 @@ namespace goscanner.ConvSql
             SrcLine = context.Start.Line;
             SrcCol  = context.Start.Column;
 
-
             var dirRoot = inst.Options.ConvertSql.SourcePathDir;
             if( !dirRoot.EndsWith( Path.PathSeparator))
                 dirRoot += Path.DirectorySeparatorChar;
 
             SrcFile = SrcFile.Replace( dirRoot, "" );
-
             
             SrcQryOffset    = lambdaQryTag.Context.Start.StartIndex;
             SrcStartOffset  = context.Start.StartIndex;
@@ -231,7 +230,6 @@ namespace goscanner.ConvSql
             SrcStartOffset -= SrcQryOffset;
             SrcEndOffset   -= SrcQryOffset;
             this.Hash = Utils1.Base64Encode(srcData);
-            
         }
 
         public SubQuery getSubQueryByVarName(string variableName)

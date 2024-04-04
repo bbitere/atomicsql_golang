@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace goscanner.Metadata
 {
@@ -66,6 +67,114 @@ namespace goscanner.Metadata
         THIS,
     }
 
+    public class TNoSqlCode
+    {
+        public string operatorName = "";
+        public List< TNoSqlCode > operands = new List< TNoSqlCode >();
+
+        public TNoSqlCode( string opName, params TNoSqlCode[] operands )
+        {
+            this.operatorName = opName;
+            this.operands     = operands.ToList();
+        }
+        public TNoSqlCode( string opName, List<TNoSqlCode> operands )
+        {
+            this.operatorName = opName;
+            this.operands     = operands;
+        }
+        public virtual string getNoSqlCode()
+        {
+            if( this.operands.Count == 0 )
+            {
+                return $"\"{this.operatorName}\"";
+            }
+            if( this.operands.Count == 1 )
+            {
+                if( this.operands[0] != null)
+                {
+                    return $@"
+                            []any{{
+					            ""{this.operatorName}"", ""{this.operands[0].getNoSqlCode() }"", 
+                            }}
+                    ";
+                }
+                return "/*error 1 operands */";
+            }
+            if( this.operands.Count == 2 )
+            {
+                if( this.operands[0] != null && this.operands[1] != null)
+                {
+                    return $@"
+                            []any{{
+					            ""{this.operatorName}"", ""{this.operands[0].getNoSqlCode() }"", ""{this.operands[1].getNoSqlCode() }"",
+                            }}
+                    ";
+                }
+                return "/*error 2 operands */";
+            }
+            //if( this.operands.Count == 0 )
+            {
+                return $@"
+                        []any{{
+					        ""{this.operatorName}"", 
+                        }}
+                ";
+            }
+        }
+    }
+    
+    public class TNoSqlIdentifier : TNoSqlCode
+    {
+        public TNoSqlIdentifier( string fieldName)
+            :base( fieldName)
+        {
+        }
+        public override string getNoSqlCode()
+        {
+            return $"\"{this.operatorName}\"";
+        }
+    }
+    public class TNoSqlString : TNoSqlCode
+    {
+        public TNoSqlString( string fieldName)
+            :base( fieldName)
+        {
+        }
+        public override string getNoSqlCode()
+        {
+            return $"\"{this.operatorName}\"";
+        }
+    }
+    public class TNoSqlNumber : TNoSqlCode
+    {
+        public TNoSqlNumber( string fieldName)
+            :base( fieldName)
+        {
+        }
+        public override string getNoSqlCode()
+        {
+            return $"{this.operatorName}";
+        }
+    }
+
+    public class TNoSqlSelectField : TNoSqlCode
+    {
+        public string fieldName = "";
+        public string  expression;
+
+        public TNoSqlSelectField( string fieldName, string expression )
+            :base( "-")
+        {
+            this.fieldName = fieldName;
+            this.expression = expression;
+        }
+        public override string getNoSqlCode()
+        {
+            return $"\"{this.operatorName}\"";
+        }
+    }
+
+
     [Serializable]
     public class ExpressionInfo
     {
@@ -79,6 +188,8 @@ namespace goscanner.Metadata
         public ParameterInfo[] Types;
         //public List<string> SubExpressions = null;
         public string SQLText;
+        public TNoSqlCode NoSQLCode = null;
+        public bool       bIsNoSql = false;
         public EOperandKind  OperandKind = EOperandKind.Simple;
         public ExpressionInfo() {
             if(    false
@@ -95,10 +206,11 @@ namespace goscanner.Metadata
                 || UID == 1624
                 */
                 
-                || UID == 5609
-                || UID == 5608
-                || UID == 5607
-                || UID == 5606
+
+                || UID == 28460
+                || UID == 28461
+                || UID == 28465
+                || UID == 28466
                 )
             {
                 UID = UID;

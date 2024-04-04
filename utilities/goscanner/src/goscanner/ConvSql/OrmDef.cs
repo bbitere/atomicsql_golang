@@ -27,10 +27,8 @@ namespace goscanner.ConvSql
         public const string Func_DBTable_ToRTM  = "ToRTM";
         public const string Func_DBTable_IsRTM  = "IsRTM";
 
-        
-        
-
         public const string Class_DBContext     = "DBContext";
+        public const string Class_DBContextNSql = "DBContextNSql";
         public const string Func_New_DBContext  = "New_DBContext";
         public const string Func_Select         = "Select";    //Select[T IGeneric_MODEL, V IGeneric_MODEL]
         public const string Func_SelectSubQ     = "SelectSubQ";

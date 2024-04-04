@@ -64,6 +64,7 @@ public partial class SqlConvert
                 Type = operand.Type,
                 Types = operand.Types,
                 SQLText = operand.SQLText,
+                NoSQLCode = operand.NoSQLCode,
                 OperandKind = operand.OperandKind,
                 //SubExpressions = SubExpressions,
             };
@@ -95,6 +96,7 @@ public partial class SqlConvert
                         Text = $"new ptr<{typeInfo.TypeName}>({expression})",
                         Type = typeInfo,
                         SQLText = expression.SQLText,
+                        NoSQLCode = expression.NoSQLCode,
                         OperandKind = expression.OperandKind,
                     };
                 }
@@ -122,6 +124,7 @@ public partial class SqlConvert
                         Text = $"{functionName}({expression}).val",
                         Type = typeInfo,
                         SQLText = expression.SQLText,
+                        NoSQLCode = expression.NoSQLCode,
                         OperandKind = operand.OperandKind,
                     };
                 }
@@ -133,6 +136,7 @@ public partial class SqlConvert
                         Text = $"{typeInfo.TypeName}_cast({expression})",
                         Type = typeInfo,
                         SQLText = getTextSQLError("cast to struct not supported in sql translation", context),
+                        NoSQLCode = expression.NoSQLCode,
                     };
                 }
                 else
@@ -153,6 +157,7 @@ public partial class SqlConvert
                         Text = $"({typeInfo.TypeName}){expression}",
                         Type = typeInfo,
                         SQLText =  SQLText,
+                        NoSQLCode = expression.NoSQLCode,
                         OperandKind = OperandKind,
                     };
                 }
@@ -170,6 +175,8 @@ public partial class SqlConvert
             var identif1    = Common.SanitizedIdentifier( primaryExpression?.Text ??string.Empty);
             var identifSQL1 = Common.SanitizedIdentifier( primaryExpression?.SQLText ??string.Empty);
             var field1      = Common.SanitizedIdentifier( context.IDENTIFIER().GetText());
+
+            var noSQLIdentif = primaryExpression?.NoSQLCode;
 
             TypeInfo typeInfo = null;
 
@@ -197,6 +204,7 @@ public partial class SqlConvert
                         LastToken = field1,
                         Text = $"{identif1}.{field1}",
                         SQLText = identifSQL1,
+                        NoSQLCode = noSQLIdentif,
                         OperandKind = EOperandKind.Simple,
                         Type = typeInfo ?? primaryExpression?.Type,
                         Types = typeInfo != null ? new_ParameterInfo_TypeInfo(typeInfo ) : primaryExpression?.Types
@@ -223,6 +231,8 @@ public partial class SqlConvert
                             LastToken = field1,
                             Text = $"{identif1}.{field1}",
                             SQLText = getTextSQLIdentif( $"{identif1}.{field1}", identifSQL1, sqlField, field.Type, field.Name, context, identif1 ),
+                            NoSQLCode = noSQLIdentif,
+                            bIsNoSql =  genericType.Name == OrmDef.Class_DBContextNSql,
                             OperandKind = EOperandKind.Simple,
                             Type = field.Type,
                             Types = new_ParameterInfo_TypeInfo(field.Type ),
@@ -242,6 +252,7 @@ public partial class SqlConvert
                     {
                         LastToken = field1,
                         Text = $"{identif1}.{field1}",
+                        NoSQLCode = noSQLIdentif,
                         SQLText = identifSQL1,
                         OperandKind = EOperandKind.Simple,
                         Type = typeInfo ?? primaryExpression?.Type,
@@ -266,7 +277,7 @@ public partial class SqlConvert
                  || genericType.Name == OrmDef.Sql_NullString
                  || genericType.Name == OrmDef.Sql_NullBool ) )
                 {
-                    generatePrimaryExpression_SqlNull( identif1, identifSQL1, field1, context );
+                    generatePrimaryExpression_SqlNull( identif1, identifSQL1, noSQLIdentif, field1, context );
                     return;
                 }
 
@@ -291,6 +302,7 @@ public partial class SqlConvert
                             LastToken = field1,
                             Text = $"{identif1}.{field1}",
                             SQLText = $"{identifSQL1}",
+                            NoSQLCode = noSQLIdentif,
                             OperandKind = EOperandKind.Simple,
                             Type  = OrmDef.myTTimeType,
                             Types = new_ParameterInfo_TypeInfo( OrmDef.myTTimeType ),
@@ -354,6 +366,8 @@ public partial class SqlConvert
                 Text = selectionExpression,
                 LastToken = field1,
                 SQLText = getTextSQLIdentif( selectionExpression, identifSQL1, sqlField, typeInfo ?? primaryExpression?.Type, field1, context, identif1 ),
+                NoSQLCode = new TNoSqlIdentifier( identifSQL1 ),
+                bIsNoSql = primaryExpression != null? primaryExpression.bIsNoSql: false,
                 OperandKind = EOperandKind.Simple,
                 Type = typeInfo ?? primaryExpression?.Type,
                 Types = typeInfo != null ? new_ParameterInfo_TypeInfo(typeInfo ) : primaryExpression?.Types
@@ -389,6 +403,8 @@ public partial class SqlConvert
 
             GoParser.Slice_Context sliceContext = context.slice_();
 
+            getTextNoSQLError( $"slices are not supported in nosql transaltion", context);
+
             if (sliceContext.children.Count == 3)
             {
                 // primaryExpr[:]
@@ -397,6 +413,7 @@ public partial class SqlConvert
                     LastToken = primaryExpression.LastToken,
                     Text = $"{primaryExpression}[..]",
                     SQLText = getTextSQLError("slice not supported in sql translation", context),
+                    NoSQLCode = primaryExpression.NoSQLCode,
                     Type = primaryExpression.Type,
                     Types = primaryExpression.Types
                 };
@@ -415,6 +432,7 @@ public partial class SqlConvert
                         ? $"{(expression.Type?.TypeName == "int" ? string.Empty : "(int)")}{expression}.."
                         : $"..{(expression.Type?.TypeName == "int" ? string.Empty : "(int)")}{expression}")}]",
                         SQLText = getTextSQLError("slice not supported in sql translation", context),
+                        NoSQLCode = primaryExpression.NoSQLCode,
                         Type = primaryExpression.Type,
                         Types = primaryExpression.Types
                     };
@@ -437,6 +455,7 @@ public partial class SqlConvert
                             LastToken = primaryExpression.LastToken,
                             Text = $"{primaryExpression}[{(lowExpression.Type?.TypeName == "int" ? string.Empty : "(int)")}{lowExpression}..{(highExpression.Type?.TypeName == "int" ? string.Empty : "(int)")}{highExpression}]",
                             SQLText = getTextSQLError("slice not supported in sql translation", context),
+                            NoSQLCode = primaryExpression.NoSQLCode,
                             Type = primaryExpression.Type,
                             Types = primaryExpression.Types
                         };
@@ -462,6 +481,7 @@ public partial class SqlConvert
                         LastToken = primaryExpression.LastToken,
                         Text = $"{primaryExpression}.slice(-1, {highExpression}, {maxExpression})",
                         SQLText = getTextSQLError("slice not supported in sql translation", context),
+                        NoSQLCode = primaryExpression.NoSQLCode,
                         Type = primaryExpression.Type,
                         Types = primaryExpression.Types
                     };
@@ -482,6 +502,7 @@ public partial class SqlConvert
                     {
                         Text = $"{primaryExpression}.slice({lowExpression}, {highExpression}, {maxExpression})",
                         SQLText = getTextSQLError("slice not supported in sql translation", context),
+                        NoSQLCode = primaryExpression.NoSQLCode,
                         Type = primaryExpression.Type,
                         Types = primaryExpression.Types,
                         
@@ -506,6 +527,7 @@ public partial class SqlConvert
                     Text = $"{primaryExpression}._<{typeInfo.TypeName}>()",
                     Type = typeInfo,
                     SQLText = primaryExpression.SQLText,
+                    NoSQLCode = primaryExpression.NoSQLCode,
                     OperandKind = primaryExpression.OperandKind,
                 };
             }
@@ -532,7 +554,8 @@ public partial class SqlConvert
         return Signature.Signature;
     }
 
-    void generatePrimaryExpression_SqlNull(string identif1, string identifSQL1, string field1, GoParser.PrimaryExprContext context )
+    void generatePrimaryExpression_SqlNull(string identif1, string identifSQL1, 
+        TNoSqlCode noSqlCode, string field1, GoParser.PrimaryExprContext context )
     {
         if( field1 == OrmDef.Sql_Null_Valid)
         {
@@ -541,6 +564,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"({identifSQL1} IS NOT NULL)",
+                NoSQLCode = new TNoSqlCode( "!=" , noSqlCode, null),
                 OperandKind = EOperandKind.Operator,
                 Type  = TypeInfo.BoolType,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.BoolType ),
@@ -554,6 +578,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.BoolType,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.BoolType ),
@@ -567,6 +592,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.ByteType,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.ByteType ),
@@ -580,6 +606,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.Int32Type,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.Int32Type ),
@@ -593,6 +620,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.Int16Type,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.Int16Type ),
@@ -606,6 +634,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.Int64Type,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.Int64Type ),
@@ -619,6 +648,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.Float64Type,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.Float64Type ),
@@ -632,6 +662,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.StringType,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.StringType ),
@@ -645,6 +676,7 @@ public partial class SqlConvert
                 LastToken = field1,
                 Text = $"{identif1}.{field1}",
                 SQLText = $"{identifSQL1}",
+                NoSQLCode = noSqlCode,
                 OperandKind = EOperandKind.Simple,
                 Type  = TypeInfo.TimeType,
                 Types = new_ParameterInfo_TypeInfo( TypeInfo.TimeType ),

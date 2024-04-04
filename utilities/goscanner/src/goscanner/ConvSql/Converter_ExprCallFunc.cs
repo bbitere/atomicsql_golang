@@ -66,6 +66,7 @@ namespace goscanner.ConvSql
             {
                 context.m_classMethod     = normalizedType1.Name;
                 context.m_funcMethodName  = funcName;
+                context.m_bIsNoSql        = primaryExpression.bIsNoSql;
 
                 if( this.GetTopSubquery() != null)
                 { 
@@ -94,27 +95,14 @@ namespace goscanner.ConvSql
 
             var packageName = getPackageNameOfFunction( functionName );
             if( packageName == Options.ConvertSql.OrmDir_Atomicsql_Git
-             || ( normalizedType1 != null && normalizedType1.Name == OrmDef.Class_DBContext ) )
+             || ( normalizedType1 != null 
+                    && ( normalizedType1.Name == OrmDef.Class_DBContext 
+                      || normalizedType1.Name == OrmDef.Class_DBContextNSql )
+                ) )
             {
                 context.m_classMethod     = normalizedType1 != null? normalizedType1.Name: null;
                 context.m_funcMethodName  = funcName;
-
-                //if( funcName == OrmDef.Func_Select )
-                //    context.m_SubTagMethodSelectCall = OrmDef.SubTag_Select;
-
-                //if( funcName == OrmDef.Func_SelectSubQ )
-                //    context.m_SubTagMethodSelectCall = OrmDef.Func_SelectSubQ;
-                /*
-                if( funcName == OrmDef.Func_Select )
-                {
-                    //Lambda_createSubtagID(OrmDef.SubTag_Select);
-                    Lambda_createSubtag_AtQueryOrSelect("", OrmDef.SubTag_Select);
-                }
-                if( funcName == OrmDef.Func_SelectSubQ )
-                {
-                    //Lambda_createSubtagID(OrmDef.SubTag_Select);
-                    Lambda_createSubtag_AtQueryOrSelect("", OrmDef.Func_SelectSubQ);
-                }*/
+                
                 if( funcName == OrmDef.Func_Aggregate )
                 {
                     if( context.arguments()?.typeNameGenericList()?.Length == 1 )
@@ -172,6 +160,7 @@ namespace goscanner.ConvSql
                                 Type  = castExpressions[0].Type,
                                 Types = castExpressions[0].Types,
                                 SQLText = castExpressions[0].SQLText,
+                                NoSQLCode = castExpressions[0].NoSQLCode,
                                 OperandKind = castExpressions[0].OperandKind,
                             };
                         return;
@@ -303,6 +292,7 @@ namespace goscanner.ConvSql
             {
                 if (typeInfo is null)
                 {
+                    getTextNoSQLError("new operator not supported in sql translation", context);
                     string typeName = expressions?[0].Text;
 
                     SQLText = expressions?[0].SQLText;
@@ -366,6 +356,7 @@ namespace goscanner.ConvSql
                     {
                         argType = expressions?[0].Type.Clone() ?? TypeInfo.VarType.Clone();
 
+                        getTextNoSQLError("make operator not supported in sql translation", context);
                         SQLText = getTextSQLError("new operator not supported in sql translation", context);
 
                         argType = new PointerTypeInfo
@@ -391,6 +382,7 @@ namespace goscanner.ConvSql
             }
             else if (primaryExpression.Text == "make" && typeInfo is not null)
             {
+                getTextNoSQLError("make operator not supported in sql translation", context);
                 SQLText = getTextSQLError("make operator not supported in sql translation", context);
 
                 PrimaryExpressions[context] = typeInfo.TypeClass switch
@@ -537,6 +529,8 @@ namespace goscanner.ConvSql
                         Type  = type,
                         Types = types,
                         SQLText = SQLText,
+                        NoSQLCode = null,
+                        bIsNoSql = primaryExpression != null? primaryExpression.bIsNoSql: false,
                         OperandKind = OperandKind,
                     };
                 }else

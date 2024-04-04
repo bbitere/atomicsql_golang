@@ -10,6 +10,7 @@ public partial class GoParser{
 
         public string m_funcMethodName=null;
         public string m_classMethod;
+        public bool m_bIsNoSql = false;
     }
 }
 

@@ -259,7 +259,8 @@ public partial class SqlConvert
             if(m_LambdaCode.SubQueries != null)
                 Utils.Nop();
 
-            m_LambdaCode.SqlCode = expressions[0].SQLText;
+            m_LambdaCode.SqlCode   = expressions[0].SQLText;
+            m_LambdaCode.NoSqlCode = expressions[0].NoSQLCode != null ? expressions[0].NoSQLCode.getNoSqlCode(): "";
             if( m_LambdaCode.SqlCode == null)
                 Debugger.Break();
         }
@@ -473,16 +474,14 @@ public partial class SqlConvert
             var paramName   = paramNameCtx != null? paramNameCtx.Symbol.Text : "";
             //Debug_Console($"Lambda_enterFuncLit: {m_LambdaTag} -> {topSubTag.SubTag}");
 
-
             var ctxPrimaryExpr = getPrimaryContext(context);
             if( ctxPrimaryExpr != null )
             {
-                var subTagName= OrmDef.GetSubTabByFuncName( ctxPrimaryExpr.m_funcMethodName );
+                var subTagName  = OrmDef.GetSubTabByFuncName( ctxPrimaryExpr.m_funcMethodName );
                 if( subTagName != "" )
                 {
-                    setLambdaCode( new TLambdaCode( this, topQryTag, subTagName,
-                                        m_LambdaCode, 
-                                        ctxPrimaryExpr, context, paramName) );
+                    setLambdaCode( new TLambdaCode( this, topQryTag, subTagName, m_LambdaCode, 
+                                                    ctxPrimaryExpr, context, paramName, ctxPrimaryExpr.m_bIsNoSql) );
                     AddLambda( m_LambdaCode );
                 }else
                 {
@@ -501,12 +500,15 @@ public partial class SqlConvert
     //              return &V{ field1: val,}
     //          } )
     // se reitereaza fieldurile de inistalizare a lui V din func lit
-    protected string Lambda_SelectFields( ParserRuleContext context, 
+    protected (string, TNoSqlCode) Lambda_SelectFields( ParserRuleContext context, 
                 GoParser.KeyedElementContext[] keyedElements, TypeInfo typeInfo1 )
     {
         var arrSqlSelectFld = new List<string>();
+        var arrNoSqlSelectFld = new List<TNoSqlCode>();
+        
         var bError = false;
         var textSqlSelect = "";
+        TNoSqlCode noSqlSelect = null;
 
         m_LambdaCode.Select_SqlFields = new Dictionary<string, string>();
 
@@ -520,23 +522,26 @@ public partial class SqlConvert
                 Log_Error( context, $"The Name of field should start with capital in order to be public: {key}" );
             }
 
-            var (isValid, sqlItem) = Select_generateItem( m_LambdaCode.Select_SqlFields,
+            var (isValid, sqlItem, noSqlCode) = Select_generateItem( m_LambdaCode.Select_SqlFields,
                                         key, expression, context, typeInfo1);
             if( isValid ) 
             {
                 arrSqlSelectFld.Add(sqlItem);   
+                arrNoSqlSelectFld.Add(noSqlCode);
             }else
             {
                 bError = true;
                 textSqlSelect = sqlItem;
+                noSqlSelect = noSqlCode;
                 break;
             }
         }
         if( !bError)
         {
             textSqlSelect = $"{string.Join(", ", arrSqlSelectFld )}";
+            noSqlSelect = new TNoSqlCode("select", arrNoSqlSelectFld);
         }
-        return textSqlSelect;
+        return (textSqlSelect, noSqlSelect);
     }
 }
 
