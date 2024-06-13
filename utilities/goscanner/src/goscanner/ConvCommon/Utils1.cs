@@ -64,6 +64,9 @@ namespace goscanner.ConvCommon
                 foreach( var part_ in parts ) {
 
                     var part = part_.Trim();    
+                    if( part == "")
+                        continue;
+
                     Uri file = new Uri(part);            
                     var dir = file.AbsolutePath;
                     if( dir.EndsWith("/") )
@@ -96,7 +99,14 @@ namespace goscanner.ConvCommon
 
         public static string getRelativePath(string folder1, string file1)
         {
-            Uri file = new Uri(file1);            
+            Uri file = null;
+            try
+            {
+                file = new Uri(file1);            
+            }catch(Exception e)
+            {
+               return file1;
+            }
             Uri folder = new Uri(folder1);
 
             var relativePath = Uri.UnescapeDataString(

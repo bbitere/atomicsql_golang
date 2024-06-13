@@ -152,6 +152,7 @@ namespace goscanner.ConvSql
             //    Utils1.Nop();
 
             this.IsQueuedSelect = SubTag == OrmDef.Func_Select 
+                               || SubTag == OrmDef.Func_SelectN
                                || SubTag == OrmDef.Func_SelectSubQ;
             
             //lambdaSubTag.CurrentLambdaCode = this;

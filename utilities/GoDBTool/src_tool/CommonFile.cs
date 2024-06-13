@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace src_tool
 {
@@ -19,11 +20,13 @@ namespace src_tool
         public string sqlName = "";        
         public bool bIsIdentity = false;        
         public bool bIsNullable = false;
-        public String sqlType = "";
+        public string sqlType = "";
         public DbTable ForeignKey = null;
+        public string descriptionTag;
         public DbColumn initSql(string sqlName, string sqlType, bool bIsNullable)
         {
             this.sqlName = sqlName;
+            checkedSqlName(this.sqlName);
             this.sqlType = sqlType;
             this.bIsIdentity = false;
             this.bIsNullable = bIsNullable;
@@ -33,6 +36,7 @@ namespace src_tool
         public DbColumn initSqlPrimary(string sqlName)
         {
             this.sqlName = sqlName;
+            checkedSqlName(this.sqlName);
             this.sqlType = "";
             this.bIsIdentity = true;
             this.bIsNullable = false;
@@ -42,7 +46,8 @@ namespace src_tool
             string langName, string langName2, string langType,
             string sqlName, string sqlType,
             bool bIsNullable, bool bIsIdentity, 
-            DbTable ForeignKey )
+            DbTable ForeignKey,
+            string tags)
         {
             this.langName = langName;
             this.langName2 = langName2;
@@ -50,10 +55,18 @@ namespace src_tool
             this.bIsIdentity = bIsIdentity;
                     
             this.sqlName = sqlName;
+            checkedSqlName(this.sqlName);
             this.sqlType = sqlType;
             this.bIsNullable = bIsNullable;
             this.ForeignKey = ForeignKey;
+            this.descriptionTag = tags;
             return this;
+        }
+        void checkedSqlName(string sqlName)
+        {
+            if( sqlName.IndexOf("\"") >= 0
+             || sqlName.IndexOf(":") >= 0)
+                Debugger.Break();
         }
     }
     public class DbTable

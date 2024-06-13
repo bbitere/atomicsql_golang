@@ -25,6 +25,10 @@ namespace src_tool
 {
 public class GoModelTemplate
 {
+    public const string FIELD_IS_OMITTED_INTEGRAL = "-";//sunt in general foreignkeyuri.
+    public const string MARK_PRIMARY_KEY = "omitempty";  //this mark the column as primary key
+
+    public const string NoSqlID = "NoSqlID";//ID for NoSql fields.
     public const string POSTFIX_FOREIGNKEY = "_ID";
     
     public const string pkgOrm = "orm";
@@ -191,11 +195,11 @@ public class GoModelTemplate
         var jsonName = sqlName;//nameCol.ToLower();
         if(jsonName != "" && bIdentity )
         {
-            jsonName = $"{nameCol},omitempty"; //all the time the primary key will be with ID
+            jsonName = $"{nameCol},{GoModelTemplate.MARK_PRIMARY_KEY}"; //all the time the primary key will be with ID
         }else
         if( bIsForeignKey)
         {
-            jsonName = "-";//omit integral
+            jsonName = FIELD_IS_OMITTED_INTEGRAL;//omit integral
         }
         var spaces  = new String(' ', Math.Max( 1, 20- nameCol.Length) );
         var spaces2 = new String(' ', Math.Max( 1, 50- ($"{nameCol}{spaces}{nameType}").Length) );

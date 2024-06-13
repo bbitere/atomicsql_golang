@@ -2890,12 +2890,12 @@ func (_this *DBQueryNoSql[T]) _arrayOfSingleFieldBool(sqlResult *mongo.Cursor, f
 
 func (_this *DBQueryNoSql[T]) generateFullModel() *T {
 
-	var ctx = _this.tableInst.m_ctx
+	/*var ctx = _this.tableInst.m_ctx
 	var def, has = ctx.DictTablesIncludeRelDefs[_this.tableName]
 	if has {
 		var model = (*def).FnNewInst(true).(*T)
 		return model
-	} else {
+	} else */ {
 		var model *T = new(T)
 		return model
 	}

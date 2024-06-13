@@ -383,7 +383,7 @@ public abstract partial class ScannerBase : GoParserBaseListener
                     {
                         scanDirectory(bTranslate, options.ConvertSql.SourcePathDir2, options, showParseTree, createNewScanner, fileNeedsScan, handleSkippedScan);
                     }
-                    if( options.ConvertSql.OrmDir_Atomicsql_Git != null 
+                    if( (options.ConvertSql.OrmDir_Atomicsql_Git != null || options.ConvertSql.OrmDir_AtomicNSql_Git != null )
                      && options.ConvertSql.OrmDir_Atomicsql_MetadataFile != null )
                     {
                         var folder = PreScanner.GetFolderMetadataByMetadataFileName( 
@@ -1011,7 +1011,12 @@ public abstract partial class ScannerBase : GoParserBaseListener
         if( options.ConvertSql != null)
         {
             if(bDebugConsole)
+            {
                 Console.WriteLine($"LoadMeta: {targetImport} <-> {options.ConvertSql.OrmDir_Atomicsql_Git}");
+                if( options.ConvertSql.OrmDir_AtomicNSql_Git != null)
+                    Console.WriteLine($"LoadMeta: {targetImport} <-> {options.ConvertSql.OrmDir_AtomicNSql_Git}");
+            }
+
             if( targetImport == options.ConvertSql.OrmDir_Atomicsql_Git )
             {
                 metadata = options.ConvertSql.OrmDirAtomicsql_DirMetadata;

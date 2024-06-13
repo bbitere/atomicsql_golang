@@ -25,6 +25,7 @@ namespace src_tool
         {
             public ConfigFile config = new ConfigFile();
             public string type_out_file = "";
+            public bool bDatabaseFirst = false;
 
             public DialectArg(
                 ConfigFile config,
@@ -37,7 +38,8 @@ namespace src_tool
 
         public void GenDBModels( 
                 string cfg_file,
-                string type_out_file
+                string type_out_file,
+                bool bDatabaseFirst
             )
         {
             var config = new ConfigFile();
@@ -47,45 +49,67 @@ namespace src_tool
             GenericDialect dialect = GenericDialect.GetDialectByName(config.SqlLang);
             if( dialect == null)
                 return;
-            
-            dialect.fnProcessData = ProcessData;
-            dialect.startConnection( arg );
+
+            arg.bDatabaseFirst = bDatabaseFirst;
+
+            if( arg.bDatabaseFirst)            
+            {
+                dialect.fnProcessData = ProcessData;
+                dialect.startConnection( arg );
+            }else
+            {
+                dialect.fnProcessData = ProcessData;
+                ProcessData( dialect, arg );
+            }
         }
         void ProcessData(GenericDialect dialect, GenericDialectArg arg1 )
         {
+            var bOk = false;
+            var dictTables = new Dictionary<string, DbTable>();
             var arg = arg1 as DialectArg;
-            var dictTables = dialect.readTables( arg.config.SqlLang );
-            if( dictTables != null )
+            if( arg.bDatabaseFirst)
+            {
+                dictTables = dialect.readTables( arg.config.SqlLang );
+                if( dictTables != null )
+                {
+                    updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect);
+
+                    if( dialect.readConstraintors( dictTables  ))
+                    {
+                        bOk = true;
+                    }
+                }
+            }else
             {
                 updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect);
-
-                if( dialect.readConstraintors( dictTables  ))
+                bOk = true;
+            }
+            if( bOk ) 
+            {
+                Console.WriteLine("Generate DB defs");
+                if( arg.type_out_file == EOuputLang.GoLang)
                 {
-                    Console.WriteLine("Generate DB defs");
-                    if( arg.type_out_file == EOuputLang.GoLang)
-                    {
-                        var config = arg.config;
-                        var out_models = config.ModelsOutputDir;
-                        var out_file_dbcontext = config.OutputDBContextFile;
-                        var import_package_models = config.ImportPackageModels.Trim();
-                        var import_package_orm    = config.ImportPackageOrm.Trim();
-                        var packageNameNsql1       = config.PackageGenSql.Trim();
+                    var config = arg.config;
+                    var out_models = config.ModelsOutputDir;
+                    var out_file_dbcontext = config.OutputDBContextFile;
+                    var import_package_models = config.ImportPackageModels.Trim();
+                    var import_package_orm    = config.ImportPackageOrm.Trim();
+                    var packageNameNsql1       = config.PackageGenSql.Trim();
             
-                        string packageNameModels    = getPackageByImport(import_package_models);
-                        //string packageNameOrm       = getPackageByImport(import_package_orm);
-                        string packageNameNsql      = getPackageByImport(packageNameNsql1);
+                    string packageNameModels    = getPackageByImport(import_package_models);
+                    //string packageNameOrm       = getPackageByImport(import_package_orm);
+                    string packageNameNsql      = getPackageByImport(packageNameNsql1);
 
-                        string tables_DefVar = "";
-                        var listTables = Utils.getListFromDict(dictTables);
+                    string tables_DefVar = "";
+                    var listTables = Utils.getListFromDict(dictTables);
 
-                        Golang_writeModelsDefs( dialect, listTables, arg.config, out_models, arg.config.Models_Extension,
-                            packageNameModels, arg.config.BaseModelName, ref tables_DefVar);
+                    Golang_writeModelsDefs( dialect, listTables, arg.config, out_models, arg.config.Models_Extension,
+                        packageNameModels, arg.config.BaseModelName, ref tables_DefVar);
 
-                        Golang_writeDBContext( dialect, listTables, arg.config, out_file_dbcontext,
-                            packageNameNsql, import_package_models, 
-                            import_package_orm,
-                            tables_DefVar );
-                    }
+                    Golang_writeDBContext( dialect, listTables, arg.config, out_file_dbcontext,
+                        packageNameNsql, import_package_models, 
+                        import_package_orm,
+                        tables_DefVar );
                 }
             }
         }
@@ -129,33 +153,45 @@ namespace src_tool
                     file, delimeter, dialect, ref bMustDeleteJsonFile );
 
                 //DbTable tableDBParam = null;
-                var dict = Utils.getDictFromList(list, x=>x.SqlTableNameModel );
+                var dictTables = Utils.getDictFromList(list, x=>x.SqlTableNameModel );
 
-                foreach( var it in tables )
+                foreach( var it in dictTables )
                 {
-                    if( dict.ContainsKey( it.Key ))
+                    //if( dict.ContainsKey( it.Key ))
                     {
                         var table = it.Value;
-                        table.LangTableNameModel = dict[it.Key].LangTableNameModel; 
+                        tables[ it.Key ] = table;
 
-                        var dictCol = Utils.getDictFromList(dict[it.Key].columns, x=>x.sqlName );
+                        table.LangTableNameModel = dictTables[it.Key].LangTableNameModel; 
+
+                        var dictCol = Utils.getDictFromList(dictTables[it.Key].columns, x=>x.sqlName );
+
+                        DbColumn mainColumn = null;
                         foreach( var col in table.columns)
                         { 
+                            if( dialect.isNoSql() )
+                            {
+                                if( col.descriptionTag != null 
+                                    
+                                 && col.descriptionTag.Contains(GoModelTemplate.MARK_PRIMARY_KEY) )
+                                {
+                                    mainColumn = col;
+                                }
+                            }
+
                             if( dictCol.ContainsKey( col.sqlName))
                             {
                                 col.langName  = dictCol[col.sqlName].langName; 
                                 col.langName2 = dictCol[col.sqlName].langName2; 
                             }
                         }
-                    }else
-                    {
-                        
+                        if( dialect.isNoSql() && table.PrimaryColumn == null && mainColumn != null )
+                        {
+                            table.PrimaryColumn = mainColumn;
+                        }
                     }
                 }
-                //if( tableDBParam != null )
-                { 
-                    tables.Remove( MigrationDB.TABLE_MIGRATION );
-                }
+                
             }
         }
         /*
@@ -274,6 +310,9 @@ namespace src_tool
             var varDefModel = new List<string>();
             foreach( var column in table.columns )
             {
+                if( column.langName == GoModelTemplate.NoSqlID)
+                    continue;
+
                 if( column.ForeignKey != null)
                 {
                     //define the UserRole_ID
@@ -333,10 +372,11 @@ namespace src_tool
 				    //model.UserRoleID = (defUserRole.Def().FnNewInst(bFull)).(*UserRole)
 
                     var Table = column.ForeignKey.LangTableNameModel;
+                    var instName = column.langName;
                     var FK_ID = column.langName;
                     var def =$@"
-                        var def{Table} = {GoModelTemplate.PREF_DEF}{Table}{{}}
-				        model.{FK_ID} = (def{Table}.Def().FnNewInst(bFull)).(*{Table})";
+                        var def{instName} = {GoModelTemplate.PREF_DEF}{Table}{{}}
+				        model.{FK_ID} = (def{instName}.Def().FnNewInst(bFull)).(*{Table})";
 
                     TDefModel.Add(def);
                 }
@@ -357,6 +397,11 @@ namespace src_tool
         {
             foreach( var table in tables)
             {
+                if( table.PrimaryColumn == null)
+                {
+                    dialect.printError($"Primary column from table {table.LangTableNameModel}. Add keyword {GoModelTemplate.MARK_PRIMARY_KEY} in primary column tags");
+                }
+
                 var packageImports = new Dictionary<string, string>();
                 //var table = iTable;
 

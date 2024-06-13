@@ -8,6 +8,7 @@ using Antlr4.Runtime;
 using System.Reflection.Metadata;
 using goscanner.Metadata;
 using goscanner.ConvCommon;
+using System.Diagnostics;
 
 namespace goscanner.ConvSql
 {
@@ -42,7 +43,8 @@ namespace goscanner.ConvSql
 
         public string OrmDir_AtomicSql;
         //the git of atomicsql
-        public string OrmDir_Atomicsql_Git;        
+        public string OrmDir_Atomicsql_Git;
+        public string OrmDir_AtomicNSql_Git;
 
         //file with metadata of atomicsql
         public string OrmDir_Atomicsql_MetadataFile;
@@ -76,26 +78,17 @@ namespace goscanner.ConvSql
 
                 case "OrmDir_Atomicsql":            this.OrmDir_AtomicSql = Utils1.getAbsoluteDirPath( content ); break;
                 case "OrmDir_Atomicsql_Git":        this.OrmDir_Atomicsql_Git = content; break;
+                case "OrmDir_AtomicNSql_Git":       this.OrmDir_AtomicNSql_Git = content; break;
                 case "OrmDir_Atomicsql_Metadata":   this.OrmDir_Atomicsql_MetadataFile = content; break;
 
                 case "OrmDir_AtomicsqlFunc":        this.OrmDir_AtomicSqlFunc = Utils1.getAbsoluteDirPath( content ); break;
                 case "OrmDir_AtomicsqlFunc_Git":    this.OrmDir_AtomicsqlFunc_Git = content; break;
                 case "OrmDir_AtomicsqlFunc_Metadata":this.OrmDir_AtomicsqlFunc_MetadataFile = content; break;
-                    
                 
                 default: 
                     Console.WriteLine( $"Not identified token {token1} in single line property ");
                 break;
             }
-
-            if( SqlLang == ESqlOutputType.Mssql)
-                SqlDialect = new MsSql_Dialect();
-            else
-            if( SqlLang == ESqlOutputType.Mysql)
-                SqlDialect = new MySql_Dialect();
-            else
-            if( SqlLang == ESqlOutputType.Postgres)
-                SqlDialect = new PostgresSql_Dialect();
         }
 
         protected override void updateProperties()
@@ -127,10 +120,13 @@ namespace goscanner.ConvSql
             else
                 Console.WriteLine($"OrmDir_AtomicSql = {OrmDir_AtomicSql}");
 
-            if( OrmDir_Atomicsql_Git  == null )
+            if( OrmDir_Atomicsql_Git  == null && OrmDir_AtomicNSql_Git  == null )
                 Console.WriteLine("OrmDir_Atomicsql_Git - not set");
             else
+            {
                 Console.WriteLine($"OrmDir_Atomicsql_Git = {OrmDir_Atomicsql_Git}");
+                Console.WriteLine($"OrmDir_AtomicNSql_Git = {OrmDir_AtomicNSql_Git}");
+            }
 
             if( OrmDir_AtomicSqlFunc  == null )
                 Console.WriteLine("OrmDir_AtomicsqlFunc - not set");
@@ -159,6 +155,28 @@ namespace goscanner.ConvSql
                 default: 
                     Console.WriteLine( $"Not identified token {token1} in multiline declaration ");
                 break;
+            }
+        }
+
+        public override void ParseConfigFile( string pathFile)
+        {
+            base.ParseConfigFile( pathFile);
+
+            if( SqlLang == ESqlOutputType.Mssql)
+                SqlDialect = new MsSql_Dialect();
+            else
+            if( SqlLang == ESqlOutputType.Mysql)
+                SqlDialect = new MySql_Dialect();
+            else
+            if( SqlLang == ESqlOutputType.Postgres)
+                SqlDialect = new PostgresSql_Dialect();
+            else
+            if( SqlLang == ESqlOutputType.MongoDB)
+                SqlDialect = new MongoDBNoSql_Dialect();
+            else
+            {
+                Debugger.Break();
+                Console.WriteLine( "sql dialect is not recognized" );
             }
         }
 

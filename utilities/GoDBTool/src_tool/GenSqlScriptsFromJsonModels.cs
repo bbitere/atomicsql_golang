@@ -593,7 +593,7 @@ namespace src_tool
 
             foreach( var dbTable in dbTables)
             {
-                if( dbTable.LangTableNameModel == "Project")
+                if( dbTable.LangTableNameModel == "User")
                     Utils.Nop();
 
                 var nextShouldBeFK = "";
@@ -629,18 +629,21 @@ namespace src_tool
                     var langName  = it.Key;
                     DbTable tblPointer = null;
 
-                    var sqlName = getSqlName(tags);
+                    var sqlName = getSqlName(tags, dialect );
                     if( sqlName == "")
                     {
                         continue;
                     }
-                    if( sqlName == "-")
+                    if( !dialect.isNoSql() && it.Key == GoModelTemplate.NoSqlID)
+                        continue;
+                    
+                    if( sqlName == GoModelTemplate.FIELD_IS_OMITTED_INTEGRAL)
                     {
                         nextShouldBeFK = it.Key;
                         nextShouldBeFK_pointerType = type;
                         continue;
                     }else
-                    if( nextShouldBeFK != "")
+                    if( nextShouldBeFK != "" && !dialect.isNoSql() )
                     {
                         var compressedName = GoModelTemplate.ConvertToIdent_GoLang( it.Key);
                         if( nextShouldBeFK != compressedName)
@@ -673,7 +676,7 @@ namespace src_tool
 
                     //var langName = it.Key;
                     var langType = type;
-                    var bIsIdentity = tags.Contains("omitempty");
+                    var bIsIdentity = tags.Contains(GoModelTemplate.MARK_PRIMARY_KEY);
                     if( bIsIdentity)
                         dbTable.PrimaryColumn = column;
 
@@ -690,7 +693,8 @@ namespace src_tool
                         sqlType: sqlType,
                         bIsNullable: bIsNullable,
                         bIsIdentity: bIsIdentity,
-                        ForeignKey: tblPointer
+                        ForeignKey: tblPointer,
+                        tags
                         );
 
                     if( !dictSqlColumns.ContainsKey(column.sqlName) )
@@ -701,10 +705,8 @@ namespace src_tool
                         bMustDeleteJsonFile = true;
                         dialect.printError( $"duplicate column aat sql Name: '{column.sqlName}'. check if is duplicate or you miss to do in 2 steps the renaming of a column");
                     }
-
                     dbTable.columns.Add( column);
                 }
-
                 //dbTables.Add(dbTable);
             }
 
@@ -716,21 +718,57 @@ namespace src_tool
          * `json:"UUID"`
          *  `json:"-"`
          */ 
-        private static string getSqlName(string tags)
+        private static string getSqlName(string tags, GenericDialect dialect)
         {
             if( tags == "")
                 return "";
 
-            if( tags == "-")
+            if( tags == GoModelTemplate.FIELD_IS_OMITTED_INTEGRAL)
                 return "";
 
-            if( tags.StartsWith("\"json:\\\"") )
+            var bFoundDescr = false;
+            var arrTags = tags.Split(new string[]{ "  ", }, StringSplitOptions.RemoveEmptyEntries );
+            foreach( var tag1 in arrTags)
             {
-                var tags1 = tags.Replace("\"json:\\\"", "");
-                tags1 = tags1.Replace("\\\"\"", "");
-                var p = tags1.Split(',');
-                return p[0].Trim();
-            } else
+                var tag = tag1.Trim();
+                if( tag.StartsWith("\"bson:\\\"") )
+                {
+                    bFoundDescr = true;
+                    if( dialect.isNoSql() )
+                    {
+                        var tags1 = tag.Replace("\"bson:\\\"", "");
+                        tags1 = tags1.Replace("\\\"\"", "");
+                        tags1 = tags1.Replace("\\\"", "");
+                        
+                        var p = tags1.Split(',');
+                        return p[0].Trim();
+                    }
+                }else
+                if( tag.StartsWith("\"json:\\\"") )
+                {
+                    bFoundDescr = true;
+
+                    var tags1 = tag.Replace("\"json:\\\"", "");
+                    tags1 = tags1.Replace("\\\"\"", "");
+                    tags1 = tags1.Replace("\\\"", "");
+                    
+                    var p = tags1.Split(',');
+                    return p[0].Trim();
+                } else
+                if( tag.StartsWith("\"atmsql:\\\"") )
+                {
+                    bFoundDescr = true;
+
+                    var tags1 = tag.Replace("\"atmsql:\\\"", "");
+                    tags1 = tags1.Replace("\\\"\"", "");
+                    tags1 = tags1.Replace("\\\"", "");
+                    
+                    var p = tags1.Split(',');
+                    return p[0].Trim();
+                }
+            }
+            
+            if( !bFoundDescr )
             {
                 Console.WriteLine($"json definition of description field is incomplete :{tags}");
             }

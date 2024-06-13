@@ -1,17 +1,16 @@
 /* this class is generated automatically by DB_Tool.exe exporter*/
 
-package mymodels
-
-import (
-	"reflect"
-
-	orm "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
-)
-
-/*import (
+    package mymodels
+	import (
+        "reflect"
+        orm	  "github.com/bbitere/atomicsql_golang.git/src/atomicsql"
+    )
+	
+	
+        /*import (
 	    sql "database/sql"
         )*/
-/*
+	/*
     type User struct /*atomicsql-table:"user"* / {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
@@ -23,12 +22,12 @@ import (
             Time1               sql.NullTime                  `json:"time1"`
             Money               float64                       `json:"money"`
     }
-*/
+	*/
     func (model  User) GetID() int64 {
-	    return int64( 0 )
+	    return int64( model.ID )
     }
 	func (model  User) SetID( id int64 ) {
-	    //model.ID = int32(id)
+	    model.ID = int(id)
     }
 
     type T_User struct {
@@ -53,8 +52,8 @@ import (
 				var model = new (User);
 				if( bFull ){
 					
-                        var defUserRole = T_UserRole{}
-				        model.UserRoleID = (defUserRole.Def().FnNewInst(bFull)).(*UserRole)
+                        var defUserRoleID = T_UserRole{}
+				        model.UserRoleID = (defUserRoleID.Def().FnNewInst(bFull)).(*UserRole)
 				}
 				return model;
 			},

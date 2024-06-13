@@ -262,6 +262,7 @@ public class Options
     {
         for( var i = 0; i < 100000000; i++)
         {
+            
             Thread.Sleep(100);
         }         
     }

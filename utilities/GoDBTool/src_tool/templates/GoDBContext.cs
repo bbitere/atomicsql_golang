@@ -11,7 +11,9 @@ public class GoDBContext:GoModelTemplate
 {
 	public const string pkgModels = "m";
 	//public const string pkgOrm = "orm";
-	public const string _DBTable = "DBTable";
+	public /*const*/ static string _DBTable = "DBTable";
+	public /*const*/ static string _DBContextBase = "DBContextBase";
+		
 	//public const string Template_V = "V";
 	//public const string Template_Def = pkgOrm+".IGeneric_MODEL";
 		
@@ -43,7 +45,7 @@ public class GoDBContext:GoModelTemplate
 		var space1 = new String( ' ', Math.Max(1, 30 -$"ret.{tableInstName} =".Length) );
 
 		var text = $@"			
-			ret.{tableInstName} ={space1}(new({pkgOrm}.{_DBTable}[{pkgModels}.{tableName}])).Constr(""{sqlTableNameModel}"", ""{tableName}"", &ret.DBContextBase)";
+			ret.{tableInstName} ={space1}(new({pkgOrm}.{_DBTable}[{pkgModels}.{tableName}])).Constr(""{sqlTableNameModel}"", ""{tableName}"", &ret.{_DBContextBase})";
 		return text;
 	}
 
@@ -56,7 +58,7 @@ public class GoDBContext:GoModelTemplate
 		var space1 = new String( ' ', Math.Max(1, 30 -$"ret.{tableInstName} =".Length) );
 
 		var text = $@"			
-			ret.{tableInstName} ={space1}(new({pkgOrm}.{_DBTable}[{pkgModels}.{tableName}])).Constr(""{sqlTableNameModel}"", ""{tableName}"", &ret.DBContextBase)";
+			ret.{tableInstName} ={space1}(new({pkgOrm}.{_DBTable}[{pkgModels}.{tableName}])).Constr(""{sqlTableNameModel}"", ""{tableName}"", &ret.{_DBContextBase})";
 		return text;
 	}
 
@@ -85,7 +87,7 @@ public class GoDBContext:GoModelTemplate
 		string fk, DbTable tableRoot, DbColumn colRoot, DbTable tableTgt )
 	{
 		var tgtTable_sqlName = tableTgt.SqlTableNameModel;
-		var tgtFldID_sqlName = tableTgt.PrimaryColumn.sqlName;
+		var tgtFldID_sqlName = tableTgt.PrimaryColumn != null ? tableTgt.PrimaryColumn.sqlName: "error_no_primary_key";
 
 		var rootTable_sqlName = tableRoot.SqlTableNameModel;
 		var rootFldFk_sqlName = colRoot.sqlName;
@@ -131,6 +133,14 @@ public class GoDBContext:GoModelTemplate
 		Dictionary<string,FKRootTgt> ForeignKeys,
 		List<DbTable> tables )
     {
+		if( config != null)
+		{
+			if(config.DBTable != null)
+				_DBTable = config.DBTable;
+
+			if(config.DBContextBase != null)
+					_DBContextBase = config.DBContextBase;
+		}
 
 		var tables_def1_list = new List<string>();
 		tables.ForEach( x=> { tables_def1_list.Add( GetTemplateDBContext_def1(x) );} );

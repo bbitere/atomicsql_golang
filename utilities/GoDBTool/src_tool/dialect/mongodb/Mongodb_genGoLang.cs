@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace src_tool
 {
-partial class PostgressDialect
+partial class MongodbDialect
 {
         
     public override string getGoLangTypeIntFk( 
         DbColumn column, ref Dictionary<string, string> packageImports )
     {
-        var nameSqlType = column.sqlType.ToLower();
+        var nameSqlType = column.sqlType;
         /*
         var nameArr = "";
         if( nameSqlType.Contains("[]") )
@@ -29,7 +29,6 @@ partial class PostgressDialect
                 case "smallint" :   return "sql.NullInt16";
                 case "smallserial": return "sql.NullInt16";
 
-                case "int" :        return "sql.NullInt32";
                 case "integer" :    return "sql.NullInt32";
                 case "serial" :     return "sql.NullInt32";
 
@@ -49,7 +48,6 @@ partial class PostgressDialect
                 case "smallint" : return "int16";
                 case "smallserial" : return "int16";
 
-                case "int" : return "int32";
                 case "integer" : return "int32";
                 case "serial" : return "int32";
 
@@ -64,8 +62,6 @@ partial class PostgressDialect
             }
         }
     }
-
-    
     
     public override string getGoLangType( DbColumn column, ref Dictionary<string, string> importPackage )
     {
@@ -297,6 +293,8 @@ partial class PostgressDialect
 
             default: 
             {
+                if(column.langType != null)
+                    return column.langType;
                 Console.WriteLine($"Sql Type '{nameSqlType}': *** not implemented ***. Use text or varchar(1024)");
                 return "";
             }

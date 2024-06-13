@@ -14,17 +14,14 @@
 			orm.DBContextBase
 
 			
-			Bar                 *orm.DBTable[m.Bar]
-			Bar_                  m.T_Bar
+			Statusrole          *orm.DBTable[m.Statusrole]
+			Statusrole_           m.T_Statusrole
 		
-			Bar1                *orm.DBTable[m.Bar1]
-			Bar1_                 m.T_Bar1
+			User                *orm.DBTable[m.User]
+			User_                 m.T_User
 		
-			Bar2                *orm.DBTable[m.Bar2]
-			Bar2_                 m.T_Bar2
-		
-			Dbparams            *orm.DBTable[m.Dbparams]
-			Dbparams_             m.T_Dbparams
+			UserRole            *orm.DBTable[m.UserRole]
+			UserRole_             m.T_UserRole
 		
 			Department          *orm.DBTable[m.Department]
 			Department_           m.T_Department
@@ -35,20 +32,11 @@
 			Employee2           *orm.DBTable[m.Employee2]
 			Employee2_            m.T_Employee2
 		
-			Project             *orm.DBTable[m.Project]
-			Project_              m.T_Project
-		
 			ProjectStatus       *orm.DBTable[m.ProjectStatus]
 			ProjectStatus_        m.T_ProjectStatus
 		
-			Statusrole          *orm.DBTable[m.Statusrole]
-			Statusrole_           m.T_Statusrole
-		
-			User                *orm.DBTable[m.User]
-			User_                 m.T_User
-		
-			UserRole            *orm.DBTable[m.UserRole]
-			UserRole_             m.T_UserRole
+			Project             *orm.DBTable[m.Project]
+			Project_              m.T_Project
 		
 		}		
 		func (_this *DBContext) Constr(dbBase orm.DBContextBase)  (*DBContext,error) {
@@ -58,378 +46,8 @@
 			
 			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
 				
-	"Bar": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "bar",
-			PrimaryColumnLangName: "Id",
-			PrimaryColumnSqlName:  "Id",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "Id",
-					SqlName:    "Id",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "FooId",
-					SqlName:    "foo_id",
-					SqlType:    "bigint",
-					LangType:   "sql.NullInt64",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "UniqueInt",
-					SqlName:    "unique_int",
-					SqlType:    "integer",
-					LangType:   "sql.NullInt32",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "NonuniqueInt",
-					SqlName:    "nonunique_int",
-					SqlType:    "integer",
-					LangType:   "sql.NullInt32",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
-	"Bar1": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "bar1",
-			PrimaryColumnLangName: "Id",
-			PrimaryColumnSqlName:  "Id",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "Id",
-					SqlName:    "Id",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "FooId",
-					SqlName:    "foo_id",
-					SqlType:    "bigint",
-					LangType:   "sql.NullInt64",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "UniqueInt",
-					SqlName:    "unique_int",
-					SqlType:    "integer",
-					LangType:   "sql.NullInt32",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "NonuniqueInt",
-					SqlName:    "nonunique_int",
-					SqlType:    "integer",
-					LangType:   "sql.NullInt32",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
-	"Bar2": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "bar2",
-			PrimaryColumnLangName: "Id",
-			PrimaryColumnSqlName:  "Id",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "Id",
-					SqlName:    "Id",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "FooId",
-					SqlName:    "foo_id",
-					SqlType:    "bigint",
-					LangType:   "sql.NullInt64",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "UniqueInt",
-					SqlName:    "unique_int",
-					SqlType:    "integer",
-					LangType:   "sql.NullInt32",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "NonuniqueInt",
-					SqlName:    "nonunique_int",
-					SqlType:    "integer",
-					LangType:   "sql.NullInt32",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
-	"Dbparams": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "dbparams",
-			PrimaryColumnLangName: "ID",
-			PrimaryColumnSqlName:  "ID",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "ID",
-					SqlName:    "ID",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "ParamName",
-					SqlName:    "ParamName",
-					SqlType:    "character varying",
-					LangType:   "string",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "ParamValue",
-					SqlName:    "ParamValue",
-					SqlType:    "character varying",
-					LangType:   "string",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
-	"Department": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "departm",
-			PrimaryColumnLangName: "ID",
-			PrimaryColumnSqlName:  "ID",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "ID",
-					SqlName:    "ID",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "IsActive",
-					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "NameDep",
-					SqlName:    "name_dep",
-					SqlType:    "character varying",
-					LangType:   "string",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
-	"Employee1": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "employee1",
-			PrimaryColumnLangName: "ID",
-			PrimaryColumnSqlName:  "ID",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "ID",
-					SqlName:    "ID",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "IsActive",
-					SqlName:    "isActive",
-					SqlType:    "boolean",
-					LangType:   "bool",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "User_ID",
-					SqlName:    "user_ID",
-					SqlType:    "integer",
-					LangType:   "*User",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:[]string{ "UserID", "User" },
-				},
-				{
-					LangName:   "Department_ID",
-					SqlName:    "departm_ID",
-					SqlType:    "integer",
-					LangType:   "*Department",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:[]string{ "DepartmentID", "Department" },
-				},
-				{
-					LangName:   "Department2_ID",
-					SqlName:    "departm2_ID",
-					SqlType:    "integer",
-					LangType:   "*Department",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: true,
-					ForeignKeyLangName:[]string{ "Department2ID", "Department" },
-				},
-
-			},
-		},
-
-	"Employee2": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "employee2",
-			PrimaryColumnLangName: "ID",
-			PrimaryColumnSqlName:  "ID",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "ID",
-					SqlName:    "ID",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
-	"Project": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "project",
-			PrimaryColumnLangName: "ID",
-			PrimaryColumnSqlName:  "ID",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "ID",
-					SqlName:    "ID",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "Name",
-					SqlName:    "name",
-					SqlType:    "character varying",
-					LangType:   "string",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
-	"ProjectStatus": orm.TDefTable{
-			SchemaTable:           "public",
-			SqlTableName:          "projstatus",
-			PrimaryColumnLangName: "ID",
-			PrimaryColumnSqlName:  "ID",
-			Columns: []orm.TSqlColumnDef{
-								{
-					LangName:   "ID",
-					SqlName:    "ID",
-					SqlType:    "integer",
-					LangType:   "int32",
-					Flags:      "",
-					IsPrimary:  true,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-				{
-					LangName:   "Name",
-					SqlName:    "name",
-					SqlType:    "character varying",
-					LangType:   "string",
-					Flags:      "",
-					IsPrimary:  false,
-					IsNullable: false,
-					ForeignKeyLangName:nil,
-				},
-
-			},
-		},
-
 	"Statusrole": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "",
 			SqlTableName:          "statusRole",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -437,7 +55,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "INT",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -447,7 +65,7 @@
 				{
 					LangName:   "StatusName",
 					SqlName:    "status_name",
-					SqlType:    "character varying",
+					SqlType:    "VARCHAR",
 					LangType:   "sql.NullString",
 					Flags:      "",
 					IsPrimary:  false,
@@ -459,7 +77,7 @@
 		},
 
 	"User": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "",
 			SqlTableName:          "user",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -467,7 +85,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "INT",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -477,7 +95,7 @@
 				{
 					LangName:   "UserName",
 					SqlName:    "userName",
-					SqlType:    "character varying",
+					SqlType:    "VARCHAR",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -487,7 +105,7 @@
 				{
 					LangName:   "UUID",
 					SqlName:    "UUID",
-					SqlType:    "character varying",
+					SqlType:    "VARCHAR",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -497,7 +115,7 @@
 				{
 					LangName:   "UserPsw",
 					SqlName:    "user_psw",
-					SqlType:    "character varying",
+					SqlType:    "VARCHAR",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -507,7 +125,7 @@
 				{
 					LangName:   "UserRole_ID",
 					SqlName:    "userRole_ID",
-					SqlType:    "integer",
+					SqlType:    "INT",
 					LangType:   "*UserRole",
 					Flags:      "",
 					IsPrimary:  false,
@@ -517,7 +135,7 @@
 				{
 					LangName:   "Time1",
 					SqlName:    "time1",
-					SqlType:    "timestamp without time zone",
+					SqlType:    "TIMESTAMP",
 					LangType:   "sql.NullTime",
 					Flags:      "",
 					IsPrimary:  false,
@@ -539,7 +157,7 @@
 		},
 
 	"UserRole": orm.TDefTable{
-			SchemaTable:           "public",
+			SchemaTable:           "",
 			SqlTableName:          "user_role",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -547,7 +165,7 @@
 								{
 					LangName:   "ID",
 					SqlName:    "ID",
-					SqlType:    "integer",
+					SqlType:    "INT",
 					LangType:   "int32",
 					Flags:      "",
 					IsPrimary:  true,
@@ -557,7 +175,7 @@
 				{
 					LangName:   "IsActive",
 					SqlName:    "isActive",
-					SqlType:    "boolean",
+					SqlType:    "BOOLEAN",
 					LangType:   "bool",
 					Flags:      "",
 					IsPrimary:  false,
@@ -567,7 +185,7 @@
 				{
 					LangName:   "RoleName",
 					SqlName:    "roleName",
-					SqlType:    "character varying",
+					SqlType:    "VARCHAR",
 					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
@@ -576,8 +194,8 @@
 				},
 				{
 					LangName:   "Role_status_ID",
-					SqlName:    "role_status_ID",
-					SqlType:    "integer",
+					SqlName:    "statusrole_ID",
+					SqlType:    "INT",
 					LangType:   "*Statusrole",
 					Flags:      "",
 					IsPrimary:  false,
@@ -587,8 +205,188 @@
 				{
 					LangName:   "MyActive",
 					SqlName:    "my_active",
-					SqlType:    "boolean",
+					SqlType:    "BOOLEAN",
 					LangType:   "bool",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+
+			},
+		},
+
+	"Department": orm.TDefTable{
+			SchemaTable:           "",
+			SqlTableName:          "departm",
+			PrimaryColumnLangName: "ID",
+			PrimaryColumnSqlName:  "ID",
+			Columns: []orm.TSqlColumnDef{
+								{
+					LangName:   "ID",
+					SqlName:    "ID",
+					SqlType:    "INT",
+					LangType:   "int32",
+					Flags:      "",
+					IsPrimary:  true,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+				{
+					LangName:   "IsActive",
+					SqlName:    "isActive",
+					SqlType:    "BOOLEAN",
+					LangType:   "bool",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+				{
+					LangName:   "NameDep",
+					SqlName:    "name_dep",
+					SqlType:    "VARCHAR",
+					LangType:   "string",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+
+			},
+		},
+
+	"Employee1": orm.TDefTable{
+			SchemaTable:           "",
+			SqlTableName:          "employee1",
+			PrimaryColumnLangName: "ID",
+			PrimaryColumnSqlName:  "ID",
+			Columns: []orm.TSqlColumnDef{
+								{
+					LangName:   "ID",
+					SqlName:    "ID",
+					SqlType:    "INT",
+					LangType:   "int32",
+					Flags:      "",
+					IsPrimary:  true,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+				{
+					LangName:   "IsActive",
+					SqlName:    "isActive",
+					SqlType:    "BOOLEAN",
+					LangType:   "bool",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+				{
+					LangName:   "User_ID",
+					SqlName:    "user_ID",
+					SqlType:    "INT",
+					LangType:   "*User",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: false,
+					ForeignKeyLangName:[]string{ "UserID", "User" },
+				},
+				{
+					LangName:   "Department_ID",
+					SqlName:    "departm_ID",
+					SqlType:    "INT",
+					LangType:   "*Department",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: true,
+					ForeignKeyLangName:[]string{ "DepartmentID", "Department" },
+				},
+				{
+					LangName:   "Department2_ID",
+					SqlName:    "departm2_ID",
+					SqlType:    "INT",
+					LangType:   "*Department",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: true,
+					ForeignKeyLangName:[]string{ "Department2ID", "Department" },
+				},
+
+			},
+		},
+
+	"Employee2": orm.TDefTable{
+			SchemaTable:           "",
+			SqlTableName:          "employee2",
+			PrimaryColumnLangName: "ID",
+			PrimaryColumnSqlName:  "ID",
+			Columns: []orm.TSqlColumnDef{
+								{
+					LangName:   "ID",
+					SqlName:    "ID",
+					SqlType:    "INT",
+					LangType:   "int32",
+					Flags:      "",
+					IsPrimary:  true,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+
+			},
+		},
+
+	"ProjectStatus": orm.TDefTable{
+			SchemaTable:           "",
+			SqlTableName:          "projstatus",
+			PrimaryColumnLangName: "ID",
+			PrimaryColumnSqlName:  "ID",
+			Columns: []orm.TSqlColumnDef{
+								{
+					LangName:   "ID",
+					SqlName:    "ID",
+					SqlType:    "INT",
+					LangType:   "int32",
+					Flags:      "",
+					IsPrimary:  true,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+				{
+					LangName:   "Name",
+					SqlName:    "name",
+					SqlType:    "VARCHAR",
+					LangType:   "string",
+					Flags:      "",
+					IsPrimary:  false,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+
+			},
+		},
+
+	"Project": orm.TDefTable{
+			SchemaTable:           "",
+			SqlTableName:          "project",
+			PrimaryColumnLangName: "ID",
+			PrimaryColumnSqlName:  "ID",
+			Columns: []orm.TSqlColumnDef{
+								{
+					LangName:   "ID",
+					SqlName:    "ID",
+					SqlType:    "INT",
+					LangType:   "int32",
+					Flags:      "",
+					IsPrimary:  true,
+					IsNullable: false,
+					ForeignKeyLangName:nil,
+				},
+				{
+					LangName:   "Name",
+					SqlName:    "name",
+					SqlType:    "VARCHAR",
+					LangType:   "string",
 					Flags:      "",
 					IsPrimary:  false,
 					IsNullable: false,
@@ -600,34 +398,44 @@
 
 			}
 			
-			_this.Bar_ = m.T_Bar {
-	        Id:                  "Id",
-            FooId:               "foo_id",
-            UniqueInt:           "unique_int",
-            NonuniqueInt:        "nonunique_int",
-			}
-
-		
-			_this.Bar1_ = m.T_Bar1 {
-	        Id:                  "Id",
-            FooId:               "foo_id",
-            UniqueInt:           "unique_int",
-            NonuniqueInt:        "nonunique_int",
-			}
-
-		
-			_this.Bar2_ = m.T_Bar2 {
-	        Id:                  "Id",
-            FooId:               "foo_id",
-            UniqueInt:           "unique_int",
-            NonuniqueInt:        "nonunique_int",
-			}
-
-		
-			_this.Dbparams_ = m.T_Dbparams {
+			_this.Statusrole_ = m.T_Statusrole {
 	        ID:                  "ID",
-            ParamName:           "ParamName",
-            ParamValue:          "ParamValue",
+            StatusName:          "status_name",
+			}
+
+		
+			_this.User_ = m.T_User {
+	        ID:                  "ID",
+            UserName:            "userName",
+            UUID:                "UUID",
+            UserPsw:             "user_psw",
+            UserRole_ID:         "userRole_ID",
+            UserRoleID:          m.T_UserRole {
+                        ID:                  "userRole_ID.ID",
+                        IsActive:            "userRole_ID.isActive",
+                        RoleName:            "userRole_ID.roleName",
+                        Role_status_ID:      "userRole_ID.statusrole_ID",
+                        RoleStatusID:        m.T_Statusrole {
+                        ID:                  "userRole_ID.statusrole_ID.ID",
+                        StatusName:          "userRole_ID.statusrole_ID.status_name", 
+                        },
+                        MyActive:            "userRole_ID.my_active", 
+                        },
+            Time1:               "time1",
+            Money:               "money",
+			}
+
+		
+			_this.UserRole_ = m.T_UserRole {
+	        ID:                  "ID",
+            IsActive:            "isActive",
+            RoleName:            "roleName",
+            Role_status_ID:      "statusrole_ID",
+            RoleStatusID:        m.T_Statusrole {
+                        ID:                  "statusrole_ID.ID",
+                        StatusName:          "statusrole_ID.status_name", 
+                        },
+            MyActive:            "my_active",
 			}
 
 		
@@ -652,10 +460,10 @@
                         ID:                  "user_ID.userRole_ID.ID",
                         IsActive:            "user_ID.userRole_ID.isActive",
                         RoleName:            "user_ID.userRole_ID.roleName",
-                        Role_status_ID:      "user_ID.userRole_ID.role_status_ID",
+                        Role_status_ID:      "user_ID.userRole_ID.statusrole_ID",
                         RoleStatusID:        m.T_Statusrole {
-                        ID:                  "user_ID.userRole_ID.role_status_ID.ID",
-                        StatusName:          "user_ID.userRole_ID.role_status_ID.status_name", 
+                        ID:                  "user_ID.userRole_ID.statusrole_ID.ID",
+                        StatusName:          "user_ID.userRole_ID.statusrole_ID.status_name", 
                         },
                         MyActive:            "user_ID.userRole_ID.my_active", 
                         },
@@ -682,75 +490,21 @@
 			}
 
 		
-			_this.Project_ = m.T_Project {
-	        ID:                  "ID",
-            Name:                "name",
-			}
-
-		
 			_this.ProjectStatus_ = m.T_ProjectStatus {
 	        ID:                  "ID",
             Name:                "name",
 			}
 
 		
-			_this.Statusrole_ = m.T_Statusrole {
+			_this.Project_ = m.T_Project {
 	        ID:                  "ID",
-            StatusName:          "status_name",
-			}
-
-		
-			_this.User_ = m.T_User {
-	        ID:                  "ID",
-            UserName:            "userName",
-            UUID:                "UUID",
-            UserPsw:             "user_psw",
-            UserRole_ID:         "userRole_ID",
-            UserRoleID:          m.T_UserRole {
-                        ID:                  "userRole_ID.ID",
-                        IsActive:            "userRole_ID.isActive",
-                        RoleName:            "userRole_ID.roleName",
-                        Role_status_ID:      "userRole_ID.role_status_ID",
-                        RoleStatusID:        m.T_Statusrole {
-                        ID:                  "userRole_ID.role_status_ID.ID",
-                        StatusName:          "userRole_ID.role_status_ID.status_name", 
-                        },
-                        MyActive:            "userRole_ID.my_active", 
-                        },
-            Time1:               "time1",
-            Money:               "money",
-			}
-
-		
-			_this.UserRole_ = m.T_UserRole {
-	        ID:                  "ID",
-            IsActive:            "isActive",
-            RoleName:            "roleName",
-            Role_status_ID:      "role_status_ID",
-            RoleStatusID:        m.T_Statusrole {
-                        ID:                  "role_status_ID.ID",
-                        StatusName:          "role_status_ID.status_name", 
-                        },
-            MyActive:            "my_active",
+            Name:                "name",
 			}
 
 		
 			
 			_this.DBContextBase.FOREIGN_KEYS = map[string]orm.TForeignKey{
 								
-				"employee1.user_ID":
-				{  
-					TgtTable_sqlName:"user", 
-					TgtFldID_sqlName:"ID", 
-					
-					RootFldFk_sqlName:"user_ID", 
-					RootTable_sqlName:"employee1", 
-					
-					RootFldFk_langName:"UserID", 
-					RootFldFk_lang2Name:"User_ID", 
-				},
-				
-				
 				"user.userRole_ID":
 				{  
 					TgtTable_sqlName:"user_role", 
@@ -764,16 +518,29 @@
 				},
 				
 				
-				"user_role.role_status_ID":
+				"user_role.statusrole_ID":
 				{  
 					TgtTable_sqlName:"statusRole", 
 					TgtFldID_sqlName:"ID", 
 					
-					RootFldFk_sqlName:"role_status_ID", 
+					RootFldFk_sqlName:"statusrole_ID", 
 					RootTable_sqlName:"user_role", 
 					
 					RootFldFk_langName:"RoleStatusID", 
 					RootFldFk_lang2Name:"Role_status_ID", 
+				},
+				
+				
+				"employee1.user_ID":
+				{  
+					TgtTable_sqlName:"user", 
+					TgtFldID_sqlName:"ID", 
+					
+					RootFldFk_sqlName:"user_ID", 
+					RootTable_sqlName:"employee1", 
+					
+					RootFldFk_langName:"UserID", 
+					RootFldFk_lang2Name:"User_ID", 
 				},
 				
 				
@@ -806,18 +573,14 @@
 			}
 			
 			_this.DBContextBase.DictTablesIncludeRelDefs	= map[string]*orm.TDefIncludeRelation{
-				"bar": _this.Bar_.Def(),
-					"bar1": _this.Bar1_.Def(),
-					"bar2": _this.Bar2_.Def(),
-					"dbparams": _this.Dbparams_.Def(),
+				"statusRole": _this.Statusrole_.Def(),
+					"user": _this.User_.Def(),
+					"user_role": _this.UserRole_.Def(),
 					"departm": _this.Department_.Def(),
 					"employee1": _this.Employee1_.Def(),
 					"employee2": _this.Employee2_.Def(),
-					"project": _this.Project_.Def(),
 					"projstatus": _this.ProjectStatus_.Def(),
-					"statusRole": _this.Statusrole_.Def(),
-					"user": _this.User_.Def(),
-					"user_role": _this.UserRole_.Def(),
+					"project": _this.Project_.Def(),
 					
 			}
 			
@@ -832,18 +595,14 @@
 			ret, err := (new(DBContext)).Constr(dbBase)
 			
 						
-			ret.Bar =                     (new(orm.DBTable[m.Bar])).Constr("bar", "Bar", &ret.DBContextBase)			
-			ret.Bar1 =                    (new(orm.DBTable[m.Bar1])).Constr("bar1", "Bar1", &ret.DBContextBase)			
-			ret.Bar2 =                    (new(orm.DBTable[m.Bar2])).Constr("bar2", "Bar2", &ret.DBContextBase)			
-			ret.Dbparams =                (new(orm.DBTable[m.Dbparams])).Constr("dbparams", "Dbparams", &ret.DBContextBase)			
+			ret.Statusrole =              (new(orm.DBTable[m.Statusrole])).Constr("statusRole", "Statusrole", &ret.DBContextBase)			
+			ret.User =                    (new(orm.DBTable[m.User])).Constr("user", "User", &ret.DBContextBase)			
+			ret.UserRole =                (new(orm.DBTable[m.UserRole])).Constr("user_role", "UserRole", &ret.DBContextBase)			
 			ret.Department =              (new(orm.DBTable[m.Department])).Constr("departm", "Department", &ret.DBContextBase)			
 			ret.Employee1 =               (new(orm.DBTable[m.Employee1])).Constr("employee1", "Employee1", &ret.DBContextBase)			
 			ret.Employee2 =               (new(orm.DBTable[m.Employee2])).Constr("employee2", "Employee2", &ret.DBContextBase)			
-			ret.Project =                 (new(orm.DBTable[m.Project])).Constr("project", "Project", &ret.DBContextBase)			
 			ret.ProjectStatus =           (new(orm.DBTable[m.ProjectStatus])).Constr("projstatus", "ProjectStatus", &ret.DBContextBase)			
-			ret.Statusrole =              (new(orm.DBTable[m.Statusrole])).Constr("statusRole", "Statusrole", &ret.DBContextBase)			
-			ret.User =                    (new(orm.DBTable[m.User])).Constr("user", "User", &ret.DBContextBase)			
-			ret.UserRole =                (new(orm.DBTable[m.UserRole])).Constr("user_role", "UserRole", &ret.DBContextBase)
+			ret.Project =                 (new(orm.DBTable[m.Project])).Constr("project", "Project", &ret.DBContextBase)
 			
 			return ret, err
 		}		

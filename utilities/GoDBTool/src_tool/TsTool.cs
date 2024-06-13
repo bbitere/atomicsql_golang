@@ -82,10 +82,12 @@ namespace src_tool
                     new String[]{ 
                         "config_file", 
                         "type_out_file",
+                        "?databasefirst",
                         },
                     new String[]{ 
                         "config file;the config file containing all defs for export DB", 
                         "type of out file; type_of_file = go | ts",
+                        "database first; databasefirst = yes|no. if is yes, generate code from reading table of database",
                         });
                 if( dictArgs == null )
                     return;
@@ -93,7 +95,8 @@ namespace src_tool
                 var inst = new ExtractModelsFromSqlDatabase();
                 inst.GenDBModels( 
                                 normalizePath(dictArgs[ "config_file" ]),
-                                dictArgs[ "type_out_file" ]
+                                dictArgs[ "type_out_file" ],
+                                getVal(dictArgs, "databasefirst") == "yes"
                                 );
 
                 //Console.WriteLine( $"Completed  Generate Models for package {package}");
@@ -169,6 +172,14 @@ namespace src_tool
             //Debugger.Break();
         }
 
+        private static string getVal( Dictionary<string,string> dict, string key)
+        {
+            var val = "";
+            if( dict.TryGetValue(key, out val))
+                return val;
+
+            return null;
+        }
         private static string normalizePath(string path)
         {
             return Utils.normalizePath(path);
@@ -252,7 +263,6 @@ namespace src_tool
             {
                 Thread.Sleep(100);
             }
-            
         }
     }
 }

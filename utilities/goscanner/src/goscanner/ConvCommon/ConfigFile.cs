@@ -36,7 +36,7 @@ namespace goscanner.ConvCommon
 
         
 
-        public void ParseConfigFile( string pathFile)
+        public virtual void ParseConfigFile( string pathFile)
         {
             try
             {

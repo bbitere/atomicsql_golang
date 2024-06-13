@@ -125,6 +125,9 @@
     <Compile Include="src_tool\dialect\mysql\MySql.cs" />
     <Compile Include="src_tool\dialect\mysql\MySql_genGoLang.cs" />
     <Compile Include="src_tool\dialect\mysql\MySql_tables.cs" />
+    <Compile Include="src_tool\dialect\mongodb\Mongodb.cs" />
+    <Compile Include="src_tool\dialect\mongodb\Mongodb_genGoLang.cs" />
+    <Compile Include="src_tool\dialect\mongodb\Mongodb_tables.cs" />
     <Compile Include="src_tool\dialect\postgres\PostgressSql.cs" />
     <Compile Include="src_tool\dialect\postgres\PostgressSql_genGoLang.cs" />
     <Compile Include="src_tool\dialect\postgres\PostgressSql_tables.cs" />

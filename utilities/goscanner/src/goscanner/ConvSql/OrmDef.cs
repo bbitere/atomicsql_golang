@@ -19,6 +19,8 @@ namespace goscanner.ConvSql
         //public const string SELECT_STRCT_ITM    = "##slItm##";
 
         public const string Class_DBTable       = "DBTable";
+        public const string Class_DBTableNoSql  = "DBTableNoSql";
+        
         public const string Class_IDBQuery      = "IDBQuery";
         
         public const string Func_DBTable_Qry    = "Qry";
@@ -31,10 +33,13 @@ namespace goscanner.ConvSql
         public const string Class_DBContextNSql = "DBContextNSql";
         public const string Func_New_DBContext  = "New_DBContext";
         public const string Func_Select         = "Select";    //Select[T IGeneric_MODEL, V IGeneric_MODEL]
+        public const string Func_SelectN        = "SelectN";    //Select[T IGeneric_MODEL, V IGeneric_MODEL]
         public const string Func_SelectSubQ     = "SelectSubQ";
         public const string Func_Aggregate      = "Aggregate";  //Aggregate[T IGeneric_MODEL, V IGeneric_MODEL]
 
         public const string Class_DBQuery           = "DBQuery";
+        public const string Class_DBQueryNoSql      = "DBQueryNoSql";
+        
         public const string Func_DBQuery_Where      = "Where";
         public const string Func_DBQuery_WhereSubQ  = "WhereSubQ";
 
@@ -98,6 +103,8 @@ namespace goscanner.ConvSql
 
         public const string Atomicsql_table     = "atomicsql-table:";
         public const string Atomicsql_json_fld  = "json:";
+        public const string MongoDB_bson_fld    = "bson:";
+        
         public const string Atomicsql_CopyModel = "atomicsql:\"copy-model\"";
         public const string Atomicsql_CopyModel1 = @"""atomicsql:\""copy-model\""";
 
@@ -150,28 +157,42 @@ namespace goscanner.ConvSql
                 TypeClass = TypeClass.Simple
             };
         
-        public static string GetSubTabByFuncName(string funcName)
+        public static string GetSubTabByFuncName(string funcName, bool bIsNoSql)
         {
-            if( OrmDef.Func_DBQuery_GetValueArr.Contains(funcName) )
-                return SubTag_GetValue;
+            if( bIsNoSql )
+            {
+                //for mongodb and any no sql db, only Where() can be mapped as lambda expression
+                if( Func_DBQuery_Where == funcName)
+                    return OrmDef.SubTag_Where;
 
-            if( OrmDef.Func_DBQuery_GetValuesArr.Contains(funcName) )
-                return OrmDef.SubTag_GetValues;
+                return null;
+            }else
+            {
+                //sql types
+                if( OrmDef.Func_DBQuery_GetValueArr.Contains(funcName) )
+                    return SubTag_GetValue;
+
+                if( OrmDef.Func_DBQuery_GetValuesArr.Contains(funcName) )
+                    return OrmDef.SubTag_GetValues;
 
 
-            if( Func_DBQuery_Where == funcName)
-                return OrmDef.SubTag_Where;
+                if( Func_DBQuery_Where == funcName)
+                    return OrmDef.SubTag_Where;
 
-            if( Func_DBQuery_WhereSubQ == funcName)
-                return OrmDef.SubTag_WhereSubQ;
+                if( Func_DBQuery_WhereSubQ == funcName)
+                    return OrmDef.SubTag_WhereSubQ;
 
+                //for mongodb and any no sql db, only Where() can be mapped as lambda expression
+                if( Func_SelectN == funcName)
+                    return null;
 
-            if( Func_Select == funcName)
-                return OrmDef.SubTag_Select;
+                if( Func_Select == funcName )
+                    return OrmDef.SubTag_Select;
 
-            if( Func_SelectSubQ == funcName)
-                return OrmDef.SubTag_SelectSubQ;
-            return "";
+                if( Func_SelectSubQ == funcName)
+                    return OrmDef.SubTag_SelectSubQ;
+                return "";
+            }
         }
         
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,9 +25,8 @@ namespace goscanner.ConvSql
             if( context.Start.InputStream.SourceName.EndsWith("Test.go") )    
                 Utils.Nop();
 
-            string functionName = primaryExpression.Text;
-
-            
+            string functionName = primaryExpression.LastToken != null 
+                                ? primaryExpression.LastToken: primaryExpression.Text;
           
             //FunctionInfo functionInfo = null;
             
@@ -34,7 +34,8 @@ namespace goscanner.ConvSql
             if( funcName == OrmDef.Func_New_DBContext )
                 Utils.Nop();
 
-            context.m_funcMethodName  = functionName;
+            //context.m_funcMethodName  = functionName;
+            context.setDataPrimaryExpression( null, funcName, primaryExpression?.bIsNoSql);
 
             var detailsType = new TGenTypeDetails();
             var normalizedType1 = primaryExpression.Type.getNormalizedType();
@@ -48,7 +49,8 @@ namespace goscanner.ConvSql
               &&  funcName == OrmDef.Func_DBQuery_Where )
             {
                 if( normalizedType1 != null
-                 && normalizedType1.Name == OrmDef.Class_DBQuery )
+                 && (normalizedType1.Name == OrmDef.Class_DBQuery || normalizedType1.Name == OrmDef.Class_DBQueryNoSql )
+                 )
                 { 
                     Debug_Console("normalizedType1: OrmDef.Class_DBQuery");
                 }else
@@ -62,11 +64,9 @@ namespace goscanner.ConvSql
             }
 
             if( normalizedType1 != null
-             && normalizedType1.Name == OrmDef.Class_DBQuery )
+             && (normalizedType1.Name == OrmDef.Class_DBQuery || normalizedType1.Name == OrmDef.Class_DBQueryNoSql ) )
             {
-                context.m_classMethod     = normalizedType1.Name;
-                context.m_funcMethodName  = funcName;
-                context.m_bIsNoSql        = primaryExpression.bIsNoSql;
+                context.setDataPrimaryExpression( normalizedType1.Name, funcName, primaryExpression?.bIsNoSql);
 
                 if( this.GetTopSubquery() != null)
                 { 
@@ -94,14 +94,14 @@ namespace goscanner.ConvSql
             }
 
             var packageName = getPackageNameOfFunction( functionName );
-            if( packageName == Options.ConvertSql.OrmDir_Atomicsql_Git
+            if( (   packageName == Options.ConvertSql.OrmDir_Atomicsql_Git 
+                 || packageName == Options.ConvertSql.OrmDir_AtomicNSql_Git)
              || ( normalizedType1 != null 
                     && ( normalizedType1.Name == OrmDef.Class_DBContext 
                       || normalizedType1.Name == OrmDef.Class_DBContextNSql )
                 ) )
             {
-                context.m_classMethod     = normalizedType1 != null? normalizedType1.Name: null;
-                context.m_funcMethodName  = funcName;
+                context.setDataPrimaryExpression(  normalizedType1 != null? normalizedType1.Name: null, funcName, primaryExpression?.bIsNoSql);
                 
                 if( funcName == OrmDef.Func_Aggregate )
                 {
@@ -161,6 +161,7 @@ namespace goscanner.ConvSql
                                 Types = castExpressions[0].Types,
                                 SQLText = castExpressions[0].SQLText,
                                 NoSQLCode = castExpressions[0].NoSQLCode,
+                                bIsNoSql = castExpressions[0].bIsNoSql,
                                 OperandKind = castExpressions[0].OperandKind,
                             };
                         return;
@@ -174,10 +175,14 @@ namespace goscanner.ConvSql
             var normalizedType1 = primaryExpression.Type.getNormalizedType();
             if( normalizedType1 != null)
             {
-                if( normalizedType1.Name == OrmDef.Class_DBQuery 
-                  && OrmDef.Func_DBQuery_End.Contains(funcName) )
+                if( OrmDef.Func_DBQuery_End.Contains(funcName) )
                 {
-                    this.Lambda_endChainOfQuery();
+                    if(  (normalizedType1.Name == OrmDef.Class_DBQuery || normalizedType1.Name == OrmDef.Class_DBQueryNoSql ) 
+                      || (normalizedType1.Name == OrmDef.Class_DBTable || normalizedType1.Name == OrmDef.Class_DBTableNoSql )
+                      )                  
+                    {
+                        this.Lambda_endChainOfQuery();
+                    }
                 }
 
                 packageName = normalizedType1.PackageName;
@@ -241,7 +246,9 @@ namespace goscanner.ConvSql
             }
             if( normalizedType1 != null 
              && (funcName == OrmDef.Func_DBTable_Qry || funcName == OrmDef.Func_DBTable_QryS )
-             && normalizedType1.Name == OrmDef.Class_DBTable 
+             && (  normalizedType1.Name == OrmDef.Class_DBTable 
+                || normalizedType1.Name == OrmDef.Class_DBTableNoSql
+                )
              && normalizedType1.PackageName!= "" )
             {
                 if(argument0 == "\"tst1074\"u8")
@@ -269,18 +276,23 @@ namespace goscanner.ConvSql
                     this.Lambda_callQryMethod( context, argument0, "");
             }else
             {
-                var subTagName= OrmDef.GetSubTabByFuncName( funcName );
+                var subTagName= OrmDef.GetSubTabByFuncName( funcName, context.m_bIsNoSql );
                 if( normalizedType1 != null
-                 && (subTagName != "" && normalizedType1.Name == OrmDef.Class_DBQuery ) )
+                 && (subTagName != "" && (normalizedType1.Name == OrmDef.Class_DBQuery) || normalizedType1.Name == OrmDef.Class_DBQueryNoSql) 
+                 )
                 {
                     this.Lambda_callWhereMethod(context, subTagName );
                 }else
-                if( funcName == OrmDef.Func_Select || funcName == OrmDef.Func_SelectSubQ )
+                if( funcName == OrmDef.Func_Select || funcName == OrmDef.Func_SelectSubQ || funcName == OrmDef.Func_SelectN )
                 {
                     var packageTgtName = getPackageNameOfFunction( functionName );
-                    if( packageTgtName == Options.ConvertSql.OrmDir_Atomicsql_Git ) 
+                    if( packageTgtName == Options.ConvertSql.OrmDir_Atomicsql_Git 
+                     || packageTgtName == Options.ConvertSql.OrmDir_AtomicNSql_Git ) 
                     {
                         this.Lambda_callSelectMethod( context, subTagName );
+
+                        //I added here because Select( ctx.Table.Qry("label")) should end at the end of Select()
+                        this.Lambda_endChainOfQuery();
                     }
                 }
             }
@@ -427,7 +439,7 @@ namespace goscanner.ConvSql
                     if( parameters == null)
                         parameters = funcInfo1.Signature.Signature.Parameters;
 
-                    SQLText = getTextSQL( sqlMethod );
+                    SQLText = getTextSQL( context, sqlMethod );
                     if( this.m_LambdaCode != null ) 
                     {
                         Utils.Nop();
@@ -509,7 +521,7 @@ namespace goscanner.ConvSql
                 {
                     string argumentSQLList = string.Join(", ", arguments_SQL);
 
-                    SQLText = getTextSQL( new TTextSql
+                    SQLText = getTextSQL( context, new TTextSql
                             { defaultSql = $"CALL {primaryExpression.SQLText}({argumentSQLList})" 
                             } );
                 }
@@ -541,6 +553,8 @@ namespace goscanner.ConvSql
                         Text = $"{primaryExpression}({argumentList})",
                         Type = primaryExpression.Type,
                         SQLText = SQLText,
+                        NoSQLCode = null,
+                        bIsNoSql = primaryExpression.bIsNoSql,
                         OperandKind = OperandKind,
                     };
                 }

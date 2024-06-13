@@ -43,6 +43,10 @@ namespace src_tool
         { 
             return "mysql";
         }
+        public override bool isNoSql()
+        {
+            return false;
+        }
     
         public override string SqlSeparator()
         { 

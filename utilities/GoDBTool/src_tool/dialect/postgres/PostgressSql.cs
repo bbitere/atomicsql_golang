@@ -21,6 +21,10 @@ namespace src_tool
         { 
             return "postgres";
         }
+        public override bool isNoSql()
+        {
+            return false;
+        }
         public override string SqlSeparator()
         { 
             return ";";

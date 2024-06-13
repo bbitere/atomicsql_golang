@@ -50,6 +50,8 @@ public class ESqlOutputType
     public const string Postgres = "postgres";
     public const string Mysql = "mysql";
     public const string Mssql = "mssql";
+
+    public const string MongoDB = "mongodb";
 }
 
 //this are used in def of SQL_Method()
@@ -505,7 +507,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         return (null, null);
     }
 
-    protected string getTextSQL( TTextSql arg )
+    protected string getTextSQL( ParserRuleContext ctx, TTextSql arg )
     {
         switch( Options.ConvertSql.SqlLang )
         {
@@ -518,6 +520,14 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
             case ESqlOutputType.Mssql:
                 return arg.msSqlText != null? arg.msSqlText: arg.defaultSql;
 
+            case ESqlOutputType.MongoDB:
+
+                if( m_LambdaCode != null)
+                {
+                    Log_Error( ctx, "calling methods is not allowed in nosql query");
+                }
+                return "";
+                
             default:
             {
                 Debugger.Break();
@@ -529,45 +539,74 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
     //`json:"-"`
     //`json:"userrole_id"`
 
-    protected string getSqlField_ExtractFromJsonAnnotation( FieldInfo fld )
+    protected string getSqlField_ExtractFromJsonAnnotation( Sql_Dialect dialect, FieldInfo fld )
     {
-        var description = fld.Description;
-        if( description != null ) 
+        var descriptionsTxt = fld.Description;
+        if( descriptionsTxt != null ) 
         {
-            if( description.StartsWith("\"")
-             && description.EndsWith("\"") )
+            if( descriptionsTxt.StartsWith("\"")
+             && descriptionsTxt.EndsWith("\"") )
             {
-                description = description.Substring(1, description.Length -2);
+                descriptionsTxt = descriptionsTxt.Substring(1, descriptionsTxt.Length -2);
             }
-            if( description.StartsWith(OrmDef.Atomicsql_json_fld) )
+            var descriptions = descriptionsTxt.Split( new String[]{ "  " }, StringSplitOptions.RemoveEmptyEntries );
+            foreach( var description1 in descriptions )
             {
-                var fieldJson = description.Replace(OrmDef.Atomicsql_json_fld, "");
-                if( fieldJson.StartsWith("\"")
-                 && fieldJson.EndsWith("\"") )
+                var description = description1.Trim();
+                if( !dialect.isNoSql() && description.StartsWith(OrmDef.Atomicsql_json_fld) )
                 {
-                    fieldJson = fieldJson.Substring(1, fieldJson.Length -2);
-                    if( fieldJson == "-")
-                        return null;
+                    var fieldJson = description.Replace(OrmDef.Atomicsql_json_fld, "");
+                    if( fieldJson.StartsWith("\"")
+                     && fieldJson.EndsWith("\"") )
+                    {
+                        fieldJson = fieldJson.Substring(1, fieldJson.Length -2);
+                        if( fieldJson == "-")
+                            return null;
 
-                    var parts = fieldJson.Split(',');
-                    return parts[0];
+                        var parts = fieldJson.Split(',');
+                        return parts[0];
+                    }
+                    if( fieldJson.StartsWith("\\\"")
+                     && fieldJson.EndsWith("\\\"") )
+                    {
+                        fieldJson = fieldJson.Substring(2, fieldJson.Length -4);
+                        if( fieldJson == "-")
+                            return null;
+
+                        var parts = fieldJson.Split(',');
+                        return parts[0];
+                    }
                 }
-                if( fieldJson.StartsWith("\\\"")
-                 && fieldJson.EndsWith("\\\"") )
+                if( dialect.isNoSql() && description.StartsWith(OrmDef.MongoDB_bson_fld) )
                 {
-                    fieldJson = fieldJson.Substring(2, fieldJson.Length -4);
-                    if( fieldJson == "-")
-                        return null;
+                    var fieldJson = description.Replace(OrmDef.MongoDB_bson_fld, "");
+                    if( fieldJson.StartsWith("\"")
+                     && fieldJson.EndsWith("\"") )
+                    {
+                        fieldJson = fieldJson.Substring(1, fieldJson.Length -2);
+                        if( fieldJson == "-")
+                            return null;
 
-                    var parts = fieldJson.Split(',');
-                    return parts[0];
+                        var parts = fieldJson.Split(',');
+                        return parts[0];
+                    }
+                    if( fieldJson.StartsWith("\\\"")
+                     && fieldJson.EndsWith("\\\"") )
+                    {
+                        fieldJson = fieldJson.Substring(2, fieldJson.Length -4);
+                        if( fieldJson == "-")
+                            return null;
+
+                        var parts = fieldJson.Split(',');
+                        return parts[0];
+                    }
                 }
             }
         }
         return fld.Name;
     }
 
-    protected string getSqlTextForField( FieldInfo field, StructInfo structInfo, ref TypeInfo typeInfo, bool bAllowPointer)
+    protected string getSqlTextForField( Sql_Dialect dialect, FieldInfo field, StructInfo structInfo, ref TypeInfo typeInfo, bool bAllowPointer)
     {
         var sqlField = "";
         if( field.Type.IsPointer() )
@@ -580,20 +619,22 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
             {
                 typeInfo = field.Type;
 
-                sqlField = getSqlField_ExtractFromJsonAnnotation( field );
+                sqlField = getSqlField_ExtractFromJsonAnnotation( dialect, field );
                 if( sqlField == null //daca este ForeignKey
                     && field.Type.Name.StartsWith("*")
                     && iFld+1 < structInfo.Fields.Length )
                 {
-                    sqlField = getSqlField_ExtractFromJsonAnnotation( structInfo.Fields[iFld+1] );
+                    sqlField = getSqlField_ExtractFromJsonAnnotation( dialect, structInfo.Fields[iFld+1] );
                 }
             }else
                 Debugger.Break();
             
         }else
         {
-            sqlField = getSqlField_ExtractFromJsonAnnotation( field );
+            sqlField = getSqlField_ExtractFromJsonAnnotation(  dialect, field );
         }
+        //if( sqlField == null)
+        //    Debugger.Break();
         return sqlField;
     }
 
@@ -606,6 +647,15 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
             return str;
         }
         return $"{PREFIX_FIELD}{sqlIdentif}.{sqlField}{POSTFIX_FIELD}";
+    }
+    protected TNoSqlCode getTextNoSQLIdentif(string identifExpr, string sqlIdentif, string sqlField, TypeInfo type, string fldName, ParserRuleContext ctx, string operandDOT)
+    {
+        var str = this.Lambda_getSQLIdentif( identifExpr,  sqlIdentif, sqlField, type, fldName, ctx, operandDOT);
+        if( str != null ) 
+        {
+            return new TNoSqlCode( str );
+        }
+        return new TNoSqlCode($"{PREFIX_FIELD}{sqlIdentif}.{sqlField}{POSTFIX_FIELD}" );
     }
 
     protected string getTextSQLVarIdentif(string identif, TypeInfo type, ParserRuleContext ctx)
@@ -623,6 +673,14 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         if(identif == "ids")
              Utils.Nop();
         return $"{PREFIX_VAR}{identif}{POSTFIX_VAR}";
+    }
+
+    private TNoSqlCode NSqlConvertToBool( TNoSqlCode arg, EOperandKind bIsOperator)
+    {
+        if( bIsOperator != EOperandKind.Operator )
+            return new TNoSqlCode("==", arg, TNoSqlCode.TRUE );
+                                                             
+        return arg;
     }
     private string convertToBool( string arg, EOperandKind bIsOperator )
     {
@@ -679,12 +737,15 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
     {
         var sqlText = "";
         TNoSqlCode noSQLText = null;
+        var bIsNoSql = false;
         TypeInfo typeExpr = null;
         var operandDOT = "";
+
         if( Expressions.TryGetValue( expression, out var exprElem) ) 
         {
             sqlText = exprElem.SQLText;
             noSQLText = exprElem.NoSQLCode;
+            bIsNoSql = exprElem.bIsNoSql;
             operandDOT =  exprElem.Text;
             typeExpr = exprElem.Type;
         }else
@@ -692,6 +753,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         {
             sqlText = operand.SQLText;
             noSQLText = exprElem.NoSQLCode;
+            bIsNoSql = exprElem.bIsNoSql;
             operandDOT =  operand.Text;
             typeExpr = operand.Type;
         }
@@ -700,6 +762,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         {
             sqlText = primaryExpr.SQLText;
             noSQLText = exprElem.NoSQLCode;
+            bIsNoSql = exprElem.bIsNoSql;
             operandDOT =  primaryExpr.Text;
             typeExpr = primaryExpr.Type;
         } 
@@ -708,6 +771,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
         {
             sqlText = unaryExpr.SQLText;
             noSQLText = exprElem.NoSQLCode;
+            bIsNoSql = exprElem.bIsNoSql;
             operandDOT =  unaryExpr.Text;
             typeExpr = unaryExpr.Type;
         }
@@ -737,7 +801,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                                     continue;
 
                                 TypeInfo fldType2= fld.Type;
-                                var sqlField = getSqlTextForField( f1, fldStructInfo, ref fldType2, false );//{f1.Name}
+                                var sqlField = getSqlTextForField( Options.ConvertSql.SqlDialect, f1, fldStructInfo, ref fldType2, false );//{f1.Name}
                                 if( sqlField == null )
                                     continue;// do not export pointer field. only the foreignbkey_id
 

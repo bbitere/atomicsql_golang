@@ -183,7 +183,7 @@ namespace src_tool
                                         column.ForeignKey = tables[colRefTable];
                                     }else
                                     {
-                                        printError($"Foreign key from table {tableName} to {colRefTable} is not pointed to primary key");
+                                        printError($"Foreign key from table {tableName} to {colRefTable} is not pointed to primary key. Add keyword {GoModelTemplate.MARK_PRIMARY_KEY} in primary column tags");
                                         return false;
                                     }
                                 }else

@@ -12,7 +12,7 @@ import (
 type Statusrole struct /*atomicsql-table:"statusRole"*/ {
 	orm.Generic_MODEL   `bson:"-"`
 
-	NoSqlID				primitive.ObjectID		`bson:"_id,omitempty"`
-	ID         int32          `bson:"-"`
-	StatusName sql.NullString `bson:"status_name"`
+	NoSqlID		primitive.ObjectID		`bson:"_id,omitempty"`
+	ID         int32          `json:"ID,omitempty"      bson:"-"`
+	StatusName sql.NullString `json:"status_name"       bson:"status_name"`
 }

@@ -13,6 +13,7 @@ namespace src_tool
         public static readonly string MySql = "mysql";
         public static readonly string MsSql = "mssql";
         public static readonly string Oracle = "oracle";
+        public static readonly string MongoDB= "mongodb";
     }
 
     public class ConfigFile
@@ -36,6 +37,8 @@ namespace src_tool
         public string SqlLang = ELangSql.PostgresSql;
         public string Delimeter;
         public string DirJsons;
+		public string DBTable;
+        public string DBContextBase;
 
         public void ParseConfigFile( string pathFile)
         {
@@ -124,21 +127,21 @@ namespace src_tool
             switch( token1 ) 
             {
                 case "OutputDBContextFile": this.OutputDBContextFile = content; break;
-                case "Models_Extension": this.Models_Extension = content; break;
+                case "Models_Extension":    this.Models_Extension = content; break;
                     
                 case "ModelsOutputDir":     this.ModelsOutputDir = content; break;
                 case "BaseModelName":       this.BaseModelName = content; break;
                 case "FullName_PackageModels": this.ImportPackageModels = content; break;
                 case "FullName_PackageOrm":    this.ImportPackageOrm = content; break;
-                case "FullName_PackageGenSql":       this.PackageGenSql = content; break;
+                case "FullName_PackageGenSql": this.PackageGenSql = content; break;
                     
                 case "ConnectionString":    this.ConnectionString = content; break;
                 case "SqlLang":             this.SqlLang = content; break;
                 case "DELIMETER":           this.Delimeter = content; break;
-                case "DirJsons":           this.DirJsons = content; break;
-                    
-                
-                    
+                case "DirJsons":            this.DirJsons = content; break;
+                case "DBTable":             this.DBTable = content; break;
+                case "DBContextBase":             this.DBContextBase = content; break;
+                                    
                 default: 
                     Console.WriteLine( $"Not identified token {token1} in single line property ");
                 break;

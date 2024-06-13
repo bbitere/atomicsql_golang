@@ -8,22 +8,22 @@
 	
 	
         /**/
-	/*
-    type Dbparams struct /*atomicsql-table:"dbparams"* / {
+	
+    type DBParams struct /*atomicsql-table:"DBParams"*/ {
 	        orm.Generic_MODEL
 	        ID                  int32                         `json:"ID,omitempty"`
             ParamName           string                        `json:"ParamName"`
             ParamValue          string                        `json:"ParamValue"`
     }
-	*/
-    func (model  Dbparams) GetID() int64 {
+	
+    func (model  DBParams) GetID() int64 {
 	    return int64( model.ID )
     }
-	func (model  Dbparams) SetID( id int64 ) {
+	func (model  DBParams) SetID( id int64 ) {
 	    model.ID = int32(id)
     }
 
-    type T_Dbparams struct {
+    type T_DBParams struct {
 	        
 			orm.Generic_Def
 	        ID                  string
@@ -31,17 +31,11 @@
             ParamValue          string
     }
 	
-	func (_this *T_Dbparams) Def() *orm.TDefIncludeRelation{
+	func (_this *T_DBParams) Def() *orm.TDefIncludeRelation{
         return &orm.TDefIncludeRelation{ 
             
             ValueDef: reflect.ValueOf( *_this),
-			SqlTable:	"dbparams",
-            FnNewInst:	func(bFull bool)any{ 
-				var model = new (Dbparams);
-				if( bFull ){
-					
-				}
-				return model;
-			},
+			SqlTable:	"DBParams",
+            FnNewInst:	func(bFull bool)any{ return new (DBParams) },
         }
     }

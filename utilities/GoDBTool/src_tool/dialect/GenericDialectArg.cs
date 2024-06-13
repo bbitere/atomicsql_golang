@@ -8,6 +8,7 @@ namespace src_tool
 {
     public class GenericDialectArg
     {
+        
         public string connection_string;
         public GenericDialectArg(string connection_string)
         {

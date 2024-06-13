@@ -30,6 +30,9 @@ namespace goscanner.ConvSql
         public virtual string QuoteField(string fieldName){ return fieldName;}
 
         public abstract string GetDialectName();//{ return "";}
+
+        public abstract bool isNoSql();//{ return "";}
+        
     }
 
     public class PostgresSql_Dialect :Sql_Dialect
@@ -41,6 +44,7 @@ namespace goscanner.ConvSql
             NULL = "null";
         }
 
+        public override bool isNoSql(){ return false;}
         public override string GetDialectName(){ return "postgres";}
         public override string convertGolangTypeToSqlType( 
             string typeName, ParserRuleContext ctx, SqlConvert convertInst)
@@ -104,6 +108,7 @@ namespace goscanner.ConvSql
             NULL = "null";
         }
 
+        public override bool isNoSql(){ return false;}
         public override string GetDialectName(){ return "mysql";}
         public override string convertGolangTypeToSqlType( 
             string typeName, ParserRuleContext ctx, SqlConvert convertInst)
@@ -172,6 +177,7 @@ namespace goscanner.ConvSql
             NULL = "null";
         }
 
+        public override bool isNoSql(){ return false;}
         public override string GetDialectName(){ return "mssql";}
         public override string convertGolangTypeToSqlType( 
             string typeName, ParserRuleContext ctx, SqlConvert convertInst)
@@ -227,7 +233,72 @@ namespace goscanner.ConvSql
         { 
             return $"[{fieldName}]";
         }
+    }
 
-        
+
+
+    public class MongoDBNoSql_Dialect :Sql_Dialect
+    {
+        public MongoDBNoSql_Dialect()
+        {
+            TRUE = "true";
+            FALSE = "false";
+            NULL = "null";
+        }
+
+        public override bool isNoSql(){ return true;}
+        public override string GetDialectName(){ return "mongodb";}
+        public override string convertGolangTypeToSqlType( 
+            string typeName, ParserRuleContext ctx, SqlConvert convertInst)
+        {
+            typeName = typeName.Replace("@", ""); 
+
+            switch(typeName)
+            { 
+                case "string": return "String";
+                case "char": return "String";
+                case "bool": return "Boolean";
+
+                case "byte": return "Int32";
+                case "int16": return "Int32";
+                case "int": return "Int32";
+                case "int32": return "Int32";
+                case "int64": return "Integer";
+
+                case "time.Time": return "Timestamp";
+                case "Time": return "Timestamp";
+
+                case "UUID": return "String";
+                case "uuid.UUID": return "String";
+
+                case "float32": return "Decimal128";
+                case "float64": return "Decimal128";
+            }
+            return convertInst.getTextSQLError("type cannot be converted", ctx);
+        }
+
+        public override string convertFormatTime_GolangToSql( string format1)
+        {
+            var format = format1;
+            format = format.Replace("2006","%Y");
+            format = format.Replace("15","%H");
+            format = format.Replace("01","%m");
+            format = format.Replace("02","%d");
+            format = format.Replace("04","%M");
+            format = format.Replace("05","%S");
+
+            format = format.Replace(".000000","FF6");
+            format = format.Replace(".000","FF3");
+
+            format = format.Replace("Jan","%B");
+            format = format.Replace("January","%B");
+            format = format.Replace("Mon","%w");
+            
+            return format;
+        }
+        public override string QuoteField(string fieldName)
+        { 
+            return $"\"{fieldName}\"";
+        }
     }
 }

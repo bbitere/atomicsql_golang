@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace goscanner.Metadata
@@ -69,6 +70,9 @@ namespace goscanner.Metadata
 
     public class TNoSqlCode
     {
+        public static TNoSqlCode TRUE = new TNoSqlCode("true");
+        public static int s_UID = 1;
+        public int UID = s_UID++;
         public string operatorName = "";
         public List< TNoSqlCode > operands = new List< TNoSqlCode >();
 
@@ -76,14 +80,28 @@ namespace goscanner.Metadata
         {
             this.operatorName = opName;
             this.operands     = operands.ToList();
+            if( this.UID == 622)
+                UID = UID;
         }
         public TNoSqlCode( string opName, List<TNoSqlCode> operands )
         {
             this.operatorName = opName;
             this.operands     = operands;
+            if( this.UID == 622)
+                UID = UID;
         }
-        public virtual string getNoSqlCode()
+        private string generateTabs(int indentTab)
         {
+            var tabs = "";
+            for(var i = 0; i < indentTab; i++) 
+            {
+                tabs += "\t";
+            }
+            return tabs;
+        }
+        public virtual string getNoSqlCode(int indentTab)
+        {
+            var tabs = generateTabs(indentTab);
             if( this.operands.Count == 0 )
             {
                 return $"\"{this.operatorName}\"";
@@ -92,11 +110,11 @@ namespace goscanner.Metadata
             {
                 if( this.operands[0] != null)
                 {
+                    var op0 = this.operands[0].getNoSqlCode(indentTab+1);
                     return $@"
-                            []any{{
-					            ""{this.operatorName}"", ""{this.operands[0].getNoSqlCode() }"", 
-                            }}
-                    ";
+                            {tabs}[]any{{
+					        {tabs}    ""{this.operatorName}"", {op0} 
+                            {tabs}}}";
                 }
                 return "/*error 1 operands */";
             }
@@ -104,21 +122,18 @@ namespace goscanner.Metadata
             {
                 if( this.operands[0] != null && this.operands[1] != null)
                 {
+                    var op0 = this.operands[0].getNoSqlCode(indentTab+1);
+                    var op1 = this.operands[1].getNoSqlCode(indentTab+1);
                     return $@"
-                            []any{{
-					            ""{this.operatorName}"", ""{this.operands[0].getNoSqlCode() }"", ""{this.operands[1].getNoSqlCode() }"",
-                            }}
-                    ";
+                            {tabs}[]any{{
+					        {tabs}    ""{this.operatorName}"", {op0}, {op1},
+                            {tabs}}}";
                 }
-                return "/*error 2 operands */";
+                return "/*error 2 operands. one is missing*/";
             }
             //if( this.operands.Count == 0 )
             {
-                return $@"
-                        []any{{
-					        ""{this.operatorName}"", 
-                        }}
-                ";
+                return $@" []any{{ ""{this.operatorName}"", }}";
             }
         }
     }
@@ -129,7 +144,7 @@ namespace goscanner.Metadata
             :base( fieldName)
         {
         }
-        public override string getNoSqlCode()
+        public override string getNoSqlCode(int indentTab)
         {
             return $"\"{this.operatorName}\"";
         }
@@ -140,7 +155,7 @@ namespace goscanner.Metadata
             :base( fieldName)
         {
         }
-        public override string getNoSqlCode()
+        public override string getNoSqlCode(int indentTab)
         {
             return $"\"{this.operatorName}\"";
         }
@@ -151,7 +166,7 @@ namespace goscanner.Metadata
             :base( fieldName)
         {
         }
-        public override string getNoSqlCode()
+        public override string getNoSqlCode(int indentTab)
         {
             return $"{this.operatorName}";
         }
@@ -168,7 +183,7 @@ namespace goscanner.Metadata
             this.fieldName = fieldName;
             this.expression = expression;
         }
-        public override string getNoSqlCode()
+        public override string getNoSqlCode(int indentTab)
         {
             return $"\"{this.operatorName}\"";
         }
@@ -205,12 +220,17 @@ namespace goscanner.Metadata
                 || UID == 1625 
                 || UID == 1624
                 */
-                
 
-                || UID == 28460
-                || UID == 28461
-                || UID == 28465
-                || UID == 28466
+                
+                || UID == 27186
+                || UID == 27187
+                || UID == 27188
+                || UID == 27189
+                || UID == 27190
+                || UID == 27191
+                || UID == 27192
+                || UID == 27549
+                
                 )
             {
                 UID = UID;

@@ -186,6 +186,7 @@ public partial class SqlConvert
                     Text = expression,
                     SQLText = sqlText,
                     NoSQLCode = nosqlCode,
+                    bIsNoSql = leftOperandExpression!=null?leftOperandExpression.bIsNoSql:false,
                     OperandKind = OperandKind,
                     Type = new TypeInfo
                     {
@@ -356,6 +357,7 @@ public partial class SqlConvert
             string unaryOP = context.children[0].GetText();
             var sqlText =  "";
             TNoSqlCode noSQLCode = null;
+            var bIsNoSql = false;
             ExpressionInfo expression = null;
             var OperandKind = EOperandKind.Simple;
 
@@ -368,10 +370,11 @@ public partial class SqlConvert
                     TypeInfo expressionType = expression.Type;
 
                     noSQLCode = expression.NoSQLCode;
+                    bIsNoSql  = expression.bIsNoSql;
                     sqlText   = expression.SQLText;
                     if( unaryOP == "!")
                     {
-                        noSQLCode = new TNoSqlCode( "!", expression.NoSQLCode);
+                        noSQLCode = new TNoSqlCode( "!", NSqlConvertToBool( expression.NoSQLCode, expression.OperandKind ));
 
                         expression.SQLText = convertToBool( expression.SQLText, expression.OperandKind );
                         OperandKind = EOperandKind.Operator;
@@ -458,6 +461,7 @@ public partial class SqlConvert
                         Text = unaryExpression,
                         SQLText = sqlText,
                         NoSQLCode = noSQLCode,
+                        bIsNoSql = expression.bIsNoSql,
                         OperandKind = OperandKind,
                         Type = expressionType
                     };
@@ -531,6 +535,7 @@ public partial class SqlConvert
                 Type = expression.Type,
                 SQLText = $"({expression.SQLText})",
                 NoSQLCode = expression.NoSQLCode,
+                bIsNoSql = expression.bIsNoSql,
             };
             return;
         }
@@ -543,6 +548,7 @@ public partial class SqlConvert
                 Type = expression.Type,
                 SQLText = $"{expression.SQLText}",
                 NoSQLCode = expression.NoSQLCode,
+                bIsNoSql = expression.bIsNoSql,
             };
             return;
         }
@@ -555,6 +561,7 @@ public partial class SqlConvert
                 Type = expression.Type,
                 SQLText = $"{expression.SQLText}",
                 NoSQLCode = expression.NoSQLCode,
+                bIsNoSql = expression.bIsNoSql,
             };
             return;
         }
@@ -742,7 +749,7 @@ public partial class SqlConvert
         else if (context.NIL_LIT() is not null)
         {
             SQLText = sql_NULL;
-            NoSQLText = new TNoSqlIdentifier( null );
+            NoSQLText = new TNoSqlIdentifier( "nil" );
             basicLiteral = "null";
             typeInfo = TypeInfo.ObjectType;
         }
@@ -758,6 +765,7 @@ public partial class SqlConvert
             Text = basicLiteral,
             SQLText = SQLText,
             NoSQLCode = NoSQLText,
+            bIsNoSql = false,
             Type = typeInfo,
             OperandKind = EOperandKind.Simple
         };
@@ -983,6 +991,7 @@ public partial class SqlConvert
             Type = typeInfo,
             SQLText = textSqlSelect,
             NoSQLCode = noSqlSelect,
+            bIsNoSql = false,
         };
     }
 
@@ -1059,6 +1068,8 @@ public partial class SqlConvert
                     Type = TypeInfo.VoidType,
                     OperandKind = EOperandKind.Simple,
                     SQLText = Options.ConvertSql.SqlDialect.NULL,
+                    NoSQLCode = new TNoSqlCode("nil"),
+                    bIsNoSql = false,
                 };
                 return;
             }
@@ -1074,6 +1085,8 @@ public partial class SqlConvert
                     Type = CurrentFunction.ThisVar.Type,
                     OperandKind = EOperandKind.THIS,
                     SQLText = Options.ConvertSql.SqlDialect.THIS,
+                    NoSQLCode = new TNoSqlCode(Options.ConvertSql.SqlDialect.THIS),
+                    bIsNoSql = false,
                 };
                 return;
             }
@@ -1131,6 +1144,7 @@ public partial class SqlConvert
                             Type = typeVar.Type,
                             SQLText = SQLText,
                             OperandKind = EOperandKind.Simple,
+                            //NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, typeVar.Type, context ) ),
                         };
                     }else
                     {
@@ -1139,7 +1153,7 @@ public partial class SqlConvert
                             Text = context.GetText(),
                             Type = typeVar.Type,
                             SQLText = getTextSQLVarIdentif( identifier, typeVar.Type, context), 
-                            NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, TypeInfo.VarType, context ) ),
+                            NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, typeVar.Type, context ) ),
                             OperandKind = EOperandKind.Simple,
                         };
                         //SQLText = getTextSQLError( "internal error 143", context );
@@ -1158,6 +1172,7 @@ public partial class SqlConvert
                                 Type = typeVar.Type,
                                 SQLText = constExpr.SQLText, 
                                 NoSQLCode = constExpr.NoSQLCode,
+                                bIsNoSql = constExpr.bIsNoSql,
                                 OperandKind = EOperandKind.Simple,
                             };
                             return;
@@ -1169,7 +1184,7 @@ public partial class SqlConvert
                         Text = context.GetText(),
                         Type = typeVar.Type,
                         SQLText = getTextSQLVarIdentif( identifier, typeVar.Type, context), 
-                        NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, TypeInfo.VarType, context ) ),
+                        NoSQLCode = new TNoSqlIdentifier( getTextSQLVarIdentif( identifier, typeVar.Type, context ) ),
                         OperandKind = EOperandKind.Simple,
                     
                     };

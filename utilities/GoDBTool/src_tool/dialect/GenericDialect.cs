@@ -19,6 +19,9 @@ namespace src_tool
 
         
         public abstract string getSql();
+        public abstract bool isNoSql();
+
+        
         public abstract string SqlSeparator();
         public abstract string dropColumn(DbTable table,DbColumn column);
         public abstract string addColumn(DbTable table,DbColumn column);
@@ -90,6 +93,10 @@ namespace src_tool
 
         public static GenericDialect GetDialectByName(string SqlLang)
         {
+            if( SqlLang == ELangSql.MongoDB )
+            {
+                return new MongodbDialect();
+            }else
             if( SqlLang == ELangSql.PostgresSql )
             {
                 return new PostgressDialect();

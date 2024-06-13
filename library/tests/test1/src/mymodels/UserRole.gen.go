@@ -17,7 +17,7 @@
             IsActive            bool                          `json:"isActive"`
             RoleName            string                        `json:"roleName"`
             RoleStatusID        *Statusrole                   `json:"-"`
-            Role_status_ID      sql.NullInt32                 `json:"role_status_ID"`
+            Role_status_ID      sql.NullInt32                 `json:"statusrole_ID"`
             MyActive            bool                          `json:"my_active"`
     }
 	*/
@@ -48,8 +48,8 @@
 				var model = new (UserRole);
 				if( bFull ){
 					
-                        var defStatusrole = T_Statusrole{}
-				        model.RoleStatusID = (defStatusrole.Def().FnNewInst(bFull)).(*Statusrole)
+                        var defRoleStatusID = T_Statusrole{}
+				        model.RoleStatusID = (defRoleStatusID.Def().FnNewInst(bFull)).(*Statusrole)
 				}
 				return model;
 			},

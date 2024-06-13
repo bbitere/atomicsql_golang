@@ -7,7 +7,7 @@ call 0.common_config.cmd
 
 @echo ------------------------------------------------------
 @echo "2. parse generated_jsons -> generate sql_scripts"
-%GoServerTool% -asql_migration  -sql_lang=%SQL_LANG% -execute_scripts=n -delimeter=@@@@@@@@######@@@@@@^
+%GoServerTool%  -asql_migration  -sql_lang=%SQL_LANG% -execute_scripts=n -delimeter=@@@@@@@@######@@@@@@^
 		-json_dir=%SRCDIR_PATH%\_db_jsons^
 		-sql_dir=%SRCDIR_PATH%\_db_migration^
 	    -connection_string=%CONNECTION_STRING%
@@ -25,7 +25,7 @@ pause
 
 @echo ------------------------------------------------------ 
 @echo "5. generate the sql seqs for lambda expression : where() & select()"
-%GoScan% -o -i -h -q=.\sql-config.cfg %SRCDIR_PATH%\src
+%GoScan%   -o -i -h -q=.\sql-config.cfg %SRCDIR_PATH%\src
 pause
  
 

@@ -177,7 +177,8 @@ public partial class SqlConvert
         var top = Lambda_getTopQueryTag();
         if( top != null && top.LambdaCodeContainer == m_LambdaCode)
         {
-            Log_Error(top.Context, $"Last call of {OrmDef.Func_DBTable_Qry} is not end ok!");
+            Log_Error(top.Context, $"Last call of {OrmDef.Func_DBTable_Qry}('{top.Tag}') is not ended in a right manner!");
+            //Log_Error(ctx, $"Last call of {OrmDef.Func_DBTable_Qry}('{top.Tag}') is not ended in a right manner!");
         }
         m_LambdaFunc_SubTags.Add( new QueryTag(Tag, m_LambdaCode, ctx ) );
         
@@ -260,9 +261,20 @@ public partial class SqlConvert
                 Utils.Nop();
 
             m_LambdaCode.SqlCode   = expressions[0].SQLText;
-            m_LambdaCode.NoSqlCode = expressions[0].NoSQLCode != null ? expressions[0].NoSQLCode.getNoSqlCode(): "";
             if( m_LambdaCode.SqlCode == null)
                 Debugger.Break();
+
+            m_LambdaCode.NoSqlCode = "";
+            if( expressions[0].NoSQLCode != null)
+            {
+                var noSQLCode = expressions[0].NoSQLCode;
+                if( expressions[0].Type.IsBool() )
+                {
+                    noSQLCode = NSqlConvertToBool( noSQLCode, expressions[0].OperandKind );
+                }
+                m_LambdaCode.NoSqlCode =  noSQLCode.getNoSqlCode(0);
+            }
+            
         }
     }
 
@@ -477,19 +489,22 @@ public partial class SqlConvert
             var ctxPrimaryExpr = getPrimaryContext(context);
             if( ctxPrimaryExpr != null )
             {
-                var subTagName  = OrmDef.GetSubTabByFuncName( ctxPrimaryExpr.m_funcMethodName );
-                if( subTagName != "" )
+                var subTagName  = OrmDef.GetSubTabByFuncName( ctxPrimaryExpr.m_funcMethodName, ctxPrimaryExpr.m_bIsNoSql );
+                if( subTagName != null )
                 {
-                    setLambdaCode( new TLambdaCode( this, topQryTag, subTagName, m_LambdaCode, 
-                                                    ctxPrimaryExpr, context, paramName, ctxPrimaryExpr.m_bIsNoSql) );
-                    AddLambda( m_LambdaCode );
-                }else
-                {
-                    Log_Error(context, "It is Not Allowed that lit func to be exposed not in a call method of Where() of Select() ");
+                    if( subTagName != "" )
+                    {
+                        setLambdaCode( new TLambdaCode( this, topQryTag, subTagName, m_LambdaCode, 
+                                                        ctxPrimaryExpr, context, paramName, ctxPrimaryExpr.m_bIsNoSql) );
+                        AddLambda( m_LambdaCode );
+                    }else
+                    {
+                        Log_Error(context, "It is Not Allowed that lit func to be exposed not in a call method or Where() of Select() ");
+                    }
                 }
             }else
             { 
-                Log_Error(context, "It is Not Allowed that lit func to be exposed not in a call method of Where() of Select() ");
+                Log_Error(context, "It is Not Allowed that lit func to be exposed not in a call method of Where() or Select() ");
             }
             
         }
