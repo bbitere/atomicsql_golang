@@ -24,7 +24,7 @@ type TESqlDialect struct {
 var ESqlDialect TESqlDialect = TESqlDialect{
 	Postgres: 	"Postgres",
 	MySql:     	"MySql",
-	MongoDB:	"mongo",
+	MongoDB:	"mongodb",
 }
 
 type TSqlColumnDef struct {

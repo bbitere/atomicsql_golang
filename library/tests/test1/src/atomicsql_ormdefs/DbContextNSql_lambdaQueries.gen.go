@@ -27,8 +27,8 @@ func (_this *DBContextNSql) LoadCompiledQuery(){
 			Tag: 			"ns-asdax",
 			File: 			"test1.go",
 			StartOff: 		23,
-			EndOff:  		152,
-			Hash:  			"ZnVuYyh4ICptLlVzZXIpIGJvb2wgew0KCQlyZXR1cm4geC5Nb25leSA+PSBVc2VyTW9uZXkgJiYNCgkJCSh4LlVzZXJSb2xlSUQuUm9sZU5hbWUgPT0gUm9sZU5hbWVEZWZhdWx0IHx8IHguVXNlclJvbGVJRCA9PSBuaWwpDQoJ",
+			EndOff:  		153,
+			Hash:  			"ZnVuYyh4ICptLlVzZXIpIGJvb2wgew0KCQlyZXR1cm4geC5Nb25leSA+PSBVc2VyTW9uZXkgJiYNCgkJCSh4LlVzZXJSb2xlSUQgPT0gbmlsIHx8IHguVXNlclJvbGVJRC5Sb2xlTmFtZSA9PSBSb2xlTmFtZURlZmF1bHQgKQ0KCQ==",
 			IsQryS:			false,
 			SubQueries: 	nil,
 			NosqlQuery: 	
@@ -40,10 +40,10 @@ func (_this *DBContextNSql) LoadCompiledQuery(){
                             	[]any{
 					        	    "||", 
                             		[]any{
-					        		    "==", "{#@userRole_ID.roleName@#}", "{@@RoleNameDefault@@}",
+					        		    "==", "{#@userRole_ID@#}", nil,
                             		}, 
                             		[]any{
-					        		    "==", "{#@userRole_ID@#}", "nil",
+					        		    "==", "{#@userRole_ID.roleName@#}", "{@@RoleNameDefault@@}",
                             		},
                             	},
                             },
@@ -94,7 +94,7 @@ func (_this *DBContextNSql) LoadCompiledQuery(){
 			SubQueries: 	nil,
 			NosqlQuery: 	
                             []any{
-					            "==", "{#@userRole_ID.isActive@#}", "true",
+					            "==", "{#@userRole_ID.isActive@#}", true,
                             },
 		},
 		"tst254-W1": 
@@ -119,7 +119,7 @@ func (_this *DBContextNSql) LoadCompiledQuery(){
 			SubQueries: 	nil,
 			NosqlQuery: 	
                             []any{
-					            "==", "{#@userRole_ID.isActive@#}", "true",
+					            "==", "{#@userRole_ID.isActive@#}", true,
                             },
 		},
 		"tst665-W1": 
@@ -144,7 +144,7 @@ func (_this *DBContextNSql) LoadCompiledQuery(){
 			SubQueries: 	nil,
 			NosqlQuery: 	
                             []any{
-					            "==", "{#@userRole_ID.isActive@#}", "true",
+					            "==", "{#@userRole_ID.isActive@#}", true,
                             },
 		},
 	}

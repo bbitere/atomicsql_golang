@@ -40,6 +40,18 @@ const PREFIX_KEY = "_id.";
 
 const TAG_BSON = "bson";//all fields have prefix "bson:"
 
+const PREFIX_FIELD  = "{#@";
+const POSTFIX_FIELD = "@#}";
+
+const SUBQ_PREFIX_FIELD  = "{#$";
+const SUBQ_POSTFIX_FIELD = "$#}";
+
+const PREFIX_VAR  = "{@@";
+const POSTFIX_VAR = "@@}";
+
+const START_SUBQUERY      = "{@$";
+const END_SUBQUERY        = "$@}";
+
 // --------------------------------------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------------------------------------
@@ -1235,7 +1247,7 @@ func (_this *DBQueryNoSql[T]) getFilterFromNativeMethod(
 		dictStatics[ keyWord ] = staticVal;		
 	}
 
-	return _this.createWhereFilter( compiledQry.NosqlQuery, dictStatics, compiledQry )
+	return _this.createWhereFilter( true, compiledQry.NosqlQuery, dictStatics, compiledQry )
 }
 
 func (_this *DBQueryNoSql[T]) extractSqlNameFromTag(tag reflect.StructTag) string{
@@ -1267,16 +1279,20 @@ func (_this *DBQueryNoSql[T]) recurentFieldNameOfStructT( reflTypeT reflect.Type
 }
 func (_this *DBQueryNoSql[T]) getFieldNameOfStructT(fieldName string) string{
 
-	var key1, found = strings.CutPrefix( fieldName, "@#");
+	//var key1, found = strings.CutPrefix( fieldName, "@#");
+	var key1, found = strings.CutPrefix( fieldName, PREFIX_FIELD);
 	if( found ){
-		var fieldName, found2 = strings.CutSuffix( key1, "#@");
+		//var fieldName, found2 = strings.CutSuffix( key1, "#@");
+		var fieldName, found2 = strings.CutSuffix( key1, POSTFIX_FIELD );
 		if( found2 ){
 
-			var structT = new (T);
-			var reflTypeT =  reflect.TypeOf( *structT );
+			//bbitere: from lambda string of compiler, come exactly the string that I need,
+			return fieldName;
+			//var structT = new (T);
+			//var reflTypeT =  reflect.TypeOf( *structT );
 
-			var arrFieldName = strings.Split( fieldName, ".");
-			return _this.recurentFieldNameOfStructT( reflTypeT, 0, arrFieldName );
+			//var arrFieldName = strings.Split( fieldName, ".");
+			//return _this.recurentFieldNameOfStructT( reflTypeT, 0, arrFieldName );
 		}
 	}
 	return fieldName;
@@ -1353,37 +1369,62 @@ func (_this *DBQueryNoSql[T]) elemWhereFilter(
 	}
 	return nil;
 }
+func isEqual( item any,  keyword1 string) bool{
+
+	switch item.(type) {
+
+		case string:	{
+
+			var itemS = item.(string); 
+			return itemS == keyword1;
+		}
+	}
+	return false;
+}
 
 func (_this *DBQueryNoSql[T]) createWhereFilter( 
+	bRoot bool,
 	queryNoSqlDef []any,
 	dictStatics  map[string]any, 	
 	compiledQry  atomicsql.TCompiledSqlQuery ) []bson.M {
 
 	var filterCriteria []bson.M
 
-	for i := 0; i < len(queryNoSqlDef); i++ {
 
-		var item = queryNoSqlDef[i];
+	
+	var startIdx = 0;
+	if( bRoot && isEqual( queryNoSqlDef[0], "&&") ){
+		startIdx = 1;
+	
+		for i := startIdx; i < len(queryNoSqlDef); i++ {
 
-		switch  item.(type) {
+			var item = queryNoSqlDef[i];
 
-			case []any:	{
+			switch item.(type) {
 
-				var itemArr = item.([]any); 
-				var filter1 = _this.elemWhereFilter( itemArr, dictStatics, compiledQry );
-				
-				filterCriteria = append( filterCriteria, filter1 );
-				
-				break;
-			}
-			default: {
-				//var filter1 = bson.M{Key: item};
-				//filterCriteria = append( filterCriteria, filter1 );
+				case []any:	{
 
-				break;
+					var itemArr = item.([]any); 
+					var filter1 = _this.elemWhereFilter( itemArr, dictStatics, compiledQry );
+					
+					filterCriteria = append( filterCriteria, filter1 );
+					
+					break;
+				}
+				default: {
+					//var filter1 = bson.M{Key: item};
+					//filterCriteria = append( filterCriteria, filter1 );
+
+					break;
+				}
 			}
 		}
+	}else{
+
+		var filter1 = _this.elemWhereFilter( queryNoSqlDef, dictStatics, compiledQry );
+		filterCriteria = append( filterCriteria, filter1 );
 	}
+	
 
 	return filterCriteria;
 }
@@ -1409,7 +1450,7 @@ func (_this *DBQueryNoSql[T]) _getElem(
 			}else{
 
 			
-				var ret = _this.createWhereFilter( Val.([]any), dictStatics, compiledQry );
+				var ret = _this.createWhereFilter( false, Val.([]any), dictStatics, compiledQry );
 				var filter1    = bson.M{ mongodbOperatorName:ret};
 				return filter1;
 			}
@@ -1417,7 +1458,7 @@ func (_this *DBQueryNoSql[T]) _getElem(
 		case string:{
 
 			var sVal = Val.(string);
-			dictElem, has := dictStatics[ "{"+sVal+"}" ];
+			dictElem, has := dictStatics[ sVal ];
 			if( has ){
 
 				var filter1    = bson.M{ mongodbOperatorName: dictElem }

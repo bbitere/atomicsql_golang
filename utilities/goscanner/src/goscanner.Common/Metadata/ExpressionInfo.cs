@@ -70,10 +70,11 @@ namespace goscanner.Metadata
 
     public class TNoSqlCode
     {
-        public static TNoSqlCode TRUE = new TNoSqlCode("true");
+        public static TNoSqlCode TRUE = (new TNoSqlKeyword("true"));
         public static int s_UID = 1;
         public int UID = s_UID++;
         public string operatorName = "";
+        public bool bIsKeywordOperatorName = false;
         public List< TNoSqlCode > operands = new List< TNoSqlCode >();
 
         public TNoSqlCode( string opName, params TNoSqlCode[] operands )
@@ -99,6 +100,8 @@ namespace goscanner.Metadata
             }
             return tabs;
         }
+        
+
         public virtual string getNoSqlCode(int indentTab)
         {
             var tabs = generateTabs(indentTab);
@@ -186,6 +189,18 @@ namespace goscanner.Metadata
         public override string getNoSqlCode(int indentTab)
         {
             return $"\"{this.operatorName}\"";
+        }
+    }
+
+    public class TNoSqlKeyword : TNoSqlCode
+    {
+        public TNoSqlKeyword( string fieldName)
+            :base( fieldName)
+        {
+        }
+        public override string getNoSqlCode(int indentTab)
+        {
+            return $"{this.operatorName}";
         }
     }
 

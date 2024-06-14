@@ -749,7 +749,7 @@ public partial class SqlConvert
         else if (context.NIL_LIT() is not null)
         {
             SQLText = sql_NULL;
-            NoSQLText = new TNoSqlIdentifier( "nil" );
+            NoSQLText = (new TNoSqlKeyword( "nil" ));
             basicLiteral = "null";
             typeInfo = TypeInfo.ObjectType;
         }
@@ -1068,7 +1068,7 @@ public partial class SqlConvert
                     Type = TypeInfo.VoidType,
                     OperandKind = EOperandKind.Simple,
                     SQLText = Options.ConvertSql.SqlDialect.NULL,
-                    NoSQLCode = new TNoSqlCode("nil"),
+                    NoSQLCode = (new TNoSqlKeyword("nil")),
                     bIsNoSql = false,
                 };
                 return;

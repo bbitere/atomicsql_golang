@@ -406,7 +406,7 @@ func Test1_08(step int, bCheckName bool) (int, string, error) {
 	//do the query using FK relation
 	users1, err := ctx.User.Qry("ns-asdax").Where(func(x *m.User) bool {
 		return x.Money >= UserMoney &&
-			(x.UserRoleID.RoleName == RoleNameDefault || x.UserRoleID == nil)
+			(x.UserRoleID == nil || x.UserRoleID.RoleName == RoleNameDefault )
 	}).GetModelsRel(ctx.User_.UserRoleID.RoleStatusID.Def())
 	if err != nil {
 		return 0, nameTest, err

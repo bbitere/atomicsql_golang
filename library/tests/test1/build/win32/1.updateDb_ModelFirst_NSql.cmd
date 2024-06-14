@@ -12,7 +12,7 @@ pause
 
 @echo ------------------------------------------------------ 
 @echo "5. generate the sql seqs for lambda expression : where() & select()"
-%GoScan%  -o -i -h -q=.\sql-config_NoSql.cfg %SRCDIR_PATH%\src
+%GoScan%   -o -i -h -q=.\sql-config_NoSql.cfg %SRCDIR_PATH%\src
 pause
  
 
