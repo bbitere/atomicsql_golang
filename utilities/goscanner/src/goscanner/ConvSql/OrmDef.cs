@@ -10,9 +10,10 @@ namespace goscanner.ConvSql
 {
     internal static class OrmDef
     {
-        public const string OrmPackageName1      = "atomicsql_func";
+        public const string OrmPackageName1     = "atomicsql_func";
 
-        public const string Generic_MODEL      = "Generic_MODEL";
+        public const string Generic_MODEL_Name  = "Generic_MODEL";
+        public const string NoSqlID_Name        = "NoSqlID";
 
 
 
@@ -103,6 +104,7 @@ namespace goscanner.ConvSql
 
         public const string Atomicsql_table     = "atomicsql-table:";
         public const string Atomicsql_json_fld  = "json:";
+        public const string Atomicsql_atmsql_fld  = "atmsql:";
         public const string MongoDB_bson_fld    = "bson:";
         
         public const string Atomicsql_CopyModel = "atomicsql:\"copy-model\"";

@@ -47,7 +47,7 @@
 			var sqlSchemaDef orm.TSchemaDef = orm.TSchemaDef{
 				
 	"Statusrole": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "statusRole",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -77,7 +77,7 @@
 		},
 
 	"User": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "user",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -157,7 +157,7 @@
 		},
 
 	"UserRole": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "user_role",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -217,7 +217,7 @@
 		},
 
 	"Department": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "departm",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -257,7 +257,7 @@
 		},
 
 	"Employee1": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "employee1",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -317,7 +317,7 @@
 		},
 
 	"Employee2": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "employee2",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -337,7 +337,7 @@
 		},
 
 	"ProjectStatus": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "projstatus",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",
@@ -367,7 +367,7 @@
 		},
 
 	"Project": orm.TDefTable{
-			SchemaTable:           "",
+			SchemaTable:           "public",
 			SqlTableName:          "project",
 			PrimaryColumnLangName: "ID",
 			PrimaryColumnSqlName:  "ID",

@@ -553,6 +553,30 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
             foreach( var description1 in descriptions )
             {
                 var description = description1.Trim();
+                if( !dialect.isNoSql() && description.StartsWith(OrmDef.Atomicsql_atmsql_fld) )
+                {
+                    var fieldJson = description.Replace(OrmDef.Atomicsql_atmsql_fld, "");
+                    if( fieldJson.StartsWith("\"")
+                     && fieldJson.EndsWith("\"") )
+                    {
+                        fieldJson = fieldJson.Substring(1, fieldJson.Length -2);
+                        if( fieldJson == "-")
+                            return null;
+
+                        var parts = fieldJson.Split(',');
+                        return parts[0];
+                    }
+                    if( fieldJson.StartsWith("\\\"")
+                     && fieldJson.EndsWith("\\\"") )
+                    {
+                        fieldJson = fieldJson.Substring(2, fieldJson.Length -4);
+                        if( fieldJson == "-")
+                            return null;
+
+                        var parts = fieldJson.Split(',');
+                        return parts[0];
+                    }
+                }
                 if( !dialect.isNoSql() && description.StartsWith(OrmDef.Atomicsql_json_fld) )
                 {
                     var fieldJson = description.Replace(OrmDef.Atomicsql_json_fld, "");
@@ -577,6 +601,7 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
                         return parts[0];
                     }
                 }
+
                 if( dialect.isNoSql() && description.StartsWith(OrmDef.MongoDB_bson_fld) )
                 {
                     var fieldJson = description.Replace(OrmDef.MongoDB_bson_fld, "");
@@ -797,7 +822,9 @@ public partial class SqlConvert : goscanner.ConvCommon.ConvCommon
 
                             foreach( var f1 in fldStructInfo.Fields) 
                             {
-                                if( f1.Name == OrmDef.Generic_MODEL)
+                                if( f1.Name == OrmDef.Generic_MODEL_Name)
+                                    continue;
+                                if( f1.Name == OrmDef.NoSqlID_Name)
                                     continue;
 
                                 TypeInfo fldType2= fld.Type;

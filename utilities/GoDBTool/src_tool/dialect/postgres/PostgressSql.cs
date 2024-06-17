@@ -199,6 +199,10 @@ namespace src_tool
             return s;
         }
 
+        public override string getDefaultSchema()
+        {
+            return "public";
+        }
         
         public override string getSqlType( string langType, ref bool bIsNullable, string nameOfColumn)
         {

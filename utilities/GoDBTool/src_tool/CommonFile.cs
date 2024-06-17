@@ -68,6 +68,18 @@ namespace src_tool
              || sqlName.IndexOf(":") >= 0)
                 Debugger.Break();
         }
+        public string LangTypeIsPointer()
+        {
+            if( this.langType != null)
+            {
+                if( this.langType.StartsWith("*") )
+                {
+                    return this.langType.Replace("*", "");
+                }
+            }
+
+            return "";
+        }
     }
     public class DbTable
     {
@@ -79,14 +91,102 @@ namespace src_tool
 
         public string json;//used for private purpose
 
-        public string getPluralTableNameModel(){ return LangTableNameModel;}
+        public string getPluralTableNameModel()
+        {
+            return LangTableNameModel;
+        }
 
-        public DbTable initSql(string sqlName, DbColumn primaryKey)
+        public DbTable initSql( string sqlName, DbColumn primaryKey )
         {
             this.SqlTableNameModel = sqlName;
             this.LangTableNameModel = sqlName;
             this.PrimaryColumn = primaryKey;
             return this;
+        }
+
+
+        /**
+         * 
+         * `json:"ID,omitempty"`
+         * `json:"UUID"`
+         *  `json:"-"`
+         */ 
+        public static string parseSqlName(string tags, GenericDialect dialect)
+        {
+            if( tags == "")
+                return "";
+
+            if( tags == GoModelTemplate.FIELD_IS_OMITTED_INTEGRAL)
+                return "";
+
+            tags = tags.Trim();
+            if( tags.StartsWith("\"") && tags.EndsWith("\""))
+                tags = tags.Substring(1, tags.Length-2);
+
+
+            var bFoundDescr = false;
+            var arrTags = tags.Split(new string[]{ "  ", }, StringSplitOptions.RemoveEmptyEntries );
+            foreach( var tag1 in arrTags)
+            {
+                var tag = tag1.Trim();
+                if( tag.StartsWith("bson:\\\"") )
+                {
+                    bFoundDescr = true;
+                    if( dialect.isNoSql() )
+                    {
+                        var tags1 = tag.Replace("bson:\\\"", "");
+                        tags1 = tags1.Replace("\\\"\"", "");
+                        tags1 = tags1.Replace("\\\"", "");
+                        
+                        var p = tags1.Split(',');
+                        return p[0].Trim();
+                    }
+                }else
+                if( tag.StartsWith("json:\\\"") )
+                {
+                    bFoundDescr = true;
+
+                    if( !dialect.isNoSql() )
+                    {
+                        var tags1 = tag.Replace("json:\\\"", "");
+                        tags1 = tags1.Replace("\\\"\"", "");
+                        tags1 = tags1.Replace("\\\"", "");
+                    
+                        var p = tags1.Split(',');
+                        return p[0].Trim();
+                    }
+                } else
+                if( tag.StartsWith("atmsql:\\\"") )
+                {
+                    bFoundDescr = true;
+
+                    if( !dialect.isNoSql() )
+                    {
+                        var tags1 = tag.Replace("atmsql:\\\"", "");
+                        tags1 = tags1.Replace("\\\"\"", "");
+                        tags1 = tags1.Replace("\\\"", "");
+                    
+                        var p = tags1.Split(',');
+                        return p[0].Trim();
+                    }
+                }
+            }
+            
+            if( !bFoundDescr )
+            {
+                Console.WriteLine($"json definition of description field is incomplete :{tags}");
+            }
+            return "";
+        }
+        public bool HasSerializableAttribute(GenericDialect dialect)
+        {
+            foreach(var col in columns)
+            {
+                var sqlName = parseSqlName(col.descriptionTag, dialect);
+                if( sqlName != "")
+                    return true;
+            }
+            return false;
         }
     }
 

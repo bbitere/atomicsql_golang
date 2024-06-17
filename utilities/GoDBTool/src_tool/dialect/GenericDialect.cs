@@ -38,6 +38,8 @@ namespace src_tool
 
         public abstract string getSqlType( string langType, ref bool bIsNullable, string nameOfColumn="");
 
+        public abstract string getDefaultSchema();
+
         public abstract bool startConnection(GenericDialectArg arg);
 
         public abstract string getProperty(string name, string tableName, string colName, string colValue);

@@ -415,7 +415,7 @@ func Test1_09(step int, bCheckName bool) (int, string, error) {
 
 	type vUser1 struct {
 		m.User   `atomicsql:"copy-model"`
-		UserRole string
+		UserRole string `atmsql:"UserRole"`
 	}
 
 	//Nopp();
@@ -485,16 +485,16 @@ func Test1_10(step int, bCheckName bool) (int, string, error) {
 
 	type TUserAggr struct {
 		atmsql.Generic_MODEL
-		UserRoleID  *m.UserRole
-		UserRole_ID sql.NullInt32
-		Time1       []sql.NullTime
-		Money       []float64
+		UserRoleID  *m.UserRole  `atmsql:"UserRoleID"`
+		UserRole_ID sql.NullInt32  `atmsql:"UserRole_ID"`
+		Time1       []sql.NullTime  `atmsql:"Time1"`
+		Money       []float64  `atmsql:"Money"`
 	}
 	type TUserView struct {
 		atmsql.Generic_MODEL
-		UserRoleName string
-		MinTime1     sql.NullTime
-		SumMoney     float64
+		UserRoleName string  `atmsql:"UserRoleName"`
+		MinTime1     sql.NullTime  `atmsql:"MinTime1"`
+		SumMoney     float64  `atmsql:"SumMoney"`
 	}
 
 	usrs4, err := atmsql.Select(

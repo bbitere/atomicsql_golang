@@ -74,7 +74,7 @@ func Test_cleanUp(ctx *orm.DBContextNSql) {
 
 func Test1_00(step int, bCheckName bool) (int, string, error) {
 
-	var nameTest = "ORM: CheckIntegrity()"
+	var nameTest = "Nosql ORM: CheckIntegrity()"
 
 	ctx, _, err := Test1_init() // (orm.DBContextBase, error, string){
 	if ctx != nil {
@@ -95,7 +95,7 @@ func Test1_00(step int, bCheckName bool) (int, string, error) {
 
 func Test1_01(step int, bCheckName bool) (int, string, error) {
 
-	var nameTest = "ORM: DeleteRecords()"
+	var nameTest = "Nosql ORM: DeleteRecords()"
 	var RoleNameDefault = "default"
 
 	ctx, _, err := Test1_init() // (orm.DBContextBase, error, string){
@@ -131,7 +131,7 @@ func Test1_01(step int, bCheckName bool) (int, string, error) {
 func Test1_02N(step int, bCheckName bool) (int, string, error) {
 
 	//ORM: DeleteAllRecords;; Delete all records
-	var nameTest = "ORM: N!Test GetCount() + GetDistinctCount()"
+	var nameTest = "Nosql ORM: N!Test GetCount() + GetDistinctCount()"
 	var RoleNameDefault = "default"
 
 	ctx, _, err := Test1_init() // (orm.DBContextBase, error, string){
@@ -159,7 +159,7 @@ func Test1_02N(step int, bCheckName bool) (int, string, error) {
 func Test1_02(step int, bCheckName bool) (int, string, error) {
 
 	//ORM: DeleteAllRecords;; Delete all records
-	var nameTest = "ORM: Test GetCount() + GetDistinctCount()"
+	var nameTest = "Nosql ORM: Test GetCount() + GetDistinctCount()"
 	var RoleNameDefault = "default"
 
 	ctx, _, err := Test1_init() // (orm.DBContextBase, error, string){
@@ -204,7 +204,7 @@ func Test1_02(step int, bCheckName bool) (int, string, error) {
 // ---------------------------------------------------------
 func Test1_03(step int, bCheckName bool) (int, string, error) {
 
-	var nameTest = "ORM: Test GetFirstModelRel + InsertModel Multiple FK()"
+	var nameTest = "Nosql ORM: Test GetFirstModelRel + InsertModel Multiple FK()"
 	//var RoleNameDefault = "default";
 	var RoleNameAdmin = "admin"
 	var UserMoney float64 = 100
@@ -251,7 +251,7 @@ func Test1_03(step int, bCheckName bool) (int, string, error) {
 
 func Test1_04(step int, bCheckName bool) (int, string, error) {
 
-	var nameTest = "ORM: UpdateModel() and test the new UserRole inserted"
+	var nameTest = "Nosql ORM: UpdateModel() and test the new UserRole inserted"
 
 	var newname = "Vasile"
 	//var RoleNameDefault = "default"
@@ -304,7 +304,7 @@ func Test1_04(step int, bCheckName bool) (int, string, error) {
 
 func Test1_05(step int, bCheckName bool) (int, string, error) {
 
-	var nameTest = "ORM: UpdateModel() and test the new UserRole inserted"
+	var nameTest = "Nosql ORM: 2. UpdateModel() and test the new UserRole inserted"
 
 	var newname = "Vasile"
 	var RoleNameDefault = "default"
@@ -365,7 +365,7 @@ func Test1_05(step int, bCheckName bool) (int, string, error) {
 func Test1_08(step int, bCheckName bool) (int, string, error) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
-	var nameTest = "ORM: Test WhereEq + Relation inside Where"
+	var nameTest = "Nosql ORM: Test WhereEq + Relation inside Where"
 
 	var RoleNameDefault = "default"
 	var UserMoney float64 = 100
@@ -439,7 +439,7 @@ func Test1_08(step int, bCheckName bool) (int, string, error) {
 func Test1_09(step int, bCheckName bool) (int, string, error) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
-	var nameTest = "ORM: Select( Where )"
+	var nameTest = "Nosql ORM: Select( Where )"
 
 	var RoleNameDefault = "default"
 	var UserMoney float64 = 100
@@ -500,7 +500,7 @@ func Test1_09(step int, bCheckName bool) (int, string, error) {
 func Test1_10(step int, bCheckName bool) (int, string, error) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
-	var nameTest = "ORM: Select( Aggregate( Where() ) "
+	var nameTest = "Nosql ORM: Select( Aggregate( Where() ) "
 
 	var RoleNameDefault = "default"
 	var RoleNameAdmin = "Admin"
@@ -589,7 +589,7 @@ func Test1_10(step int, bCheckName bool) (int, string, error) {
 func Test1_11(step int, bCheckName bool) (int, string, error) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
-	var nameTest = "ORM: GetValueString"
+	var nameTest = "Nosql ORM: GetValueString"
 
 	var RoleNameDefault = "default"
 	var UserMoney float64 = 100
@@ -634,7 +634,7 @@ func Test1_11(step int, bCheckName bool) (int, string, error) {
 func Test1_12(step int, bCheckName bool) (int, string, error) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
-	var nameTest = "ORM: GetValuesString( Where )"
+	var nameTest = "Nosql ORM: GetValuesString( Where )"
 
 	var RoleNameDefault = "default"
 	var UserMoney float64 = 100
@@ -683,7 +683,7 @@ func Test1_12(step int, bCheckName bool) (int, string, error) {
 func Test1_13(step int, bCheckName bool) (int, string, error) {
 
 	//insert 2 users, 1 userrole.test where( FK. )
-	var nameTest = "ORM: GetValuesString( Where )"
+	var nameTest = "Nosql ORM: GetValuesString( Where )"
 
 	var RoleNameDefault = "default"
 	var UserMoney float64 = 100

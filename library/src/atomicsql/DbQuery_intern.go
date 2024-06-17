@@ -20,7 +20,14 @@ import (
 
 const ATTR_ATOMICSQL_COPY_MODEL string = "atomicsql:\"copy-model\""
 
+const Atomicsql_json_fld = "json";
+const Atomicsql_atmsql_fld = "atmsql";
+const Atomicsql_atmsql_atomicsql = "atomicsql";//extends struct attribute
+
 const Generic_MODEL_Name = "Generic_MODEL"
+const NoSqlID_Name = "NoSqlID";
+const NoSqlIDType_Name = "ObjectID";
+
 const ORM_NAME string = "gatomicsql"
 const SQL_ITEM_DEF string = "itm"
 const SQL_ITEM_DEF_SQ string = "itmq"
@@ -257,6 +264,69 @@ func (_this *DBQuery[T]) _Select_getSqlFields(
 	return retFields
 }
 
+
+func Field_parseSqlFieldName(fldTT reflect.StructField ) string{
+	
+	var sqlFlds1 = fldTT.Tag.Get(Atomicsql_json_fld)
+	if sqlFlds1 == "-" {
+		return "";
+	}
+	var sqlFlds2 = fldTT.Tag.Get(Atomicsql_atmsql_fld)
+	if sqlFlds2 == "-" {
+		return "";
+	}
+	if sqlFlds1 != "" ||  sqlFlds2 != "" {
+
+		var sqlFlds = sqlFlds1;
+		if( sqlFlds2 != "" ){
+			sqlFlds = sqlFlds2;
+		}
+		var sqlFldName = Str.Split(sqlFlds, ",")[0]
+		return sqlFldName
+	}
+	return "";
+}
+
+func Field_IsAllowed(fldTT reflect.StructField ) bool{
+
+	var typeTName = fldTT.Type.Name()
+
+	if( typeTName == Generic_MODEL_Name ){
+		return false;
+	}
+	if( typeTName == NoSqlIDType_Name ) {
+		return false;
+	}
+	if( fldTT.Type.Kind() == reflect.Pointer ) {
+		//the foreignKey pointer should be excluded
+		return false;
+	}
+	if( !fldTT.IsExported() ) { 
+		return false;
+	}
+	
+	var sqlFlds1 = fldTT.Tag.Get(Atomicsql_json_fld)
+	if sqlFlds1 == "-" {
+		return false;
+	}
+	var sqlFlds2 = fldTT.Tag.Get(Atomicsql_atmsql_fld)
+	if sqlFlds2 == "-" {
+		return false;
+	}
+
+	var atmFlag = fldTT.Tag.Get(Atomicsql_atmsql_atomicsql)
+	if atmFlag == "copy-model" {
+		return true;
+	}
+	//*
+	if( sqlFlds1 == "" && sqlFlds2 == "" ){
+		return false;
+	}
+	//*/
+	
+	return true;
+}
+
 // is a test to exclude the sum and min max from aggregator
 func _Select_getSqlFields1[T IGeneric_MODEL, V IGeneric_MODEL](
 	selectSqlFields map[string]string,
@@ -271,11 +341,9 @@ func _Select_getSqlFields1[T IGeneric_MODEL, V IGeneric_MODEL](
 	for i := 0; i < reflV.NumField(); i++ {
 
 		var fldTT = reflV.Field(i)
-
-		var typeTName = fldTT.Type.Name()
-
-		if typeTName == Generic_MODEL_Name ||
-			fldTT.Type.Kind() == reflect.Pointer { //the foreignKey pointer should be excluded
+		//var typeTName = fldTT.Type.Name()
+		
+		if  !Field_IsAllowed( fldTT ) { //the foreignKey pointer should be excluded
 			continue
 		}
 		var fldT, has = selectSqlFields[fldTT.Name]
@@ -312,13 +380,17 @@ func _Aggregate_generateSql[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T
 	for i := 0; i < reflT.NumField(); i++ {
 
 		var fldTT = reflT.Field(i)
-
+		if  !Field_IsAllowed( fldTT ) {
+			continue
+		}
+		/*
 		var typeTName = fldTT.Type.Name()
 
 		if typeTName == Generic_MODEL_Name ||
+		   typeTName == NoSqlIDType_Name ||
 			fldTT.Type.Kind() == reflect.Pointer { //the foreignKey pointer should be excluded
 			continue
-		}
+		}*/
 
 		dictFld[fldTT.Name] = fldTT
 	}
@@ -330,11 +402,16 @@ func _Aggregate_generateSql[T IGeneric_MODEL, V IGeneric_MODEL](_this *DBQuery[T
 
 		var fldTV = reflV.Field(i)
 
-		var typeVName = fldTV.Type.Name()
-		if typeVName == Generic_MODEL_Name ||
-			fldTV.Type.Kind() == reflect.Pointer { //the foreignKey pointer should be excluded
+		if  !Field_IsAllowed( fldTV ) {
 			continue
 		}
+		var typeVName = fldTV.Type.Name()		
+		/*		
+		if  typeVName == Generic_MODEL_Name ||
+			typeVName == NoSqlIDType_Name ||
+			fldTV.Type.Kind() == reflect.Pointer { //the foreignKey pointer should be excluded
+			continue
+		}*/
 
 		var fldTT, has = dictFld[fldTV.Name]
 		if !has {
@@ -438,24 +515,34 @@ func (_this *DBQuery[T]) _getRows_fieldsName(prefixField string) []string {
 	for iField := 0; iField < refType.NumField(); iField++ {
 
 		var fld = refType.Field(iField)
+		if  !Field_IsAllowed( fld ) {
+			continue
+		}
+
+		/*
 		if fld.Name == Generic_MODEL_Name {
 			continue
 		}
+		if fld.Name == NoSqlID_Name {
+			continue
+		}
+
 		if !fld.IsExported() {
 			continue
 		}
+		*/
+		/*
 		var sqlFlds = fld.Tag.Get("json")
 		if sqlFlds == "-" {
 			continue
-		}
-		var atmFlag = fld.Tag.Get("atomicsql")
+		}*/
+
+		var atmFlag = fld.Tag.Get(Atomicsql_atmsql_atomicsql)
 		if atmFlag == "copy-model" {
 			return []string{}
 		}
-		if atmFlag != "" {
-			sqlFlds = atmFlag
-		}
-		var sqlFldName = Str.Split(sqlFlds, ",")[0]
+		
+		var sqlFldName = Field_parseSqlFieldName( fld );
 		sqlFldName = _this._quoteField(sqlFldName)
 
 		if prefixField != "" {
@@ -655,25 +742,27 @@ func (_this *DBQuery[T]) result_getModelHeaderColumn(model any) []interface{} {
 	for i := 0; i < numCols; i++ {
 
 		var field = reflVal.Field(i)
-
 		var fldTType = reflType.Field(i)
+		
+		/*
 		var nameFld = fldTType.Name
-		if nameFld == "" {
-		}
-
 		var nameTypeFld = field.Type().Name()
-		if nameTypeFld == Generic_MODEL_Name {
+		if nameTypeFld == Generic_MODEL_Name ||
+		   nameTypeFld == NoSqlIDType_Name ||
+		   field.Type().Kind() == reflect.Pointer {
 			continue
-		}
-		if field.Type().Kind() == reflect.Pointer {
-			continue
-		}
+		}*/
 		if fldTType.Tag != "" && string(fldTType.Tag) == ATTR_ATOMICSQL_COPY_MODEL {
 
 			// SELECT( x=> {User = *x.user; ...}
 			var cols = _this.result_getModelHeaderColumn(field.Addr().Interface())
 			Arr_AddRange(&columns, &cols)
 		} else {
+			
+			if  !Field_IsAllowed( fldTType ) {
+				continue
+			}
+
 			Arr_Append(&columns, field.Addr().Interface())
 		}
 	}
@@ -711,13 +800,17 @@ func (_this *DBQuery[T]) result_getRecordHeaderColumn(model any, fields []string
 			}
 		}
 
+		//
+		if  !Field_IsAllowed( fldTType ) {
+			continue
+		}
+		/*
 		var nameTypeFld = field.Type().Name()
-		if nameTypeFld == Generic_MODEL_Name {
+		if  nameTypeFld == Generic_MODEL_Name ||
+		    NoSqlIDType_Name == Generic_MODEL_Name ||
+		    field.Type().Kind() == reflect.Pointer {
 			continue
-		}
-		if field.Type().Kind() == reflect.Pointer {
-			continue
-		}
+		}*/
 
 		if fldTType.Tag != "" && string(fldTType.Tag) == ATTR_ATOMICSQL_COPY_MODEL {
 

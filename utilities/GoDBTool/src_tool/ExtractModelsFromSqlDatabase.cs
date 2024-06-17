@@ -19,7 +19,7 @@ namespace src_tool
         public const string CONCAT_DOT = ".";
 
         public Dictionary<string, FKRootTgt> dictForeignKeys = new Dictionary<string, FKRootTgt>();
-        //public Dictionary<string, DbTable> tables = new Dictionary<string,DbTable>();
+        public Dictionary<string, DbTable> tables = new Dictionary<string,DbTable>();
         
         public class DialectArg: GenericDialectArg
         {
@@ -72,8 +72,8 @@ namespace src_tool
                 dictTables = dialect.readTables( arg.config.SqlLang );
                 if( dictTables != null )
                 {
-                    updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect);
-
+                    updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect, true);
+                    tables = dictTables;
                     if( dialect.readConstraintors( dictTables  ))
                     {
                         bOk = true;
@@ -81,7 +81,8 @@ namespace src_tool
                 }
             }else
             {
-                updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect);
+                updateGoLangNameInTablesAndColumns( ref dictTables, arg.config.Delimeter, arg.config.DirJsons, dialect, false);
+                tables = dictTables;
                 bOk = true;
             }
             if( bOk ) 
@@ -114,6 +115,16 @@ namespace src_tool
             }
         }
 
+        private DbTable findTable(string nameTable)
+        {
+            foreach( var table in this.tables)
+            {
+                if( table.Value.LangTableNameModel == nameTable)
+                    return table.Value;
+            }
+            return null;
+        }
+
         private string foundLatestJson(string dir)
         {
             if( dir == "" || dir == null)
@@ -143,7 +154,8 @@ namespace src_tool
             ref Dictionary<string, DbTable> tables, 
             string delimeter,
             string directoryJsons,
-            GenericDialect dialect)
+            GenericDialect dialect,
+            bool bUpdateTables )
         { 
             string file = foundLatestJson( directoryJsons );
             if( file != null )
@@ -155,9 +167,29 @@ namespace src_tool
                 //DbTable tableDBParam = null;
                 var dictTables = Utils.getDictFromList(list, x=>x.SqlTableNameModel );
 
+                if( !bUpdateTables )
+                {
+                    var listKeys = dictTables.Keys.ToList();
+                    for( var i = 0; i < listKeys.Count; i++ )
+                    {
+                        var key = listKeys[i];
+                        var table = dictTables[ key ];
+                        if( !table.HasSerializableAttribute( dialect ))
+                        {
+                            dictTables.Remove( key );
+                        }
+                    }
+                }
+                    
+
                 foreach( var it in dictTables )
                 {
-                    //if( dict.ContainsKey( it.Key ))
+                    if( !bUpdateTables )
+                    {
+                        if( it.Value.Schema == null)
+                            it.Value.Schema = dialect.getDefaultSchema();
+                    }
+                    if( !bUpdateTables || dictTables.ContainsKey( it.Key ) )
                     {
                         var table = it.Value;
                         tables[ it.Key ] = table;
@@ -185,9 +217,15 @@ namespace src_tool
                                 col.langName2 = dictCol[col.sqlName].langName2; 
                             }
                         }
-                        if( dialect.isNoSql() && table.PrimaryColumn == null && mainColumn != null )
+                        if( table.PrimaryColumn == null )
                         {
-                            table.PrimaryColumn = mainColumn;
+                            if( mainColumn != null )
+                            {
+                                table.PrimaryColumn = mainColumn;
+                            }else
+                            {
+                                Console.WriteLine($"table {table} ({table.LangTableNameModel}) was not primary Column. Use keyword in column tag : '{GoModelTemplate.MARK_PRIMARY_KEY}' ");
+                            }
                         }
                     }
                 }
@@ -278,18 +316,18 @@ namespace src_tool
             return defsModel;
         }
 
-        string getGoLangType_DefVar( DbColumn column, string fieldName, 
-            List< DbTable> listRecursiveStack, string prefix_member)
+        string getGoLangType_DefVar( GenericDialect dialect, string fieldName, 
+            List< DbTable> listRecursiveStack, DbTable columnForeignKey, string prefix_member)
         {
             if( listRecursiveStack != null )
             {
-                var Model_DefVar = Golang_getModelCol_DefVar(column.ForeignKey, $"{prefix_member}{fieldName}{CONCAT_DOT}", listRecursiveStack );
+                var Model_DefVar = Golang_getModelCol_DefVar(dialect, columnForeignKey, $"{prefix_member}{fieldName}{CONCAT_DOT}", listRecursiveStack );
 
                 var txtDefVarModel = String.Join( 
                         @",
                         ",Model_DefVar );
 
-                return $@"{GoDBContext.pkgModels}.{GoModelTemplate.PREF_DEF}{column.ForeignKey.LangTableNameModel} {{
+                return $@"{GoDBContext.pkgModels}.{GoModelTemplate.PREF_DEF}{columnForeignKey.LangTableNameModel} {{
                         {txtDefVarModel}, 
                         }}";
             }else
@@ -297,7 +335,7 @@ namespace src_tool
                 return $"\"{prefix_member}{fieldName}\"";
             }
         }
-        private List<string> Golang_getModelCol_DefVar(DbTable table, string prefix_member, 
+        private List<string> Golang_getModelCol_DefVar(GenericDialect dialect, DbTable table, string prefix_member, 
                     List< DbTable> listRecursiveStack)
         {   
             if( listRecursiveStack.Contains(table) )
@@ -313,10 +351,10 @@ namespace src_tool
                 if( column.langName == GoModelTemplate.NoSqlID)
                     continue;
 
-                if( column.ForeignKey != null)
+                if( column.ForeignKey != null )
                 {
                     //define the UserRole_ID
-                    var type2 = getGoLangType_DefVar( column, column.sqlName, null, prefix_member);
+                    var type2 = getGoLangType_DefVar( dialect, column.sqlName, null, null, prefix_member);
                     varDefModel.Add( GoModelTemplate.GetModelColumn_DefVar(column.langName2, type2, column.bIsIdentity ) );
 
                     //define the UserRoleID : UserRole{ ... }
@@ -330,11 +368,18 @@ namespace src_tool
 
                     dictForeignKeys[ keyFK ] = new FKRootTgt( table, column, column.ForeignKey );
 
-                    var type = getGoLangType_DefVar( column, column.sqlName, listRecursiveStack, prefix_member);
+                    var type = getGoLangType_DefVar( dialect, column.sqlName, listRecursiveStack, column.ForeignKey, prefix_member);
+                    varDefModel.Add( GoModelTemplate.GetModelColumn_DefVar(column.langName, type, column.bIsIdentity ) );
+                }else
+                if(  (dialect.isNoSql() && column.LangTypeIsPointer() != "" ) )
+                {
+                    DbTable pointerTable = findTable( column.LangTypeIsPointer() );
+                    //define the UserRoleID
+                    var type = getGoLangType_DefVar( dialect, column.sqlName, listRecursiveStack, pointerTable, prefix_member);
                     varDefModel.Add( GoModelTemplate.GetModelColumn_DefVar(column.langName, type, column.bIsIdentity ) );
                 }else
                 {
-                    var type = getGoLangType_DefVar( column, column.sqlName, null, prefix_member);
+                    var type = getGoLangType_DefVar( dialect, column.sqlName, null, null, prefix_member);
                     varDefModel.Add( GoModelTemplate.GetModelColumn_DefVar(column.langName, type, column.bIsIdentity ) );
                 }
             }
@@ -415,7 +460,7 @@ namespace src_tool
 
                 var listRecursiveStack = new List< DbTable>();
                 var TDefModel   = Golang_getModelCol_Def(table);
-                var varDefModel = Golang_getModelCol_DefVar(table, "", listRecursiveStack);
+                var varDefModel = Golang_getModelCol_DefVar(dialect, table, "", listRecursiveStack);
                 var ModelInitialize_Def = Golang_getModelInitilized(table);
                 
                 

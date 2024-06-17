@@ -629,7 +629,7 @@ namespace src_tool
                     var langName  = it.Key;
                     DbTable tblPointer = null;
 
-                    var sqlName = getSqlName(tags, dialect );
+                    var sqlName = DbTable.parseSqlName(tags, dialect );
                     if( sqlName == "")
                     {
                         continue;
@@ -639,8 +639,19 @@ namespace src_tool
                     
                     if( sqlName == GoModelTemplate.FIELD_IS_OMITTED_INTEGRAL)
                     {
-                        nextShouldBeFK = it.Key;
-                        nextShouldBeFK_pointerType = type;
+                        
+                        if( !dialect.isNoSql())
+                        {
+                            // UserID "-"
+                            // User_ID "user_ID"
+                            nextShouldBeFK = it.Key;
+                            nextShouldBeFK_pointerType = type;
+                        }else
+                        {
+                            // in nosql it is put inverse.
+                            // UserID  "user_ID"
+                            // User_ID "-"
+                        }
                         continue;
                     }else
                     if( nextShouldBeFK != "" && !dialect.isNoSql() )
@@ -712,68 +723,7 @@ namespace src_tool
 
             return dbTables;
         }
-        /**
-         * 
-         * `json:"ID,omitempty"`
-         * `json:"UUID"`
-         *  `json:"-"`
-         */ 
-        private static string getSqlName(string tags, GenericDialect dialect)
-        {
-            if( tags == "")
-                return "";
-
-            if( tags == GoModelTemplate.FIELD_IS_OMITTED_INTEGRAL)
-                return "";
-
-            var bFoundDescr = false;
-            var arrTags = tags.Split(new string[]{ "  ", }, StringSplitOptions.RemoveEmptyEntries );
-            foreach( var tag1 in arrTags)
-            {
-                var tag = tag1.Trim();
-                if( tag.StartsWith("\"bson:\\\"") )
-                {
-                    bFoundDescr = true;
-                    if( dialect.isNoSql() )
-                    {
-                        var tags1 = tag.Replace("\"bson:\\\"", "");
-                        tags1 = tags1.Replace("\\\"\"", "");
-                        tags1 = tags1.Replace("\\\"", "");
-                        
-                        var p = tags1.Split(',');
-                        return p[0].Trim();
-                    }
-                }else
-                if( tag.StartsWith("\"json:\\\"") )
-                {
-                    bFoundDescr = true;
-
-                    var tags1 = tag.Replace("\"json:\\\"", "");
-                    tags1 = tags1.Replace("\\\"\"", "");
-                    tags1 = tags1.Replace("\\\"", "");
-                    
-                    var p = tags1.Split(',');
-                    return p[0].Trim();
-                } else
-                if( tag.StartsWith("\"atmsql:\\\"") )
-                {
-                    bFoundDescr = true;
-
-                    var tags1 = tag.Replace("\"atmsql:\\\"", "");
-                    tags1 = tags1.Replace("\\\"\"", "");
-                    tags1 = tags1.Replace("\\\"", "");
-                    
-                    var p = tags1.Split(',');
-                    return p[0].Trim();
-                }
-            }
-            
-            if( !bFoundDescr )
-            {
-                Console.WriteLine($"json definition of description field is incomplete :{tags}");
-            }
-            return "";
-        }
+        
         /**
          * 
          * atomicsql-table:"user_role"

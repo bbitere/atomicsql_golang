@@ -78,10 +78,9 @@ func (_this *DBContext) LoadCompiledQuery(){
 		},
 		"evcy59-S2": 
 		{
-			//CompiledQuery: {#@NoSqlID@#} AS "NoSqlID", {#@ID@#} AS "ID", {#@userName@#} AS "UserName", {#@UUID@#} AS "UUID", {#@user_psw@#} AS "UserPsw", {#@userRole_ID@#} AS "UserRole_ID", {#@time1@#} AS "Time1", {#@money@#} AS "Money", {#@userRole_ID.roleName@#} AS "UserRole",
-			CompiledQuery:`eyNATm9TcWxJREAjfSBBUyAiTm9TcWxJRCIsIHsjQElEQCN9IEFTICJJRCIsIHsjQHVzZXJOYW1lQCN9IEFTICJVc2VyTmFtZSIsIHsjQFVVSURAI30gQVMgIlVVSUQiLCB7I0B1c2VyX3Bzd0AjfSBBUyAiVXNlclBzdyIsIHsjQHVzZXJSb2xlX0lEQCN9IEFTICJVc2VyUm9sZV9JRCIsIHsjQHRpbWUxQCN9IEFTICJUaW1lMSIsIHsjQG1vbmV5QCN9IEFTICJNb25leSIsIHsjQHVzZXJSb2xlX0lELnJvbGVOYW1lQCN9IEFTICJVc2VyUm9sZSI=`,			
+			//CompiledQuery: {#@ID@#} AS "ID", {#@userName@#} AS "UserName", {#@UUID@#} AS "UUID", {#@user_psw@#} AS "UserPsw", {#@userRole_ID@#} AS "UserRole_ID", {#@time1@#} AS "Time1", {#@money@#} AS "Money", {#@userRole_ID.roleName@#} AS "UserRole",
+			CompiledQuery:`eyNASURAI30gQVMgIklEIiwgeyNAdXNlck5hbWVAI30gQVMgIlVzZXJOYW1lIiwgeyNAVVVJREAjfSBBUyAiVVVJRCIsIHsjQHVzZXJfcHN3QCN9IEFTICJVc2VyUHN3IiwgeyNAdXNlclJvbGVfSURAI30gQVMgIlVzZXJSb2xlX0lEIiwgeyNAdGltZTFAI30gQVMgIlRpbWUxIiwgeyNAbW9uZXlAI30gQVMgIk1vbmV5IiwgeyNAdXNlclJvbGVfSUQucm9sZU5hbWVAI30gQVMgIlVzZXJSb2xlIg==`,			
 			SelectSqlFields: map[string]string{
-             "NoSqlID":"{#@NoSqlID@#}",
              "ID":"{#@ID@#}",
              "UserName":"{#@userName@#}",
              "UUID":"{#@UUID@#}",
@@ -91,11 +90,10 @@ func (_this *DBContext) LoadCompiledQuery(){
              "Money":"{#@money@#}",
              "UserRole":"{#@userRole_ID.roleName@#}",
             },			
-			OrderedFields:	[]string{ "UserRole_ID", "UserRoleID.RoleName", "NoSqlID", "ID", "UserName", "UUID", "UserPsw", "Time1", "Money" },
+			OrderedFields:	[]string{ "UserRole_ID", "UserRoleID.RoleName", "ID", "UserName", "UUID", "UserPsw", "Time1", "Money" },
 			Fields:			map[string]string{
              "UserRole_ID":"{#@userRole_ID@#}",
              "UserRoleID.RoleName":"{#@userRole_ID.roleName@#}",
-             "NoSqlID":"{#@NoSqlID@#}",
              "ID":"{#@ID@#}",
              "UserName":"{#@userName@#}",
              "UUID":"{#@UUID@#}",

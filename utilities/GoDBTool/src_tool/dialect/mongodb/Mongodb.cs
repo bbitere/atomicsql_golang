@@ -91,9 +91,14 @@ namespace src_tool
             return "";
         }
 
+        public override string getDefaultSchema()
+        {
+            return null;
+        }
         
         public override string getSqlType( string langType, ref bool bIsNullable, string nameOfColumn)
         {
+            var originalLangType = langType;
             langType = cleanNameGoStruct(langType);
             if(langType.StartsWith("[]"))
             {
@@ -133,6 +138,11 @@ namespace src_tool
                 case "float32": return "real";
                 case "float64": return "double precision";
                 case "ObjectID" : return "ObjectID";
+            }
+            if( nameOfColumn.EndsWith("_ID") 
+             || originalLangType.StartsWith("*"))
+            {   //for foreignkey.
+                return "TEXT";
             }
             return printError($"not supported type {langType}");
         }

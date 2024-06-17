@@ -227,6 +227,11 @@ namespace src_tool
                 DROP CONSTRAINT {fk_fkName};";
             return s;
         }
+        public override string getDefaultSchema()
+        {
+            return "dbo";
+        }
+
         public override string getSqlType( string langType, ref bool bIsNullable, string nameOfColumn)
         {
             langType = cleanNameGoStruct(langType);
